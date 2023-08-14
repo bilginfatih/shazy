@@ -1,0 +1,10 @@
+{
+    "welcomeMessage": "Welcome",
+    "@welcomeMessage": {
+      "content": "English Content"
+    },
+    "description": "English Content",
+    "@description": {
+      "content": "asd"
+    }
+}
