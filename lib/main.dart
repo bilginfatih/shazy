@@ -3,6 +3,8 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:shazy/styles.dart';
 import 'package:shazy/themes.dart';
+import 'core/init/navigation/navigation_manager.dart';
+import 'core/init/navigation/navigation_route_manager.dart';
 
 void main() {
   runApp(MyApp());
@@ -24,6 +26,10 @@ class MyApp extends StatelessWidget {
         GlobalCupertinoLocalizations.delegate
       ],
       supportedLocales: const [Locale('tr'), Locale('en')],
+      navigatorKey: NavigationManager.instance.navigationKey,
+      onGenerateRoute: (args) =>
+          NavigationRouteManager.instance?.generateRoute(args),
+      initialRoute: '/',
       home: const MyHomePage(),
     );
   }
