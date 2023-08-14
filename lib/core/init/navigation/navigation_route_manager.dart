@@ -15,10 +15,9 @@ class NavigationRouteManager {
   Route<dynamic> generateRoute(RouteSettings args) {
     switch (args.name) {
       default:
-        return _navigationToDefault(const MyApp(), args);
+        return _navigationToDefault(MyApp(), args);
     }
   }
 
-  MaterialPageRoute _navigationToDefault(Widget page, RouteSettings args) =>
-      MaterialPageRoute(builder: (context) => page, settings: args);
+  MaterialPageRoute _navigationToDefault(Widget page, RouteSettings args) => MaterialPageRoute(builder: (context) => page, settings: args);
 }
