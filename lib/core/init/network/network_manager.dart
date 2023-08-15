@@ -1,7 +1,5 @@
 import 'dart:convert';
-
 import 'package:dio/dio.dart';
-
 import '../../base/base_model.dart';
 import 'base_network_manager.dart';
 
