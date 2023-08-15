@@ -27,9 +27,9 @@ class MyApp extends StatelessWidget {
       ],
       supportedLocales: const [Locale('tr'), Locale('en')],
       navigatorKey: NavigationManager.instance.navigationKey,
-      onGenerateRoute: (args) => NavigationRouteManager.instance?.generateRoute(args),
+      onGenerateRoute: (args) =>
+          NavigationRouteManager.instance?.generateRoute(args),
       initialRoute: '/',
-      home: const MyHomePage(),
     );
   }
 }

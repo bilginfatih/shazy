@@ -14,6 +14,12 @@ class AppThemes {
       secondary: _appThemes.lightSecondary400,
       tertiary: _appThemes.lightTertiary400,
     ),
+    filledButtonTheme: FilledButtonThemeData(
+        style: ButtonStyle(
+            shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                RoundedRectangleBorder(
+      borderRadius: BorderRadius.circular(8.0),
+    )))),
   );
 
   static ThemeData darkTheme = ThemeData(
@@ -21,6 +27,12 @@ class AppThemes {
     colorScheme: const ColorScheme.dark().copyWith(
       primary: _appThemes.darkPrimaryColor,
     ),
+    filledButtonTheme: FilledButtonThemeData(
+        style: ButtonStyle(
+            shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                RoundedRectangleBorder(
+      borderRadius: BorderRadius.circular(8.0),
+    )))),
   );
 }
 

@@ -7,7 +7,7 @@ extension ContextExtension on BuildContext {
 
   double get width => mediaQueryData.size.width;
 
-  double responsiveHeight(double value) => (value * height) / 867.4285714285714;
+  double responsiveHeight(double value) => (value * height) / 852.0;
 
-  double responsiveWidth(double value) => (value * width) / 411.4285714285714;
+  double responsiveWidth(double value) => (value * width) / 393.0;
 }

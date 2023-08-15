@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-class AppTextStyles {
+mixin AppTextStyles {
   static final TextStyle titleXlargeRegular = GoogleFonts.poppins(
     fontSize: 34,
     fontWeight: FontWeight.w400,
@@ -25,5 +25,9 @@ class AppTextStyles {
   static final TextStyle headlineSmallRegular = GoogleFonts.poppins(
     fontSize: 18,
     fontWeight: FontWeight.w400,
+  );
+  static final TextStyle subheadLarge = GoogleFonts.poppins(
+    fontSize: 16,
+    fontWeight: FontWeight.w500,
   );
 }
