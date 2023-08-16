@@ -1,9 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:shazy/utils/extensions/context_extension.dart';
 import 'package:shazy/widgets/buttons/primary_button.dart';
-import 'package:shazy/widgets/buttons/secondary_button.dart';
-
-import '../../utils/theme/styles.dart';
 
 class SignInPage extends StatelessWidget {
   const SignInPage({super.key});
@@ -15,8 +11,11 @@ class SignInPage extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            PrimaryButton(text: 'text', context: context, onPressed: () {}),
-            SecondaryButton(text: 'text', context: context, onPressed: () {}),
+            PrimaryButton(
+              text: 'Create an account',
+              context: context,
+              onPressed: () {},
+            ),
           ],
         ),
       ),

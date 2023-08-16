@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:shazy/utils/extensions/context_extension.dart';
-
 import '../../utils/theme/styles.dart';
+import '../../utils/theme/themes.dart';
 
 class PrimaryButton extends SizedBox {
   PrimaryButton({
@@ -18,9 +18,10 @@ class PrimaryButton extends SizedBox {
           height: context.responsiveHeight(height ?? 54),
           child: FilledButton(
             onPressed: onPressed,
+            style: FilledButton.styleFrom(backgroundColor: AppThemes.lightPrimary500),
             child: Text(
               text,
-              style: style ?? AppTextStyles.subheadLarge,
+              style: style ?? AppTextStyles.subheadLargeRegular,
             ),
           ),
         );

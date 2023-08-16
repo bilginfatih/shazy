@@ -3,6 +3,7 @@ import 'package:shazy/utils/constants/navigation_constant.dart';
 
 import '../../../main.dart';
 import '../../../pages/authentication/sign_in_page.dart';
+import '../../../pages/authentication/sign_up_page.dart';
 
 class NavigationRouteManager {
   NavigationRouteManager._init();
@@ -17,12 +18,11 @@ class NavigationRouteManager {
   Route<dynamic> generateRoute(RouteSettings args) {
     switch (args.name) {
       case NavigationConstant.signIn:
-        return _navigationToDefault(const SignInPage(), args);
+        return _navigationToDefault(SignUpPage(), args);
       default:
         return _navigationToDefault(MyApp(), args);
     }
   }
 
-  MaterialPageRoute _navigationToDefault(Widget page, RouteSettings args) =>
-      MaterialPageRoute(builder: (context) => page, settings: args);
+  MaterialPageRoute _navigationToDefault(Widget page, RouteSettings args) => MaterialPageRoute(builder: (context) => page, settings: args);
 }

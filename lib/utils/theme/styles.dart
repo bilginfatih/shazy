@@ -18,6 +18,10 @@ mixin AppTextStyles {
     fontSize: 22,
     fontWeight: FontWeight.w400,
   );
+  static final TextStyle titleMedMedium = GoogleFonts.poppins(
+    fontSize: 24,
+    fontWeight: FontWeight.w500,
+  );
   static final TextStyle headlineLargeRegular = GoogleFonts.poppins(
     fontSize: 20,
     fontWeight: FontWeight.w400,
@@ -26,7 +30,11 @@ mixin AppTextStyles {
     fontSize: 18,
     fontWeight: FontWeight.w400,
   );
-  static final TextStyle subheadLarge = GoogleFonts.poppins(
+  static final TextStyle subheadLargeRegular = GoogleFonts.poppins(
+    fontSize: 16,
+    fontWeight: FontWeight.w400,
+  );
+  static final TextStyle subheadLargeMedium = GoogleFonts.poppins(
     fontSize: 16,
     fontWeight: FontWeight.w500,
   );
