@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:shazy/widgets/buttons/primary_button.dart';
 
+import '../../core/init/navigation/navigation_manager.dart';
+import '../../utils/constants/navigation_constant.dart';
+
 class SignInPage extends StatelessWidget {
   const SignInPage({super.key});
 
@@ -14,7 +17,9 @@ class SignInPage extends StatelessWidget {
             PrimaryButton(
               text: 'Create an account',
               context: context,
-              onPressed: () {},
+              onPressed: () {
+                NavigationManager.instance.navigationToPage(NavigationConstant.signUp);
+              },
             ),
           ],
         ),

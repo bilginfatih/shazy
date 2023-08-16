@@ -18,6 +18,8 @@ class NavigationRouteManager {
   Route<dynamic> generateRoute(RouteSettings args) {
     switch (args.name) {
       case NavigationConstant.signIn:
+        return _navigationToDefault(SignInPage(), args);
+      case NavigationConstant.signUp:
         return _navigationToDefault(SignUpPage(), args);
       default:
         return _navigationToDefault(MyApp(), args);
