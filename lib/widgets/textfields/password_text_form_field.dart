@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:shazy/utils/extensions/context_extension.dart';
+import 'package:shazy/utils/extensions/string_extension.dart';
 import '../../utils/theme/themes.dart';
 
-class TcTextFormField extends TextFormField {
-  TcTextFormField({
+class PasswordTextFormField extends TextFormField {
+  PasswordTextFormField({
     Key? key,
     TextEditingController? controller,
     required BuildContext context,
@@ -11,7 +12,7 @@ class TcTextFormField extends TextFormField {
           key: key,
           controller: controller,
           decoration: InputDecoration(
-            hintText: 'TC',
+            hintText: 'Enter Your Password',
             hintStyle: context.textStyle.subheadLargeMedium.copyWith(
               color: AppThemes.hintTextNeutral,
             ),
@@ -22,5 +23,13 @@ class TcTextFormField extends TextFormField {
               ),
             ),
           ),
+          validator: (value) {
+            if (value!.isEmpty) {
+              return 'Parola boş olamaz.';
+            } else if (!value.isValidPassword) {
+              return 'Geçerli bir parola giriniz.';
+            }
+            return null;
+          },
         );
 }

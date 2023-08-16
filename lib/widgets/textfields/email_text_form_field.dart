@@ -1,18 +1,19 @@
 import 'package:flutter/material.dart';
+import 'package:shazy/utils/extensions/context_extension.dart';
 import 'package:shazy/utils/extensions/string_extension.dart';
-import '../../utils/theme/styles.dart';
 import '../../utils/theme/themes.dart';
 
 class EmailTextFormField extends TextFormField {
   EmailTextFormField({
     Key? key,
     TextEditingController? controller,
+    required BuildContext context,
   }) : super(
           key: key,
           controller: controller,
           decoration: InputDecoration(
             hintText: 'Email',
-            hintStyle: AppTextStyles.subheadLargeMedium.copyWith(
+            hintStyle: context.textStyle.subheadLargeMedium.copyWith(
               color: AppThemes.hintTextNeutral,
             ),
             border: OutlineInputBorder(

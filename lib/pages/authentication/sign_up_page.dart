@@ -4,7 +4,6 @@ import 'package:intl_phone_field/intl_phone_field.dart';
 import 'package:shazy/utils/extensions/context_extension.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import '../../core/init/navigation/navigation_manager.dart';
-import '../../utils/theme/styles.dart';
 import '../../utils/theme/themes.dart';
 import '../../widgets/padding/base_padding.dart';
 import '../../widgets/textfields/email_text_form_field.dart';
@@ -19,7 +18,8 @@ class SignUpPage extends StatefulWidget {
 class _SignUpPageState extends State<SignUpPage> {
   @override
   Widget build(BuildContext context) {
-    Color appBarColor = Theme.of(context).scaffoldBackgroundColor; // Body rengini al
+    Color appBarColor =
+        Theme.of(context).scaffoldBackgroundColor; // Body rengini al
     return Scaffold(
       appBar: AppBar(
         backgroundColor: appBarColor,
@@ -28,15 +28,18 @@ class _SignUpPageState extends State<SignUpPage> {
         title: Row(
           children: [
             IconButton(
-              icon: context.isLight ? SvgPicture.asset('assets/svg/angle-left.svg') : SvgPicture.asset('assets/svg/angle-left_white.svg'),
+              icon: context.isLight
+                  ? SvgPicture.asset('assets/svg/angle-left.svg')
+                  : SvgPicture.asset('assets/svg/angle-left_white.svg'),
               onPressed: () {
                 NavigationManager.instance.navigationToPop();
               },
             ),
             Text(
               'Back',
-              style: AppTextStyles.subheadLargeRegular.copyWith(
-                color: context.isLight ? AppThemes.contentSecondary : Colors.white,
+              style: context.textStyle.subheadLargeRegular.copyWith(
+                color:
+                    context.isLight ? AppThemes.contentSecondary : Colors.white,
               ),
             ),
           ],
@@ -50,7 +53,7 @@ class _SignUpPageState extends State<SignUpPage> {
               children: [
                 Text(
                   'Sign Up',
-                  style: AppTextStyles.titleMedMedium,
+                  style: context.textStyle.titleMedMedium,
                 ),
               ],
             ),
@@ -60,7 +63,9 @@ class _SignUpPageState extends State<SignUpPage> {
             SizedBox(
               height: context.responsiveHeight(60),
               width: context.responsiveWidth(362),
-              child: NameTextFormField(),
+              child: NameTextFormField(
+                context: context,
+              ),
             ),
             SizedBox(
               height: context.responsiveHeight(20),
@@ -68,7 +73,9 @@ class _SignUpPageState extends State<SignUpPage> {
             SizedBox(
               height: context.responsiveHeight(60),
               width: context.responsiveWidth(362),
-              child: EmailTextFormField(),
+              child: EmailTextFormField(
+                context: context,
+              ),
             ),
             SizedBox(
               height: context.responsiveHeight(20),
@@ -76,7 +83,9 @@ class _SignUpPageState extends State<SignUpPage> {
             SizedBox(
               height: context.responsiveHeight(60),
               width: context.responsiveWidth(362),
-              child: TcTextFormField(),
+              child: TcTextFormField(
+                context: context,
+              ),
             ),
             SizedBox(
               height: context.responsiveHeight(20),
@@ -84,7 +93,7 @@ class _SignUpPageState extends State<SignUpPage> {
             IntlPhoneField(
               decoration: InputDecoration(
                 hintText: 'Your mobile number',
-                hintStyle: AppTextStyles.subheadLargeMedium.copyWith(
+                hintStyle: context.textStyle.subheadLargeMedium.copyWith(
                   color: AppThemes.hintTextNeutral,
                 ),
                 border: OutlineInputBorder(
@@ -94,7 +103,10 @@ class _SignUpPageState extends State<SignUpPage> {
                   ),
                 ),
               ),
-              initialCountryCode: AppLocalizations.of(context).localeName.toString().toUpperCase(),
+              initialCountryCode: AppLocalizations.of(context)
+                  .localeName
+                  .toString()
+                  .toUpperCase(),
               onChanged: (phone) {
                 print(phone.completeNumber);
               },

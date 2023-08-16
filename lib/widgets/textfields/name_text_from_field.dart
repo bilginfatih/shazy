@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:shazy/utils/extensions/context_extension.dart';
 import '../../utils/theme/styles.dart';
 import '../../utils/theme/themes.dart';
 
@@ -6,12 +7,13 @@ class NameTextFormField extends TextFormField {
   NameTextFormField({
     Key? key,
     TextEditingController? controller,
+    required BuildContext context,
   }) : super(
           key: key,
           controller: controller,
           decoration: InputDecoration(
             hintText: 'Name',
-            hintStyle: AppTextStyles.subheadLargeMedium.copyWith(
+            hintStyle: context.textStyle.subheadLargeMedium.copyWith(
               color: AppThemes.hintTextNeutral,
             ),
             border: OutlineInputBorder(

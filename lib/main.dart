@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:shazy/utils/extensions/context_extension.dart';
 import 'utils/theme/styles.dart';
 import 'utils/theme/themes.dart';
 import 'core/init/navigation/navigation_manager.dart';
@@ -42,7 +43,7 @@ class MyHomePage extends StatelessWidget {
       appBar: AppBar(
         title: Text(
           AppLocalizations.of(context).welcomeMessage,
-          style: AppTextStyles.titleXlargeRegular.copyWith(),
+          style: context.textStyle.titleXlargeRegular.copyWith(),
         ),
       ),
       body: Center(

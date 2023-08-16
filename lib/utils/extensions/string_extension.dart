@@ -17,6 +17,8 @@ extension StringExtension on String {
 
   bool get isValidUserName => !RegExp('\\s+').hasMatch(this) && length >= 3;
 
+  bool get isValidPhoneNumber => true;
+
   IconData? get toIcon {
     switch (this) {
       case 'Erkek':
