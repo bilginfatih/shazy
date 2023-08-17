@@ -5,4 +5,5 @@ mixin NavigationConstant {
   static const setPassword = '/setPassword';
   static const completeProfile = '/completeProfile';
   static const verifyOtp = '/verifyOtp';
+  static const welcome = '/welcome';
 }
