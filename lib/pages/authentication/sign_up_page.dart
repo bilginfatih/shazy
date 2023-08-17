@@ -26,13 +26,8 @@ class _SignUpPageState extends State<SignUpPage> {
   TextEditingController _emailController = TextEditingController();
   TextEditingController _tcController = TextEditingController();
   TextEditingController _genderController = TextEditingController();
-  late final VoidCallback onTermsTap = () {};
-  late final VoidCallback onPrivacyTap = () {
-    return;
-  };
   @override
   Widget build(BuildContext context) {
-    Color appBarColor = Theme.of(context).scaffoldBackgroundColor; // Body rengini al
     return Scaffold(
       appBar: BackAppBar(context: context),
       body: SingleChildScrollView(
@@ -152,7 +147,10 @@ class _SignUpPageState extends State<SignUpPage> {
                             style: context.textStyle.bodySmallMedium.copyWith(
                               color: AppThemes.lightPrimary500,
                             ),
-                            recognizer: TapGestureRecognizer()..onTap = onTermsTap,
+                            recognizer: TapGestureRecognizer()
+                              ..onTap = () {
+                                NavigationManager.instance.navigationToPage(NavigationConstant.setPassword);
+                              },
                           ),
                           TextSpan(
                             text: " and ",
@@ -165,7 +163,7 @@ class _SignUpPageState extends State<SignUpPage> {
                             style: context.textStyle.bodySmallMedium.copyWith(
                               color: AppThemes.lightPrimary500,
                             ),
-                            recognizer: TapGestureRecognizer()..onTap = onPrivacyTap,
+                            recognizer: TapGestureRecognizer()..onTap = () {},
                           ),
                         ],
                       ),

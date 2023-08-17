@@ -7,10 +7,9 @@ class BasePadding extends Padding {
     required BuildContext context,
     required Widget child,
   }) : super(
-          padding: EdgeInsets.symmetric(
-            horizontal: context.responsiveWidth(16),
-            vertical: context.responsiveHeight(16),
-          ),
-          child: child,
-        );
+            padding: EdgeInsets.symmetric(
+              horizontal: context.responsiveWidth(16),
+              vertical: context.responsiveHeight(16),
+            ),
+            child: child);
 }

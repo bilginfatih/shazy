@@ -46,6 +46,7 @@ class SignInPage extends StatelessWidget {
               PasswordTextFormField(
                 context: context,
                 controller: _passwordController,
+                hintText: 'Enter Your Password',
               ),
               SizedBox(
                 height: context.responsiveHeight(10),
