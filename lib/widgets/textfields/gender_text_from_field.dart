@@ -8,10 +8,11 @@ class GenderTextFormField extends DropdownButtonFormField {
     Key? key,
     TextEditingController? controller,
     required BuildContext context,
+    required String text,
   }) : super(
           key: key,
           decoration: InputDecoration(
-            hintText: 'Gender',
+            hintText: text,
             hintStyle: context.textStyle.subheadLargeMedium.copyWith(
               color: AppThemes.hintTextNeutral,
             ),

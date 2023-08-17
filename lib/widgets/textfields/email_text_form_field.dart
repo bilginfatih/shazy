@@ -8,11 +8,12 @@ class EmailTextFormField extends TextFormField {
     Key? key,
     TextEditingController? controller,
     required BuildContext context,
+    required String text,
   }) : super(
           key: key,
           controller: controller,
           decoration: InputDecoration(
-            hintText: 'Email',
+            hintText: text,
             hintStyle: context.textStyle.subheadLargeMedium.copyWith(
               color: AppThemes.hintTextNeutral,
             ),

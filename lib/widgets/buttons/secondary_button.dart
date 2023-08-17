@@ -2,8 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:shazy/utils/extensions/context_extension.dart';
 import 'package:shazy/utils/theme/themes.dart';
 
-import '../../utils/theme/styles.dart';
-/*
 class SecondaryButton extends SizedBox {
   SecondaryButton({
     Key? key,
@@ -18,26 +16,19 @@ class SecondaryButton extends SizedBox {
           width: context.responsiveWidth(width ?? 362),
           height: context.responsiveHeight(height ?? 54),
           child: FilledButton(
-          
             onPressed: onPressed,
-            style: ButtonStyle(
-              elevation: ,
-              backgroundColor: MaterialStateProperty.all(Colors.transparent),
-              shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(8.0),
-                  side: BorderSide(
-                      color: AppThemes.lightTheme.colorScheme.primary),
-                ),
-              ),
-            ),
+            style: FilledButton.styleFrom(
+                backgroundColor: Colors.white,
+                foregroundColor: context.isLight ? AppThemes.lightPrimary500 : Colors.grey[500],
+                side: BorderSide(
+                  strokeAlign: 1,
+                  width: 2,
+                  color: AppThemes.lightPrimary500,
+                )),
             child: Text(
               text,
-              style: style ??
-                  AppTextStyles.subheadLarge
-                      .copyWith(color: Colors.grey.shade800),
+              style: style ?? context.textStyle.subheadLargeMedium,
             ),
           ),
         );
 }
-*/

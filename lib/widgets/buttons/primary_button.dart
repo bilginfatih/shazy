@@ -20,7 +20,7 @@ class PrimaryButton extends SizedBox {
             style: FilledButton.styleFrom(backgroundColor: AppThemes.lightPrimary500),
             child: Text(
               text,
-              style: style ?? context.textStyle.subheadLargeRegular,
+              style: style ?? context.textStyle.subheadLargeRegular.copyWith(color: Colors.white),
             ),
           ),
         );
