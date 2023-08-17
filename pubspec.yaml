@@ -38,6 +38,7 @@ dependencies:
   hexcolor: ^3.0.1
   intl: any
   intl_phone_field: ^3.2.0
+  roundcheckbox: ^2.0.5
 
 dev_dependencies:
 

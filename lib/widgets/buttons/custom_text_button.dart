@@ -18,8 +18,7 @@ class CustomTextButton extends Row {
             onTap: onTap,
             child: Text(
               text2,
-              style: context.textStyle.bodyLargeRegular
-                  .copyWith(color: AppThemes.lightPrimary500),
+              style: context.textStyle.bodyLargeRegular.copyWith(color: AppThemes.lightPrimary500),
             ),
           ),
         ]);

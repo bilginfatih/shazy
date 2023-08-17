@@ -1,12 +1,19 @@
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
+import 'package:hexcolor/hexcolor.dart';
 import 'package:intl_phone_field/intl_phone_field.dart';
+import 'package:roundcheckbox/roundcheckbox.dart';
 import 'package:shazy/utils/extensions/context_extension.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import '../../core/init/navigation/navigation_manager.dart';
+import '../../utils/constants/navigation_constant.dart';
 import '../../utils/theme/themes.dart';
+import '../../widgets/app_bars/back_app_bar.dart';
+import '../../widgets/buttons/custom_text_button.dart';
+import '../../widgets/buttons/primary_button.dart';
 import '../../widgets/padding/base_padding.dart';
 import '../../widgets/textfields/email_text_form_field.dart';
+import '../../widgets/textfields/gender_text_from_field.dart';
 import '../../widgets/textfields/name_text_from_field.dart';
 import '../../widgets/textfields/tc_text_form_field.dart';
 
@@ -16,102 +23,177 @@ class SignUpPage extends StatefulWidget {
 }
 
 class _SignUpPageState extends State<SignUpPage> {
+  TextEditingController _emailController = TextEditingController();
+  TextEditingController _tcController = TextEditingController();
+  TextEditingController _genderController = TextEditingController();
+  late final VoidCallback onTermsTap = () {};
+  late final VoidCallback onPrivacyTap = () {
+    return;
+  };
   @override
   Widget build(BuildContext context) {
-    Color appBarColor =
-        Theme.of(context).scaffoldBackgroundColor; // Body rengini al
+    Color appBarColor = Theme.of(context).scaffoldBackgroundColor; // Body rengini al
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: appBarColor,
-        automaticallyImplyLeading: false,
-        elevation: 0,
-        title: Row(
-          children: [
-            IconButton(
-              icon: context.isLight
-                  ? SvgPicture.asset('assets/svg/angle-left.svg')
-                  : SvgPicture.asset('assets/svg/angle-left_white.svg'),
-              onPressed: () {
-                NavigationManager.instance.navigationToPop();
-              },
-            ),
-            Text(
-              'Back',
-              style: context.textStyle.subheadLargeRegular.copyWith(
-                color:
-                    context.isLight ? AppThemes.contentSecondary : Colors.white,
+      appBar: BackAppBar(context: context),
+      body: SingleChildScrollView(
+        child: BasePadding(
+          context: context,
+          child: Column(
+            children: [
+              Row(
+                children: [
+                  Text(
+                    'Sign Up',
+                    style: context.textStyle.titleMedMedium,
+                  ),
+                ],
               ),
-            ),
-          ],
-        ),
-      ),
-      body: BasePadding(
-        context: context,
-        child: Column(
-          children: [
-            Row(
-              children: [
-                Text(
-                  'Sign Up',
-                  style: context.textStyle.titleMedMedium,
+              SizedBox(
+                height: context.responsiveHeight(24),
+              ),
+              SizedBox(
+                height: context.responsiveHeight(60),
+                width: context.responsiveWidth(362),
+                child: NameTextFormField(
+                  context: context,
                 ),
-              ],
-            ),
-            SizedBox(
-              height: context.responsiveHeight(24),
-            ),
-            SizedBox(
-              height: context.responsiveHeight(60),
-              width: context.responsiveWidth(362),
-              child: NameTextFormField(
-                context: context,
               ),
-            ),
-            SizedBox(
-              height: context.responsiveHeight(20),
-            ),
-            SizedBox(
-              height: context.responsiveHeight(60),
-              width: context.responsiveWidth(362),
-              child: EmailTextFormField(
-                context: context,
+              SizedBox(
+                height: context.responsiveHeight(20),
               ),
-            ),
-            SizedBox(
-              height: context.responsiveHeight(20),
-            ),
-            SizedBox(
-              height: context.responsiveHeight(60),
-              width: context.responsiveWidth(362),
-              child: TcTextFormField(
-                context: context,
-              ),
-            ),
-            SizedBox(
-              height: context.responsiveHeight(20),
-            ),
-            IntlPhoneField(
-              decoration: InputDecoration(
-                hintText: 'Your mobile number',
-                hintStyle: context.textStyle.subheadLargeMedium.copyWith(
-                  color: AppThemes.hintTextNeutral,
+              SizedBox(
+                height: context.responsiveHeight(60),
+                width: context.responsiveWidth(362),
+                child: EmailTextFormField(
+                  context: context,
+                  controller: _emailController,
                 ),
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(8),
-                  borderSide: BorderSide(
-                    color: AppThemes.borderSideColor,
+              ),
+              SizedBox(
+                height: context.responsiveHeight(20),
+              ),
+              SizedBox(
+                height: context.responsiveHeight(60),
+                width: context.responsiveWidth(362),
+                child: TcTextFormField(
+                  context: context,
+                  controller: _tcController,
+                ),
+              ),
+              SizedBox(
+                height: context.responsiveHeight(20),
+              ),
+              IntlPhoneField(
+                // Ülkelere göre telefon kodu getirme paketi
+                // ignore: deprecated_member_use
+                searchText: "Search Country",
+                dropdownIcon: const Icon(Icons.keyboard_arrow_down),
+                dropdownIconPosition: IconPosition.trailing,
+                dropdownDecoration: BoxDecoration(
+                  border: Border(right: BorderSide(color: context.isLight ? HexColor("#DDDDDD") : HexColor("#D0D0D0"))),
+                ),
+                languageCode: AppLocalizations.of(context).localeName.toString(),
+                initialCountryCode: AppLocalizations.of(context).localeName.toString().toUpperCase(),
+                flagsButtonMargin: EdgeInsets.symmetric(horizontal: context.responsiveWidth(7)),
+                decoration: InputDecoration(
+                  hintText: 'Your mobile number',
+                  hintStyle: context.textStyle.subheadLargeMedium.copyWith(
+                    color: AppThemes.hintTextNeutral,
+                  ),
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(8),
+                    borderSide: BorderSide(
+                      color: AppThemes.borderSideColor,
+                    ),
                   ),
                 ),
+                onChanged: (phone) {},
               ),
-              initialCountryCode: AppLocalizations.of(context)
-                  .localeName
-                  .toString()
-                  .toUpperCase(),
-              onChanged: (phone) {
-                print(phone.completeNumber);
-              },
-            )
-          ],
+              SizedBox(
+                height: context.responsiveHeight(10),
+              ),
+              SizedBox(
+                height: context.responsiveHeight(60),
+                width: context.responsiveWidth(362),
+                child: GenderTextFormField(
+                  context: context,
+                  controller: _genderController,
+                ),
+              ),
+              SizedBox(
+                height: context.responsiveHeight(20),
+              ),
+              Row(
+                children: [
+                  Container(
+                    padding: const EdgeInsets.only(bottom: 13),
+                    child: RoundCheckBox(
+                      borderColor: Colors.green[600],
+                      checkedWidget: const Icon(Icons.check, size: 14),
+                      size: 16,
+                      onTap: (selected) {},
+                    ),
+                  ),
+                  SizedBox(width: context.responsiveWidth(10)),
+                  Expanded(
+                    // Halile sor
+                    child: RichText(
+                      text: TextSpan(
+                        style: context.textStyle.bodySmallMedium,
+                        children: [
+                          TextSpan(
+                            text: "By signing up. you agree to the ",
+                            style: context.textStyle.bodySmallMedium.copyWith(
+                              color: AppThemes.borderSideColor,
+                            ),
+                          ),
+                          TextSpan(
+                            text: "Terms of service",
+                            style: context.textStyle.bodySmallMedium.copyWith(
+                              color: AppThemes.lightPrimary500,
+                            ),
+                            recognizer: TapGestureRecognizer()..onTap = onTermsTap,
+                          ),
+                          TextSpan(
+                            text: " and ",
+                            style: context.textStyle.bodySmallMedium.copyWith(
+                              color: AppThemes.borderSideColor,
+                            ),
+                          ),
+                          TextSpan(
+                            text: "Privacy policy.",
+                            style: context.textStyle.bodySmallMedium.copyWith(
+                              color: AppThemes.lightPrimary500,
+                            ),
+                            recognizer: TapGestureRecognizer()..onTap = onPrivacyTap,
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+              SizedBox(
+                height: context.responsiveHeight(22),
+              ),
+              PrimaryButton(
+                text: 'Sign Up',
+                context: context,
+                onPressed: () {},
+              ),
+              SizedBox(
+                height: context.responsiveHeight(80),
+              ),
+              CustomTextButton(
+                text1: 'Already have an account? ',
+                text2: 'Sign in',
+                context: context,
+                onTap: () {
+                  NavigationManager.instance.navigationToPage(NavigationConstant.signIn);
+                },
+              ),
+            ],
+          ),
         ),
       ),
     );

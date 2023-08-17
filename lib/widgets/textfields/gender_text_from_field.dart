@@ -1,17 +1,17 @@
 import 'package:flutter/material.dart';
+import 'package:hexcolor/hexcolor.dart';
 import 'package:shazy/utils/extensions/context_extension.dart';
 import '../../utils/theme/themes.dart';
 
-class NameTextFormField extends TextFormField {
-  NameTextFormField({
+class GenderTextFormField extends DropdownButtonFormField {
+  GenderTextFormField({
     Key? key,
     TextEditingController? controller,
     required BuildContext context,
   }) : super(
           key: key,
-          controller: controller,
           decoration: InputDecoration(
-            hintText: 'Name',
+            hintText: 'Gender',
             hintStyle: context.textStyle.subheadLargeMedium.copyWith(
               color: AppThemes.hintTextNeutral,
             ),
@@ -22,5 +22,20 @@ class NameTextFormField extends TextFormField {
               ),
             ),
           ),
+          iconEnabledColor: context.isLight ? HexColor("#414141") : HexColor("#D0D0D0"),
+          icon: const Icon(Icons.keyboard_arrow_down),
+          items: const [
+            DropdownMenuItem(
+              value: 0,
+              child: Text("Male"),
+            ),
+            DropdownMenuItem(
+              value: 1,
+              child: Text("Female"),
+            ),
+          ],
+          onChanged: (v) {
+            v = controller;
+          },
         );
 }
