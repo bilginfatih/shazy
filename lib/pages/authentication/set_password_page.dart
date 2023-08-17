@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:shazy/utils/extensions/context_extension.dart';
 
+import '../../core/init/navigation/navigation_manager.dart';
+import '../../utils/constants/navigation_constant.dart';
 import '../../widgets/app_bars/back_app_bar.dart';
 import '../../widgets/buttons/primary_button.dart';
 import '../../widgets/padding/base_padding.dart';
@@ -78,7 +80,11 @@ class _SetPasswordPageState extends State<SetPasswordPage> {
               PrimaryButton(
                 text: 'Register',
                 context: context,
-                onPressed: () {},
+                onPressed: () {
+                  NavigationManager.instance.navigationToPage(
+                    NavigationConstant.verifyOtp,
+                  );
+                },
               ),
             ],
           ),

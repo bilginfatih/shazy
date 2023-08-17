@@ -29,6 +29,10 @@ class AppTextStyles {
         fontSize: _context.mediaQueryData.textScaleFactor * 24,
         fontWeight: FontWeight.w500,
       );
+   TextStyle get titleMedSemibold => GoogleFonts.poppins(
+        fontSize: _context.mediaQueryData.textScaleFactor * 24,
+        fontWeight: FontWeight.w600,
+      );   
   TextStyle get headlineLargeRegular => GoogleFonts.poppins(
         fontSize: _context.mediaQueryData.textScaleFactor * 20,
         fontWeight: FontWeight.w400,

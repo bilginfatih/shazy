@@ -6,6 +6,7 @@ import '../../../pages/authentication/complete_your_profile_page.dart';
 import '../../../pages/authentication/set_password_page.dart';
 import '../../../pages/authentication/sign_in_page.dart';
 import '../../../pages/authentication/sign_up_page.dart';
+import '../../../pages/authentication/verify_otp_page.dart';
 
 class NavigationRouteManager {
   NavigationRouteManager._init();
@@ -27,6 +28,8 @@ class NavigationRouteManager {
         return _navigationToDefault(SetPasswordPage(), args);
       case NavigationConstant.completeProfile:
         return _navigationToDefault(CompleteYourProfilePage(), args);
+      case NavigationConstant.verifyOtp:
+        return _navigationToDefault(VerifyOtpPage(), args);
       default:
         return _navigationToDefault(MyApp(), args);
     }
