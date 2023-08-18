@@ -33,13 +33,12 @@ class _SignUpPageState extends State<SignUpPage> {
           context: context,
           child: Column(
             children: [
-              Row(
-                children: [
-                  Text(
-                    'Sign Up',
-                    style: context.textStyle.titleMedMedium,
-                  ),
-                ],
+              Align(
+                alignment: Alignment.topLeft,
+                child: Text(
+                  'Sign Up',
+                  style: context.textStyle.titleMedMedium,
+                ),
               ),
               SizedBox(
                 height: context.responsiveHeight(24),
@@ -126,7 +125,8 @@ class _SignUpPageState extends State<SignUpPage> {
                             ),
                             recognizer: TapGestureRecognizer()
                               ..onTap = () {
-                                NavigationManager.instance.navigationToPage(NavigationConstant.setPassword);
+                                NavigationManager.instance.navigationToPage(
+                                    NavigationConstant.setPassword);
                               },
                           ),
                           TextSpan(
@@ -142,7 +142,8 @@ class _SignUpPageState extends State<SignUpPage> {
                             ),
                             recognizer: TapGestureRecognizer()
                               ..onTap = () {
-                                NavigationManager.instance.navigationToPage(NavigationConstant.completeProfile);
+                                NavigationManager.instance.navigationToPage(
+                                    NavigationConstant.completeProfile);
                               },
                           ),
                         ],
@@ -167,7 +168,8 @@ class _SignUpPageState extends State<SignUpPage> {
                 text2: 'Sign in',
                 context: context,
                 onTap: () {
-                  NavigationManager.instance.navigationToPage(NavigationConstant.signIn);
+                  NavigationManager.instance
+                      .navigationToPage(NavigationConstant.signIn);
                 },
               ),
             ],

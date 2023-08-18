@@ -12,26 +12,24 @@ import '../../widgets/padding/base_padding.dart';
 class SignInPage extends StatelessWidget {
   SignInPage({super.key});
 
-  TextEditingController _emailPhoneController = TextEditingController();
-  TextEditingController _passwordController = TextEditingController();
+  final TextEditingController _emailPhoneController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      resizeToAvoidBottomInset: false,
       appBar: BackAppBar(context: context),
       body: SingleChildScrollView(
         child: BasePadding(
           context: context,
           child: Column(
             children: [
-              Row(
-                children: [
-                  Text(
-                    'Sign In',
-                    style: context.textStyle.titleMedMedium,
-                  ),
-                ],
+              Align(
+                alignment: Alignment.topLeft,
+                child: Text(
+                  'Sign In',
+                  style: context.textStyle.titleMedMedium,
+                ),
               ),
               SizedBox(
                 height: context.responsiveHeight(24),
@@ -69,7 +67,10 @@ class SignInPage extends StatelessWidget {
               PrimaryButton(
                 text: 'Sign Up',
                 context: context,
-                onPressed: () {},
+                onPressed: () {
+                  NavigationManager.instance
+                      .navigationToPage(NavigationConstant.sendVerification);
+                },
               ),
               SizedBox(
                 height: context.responsiveHeight(110),
@@ -79,7 +80,8 @@ class SignInPage extends StatelessWidget {
                 text2: 'Sign Up',
                 context: context,
                 onTap: () {
-                  NavigationManager.instance.navigationToPage(NavigationConstant.signUp);
+                  NavigationManager.instance
+                      .navigationToPage(NavigationConstant.signUp);
                 },
               ),
             ],
@@ -89,14 +91,3 @@ class SignInPage extends StatelessWidget {
     );
   }
 }
-
-
-/*
-PrimaryButton(
-                text: 'Sign Up',
-                context: context,
-                onPressed: () {
-                  NavigationManager.instance
-                      .navigationToPage(NavigationConstant.signUp);
-                },
-              ), */

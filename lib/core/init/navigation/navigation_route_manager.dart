@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:shazy/pages/authentication/forget_password_page.dart';
+import 'package:shazy/pages/authentication/send_verification_page.dart';
 import 'package:shazy/utils/constants/navigation_constant.dart';
 
 import '../../../main.dart';
@@ -33,6 +35,10 @@ class NavigationRouteManager {
         return _navigationToDefault(VerifyOtpPage(), args);
       case NavigationConstant.welcome:
         return _navigationToDefault(const WelcomePage(), args);
+      case NavigationConstant.sendVerification:
+        return _navigationToDefault(SendVerificationPage(), args);
+      case NavigationConstant.forgetPassword:
+        return _navigationToDefault(const ForgetPasswordPage(), args);
       default:
         return _navigationToDefault(MyApp(), args);
     }
