@@ -7,8 +7,8 @@ mixin NavigationConstant {
   static const verifyOtp = '/verifyOtp';
   static const welcome = '/welcome';
   static const sendVerification = '/sendVerification';
-  static const forgetPassword = '/forgetPassword';
+  static const forgetPassword = '/';
 
   //Google Maps Ekranları
-  static const homeScreenTransport = '/';
+  static const homeScreenTransport = '/homeScreenTransport';
 }

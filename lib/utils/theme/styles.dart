@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:hexcolor/hexcolor.dart';
 import 'package:shazy/utils/extensions/context_extension.dart';
 
 class AppTextStyles {
@@ -52,6 +53,11 @@ class AppTextStyles {
   TextStyle get subheadSmallRegular => GoogleFonts.poppins(
         fontSize: _context.mediaQueryData.textScaleFactor * 14,
         fontWeight: FontWeight.w500,
+      );
+  TextStyle get subheadSmallMedium => GoogleFonts.poppins(
+        fontSize: _context.mediaQueryData.textScaleFactor * 14,
+        fontWeight: FontWeight.w500,
+        color: HexColor('#B8B8B8'),
       );
   TextStyle get bodyLargeRegular => GoogleFonts.poppins(
         fontSize: _context.mediaQueryData.textScaleFactor * 16,

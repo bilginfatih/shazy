@@ -6,10 +6,10 @@ class AppThemes {
   Color lightSecondary400 = HexColor('#81C8BD');
   Color lightTertiary400 = HexColor('#FEFEE5');
   Color darkPrimaryColor = HexColor('#FFD2BB');
-
   static Color contentSecondary = HexColor('#414141');
   static Color hintTextNeutral = HexColor('#D0D0D0');
   static Color borderSideColor = HexColor('#B8B8B8');
+  static Color secondary50 = HexColor('#eff8f7');
 
   static ThemeData lightTheme = ThemeData(
     primaryColor: ThemeData.light().scaffoldBackgroundColor,
