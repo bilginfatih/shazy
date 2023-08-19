@@ -21,8 +21,6 @@ class _HomeScreenTransportState extends State<HomeScreenTransport> {
     zoom: 14.4746,
   );
 
-  bool _locationPermissionGranted = false;
-
   @override
   void initState() {
     super.initState();
@@ -34,9 +32,6 @@ class _HomeScreenTransportState extends State<HomeScreenTransport> {
   // İzinleri kontrol eden fonksiyon
   Future<void> _getLocationPermission() async {
     ph.PermissionStatus status = await Permission.locationWhenInUse.request();
-    setState(() {
-      _locationPermissionGranted = status.isGranted;
-    });
     if (status.isGranted) {
       print('Lokasyon izni verildi.');
     } else if (status.isDenied) {

@@ -47,11 +47,14 @@
 	<true/>
 	<key>UIApplicationSupportsIndirectInputEvents</key>
 	<true/>
+	<!-- Permission options for the `location` group -->
 	<key>NSLocationWhenInUseUsageDescription</key>
-	<string>Konum bilgisine erişim izni gerekiyor.</string>
-	<key>NSLocationAlwaysUsageDescription</key>
-	<string>Konum bilgisine erişim izni gerekiyor.</string>
-	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
-	<string>Konum bilgisine erişim izni gerekiyor.</string>
+    <string>Need location when in use</string>
+    <key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
+    <string>Always and when in use!</string>
+    <key>NSLocationUsageDescription</key>
+    <string>Older devices need location.</string>
+    <key>NSLocationAlwaysUsageDescription</key>
+    <string>Can I have location always?</string>
 </dict>
 </plist>

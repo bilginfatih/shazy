@@ -1,13 +1,22 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:shazy/utils/extensions/context_extension.dart';
 import 'utils/theme/themes.dart';
 import 'core/init/navigation/navigation_manager.dart';
 import 'core/init/navigation/navigation_route_manager.dart';
+import 'package:flutter/services.dart';
 
-void main() {
-  runApp(MyApp());
+void main() async {
+  // Konum izni kontrolü
+  WidgetsFlutterBinding.ensureInitialized();
+  final locationPermissionStatus = await Permission.locationWhenInUse.request();
+  if (locationPermissionStatus.isGranted) {
+    runApp(MyApp());
+  } else {
+    SystemChannels.platform.invokeMethod('SystemNavigator.pop'); // İzin verilmezse uygulamayı kapat
+  }
 }
 
 class MyApp extends StatelessWidget {
