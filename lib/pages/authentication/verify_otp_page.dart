@@ -62,7 +62,7 @@ class _VerifyOtpPageState extends State<VerifyOtpPage> {
                 },
               ),
               SizedBox(
-                height: context.responsiveHeight(50),
+                height: context.responsiveHeight(427),
               ),
               PrimaryButton(
                 text: 'Verify',

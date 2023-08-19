@@ -3,6 +3,8 @@
         android:label="shazy"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
+        <meta-data android:name="com.google.android.geo.API_KEY"
+               android:value="AIzaSyB_8L6k1f0T1wHaV6oI5l3vH6WLRzRScGM"/>
         <activity
             android:name=".MainActivity"
             android:exported="true"
@@ -30,4 +32,7 @@
             android:name="flutterEmbedding"
             android:value="2" />
     </application>
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_BACKGROUND_LOCATION" />
 </manifest>

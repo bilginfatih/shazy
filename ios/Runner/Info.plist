@@ -47,5 +47,11 @@
 	<true/>
 	<key>UIApplicationSupportsIndirectInputEvents</key>
 	<true/>
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>Konum bilgisine erişim izni gerekiyor.</string>
+	<key>NSLocationAlwaysUsageDescription</key>
+	<string>Konum bilgisine erişim izni gerekiyor.</string>
+	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
+	<string>Konum bilgisine erişim izni gerekiyor.</string>
 </dict>
 </plist>

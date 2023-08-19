@@ -10,6 +10,7 @@ import '../../../pages/authentication/sign_in_page.dart';
 import '../../../pages/authentication/sign_up_page.dart';
 import '../../../pages/authentication/verify_otp_page.dart';
 import '../../../pages/authentication/welcome_page.dart';
+import '../../../pages/home/home_screen_transport.dart';
 
 class NavigationRouteManager {
   NavigationRouteManager._init();
@@ -39,6 +40,8 @@ class NavigationRouteManager {
         return _navigationToDefault(SendVerificationPage(), args);
       case NavigationConstant.forgetPassword:
         return _navigationToDefault(const ForgetPasswordPage(), args);
+      case NavigationConstant.homeScreenTransport:
+        return _navigationToDefault(HomeScreenTransport(), args);
       default:
         return _navigationToDefault(MyApp(), args);
     }
