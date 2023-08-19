@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:hexcolor/hexcolor.dart';
+import 'package:shazy/core/init/navigation/navigation_manager.dart';
+import 'package:shazy/utils/constants/navigation_constant.dart';
 import 'package:shazy/utils/extensions/context_extension.dart';
 import 'package:shazy/utils/theme/themes.dart';
 import 'package:shazy/widgets/app_bars/back_app_bar.dart';
@@ -18,6 +20,47 @@ class ForgetPasswordPage extends StatefulWidget {
 
 class _ForgetPasswordPageState extends State<ForgetPasswordPage> {
   bool _selectSms = true;
+
+  OptionContainer _buildOptionContainer(BuildContext context, Color color,
+      bool select, String assetName, String text1, String text2) {
+    return OptionContainer(
+      context: context,
+      color: color,
+      onTap: () {
+        setState(() {
+          _selectSms = select;
+        });
+      },
+      border: _selectSms == select
+          ? Border.all(
+              width: 1,
+              color: AppThemes.lightTheme.colorScheme.primary,
+            )
+          : null,
+      child: Row(
+        children: [
+          CircularSvgIcon(
+            context: context,
+            assetName: assetName,
+          ),
+          SizedBox(width: context.responsiveWidth(8)),
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text(text1, style: context.textStyle.subheadSmallMedium),
+              Text(
+                text2,
+                style: context.textStyle.subheadLargeMedium.copyWith(
+                  color: HexColor('#5A5A5A'),
+                ),
+              ),
+            ],
+          )
+        ],
+      ),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -67,51 +110,13 @@ class _ForgetPasswordPageState extends State<ForgetPasswordPage> {
             PrimaryButton(
               text: 'Continue',
               context: context,
-              onPressed: () {},
+              onPressed: () {
+                NavigationManager.instance
+                    .navigationToPage(NavigationConstant.phoneVerifiyOtpPage);
+              },
             ),
           ],
         ),
-      ),
-    );
-  }
-
-  OptionContainer _buildOptionContainer(BuildContext context, Color color,
-      bool select, String assetName, String text1, String text2) {
-    return OptionContainer(
-      context: context,
-      color: color,
-      onTap: () {
-        setState(() {
-          _selectSms = select;
-        });
-      },
-      border: _selectSms == select
-          ? Border.all(
-              width: 1,
-              color: AppThemes.lightTheme.colorScheme.primary,
-            )
-          : null,
-      child: Row(
-        children: [
-          CircularSvgIcon(
-            context: context,
-            assetName: assetName,
-          ),
-          SizedBox(width: context.responsiveWidth(8)),
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Text(text1, style: context.textStyle.subheadSmallMedium),
-              Text(
-                text2,
-                style: context.textStyle.subheadLargeMedium.copyWith(
-                  color: HexColor('#5A5A5A'),
-                ),
-              ),
-            ],
-          )
-        ],
       ),
     );
   }

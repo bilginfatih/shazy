@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:shazy/pages/authentication/forget_password_page.dart';
+import 'package:shazy/pages/authentication/phone_verifiy_otp_page.dart';
 import 'package:shazy/pages/authentication/send_verification_page.dart';
+import 'package:shazy/pages/authentication/set_new_password_page.dart';
 import 'package:shazy/utils/constants/navigation_constant.dart';
 
 import '../../../main.dart';
@@ -42,6 +44,10 @@ class NavigationRouteManager {
         return _navigationToDefault(const ForgetPasswordPage(), args);
       case NavigationConstant.homeScreenTransport:
         return _navigationToDefault(HomeScreenTransport(), args);
+      case NavigationConstant.phoneVerifiyOtpPage:
+        return _navigationToDefault(PhoneVerifiyOtpPage(), args);
+      case NavigationConstant.setNewPassword:
+        return _navigationToDefault(SetNewPassword(), args);
       default:
         return _navigationToDefault(MyApp(), args);
     }
