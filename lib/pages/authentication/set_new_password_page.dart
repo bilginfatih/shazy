@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:shazy/utils/extensions/context_extension.dart';
 import 'package:shazy/widgets/app_bars/back_app_bar.dart';
+import 'package:shazy/widgets/dialogs/congratulation_dialog.dart';
 import 'package:shazy/widgets/padding/base_padding.dart';
 import 'package:shazy/widgets/textfields/password_text_form_field.dart';
 
@@ -76,7 +77,8 @@ class SetNewPassword extends StatelessWidget {
               PrimaryButton(
                 text: 'Save',
                 context: context,
-                onPressed: () {},
+                onPressed: () {        
+                },
               ),
             ],
           ),

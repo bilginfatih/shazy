@@ -26,6 +26,10 @@ class AppTextStyles {
         fontSize: _context.mediaQueryData.textScaleFactor * 22,
         fontWeight: FontWeight.w400,
       );
+  TextStyle get titleSmallMedium => GoogleFonts.poppins(
+        fontSize: _context.mediaQueryData.textScaleFactor * 22,
+        fontWeight: FontWeight.w500,
+      );
   TextStyle get titleMedMedium => GoogleFonts.poppins(
         fontSize: _context.mediaQueryData.textScaleFactor * 24,
         fontWeight: FontWeight.w500,

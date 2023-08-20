@@ -26,32 +26,33 @@ class NavigationRouteManager {
 
   Route<dynamic> generateRoute(RouteSettings args) {
     switch (args.name) {
-      case NavigationConstant.signIn:
-        return _navigationToDefault(SignInPage(), args);
+      case NavigationConstant.welcome:
+        return _navigationToDefault(const WelcomePage(), args);
       case NavigationConstant.signUp:
         return _navigationToDefault(SignUpPage(), args);
+      case NavigationConstant.verifyOtp:
+        return _navigationToDefault(VerifyOtpPage(), args);
       case NavigationConstant.setPassword:
         return _navigationToDefault(SetPasswordPage(), args);
       case NavigationConstant.completeProfile:
         return _navigationToDefault(CompleteYourProfilePage(), args);
-      case NavigationConstant.verifyOtp:
-        return _navigationToDefault(VerifyOtpPage(), args);
-      case NavigationConstant.welcome:
-        return _navigationToDefault(const WelcomePage(), args);
+      case NavigationConstant.signIn:
+        return _navigationToDefault(SignInPage(), args);
       case NavigationConstant.sendVerification:
         return _navigationToDefault(SendVerificationPage(), args);
       case NavigationConstant.forgetPassword:
         return _navigationToDefault(const ForgetPasswordPage(), args);
-      case NavigationConstant.homeScreenTransport:
-        return _navigationToDefault(HomeScreenTransport(), args);
       case NavigationConstant.phoneVerifiyOtpPage:
         return _navigationToDefault(PhoneVerifiyOtpPage(), args);
       case NavigationConstant.setNewPassword:
         return _navigationToDefault(SetNewPassword(), args);
+      case NavigationConstant.homeScreenTransport:
+        return _navigationToDefault(HomeScreenTransport(), args);
       default:
         return _navigationToDefault(MyApp(), args);
     }
   }
 
-  MaterialPageRoute _navigationToDefault(Widget page, RouteSettings args) => MaterialPageRoute(builder: (context) => page, settings: args);
+  MaterialPageRoute _navigationToDefault(Widget page, RouteSettings args) =>
+      MaterialPageRoute(builder: (context) => page, settings: args);
 }
