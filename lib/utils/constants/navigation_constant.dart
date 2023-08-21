@@ -11,6 +11,9 @@ mixin NavigationConstant {
   static const phoneVerifiyOtpPage = '/phoneVerifiyOtpPage';
   static const setNewPassword = '/setNewPassword';
 
+  // home
+  static const searchPage = '/';
+
   //Google Maps Ekranları
-  static const homeScreenTransport = '/';
+  static const homeScreenTransport = '/homeScreenTransport';
 }

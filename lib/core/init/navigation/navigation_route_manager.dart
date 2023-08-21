@@ -3,6 +3,7 @@ import 'package:shazy/pages/authentication/forget_password_page.dart';
 import 'package:shazy/pages/authentication/phone_verifiy_otp_page.dart';
 import 'package:shazy/pages/authentication/send_verification_page.dart';
 import 'package:shazy/pages/authentication/set_new_password_page.dart';
+import 'package:shazy/pages/home/search_page.dart';
 import 'package:shazy/utils/constants/navigation_constant.dart';
 
 import '../../../main.dart';
@@ -48,6 +49,8 @@ class NavigationRouteManager {
         return _navigationToDefault(SetNewPassword(), args);
       case NavigationConstant.homeScreenTransport:
         return _navigationToDefault(HomeScreenTransport(), args);
+      case NavigationConstant.searchPage:
+        return _navigationToDefault(SearchPage(), args);
       default:
         return _navigationToDefault(MyApp(), args);
     }
