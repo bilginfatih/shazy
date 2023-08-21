@@ -109,6 +109,7 @@ class _HomeScreenTransportState extends State<HomeScreenTransport> {
 
   @override
   Widget build(BuildContext context) {
+    double keyboardSize = MediaQuery.of(context).viewInsets.bottom;
     return Scaffold(
       body: SingleChildScrollView(
         scrollDirection: Axis.horizontal,
@@ -156,10 +157,10 @@ class _HomeScreenTransportState extends State<HomeScreenTransport> {
                 },
               ),
               Padding(
-                padding: const EdgeInsets.only(
-                  top: 480,
-                  right: 15,
-                  left: 14,
+                padding: EdgeInsets.only(
+                  top: context.responsiveHeight(480) - keyboardSize + (keyboardSize != 0 ? context.responsiveHeight(150) : 0),
+                  right: context.responsiveWidth(15),
+                  left: context.responsiveWidth(14),
                 ),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.end,
