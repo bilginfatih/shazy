@@ -9,8 +9,8 @@ mixin NavigationConstant {
   static const sendVerification = '/sendVerification';
   static const forgetPassword = '/forgetPassword';
   static const phoneVerifiyOtpPage = '/phoneVerifiyOtpPage';
-  static const setNewPassword = '/';
+  static const setNewPassword = '/setNewPassword';
 
   //Google Maps Ekranları
-  static const homeScreenTransport = '/homeScreenTransport';
+  static const homeScreenTransport = '/';
 }

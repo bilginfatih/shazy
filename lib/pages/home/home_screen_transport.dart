@@ -1,9 +1,15 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:hexcolor/hexcolor.dart';
 import 'package:location/location.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:permission_handler/permission_handler.dart' as ph;
+import 'package:shazy/utils/extensions/context_extension.dart';
+import '../../utils/theme/themes.dart';
+import '../../widgets/buttons/icon_button.dart';
+import '../../widgets/buttons/primary_button.dart';
+import '../../widgets/icons/circular_svg_icon.dart';
 
 class HomeScreenTransport extends StatefulWidget {
   HomeScreenTransport({Key? key}) : super(key: key);
@@ -13,8 +19,10 @@ class HomeScreenTransport extends StatefulWidget {
 }
 
 class _HomeScreenTransportState extends State<HomeScreenTransport> {
+  String mapTheme = '';
   final Completer<GoogleMapController> _controller = Completer<GoogleMapController>();
   final Location _location = Location();
+  LocationData? _currentLocation;
 
   static const CameraPosition _kGooglePlex = CameraPosition(
     target: LatLng(37.42796133580664, -122.085749655962),
@@ -24,9 +32,23 @@ class _HomeScreenTransportState extends State<HomeScreenTransport> {
   @override
   void initState() {
     super.initState();
-    _getLocation();
     _getLocationPermission(); // İzin kontrolü eklendi
     _subscribeToLocationChanges(); // Geolocation Aboneliği eklendi
+    DefaultAssetBundle.of(context).loadString('assets/maptheme/night_theme.json').then(
+      (value) {
+        mapTheme = value;
+      },
+    );
+  }
+
+  Future<void> _getLocation() async {
+    try {
+      final LocationData locationData = await _location.getLocation();
+      setState(() {
+        _currentLocation = locationData;
+      });
+      // ignore: empty_catches
+    } catch (e) {}
   }
 
   // İzinleri kontrol eden fonksiyon
@@ -64,20 +86,6 @@ class _HomeScreenTransportState extends State<HomeScreenTransport> {
     );
   }
 
-  Future<void> _getLocation() async {
-    try {
-      setState(() {});
-    } catch (e) {
-      print('Could not get location: $e');
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Location data could not be retrieved.'),
-          duration: Duration(seconds: 3),
-        ),
-      );
-    }
-  }
-
   // onLocationChanged'e abone olunarak konum güncellemeleri alınır
   void _subscribeToLocationChanges() {
     _location.onLocationChanged.listen(
@@ -102,13 +110,211 @@ class _HomeScreenTransportState extends State<HomeScreenTransport> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: GoogleMap(
-        initialCameraPosition: _kGooglePlex,
-        onMapCreated: (GoogleMapController controller) {
-          _controller.complete(controller);
-        },
-        myLocationEnabled: true,
-        myLocationButtonEnabled: true,
+      body: SingleChildScrollView(
+        scrollDirection: Axis.horizontal,
+        child: SizedBox(
+          height: MediaQuery.of(context).size.height,
+          width: MediaQuery.of(context).size.width,
+          child: Stack(
+            children: [
+              GoogleMap(
+                initialCameraPosition: _kGooglePlex,
+                onMapCreated: (GoogleMapController controller) {
+                  _controller.complete(controller);
+                  if (!context.isLight) {
+                    setState(() {
+                      controller.setMapStyle(mapTheme);
+                    });
+                  }
+                },
+                myLocationEnabled: true,
+                myLocationButtonEnabled: false,
+                zoomControlsEnabled: false,
+              ),
+              CustomIconButton(
+                context: context,
+                top: 60,
+                left: 15,
+                height: context.responsiveHeight(34),
+                width: context.responsiveWidth(34),
+                icon: Icons.menu,
+                color: Colors.black,
+                size: 18,
+                onPressed: () {},
+              ),
+              CustomIconButton(
+                context: context,
+                top: 60,
+                right: 15,
+                height: context.responsiveHeight(34),
+                width: context.responsiveWidth(34),
+                icon: Icons.notifications_none_outlined,
+                color: Colors.black,
+                size: 18,
+                onPressed: () {
+                  debugPrint("object");
+                },
+              ),
+              Padding(
+                padding: const EdgeInsets.only(
+                  top: 480,
+                  right: 15,
+                  left: 14,
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.end,
+                  children: [
+                    Container(
+                      height: context.responsiveHeight(34),
+                      width: context.responsiveWidth(34),
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(4),
+                        color: context.isLight ? Colors.white : Colors.black,
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.black.withOpacity(0.2), // Kabartma rengi ve opaklık
+                            spreadRadius: 2, // Ne kadar genişlemesi gerektiği
+                            blurRadius: 4, // Görüntü bulanıklığı
+                            offset: const Offset(0, 2), // X ve Y eksenindeki ofset değeri
+                          ),
+                        ],
+                      ),
+                      child: IconButton(
+                        icon: Icon(
+                          Icons.my_location_outlined,
+                          color: context.isLight ? HexColor('#61BAAD') : AppThemes.lightPrimary500,
+                          size: 19,
+                        ),
+                        padding: const EdgeInsets.all(5),
+                        onPressed: () {
+                          _getLocation();
+                          print(_currentLocation!.latitude!.toDouble());
+                          _animateToUser(_currentLocation!.latitude!.toDouble(), _currentLocation!.longitude!.toDouble());
+                        },
+                      ),
+                    ),
+                    SizedBox(
+                      height: context.responsiveHeight(25),
+                    ),
+                    Container(
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(4),
+                        color: context.isLight ? Colors.white : HexColor('#1F212A'),
+                        border: Border.all(
+                          color: context.isLight ? Colors.white : AppThemes.lightPrimary500,
+                          width: 1,
+                        ),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.black.withOpacity(0.2),
+                            spreadRadius: 2,
+                            blurRadius: 4,
+                            offset: const Offset(0, 2),
+                          ),
+                        ],
+                      ),
+                      width: context.responsiveWidth(364),
+                      height: context.responsiveHeight(141),
+                      child: Padding(
+                        padding: const EdgeInsets.only(
+                          top: 13,
+                          right: 14,
+                          left: 14,
+                        ),
+                        child: Column(
+                          children: [
+                            SizedBox(
+                              height: context.responsiveHeight(54),
+                              width: context.responsiveWidth(336),
+                              child: TextFormField(
+                                decoration: InputDecoration(
+                                  enabledBorder: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(8),
+                                    borderSide: BorderSide(
+                                      color: AppThemes.lightPrimary500,
+                                    ),
+                                  ),
+                                  prefixIcon: CircularSvgIcon(
+                                    context: context,
+                                    assetName: context.isLight ? 'assets/svg/search.svg' : 'assets/svg/search_dark.svg',
+                                    decoration: const BoxDecoration(),
+                                  ),
+                                  hintText: 'Where would you go?',
+                                  hintStyle: context.textStyle.subheadLargeMedium.copyWith(
+                                    color: AppThemes.hintTextNeutral,
+                                  ),
+                                  border: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(8),
+                                    borderSide: BorderSide(
+                                      color: AppThemes.lightPrimary500,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ),
+                            SizedBox(
+                              height: context.responsiveHeight(15),
+                            ),
+                            PrimaryButton(
+                              context: context,
+                              text: 'Call Driver',
+                              height: context.responsiveHeight(48),
+                              width: context.responsiveWidth(334),
+                              onPressed: () {},
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+      drawer: Drawer(
+        child: ListView(
+          padding: EdgeInsets.zero,
+          children: <Widget>[
+            const DrawerHeader(
+              decoration: BoxDecoration(
+                color: Colors.blue,
+              ),
+              child: Text(
+                'Yan Menü',
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 24,
+                ),
+              ),
+            ),
+            ListTile(
+              title: Text('Seçenek 1'),
+              onTap: () {},
+            ),
+            ListTile(
+              title: Text('Seçenek 2'),
+              onTap: () {},
+            ),
+          ],
+        ),
+      ),
+      bottomNavigationBar: BottomNavigationBar(
+        items: <BottomNavigationBarItem>[
+          BottomNavigationBarItem(
+            icon: Icon(Icons.home),
+            label: 'Home',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.search),
+            label: 'Search',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.settings),
+            label: 'Settings',
+          ),
+        ],
       ),
     );
   }
