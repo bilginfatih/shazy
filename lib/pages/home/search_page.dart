@@ -22,9 +22,10 @@ class _SearchPageState extends State<SearchPage> {
         child: Column(
           children: [
             SizedBox(height: context.responsiveHeight(52)),
-            SearchTextFormField(controller: _searchController),
+            SizedBox(
+                height: 60,
+                child: SearchTextFormField(controller: _searchController)),
             SizedBox(height: context.responsiveHeight(16)),
-            
           ],
         ),
       ),
