@@ -20,7 +20,8 @@ class _SearchTextFormFieldState extends State<SearchTextFormField> {
         child: SvgPicture.asset(
           'assets/svg/map.svg',
           colorFilter: ColorFilter.mode(
-              context.isLight ? Colors.black : Colors.white, BlendMode.srcIn),
+              context.isLight ? Colors.black : HexColor('#E8E8E8'),
+              BlendMode.srcIn),
         ),
       );
 
@@ -35,7 +36,7 @@ class _SearchTextFormFieldState extends State<SearchTextFormField> {
           child: SvgPicture.asset(
             'assets/svg/cancel.svg',
             colorFilter: ColorFilter.mode(
-                context.isLight ? Colors.black : Colors.white, BlendMode.srcIn),
+                context.isLight ? Colors.black : HexColor('#E8E8E8'), BlendMode.srcIn),
           ),
         ),
       );
