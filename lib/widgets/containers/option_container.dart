@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:hexcolor/hexcolor.dart';
 import 'package:shazy/utils/extensions/context_extension.dart';
+import 'package:shazy/utils/theme/themes.dart';
 
 class OptionContainer extends GestureDetector {
   OptionContainer({
@@ -8,7 +10,7 @@ class OptionContainer extends GestureDetector {
     BoxBorder? border,
     Widget? child,
     required BuildContext context,
-    required Color color,
+    required bool select,
   }) : super(
           key: key,
           onTap: onTap,
@@ -16,8 +18,10 @@ class OptionContainer extends GestureDetector {
             height: context.responsiveHeight(80),
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(4),
-              color: color,
               border: border,
+              color: !context.isLight
+                  ? (select ? AppThemes.teriary400 : HexColor('#1F212A'))
+                  : null,
             ),
             child: Padding(
               padding: EdgeInsets.symmetric(

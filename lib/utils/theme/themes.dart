@@ -6,6 +6,8 @@ class AppThemes {
   Color lightSecondary400 = HexColor('#81C8BD');
   Color lightTertiary400 = HexColor('#FEFEE5');
   Color darkPrimaryColor = HexColor('#FFD2BB');
+  static Color teriary400 = HexColor('#FEFEE5');
+  static Color teriary600 = HexColor('#E7E7CB');
   static Color contentSecondary = HexColor('#414141');
   static Color hintTextNeutral = HexColor('#D0D0D0');
   static Color borderSideColor = HexColor('#B8B8B8');
@@ -20,7 +22,8 @@ class AppThemes {
     ),
     filledButtonTheme: FilledButtonThemeData(
         style: ButtonStyle(
-            shape: MaterialStateProperty.all<RoundedRectangleBorder>(RoundedRectangleBorder(
+            shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                RoundedRectangleBorder(
       borderRadius: BorderRadius.circular(8.0),
     )))),
   );
@@ -32,7 +35,8 @@ class AppThemes {
     ),
     filledButtonTheme: FilledButtonThemeData(
         style: ButtonStyle(
-            shape: MaterialStateProperty.all<RoundedRectangleBorder>(RoundedRectangleBorder(
+            shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                RoundedRectangleBorder(
       borderRadius: BorderRadius.circular(8.0),
     )))),
   );

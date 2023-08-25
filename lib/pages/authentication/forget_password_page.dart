@@ -21,22 +21,25 @@ class ForgetPasswordPage extends StatefulWidget {
 class _ForgetPasswordPageState extends State<ForgetPasswordPage> {
   bool _selectSms = true;
 
-  OptionContainer _buildOptionContainer(BuildContext context, Color color,
-      bool select, String assetName, String text1, String text2) {
+  OptionContainer _buildOptionContainer(BuildContext context, bool select,
+      String assetName, String text1, String text2) {
     return OptionContainer(
       context: context,
-      color: color,
       onTap: () {
         setState(() {
           _selectSms = select;
         });
       },
+      select: _selectSms == select,
       border: _selectSms == select
           ? Border.all(
               width: 1,
               color: AppThemes.lightTheme.colorScheme.primary,
             )
-          : null,
+          : Border.all(
+              width: 1,
+              color: AppThemes.hintTextNeutral,
+            ),
       child: Row(
         children: [
           CircularSvgIcon(
@@ -92,18 +95,13 @@ class _ForgetPasswordPageState extends State<ForgetPasswordPage> {
             SizedBox(
               height: context.responsiveHeight(36),
             ),
-            _buildOptionContainer(context, HexColor('#fffff0'), true,
-                'assets/svg/sms.svg', 'Via SMS', '***** ***70'),
+            _buildOptionContainer(
+                context, true, 'assets/svg/sms.svg', 'Via SMS', '***** ***70'),
             SizedBox(
               height: context.responsiveHeight(16),
             ),
-            _buildOptionContainer(
-                context,
-                AppThemes.secondary50,
-                false,
-                'assets/svg/email.svg',
-                'Via Email',
-                '**** **** **** xyz@xyz.com'),
+            _buildOptionContainer(context, false, 'assets/svg/email.svg',
+                'Via Email', '**** **** **** xyz@xyz.com'),
             SizedBox(
               height: context.responsiveHeight(322),
             ),

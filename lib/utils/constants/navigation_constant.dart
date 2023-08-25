@@ -7,12 +7,12 @@ mixin NavigationConstant {
   static const verifyOtp = '/verifyOtp';
   static const welcome = '/welcome';
   static const sendVerification = '/sendVerification';
-  static const forgetPassword = '/forgetPassword';
+  static const forgetPassword = '/';
   static const phoneVerifiyOtpPage = '/phoneVerifiyOtpPage';
   static const setNewPassword = '/setNewPassword';
 
   // home
-  static const searchPage = '/';
+  static const searchPage = '/searchPage';
 
   //Google Maps Ekranları
   static const homeScreenTransport = '/homeScreenTransport';
