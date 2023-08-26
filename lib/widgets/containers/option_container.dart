@@ -15,7 +15,7 @@ class OptionContainer extends GestureDetector {
           key: key,
           onTap: onTap,
           child: Container(
-            height: context.responsiveHeight(80),
+            height: context.responsiveHeight(context.height < 600 ? 100 : 80),
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(4),
               border: border,

@@ -22,48 +22,53 @@ class _ForgetPasswordPageState extends State<ForgetPasswordPage> {
   bool _selectSms = true;
 
   OptionContainer _buildOptionContainer(BuildContext context, bool select,
-      String assetName, String text1, String text2) {
-    return OptionContainer(
-      context: context,
-      onTap: () {
-        setState(() {
-          _selectSms = select;
-        });
-      },
-      select: _selectSms == select,
-      border: _selectSms == select
-          ? Border.all(
-              width: 1,
-              color: AppThemes.lightTheme.colorScheme.primary,
-            )
-          : Border.all(
-              width: 1,
-              color: AppThemes.hintTextNeutral,
-            ),
-      child: Row(
-        children: [
-          CircularSvgIcon(
-            context: context,
-            assetName: assetName,
-          ),
-          SizedBox(width: context.responsiveWidth(8)),
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Text(text1, style: context.textStyle.subheadSmallMedium),
-              Text(
-                text2,
-                style: context.textStyle.subheadLargeMedium.copyWith(
-                  color: HexColor('#5A5A5A'),
-                ),
+          String assetName, String text1, String text2) =>
+      OptionContainer(
+        context: context,
+        onTap: () {
+          setState(() {
+            _selectSms = select;
+          });
+        },
+        select: _selectSms == select,
+        border: _selectSms == select
+            ? Border.all(
+                width: 1,
+                color: AppThemes.lightTheme.colorScheme.primary,
+              )
+            : Border.all(
+                width: 1,
+                color: AppThemes.hintTextNeutral,
               ),
-            ],
-          )
-        ],
-      ),
-    );
-  }
+        child: Row(
+          children: [
+            CircularSvgIcon(
+              context: context,
+              assetName: assetName,
+            ),
+            SizedBox(width: context.responsiveWidth(8)),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text(text1, style: context.textStyle.subheadSmallMedium),
+                SizedBox(
+                  width: context.responsiveWidth(250),
+                  child: Text(
+                    text2,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    softWrap: false,
+                    style: context.textStyle.subheadLargeMedium.copyWith(
+                      color: HexColor('#5A5A5A'),
+                    ),
+                  ),
+                ),
+              ],
+            )
+          ],
+        ),
+      );
 
   @override
   Widget build(BuildContext context) {
@@ -102,9 +107,7 @@ class _ForgetPasswordPageState extends State<ForgetPasswordPage> {
             ),
             _buildOptionContainer(context, false, 'assets/svg/email.svg',
                 'Via Email', '**** **** **** xyz@xyz.com'),
-            SizedBox(
-              height: context.responsiveHeight(322),
-            ),
+            const Spacer(),
             PrimaryButton(
               text: 'Continue',
               context: context,
