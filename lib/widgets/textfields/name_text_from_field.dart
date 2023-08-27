@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:shazy/utils/extensions/context_extension.dart';
+import '../../utils/extensions/context_extension.dart';
 import '../../utils/theme/themes.dart';
 
 class NameTextFormField extends TextFormField {

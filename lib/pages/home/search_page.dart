@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:hexcolor/hexcolor.dart';
-import 'package:shazy/utils/extensions/context_extension.dart';
-import 'package:shazy/widgets/list_tile/search_list_tile.dart';
-import 'package:shazy/widgets/textfields/search_text_form_field.dart';
+import '../../utils/extensions/context_extension.dart';
+import '../../widgets/list_tile/search_list_tile.dart';
+import '../../widgets/textfields/search_text_form_field.dart';
 
 import '../../widgets/padding/base_padding.dart';
 

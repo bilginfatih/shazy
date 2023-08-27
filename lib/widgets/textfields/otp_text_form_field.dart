@@ -3,7 +3,7 @@ import 'package:hexcolor/hexcolor.dart';
 import 'package:otp_text_field/otp_field.dart';
 import 'package:otp_text_field/otp_field_style.dart';
 import 'package:otp_text_field/style.dart';
-import 'package:shazy/utils/extensions/context_extension.dart';
+import '../../utils/extensions/context_extension.dart';
 
 class OTPTextFormField extends OTPTextField {
   OTPTextFormField({

@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:shazy/pages/authentication/forget_password_page.dart';
-import 'package:shazy/pages/authentication/phone_verifiy_otp_page.dart';
-import 'package:shazy/pages/authentication/send_verification_page.dart';
-import 'package:shazy/pages/authentication/set_new_password_page.dart';
-import 'package:shazy/pages/home/search_page.dart';
-import 'package:shazy/utils/constants/navigation_constant.dart';
+import 'package:shazy/pages/payment/payment_method_page.dart';
+import '../../../pages/authentication/forget_password_page.dart';
+import '../../../pages/authentication/phone_verifiy_otp_page.dart';
+import '../../../pages/authentication/send_verification_page.dart';
+import '../../../pages/authentication/set_new_password_page.dart';
+import '../../../pages/home/search_page.dart';
+import '../../../utils/constants/navigation_constant.dart';
 
 import '../../../main.dart';
 import '../../../pages/authentication/complete_your_profile_page.dart';
@@ -50,7 +51,9 @@ class NavigationRouteManager {
       case NavigationConstant.homeScreenTransport:
         return _navigationToDefault(HomeScreenTransport(), args);
       case NavigationConstant.searchPage:
-        return _navigationToDefault(SearchPage(), args);
+        return _navigationToDefault(const SearchPage(), args);
+      case NavigationConstant.paymentMethod:
+        return _navigationToDefault(PaymetnMethodPage(), args);
       default:
         return _navigationToDefault(MyApp(), args);
     }

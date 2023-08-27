@@ -3,6 +3,7 @@ import 'package:hexcolor/hexcolor.dart';
 
 class AppThemes {
   static Color lightPrimary500 = HexColor('#9C54D5');
+  static Color lightPrimary50 = HexColor('#F5EEFB');
   Color lightSecondary400 = HexColor('#81C8BD');
   Color lightTertiary400 = HexColor('#FEFEE5');
   Color darkPrimaryColor = HexColor('#FFD2BB');
@@ -12,6 +13,7 @@ class AppThemes {
   static Color hintTextNeutral = HexColor('#D0D0D0');
   static Color borderSideColor = HexColor('#B8B8B8');
   static Color secondary50 = HexColor('#eff8f7');
+  static Color secondary700 = HexColor('##45847B');
 
   static ThemeData lightTheme = ThemeData(
     primaryColor: ThemeData.light().scaffoldBackgroundColor,

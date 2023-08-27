@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:shazy/utils/extensions/context_extension.dart';
-import 'package:shazy/widgets/app_bars/back_app_bar.dart';
-import 'package:shazy/widgets/buttons/custom_text_button.dart';
-import 'package:shazy/widgets/buttons/primary_button.dart';
-import 'package:shazy/widgets/textfields/email_and_phone_text_form_field.dart';
-import 'package:shazy/widgets/textfields/password_text_form_field.dart';
+import '../../utils/extensions/context_extension.dart';
+import '../../widgets/app_bars/back_app_bar.dart';
+import '../../widgets/buttons/custom_text_button.dart';
+import '../../widgets/buttons/primary_button.dart';
+import '../../widgets/textfields/email_and_phone_text_form_field.dart';
+import '../../widgets/textfields/password_text_form_field.dart';
 import '../../core/init/navigation/navigation_manager.dart';
 import '../../utils/constants/navigation_constant.dart';
 import '../../widgets/padding/base_padding.dart';

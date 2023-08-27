@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:intl_phone_field/intl_phone_field.dart';
-import 'package:shazy/utils/extensions/context_extension.dart';
+import '../../utils/extensions/context_extension.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import '../../utils/theme/themes.dart';
 

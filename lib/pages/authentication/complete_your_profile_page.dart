@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:shazy/utils/extensions/context_extension.dart';
+import '../../utils/extensions/context_extension.dart';
 
 import '../../widgets/app_bars/back_app_bar.dart';
 import '../../widgets/buttons/primary_button.dart';

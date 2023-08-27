@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:shazy/utils/extensions/context_extension.dart';
-import 'package:shazy/utils/extensions/string_extension.dart';
+import '../../utils/extensions/context_extension.dart';
+import '../../utils/extensions/string_extension.dart';
 import '../../utils/theme/themes.dart';
 
 class EmailAndPhoneTextFormField extends TextFormField {

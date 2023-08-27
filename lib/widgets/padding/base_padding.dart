@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:shazy/utils/extensions/context_extension.dart';
+import '../../utils/extensions/context_extension.dart';
 
 class BasePadding extends Padding {
   BasePadding({
@@ -7,6 +7,7 @@ class BasePadding extends Padding {
     required BuildContext context,
     required Widget child,
   }) : super(
+            key: key,
             padding: EdgeInsets.symmetric(
               horizontal: context.responsiveWidth(16),
               vertical: context.responsiveHeight(16),

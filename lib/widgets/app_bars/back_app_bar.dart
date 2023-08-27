@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:hexcolor/hexcolor.dart';
-import 'package:shazy/utils/extensions/context_extension.dart';
+import '../../utils/extensions/context_extension.dart';
 
 import '../../core/init/navigation/navigation_manager.dart';
 import '../../utils/theme/themes.dart';
@@ -41,10 +41,11 @@ class BackAppBar extends AppBar {
                 width: context.responsiveWidth(191),
                 height: context.responsiveHeight(25),
                 alignment: Alignment.center,
-                margin: const EdgeInsets.symmetric(horizontal: 25),
+                margin: EdgeInsets.symmetric(
+                    horizontal: context.responsiveWidth(15)),
                 child: Text(
                   mainTitle ?? "",
-                  style: context.textStyle.headlineSmallRegular.copyWith(
+                  style: context.textStyle.headlineSmallMedium.copyWith(
                       color:
                           context.isLight ? HexColor("#2A2A2A") : Colors.white),
                 ),

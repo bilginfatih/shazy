@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:shazy/utils/theme/styles.dart';
+import '../theme/styles.dart';
 
 extension ContextExtension on BuildContext {
   MediaQueryData get mediaQueryData => MediaQuery.of(this);

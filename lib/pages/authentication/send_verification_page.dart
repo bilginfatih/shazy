@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:shazy/utils/extensions/context_extension.dart';
-import 'package:shazy/widgets/app_bars/back_app_bar.dart';
-import 'package:shazy/widgets/padding/base_padding.dart';
-import 'package:shazy/widgets/textfields/email_and_phone_text_form_field.dart';
+import '../../utils/extensions/context_extension.dart';
+import '../../widgets/app_bars/back_app_bar.dart';
+import '../../widgets/padding/base_padding.dart';
+import '../../widgets/textfields/email_and_phone_text_form_field.dart';
 
 import '../../widgets/buttons/primary_button.dart';
 

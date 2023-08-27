@@ -1,15 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:hexcolor/hexcolor.dart';
-import 'package:shazy/core/init/navigation/navigation_manager.dart';
-import 'package:shazy/utils/constants/navigation_constant.dart';
-import 'package:shazy/utils/extensions/context_extension.dart';
-import 'package:shazy/utils/theme/themes.dart';
-import 'package:shazy/widgets/app_bars/back_app_bar.dart';
-import 'package:shazy/widgets/buttons/primary_button.dart';
-import 'package:shazy/widgets/containers/option_container.dart';
-import 'package:shazy/widgets/icons/circular_svg_icon.dart';
-import 'package:shazy/widgets/padding/base_padding.dart';
+import '../../core/init/navigation/navigation_manager.dart';
+import '../../utils/constants/navigation_constant.dart';
+import '../../utils/extensions/context_extension.dart';
+import '../../utils/theme/themes.dart';
+import '../../widgets/app_bars/back_app_bar.dart';
+import '../../widgets/buttons/primary_button.dart';
+import '../../widgets/containers/option_container.dart';
+import '../../widgets/icons/circular_svg_icon.dart';
+import '../../widgets/padding/base_padding.dart';
 
 class ForgetPasswordPage extends StatefulWidget {
   const ForgetPasswordPage({super.key});
