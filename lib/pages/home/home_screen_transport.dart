@@ -1,10 +1,13 @@
 import 'dart:async';
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:location/location.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:permission_handler/permission_handler.dart' as ph;
+import '../../core/init/navigation/navigation_manager.dart';
+import '../../utils/constants/navigation_constant.dart';
 import '../../utils/extensions/context_extension.dart';
 import '../../utils/theme/themes.dart';
 import '../../widgets/buttons/icon_button.dart';
@@ -32,8 +35,9 @@ class _HomeScreenTransportState extends State<HomeScreenTransport> {
   @override
   void initState() {
     super.initState();
+    _getLocation();
     _getLocationPermission(); // İzin kontrolü eklendi
-    _subscribeToLocationChanges(); // Geolocation Aboneliği eklendi
+    // _subscribeToLocationChanges(); // Geolocation Aboneliği eklendi
     DefaultAssetBundle.of(context).loadString('assets/maptheme/night_theme.json').then(
       (value) {
         mapTheme = value;
@@ -47,6 +51,7 @@ class _HomeScreenTransportState extends State<HomeScreenTransport> {
       setState(() {
         _currentLocation = locationData;
       });
+      _animateToUser(_currentLocation?.latitude ?? 0, _currentLocation?.longitude ?? 0);
       // ignore: empty_catches
     } catch (e) {}
   }
@@ -87,7 +92,7 @@ class _HomeScreenTransportState extends State<HomeScreenTransport> {
   }
 
   // onLocationChanged'e abone olunarak konum güncellemeleri alınır
-  void _subscribeToLocationChanges() {
+  /*void _subscribeToLocationChanges() {
     _location.onLocationChanged.listen(
       (LocationData currentLocation) {
         print('Current location: ${currentLocation.latitude}, ${currentLocation.longitude}');
@@ -95,7 +100,7 @@ class _HomeScreenTransportState extends State<HomeScreenTransport> {
         _animateToUser(currentLocation.latitude ?? 0, currentLocation.longitude ?? 0);
       },
     );
-  }
+  }*/
 
   // Kullanıcının konumunu harita üzerinde takip etmek için kamera animasyonu yapar
   Future<void> _animateToUser(double latitude, double longitude) async {
@@ -129,7 +134,7 @@ class _HomeScreenTransportState extends State<HomeScreenTransport> {
                   }
                 },
                 myLocationEnabled: true,
-                myLocationButtonEnabled: false,
+                myLocationButtonEnabled: Platform.isIOS ? true : false,
                 zoomControlsEnabled: false,
               ),
               CustomIconButton(
@@ -188,8 +193,6 @@ class _HomeScreenTransportState extends State<HomeScreenTransport> {
                         ),
                         padding: const EdgeInsets.all(5),
                         onPressed: () {
-                          _getLocation();
-                          print(_currentLocation!.latitude!.toDouble());
                           _animateToUser(_currentLocation!.latitude!.toDouble(), _currentLocation!.longitude!.toDouble());
                         },
                       ),
@@ -251,6 +254,11 @@ class _HomeScreenTransportState extends State<HomeScreenTransport> {
                                     ),
                                   ),
                                 ),
+                                onTap: () {
+                                  NavigationManager.instance.navigationToPage(
+                                    NavigationConstant.searchPage,
+                                  );
+                                },
                               ),
                             ),
                             SizedBox(
