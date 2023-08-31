@@ -13,6 +13,7 @@ class AppThemes {
   static Color hintTextNeutral = HexColor('#D0D0D0');
   static Color borderSideColor = HexColor('#B8B8B8');
   static Color secondary50 = HexColor('#eff8f7');
+  static Color secondary500 = HexColor('#61BAAD');
   static Color secondary700 = HexColor('##45847B');
 
   static ThemeData lightTheme = ThemeData(

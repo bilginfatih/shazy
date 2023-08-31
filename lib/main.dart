@@ -1,25 +1,29 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:permission_handler/permission_handler.dart';
-import 'utils/extensions/context_extension.dart';
-import 'utils/theme/themes.dart';
+
 import 'core/init/navigation/navigation_manager.dart';
 import 'core/init/navigation/navigation_route_manager.dart';
-import 'package:flutter/services.dart';
+import 'utils/extensions/context_extension.dart';
+import 'utils/theme/themes.dart';
 
 void main() async {
   // Konum izni kontrolü
   WidgetsFlutterBinding.ensureInitialized();
   final locationPermissionStatus = await Permission.locationWhenInUse.request();
   if (locationPermissionStatus.isGranted) {
-    runApp(MyApp());
+    runApp(const MyApp());
   } else {
-    SystemChannels.platform.invokeMethod('SystemNavigator.pop'); // İzin verilmezse uygulamayı kapat
+    SystemChannels.platform.invokeMethod(
+        'SystemNavigator.pop'); // İzin verilmezse uygulamayı kapat
   }
 }
 
 class MyApp extends StatelessWidget {
+  const MyApp({super.key});
+
   @override
   Widget build(BuildContext context) {
     SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
@@ -37,7 +41,8 @@ class MyApp extends StatelessWidget {
       ],
       supportedLocales: const [Locale('tr'), Locale('en')],
       navigatorKey: NavigationManager.instance.navigationKey,
-      onGenerateRoute: (args) => NavigationRouteManager.instance?.generateRoute(args),
+      onGenerateRoute: (args) =>
+          NavigationRouteManager.instance?.generateRoute(args),
       initialRoute: '/',
     );
   }
@@ -45,6 +50,7 @@ class MyApp extends StatelessWidget {
 
 class MyHomePage extends StatelessWidget {
   const MyHomePage({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(

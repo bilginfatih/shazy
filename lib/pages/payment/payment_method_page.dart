@@ -4,6 +4,7 @@ import 'package:hexcolor/hexcolor.dart';
 import 'package:shazy/utils/extensions/context_extension.dart';
 import 'package:shazy/utils/theme/themes.dart';
 import 'package:shazy/widgets/buttons/primary_button.dart';
+import 'package:shazy/widgets/buttons/secondary_button.dart';
 import 'package:shazy/widgets/containers/option_container.dart';
 import '../../widgets/app_bars/back_app_bar.dart';
 import '../../widgets/padding/base_padding.dart';
