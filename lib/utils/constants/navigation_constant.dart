@@ -18,5 +18,6 @@ mixin NavigationConstant {
   static const homeScreenTransport = '/homeScreenTransport';
 
   // Payment
-  static const paymentMethod = '/';
+  static const paymentMethod = '/paymentMethod';
+  static const addCard = '/';
 }

@@ -6,12 +6,13 @@ class NameTextFormField extends TextFormField {
   NameTextFormField({
     Key? key,
     TextEditingController? controller,
+    String? hintText,
     required BuildContext context,
   }) : super(
           key: key,
           controller: controller,
           decoration: InputDecoration(
-            hintText: 'Name',
+            hintText: hintText ?? 'Name',
             hintStyle: context.textStyle.subheadLargeMedium.copyWith(
               color: AppThemes.hintTextNeutral,
             ),

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:shazy/pages/payment/add_card_page.dart';
 import 'package:shazy/pages/payment/payment_method_page.dart';
 import '../../../pages/authentication/forget_password_page.dart';
 import '../../../pages/authentication/phone_verifiy_otp_page.dart';
@@ -53,7 +54,9 @@ class NavigationRouteManager {
       case NavigationConstant.searchPage:
         return _navigationToDefault(const SearchPage(), args);
       case NavigationConstant.paymentMethod:
-        return _navigationToDefault(PaymetnMethodPage(), args);
+        return _navigationToDefault(const PaymetnMethodPage(), args);
+      case NavigationConstant.addCard:
+        return _navigationToDefault(AddCard(), args);
       default:
         return _navigationToDefault(MyApp(), args);
     }
