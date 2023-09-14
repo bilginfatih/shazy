@@ -14,7 +14,8 @@ class AppThemes {
   static Color borderSideColor = HexColor('#B8B8B8');
   static Color secondary50 = HexColor('#eff8f7');
   static Color secondary500 = HexColor('#61BAAD');
-  static Color secondary700 = HexColor('##45847B');
+  static Color secondary700 = HexColor('#45847B');
+  static Color primary100 = HexColor('#E0CAF2');
 
   static ThemeData lightTheme = ThemeData(
     primaryColor: ThemeData.light().scaffoldBackgroundColor,
