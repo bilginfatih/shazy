@@ -80,6 +80,11 @@ class AppTextStyles {
         fontWeight: FontWeight.w500,
         color: HexColor('#5A5A5A'),
       );
+  TextStyle get bodyMediumRegular => GoogleFonts.poppins(
+        fontSize: _context.mediaQueryData.textScaleFactor * 14,
+        fontWeight: FontWeight.w400,
+        color: HexColor('#5A5A5A'),
+      );
   TextStyle get bodySmallMedium => GoogleFonts.poppins(
         fontSize: _context.mediaQueryData.textScaleFactor * 12,
         fontWeight: FontWeight.w500,

@@ -20,7 +20,11 @@ class BackAppBar extends AppBar {
             children: [
               GestureDetector(
                 onTap: () {
-                  NavigationManager.instance.navigationToPop();
+                  if (MediaQuery.of(context).viewInsets.bottom > 0) {
+                    FocusManager.instance.primaryFocus?.unfocus();
+                  } else {
+                    NavigationManager.instance.navigationToPop();
+                  }
                 },
                 child: context.isLight
                     ? SvgPicture.asset('assets/svg/angle-left.svg')
