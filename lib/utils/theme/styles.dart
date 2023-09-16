@@ -75,6 +75,10 @@ class AppTextStyles {
         fontSize: _context.mediaQueryData.textScaleFactor * 16,
         fontWeight: FontWeight.w500,
       );
+  TextStyle get bodyLargeMedium => GoogleFonts.poppins(
+        fontSize: _context.mediaQueryData.textScaleFactor * 16,
+        fontWeight: FontWeight.w500,
+      );
   TextStyle get bodyMedium => GoogleFonts.poppins(
         fontSize: _context.mediaQueryData.textScaleFactor * 14,
         fontWeight: FontWeight.w500,
@@ -92,5 +96,10 @@ class AppTextStyles {
   TextStyle get bodySmallRegular => GoogleFonts.poppins(
         fontSize: _context.mediaQueryData.textScaleFactor * 12,
         fontWeight: FontWeight.w400,
+      );
+  TextStyle get labelSmallMedium => GoogleFonts.poppins(
+        fontSize: _context.mediaQueryData.textScaleFactor * 12,
+        fontWeight: FontWeight.w500,
+        color: HexColor('#5A5A5A'),
       );
 }

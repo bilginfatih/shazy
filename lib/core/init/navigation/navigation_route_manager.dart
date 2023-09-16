@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:shazy/pages/contact/message_page.dart';
 import 'package:shazy/pages/payment/add_card_page.dart';
 import 'package:shazy/pages/payment/payment_method_page.dart';
+import 'package:shazy/pages/payment/payment_tip_page.dart';
 import '../../../pages/authentication/forget_password_page.dart';
 import '../../../pages/authentication/phone_verifiy_otp_page.dart';
 import '../../../pages/authentication/send_verification_page.dart';
@@ -60,6 +61,8 @@ class NavigationRouteManager {
         return _navigationToDefault(AddCard(), args);
         case NavigationConstant.message:
         return _navigationToDefault(MessagePage(), args);
+        case NavigationConstant.paymentTip:
+        return _navigationToDefault(const PaymentTipPage(), args);
       default:
         return _navigationToDefault(MyApp(), args);
     }

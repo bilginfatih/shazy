@@ -5,9 +5,14 @@ import '../../utils/extensions/context_extension.dart';
 
 import '../../core/init/navigation/navigation_manager.dart';
 
-class CongratulationDialog extends Dialog {
-  CongratulationDialog({Key? key, required BuildContext context})
-      : super(
+class SuccessDialog extends Dialog {
+  SuccessDialog({
+    Key? key,
+    Widget? widget,
+    required BuildContext context,
+    required String title,
+    required String text1,
+  }) : super(
           key: key,
           insetPadding: EdgeInsets.symmetric(
             horizontal: context.responsiveWidth(17),
@@ -60,7 +65,7 @@ class CongratulationDialog extends Dialog {
               ),
               SizedBox(height: context.responsiveHeight(23)),
               Text(
-                "Congratulation",
+                title,
                 style: context.textStyle.titleSmallMedium,
               ),
               SizedBox(height: context.responsiveHeight(7)),
@@ -68,12 +73,14 @@ class CongratulationDialog extends Dialog {
                 padding: EdgeInsets.symmetric(
                     horizontal: context.responsiveWidth(50)),
                 child: Text(
-                  "Your account is ready to use. You will be redirected to the Home Page in a few seconds.",
+                  text1,
                   style: context.textStyle.bodySmallMedium
                       .copyWith(color: HexColor('#898989')),
                   textAlign: TextAlign.center,
                 ),
               ),
+              SizedBox(height: context.responsiveHeight(24),),
+              widget ?? const SizedBox(),
             ],
           ),
         );

@@ -4,51 +4,12 @@ import 'package:hexcolor/hexcolor.dart';
 import 'package:shazy/utils/extensions/context_extension.dart';
 import 'package:shazy/utils/theme/themes.dart';
 import 'package:shazy/widgets/buttons/primary_button.dart';
-import 'package:shazy/widgets/buttons/secondary_button.dart';
-import 'package:shazy/widgets/containers/option_container.dart';
+import 'package:shazy/widgets/containers/payment_method_container.dart';
 import '../../widgets/app_bars/back_app_bar.dart';
 import '../../widgets/padding/base_padding.dart';
 
 class PaymetnMethodPage extends StatelessWidget {
   const PaymetnMethodPage({super.key});
-
-  Opacity _buildPaymentMethods(
-      BuildContext context, String assetName, String text1, String text2,
-      {double opacity = 0.45}) {
-    return Opacity(
-      opacity: opacity,
-      child: OptionContainer(
-        context: context,
-        select: true,
-        height: 80,
-        border: Border.all(
-          width: 1,
-          color: AppThemes.lightTheme.colorScheme.primary,
-        ),
-        color: AppThemes.lightPrimary50,
-        child: Row(
-          children: [
-            SvgPicture.asset('assets/svg/payment/$assetName.svg'),
-            SizedBox(
-              width: context.responsiveWidth(13),
-            ),
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Text(
-                  text1,
-                  style: context.textStyle.subheadLargeMedium
-                      .copyWith(color: HexColor('#5A5A5A')),
-                ),
-                Text(text2, style: context.textStyle.subheadSmallMedium)
-              ],
-            ),
-          ],
-        ),
-      ),
-    );
-  }
 
   Row _buildPriceRow(BuildContext context, String text1, String text2) => Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -178,21 +139,22 @@ class PaymetnMethodPage extends StatelessWidget {
                     .copyWith(color: HexColor('#898989')),
               ),
             ), */
-            _buildPaymentMethods(
-              context,
-              'visa',
-              '**** **** **** 8970',
-              'Expires: 12/26',
-              opacity: 1,
+
+            PaymetMethodContainer(
+              context: context,
+              assetName: 'visa',
+              text1: '**** **** **** 8970',
+              text2: 'Expires: 12/26',
+              opacitiy: 1,
             ),
             SizedBox(
               height: context.responsiveHeight(8),
             ),
-            _buildPaymentMethods(
-              context,
-              'mastercard',
-              '**** **** **** 8970',
-              'Expires: 12/26',
+            PaymetMethodContainer(
+              context: context,
+              assetName: 'mastercard',
+              text1: '**** **** **** 8970',
+              text2: 'Expires: 12/26',
             ),
             const Spacer(),
             PrimaryButton(
