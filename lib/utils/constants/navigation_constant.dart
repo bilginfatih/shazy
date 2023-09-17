@@ -24,5 +24,8 @@ mixin NavigationConstant {
 
   // contact
   static const message = '/message';
-  static const cancelRide = '/';
+  static const cancelRide = '/cancelRide';
+
+  // history
+  static const historyUpcoming = '/';
 }

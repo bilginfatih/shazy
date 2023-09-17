@@ -8,6 +8,7 @@ import '../../../pages/authentication/forget_password_page.dart';
 import '../../../pages/authentication/phone_verifiy_otp_page.dart';
 import '../../../pages/authentication/send_verification_page.dart';
 import '../../../pages/authentication/set_new_password_page.dart';
+import '../../../pages/history/history_upcoming_page.dart';
 import '../../../pages/home/search_page.dart';
 import '../../../utils/constants/navigation_constant.dart';
 
@@ -66,6 +67,8 @@ class NavigationRouteManager {
         return _navigationToDefault(const PaymentTipPage(), args);
       case NavigationConstant.cancelRide:
         return _navigationToDefault(const CancelRidePage(), args);
+      case NavigationConstant.historyUpcoming:
+        return _navigationToDefault(const HistoryUpcomingPage(), args);
       default:
         return _navigationToDefault(MyApp(), args);
     }
