@@ -5,6 +5,7 @@ import '../../../pages/authentication/phone_verifiy_otp_page.dart';
 import '../../../pages/authentication/send_verification_page.dart';
 import '../../../pages/authentication/set_new_password_page.dart';
 import '../../../pages/home/search_page.dart';
+import '../../../pages/home/search_places_page.dart';
 import '../../../utils/constants/navigation_constant.dart';
 
 import '../../../main.dart';
@@ -51,7 +52,7 @@ class NavigationRouteManager {
       case NavigationConstant.homeScreenTransport:
         return _navigationToDefault(HomeScreenTransport(), args);
       case NavigationConstant.searchPage:
-        return _navigationToDefault(const SearchPage(), args);
+        return _navigationToDefault( SearchPage(), args);
       case NavigationConstant.paymentMethod:
         return _navigationToDefault(PaymetnMethodPage(), args);
       default:

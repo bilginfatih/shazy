@@ -6,6 +6,8 @@ import 'package:hexcolor/hexcolor.dart';
 import 'package:location/location.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:permission_handler/permission_handler.dart' as ph;
+import 'package:provider/provider.dart';
+import '../../core/base/app_info.dart';
 import '../../core/init/navigation/navigation_manager.dart';
 import '../../utils/constants/navigation_constant.dart';
 import '../../utils/extensions/context_extension.dart';
@@ -243,7 +245,9 @@ class _HomeScreenTransportState extends State<HomeScreenTransport> {
                                     assetName: context.isLight ? 'assets/svg/search.svg' : 'assets/svg/search_dark.svg',
                                     decoration: const BoxDecoration(),
                                   ),
-                                  hintText: 'Where would you go?',
+                                  hintText: Provider.of<AppInfo>(context).userDropOffLocation != null
+                                      ? Provider.of<AppInfo>(context).userDropOffLocation!.locationName!
+                                      : 'Where would you go?',
                                   hintStyle: context.textStyle.subheadLargeMedium.copyWith(
                                     color: AppThemes.hintTextNeutral,
                                   ),
