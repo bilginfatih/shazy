@@ -11,7 +11,7 @@ mixin NavigationConstant {
   static const phoneVerifiyOtpPage = '/phoneVerifiyOtpPage';
   static const setNewPassword = '/setNewPassword';
 
-  // home
+  // Home
   static const searchPage = '/searchPage';
 
   //Google Maps Ekranları
@@ -22,10 +22,15 @@ mixin NavigationConstant {
   static const addCard = '/addCard';
   static const paymentTip = '/paymentTip';
 
-  // contact
+  // Contact
   static const message = '/message';
   static const cancelRide = '/cancelRide';
 
-  // history
-  static const historyUpcoming = '/';
+  // History
+  static const historyUpcoming = '/historyUpcoming';
+
+  // Wallet
+  static const wallet = '/wallet';
+
+  // Offer
 }

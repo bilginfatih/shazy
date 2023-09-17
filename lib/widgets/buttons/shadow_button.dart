@@ -17,13 +17,13 @@ class ShadowButton extends Container {
             boxShadow: [
               BoxShadow(
                 color: Colors.grey.shade300,
-                blurRadius: 5.0,
-                offset: const Offset(5, 5),
+                blurRadius: 10.0,
+                offset: const Offset(0, 5),
               )
             ],
           ),
           child: GestureDetector(
-            onTap:onTap,
+            onTap: onTap,
             child: icon,
           ),
         );

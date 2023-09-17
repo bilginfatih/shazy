@@ -16,6 +16,8 @@ class AppThemes {
   static Color secondary500 = HexColor('#61BAAD');
   static Color secondary700 = HexColor('#45847B');
   static Color primary100 = HexColor('#E0CAF2');
+  static Color success700 = HexColor('#388E3D');
+  static Color error700 = HexColor('#D32F2F');
 
   static ThemeData lightTheme = ThemeData(
     primaryColor: ThemeData.light().scaffoldBackgroundColor,

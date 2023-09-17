@@ -4,6 +4,7 @@ import 'package:shazy/pages/contact/message_page.dart';
 import 'package:shazy/pages/payment/add_card_page.dart';
 import 'package:shazy/pages/payment/payment_method_page.dart';
 import 'package:shazy/pages/payment/payment_tip_page.dart';
+import 'package:shazy/pages/wallet/wallet_page.dart';
 import '../../../pages/authentication/forget_password_page.dart';
 import '../../../pages/authentication/phone_verifiy_otp_page.dart';
 import '../../../pages/authentication/send_verification_page.dart';
@@ -69,6 +70,8 @@ class NavigationRouteManager {
         return _navigationToDefault(const CancelRidePage(), args);
       case NavigationConstant.historyUpcoming:
         return _navigationToDefault(const HistoryUpcomingPage(), args);
+      case NavigationConstant.wallet:
+        return _navigationToDefault(const WalletPage(), args);
       default:
         return _navigationToDefault(MyApp(), args);
     }
