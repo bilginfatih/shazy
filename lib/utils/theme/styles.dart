@@ -54,6 +54,10 @@ class AppTextStyles {
         fontSize: _context.mediaQueryData.textScaleFactor * 18,
         fontWeight: FontWeight.w500,
       );
+  TextStyle get headlineSmallBold => GoogleFonts.poppins(
+        fontSize: _context.mediaQueryData.textScaleFactor * 18,
+        fontWeight: FontWeight.w700,
+      );
   TextStyle get subheadLargeRegular => GoogleFonts.poppins(
         fontSize: _context.mediaQueryData.textScaleFactor * 16,
         fontWeight: FontWeight.w400,

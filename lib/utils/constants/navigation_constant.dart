@@ -33,4 +33,5 @@ mixin NavigationConstant {
   static const wallet = '/wallet';
 
   // Offer
+  static const offer = '/';
 }
