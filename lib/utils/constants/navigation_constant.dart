@@ -10,7 +10,6 @@ mixin NavigationConstant {
   static const forgetPassword = '/forgetPassword';
   static const phoneVerifiyOtpPage = '/phoneVerifiyOtpPage';
   static const setNewPassword = '/setNewPassword';
-  static const message = '/message';
 
   // home
   static const searchPage = '/searchPage';
@@ -21,5 +20,9 @@ mixin NavigationConstant {
   // Payment
   static const paymentMethod = '/paymentMethod';
   static const addCard = '/addCard';
-  static const paymentTip = '/';
+  static const paymentTip = '/paymentTip';
+
+  // contact
+  static const message = '/message';
+  static const cancelRide = '/';
 }

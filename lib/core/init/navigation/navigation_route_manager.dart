@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:shazy/pages/contact/cancel_ride_page.dart';
 import 'package:shazy/pages/contact/message_page.dart';
 import 'package:shazy/pages/payment/add_card_page.dart';
 import 'package:shazy/pages/payment/payment_method_page.dart';
@@ -59,10 +60,12 @@ class NavigationRouteManager {
         return _navigationToDefault(const PaymetnMethodPage(), args);
       case NavigationConstant.addCard:
         return _navigationToDefault(AddCard(), args);
-        case NavigationConstant.message:
+      case NavigationConstant.message:
         return _navigationToDefault(MessagePage(), args);
-        case NavigationConstant.paymentTip:
+      case NavigationConstant.paymentTip:
         return _navigationToDefault(const PaymentTipPage(), args);
+      case NavigationConstant.cancelRide:
+        return _navigationToDefault(const CancelRidePage(), args);
       default:
         return _navigationToDefault(MyApp(), args);
     }
