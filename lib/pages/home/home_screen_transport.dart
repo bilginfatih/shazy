@@ -1,17 +1,24 @@
 import 'dart:async';
 import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:flutter_polyline_points/flutter_polyline_points.dart';
+import 'package:geolocator/geolocator.dart';
+
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:hexcolor/hexcolor.dart';
-import 'package:location/location.dart';
+import 'package:geolocator/geolocator.dart' as geolocator;
 import 'package:permission_handler/permission_handler.dart';
 import 'package:permission_handler/permission_handler.dart' as ph;
+import 'package:provider/provider.dart';
+import '../../core/assistants/asistant_methods.dart';
+import '../../core/base/app_info.dart';
 import '../../core/init/navigation/navigation_manager.dart';
 import '../../utils/constants/navigation_constant.dart';
 import '../../utils/extensions/context_extension.dart';
 import '../../utils/theme/themes.dart';
 import '../../widgets/buttons/icon_button.dart';
 import '../../widgets/buttons/primary_button.dart';
+import '../../widgets/dialogs/search_driver_dialog.dart';
 import '../../widgets/icons/circular_svg_icon.dart';
 
 class HomeScreenTransport extends StatefulWidget {
@@ -24,8 +31,29 @@ class HomeScreenTransport extends StatefulWidget {
 class _HomeScreenTransportState extends State<HomeScreenTransport> {
   String mapTheme = '';
   final Completer<GoogleMapController> _controller = Completer<GoogleMapController>();
-  final Location _location = Location();
-  LocationData? _currentLocation;
+  GoogleMapController? newGoogleMapController;
+
+  List<LatLng> pLineCoOrdinatesList = [];
+  Set<Polyline> polyLineSet = {};
+
+  Set<Marker> markersSet = {};
+
+  Position? userCurrentPosition;
+  var geoLocator = Geolocator();
+
+  locateUserPosition() async {
+    Position cPosition = await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
+    userCurrentPosition = cPosition;
+
+    LatLng latLngPosition = LatLng(userCurrentPosition!.latitude, userCurrentPosition!.longitude);
+
+    CameraPosition cameraPosition = CameraPosition(target: latLngPosition, zoom: 14);
+
+    newGoogleMapController!.animateCamera(CameraUpdate.newCameraPosition(cameraPosition));
+
+    String humanReadableAddress = await AssistantMethods.searchAddressForGeographicCoOrdinates(userCurrentPosition!, context);
+    print("this is your address = " + humanReadableAddress);
+  }
 
   static const CameraPosition _kGooglePlex = CameraPosition(
     target: LatLng(37.42796133580664, -122.085749655962),
@@ -35,7 +63,6 @@ class _HomeScreenTransportState extends State<HomeScreenTransport> {
   @override
   void initState() {
     super.initState();
-    _getLocation();
     _getLocationPermission(); // İzin kontrolü eklendi
     // _subscribeToLocationChanges(); // Geolocation Aboneliği eklendi
     DefaultAssetBundle.of(context).loadString('assets/maptheme/night_theme.json').then(
@@ -43,17 +70,6 @@ class _HomeScreenTransportState extends State<HomeScreenTransport> {
         mapTheme = value;
       },
     );
-  }
-
-  Future<void> _getLocation() async {
-    try {
-      final LocationData locationData = await _location.getLocation();
-      setState(() {
-        _currentLocation = locationData;
-      });
-      _animateToUser(_currentLocation?.latitude ?? 0, _currentLocation?.longitude ?? 0);
-      // ignore: empty_catches
-    } catch (e) {}
   }
 
   // İzinleri kontrol eden fonksiyon
@@ -103,14 +119,6 @@ class _HomeScreenTransportState extends State<HomeScreenTransport> {
   }*/
 
   // Kullanıcının konumunu harita üzerinde takip etmek için kamera animasyonu yapar
-  Future<void> _animateToUser(double latitude, double longitude) async {
-    final GoogleMapController controller = await _controller.future;
-    CameraPosition newPosition = CameraPosition(
-      target: LatLng(latitude, longitude),
-      zoom: 17.0,
-    );
-    controller.animateCamera(CameraUpdate.newCameraPosition(newPosition));
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -127,15 +135,19 @@ class _HomeScreenTransportState extends State<HomeScreenTransport> {
                 initialCameraPosition: _kGooglePlex,
                 onMapCreated: (GoogleMapController controller) {
                   _controller.complete(controller);
+                  newGoogleMapController = controller;
                   if (!context.isLight) {
                     setState(() {
                       controller.setMapStyle(mapTheme);
                     });
                   }
+                  locateUserPosition();
                 },
                 myLocationEnabled: true,
                 myLocationButtonEnabled: Platform.isIOS ? true : false,
-                zoomControlsEnabled: false,
+                zoomControlsEnabled: true,
+                polylines: polyLineSet,
+                markers: markersSet,
               ),
               CustomIconButton(
                 context: context,
@@ -192,9 +204,7 @@ class _HomeScreenTransportState extends State<HomeScreenTransport> {
                           size: 19,
                         ),
                         padding: const EdgeInsets.all(5),
-                        onPressed: () {
-                          _animateToUser(_currentLocation!.latitude!.toDouble(), _currentLocation!.longitude!.toDouble());
-                        },
+                        onPressed: () {},
                       ),
                     ),
                     SizedBox(
@@ -243,7 +253,9 @@ class _HomeScreenTransportState extends State<HomeScreenTransport> {
                                     assetName: context.isLight ? 'assets/svg/search.svg' : 'assets/svg/search_dark.svg',
                                     decoration: const BoxDecoration(),
                                   ),
-                                  hintText: 'Where would you go?',
+                                  hintText: Provider.of<AppInfo>(context).userDropOffLocation != null
+                                      ? Provider.of<AppInfo>(context).userDropOffLocation!.locationName
+                                      : 'Where would you go?',
                                   hintStyle: context.textStyle.subheadLargeMedium.copyWith(
                                     color: AppThemes.hintTextNeutral,
                                   ),
@@ -269,7 +281,20 @@ class _HomeScreenTransportState extends State<HomeScreenTransport> {
                               text: 'Call Driver',
                               height: context.responsiveHeight(48),
                               width: context.responsiveWidth(334),
-                              onPressed: () {},
+                              onPressed: () async {
+                                await drawPolyLineFromOriginToDestination();
+                                // ignore: use_build_context_synchronously
+                                showModalBottomSheet(
+                                  isDismissible: false,
+                                  context: context,
+                                  builder: (BuildContext context) {
+                                    return Container(
+                                      height: context.responsiveHeight(479),
+                                      child: _buildBottomSheet(context),
+                                    );
+                                  },
+                                );
+                              },
                             ),
                           ],
                         ),
@@ -310,7 +335,7 @@ class _HomeScreenTransportState extends State<HomeScreenTransport> {
         ),
       ),
       bottomNavigationBar: BottomNavigationBar(
-        items: <BottomNavigationBarItem>[
+        items: const <BottomNavigationBarItem>[
           BottomNavigationBarItem(
             icon: Icon(Icons.home),
             label: 'Home',
@@ -326,5 +351,116 @@ class _HomeScreenTransportState extends State<HomeScreenTransport> {
         ],
       ),
     );
+  }
+
+  Widget _buildBottomSheet(BuildContext context) {
+    return Container(
+      child: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: <Widget>[
+            ListTile(
+              title: Text('Option 1'),
+              onTap: () {
+                // Seçenek 1 seçildiğinde yapılacak işlemler
+                Navigator.pop(context); // Bottom Sheet'i kapat
+              },
+            ),
+            ListTile(
+              title: Text('Option 2'),
+              onTap: () {
+                // Seçenek 2 seçildiğinde yapılacak işlemler
+                Navigator.pop(context); // Bottom Sheet'i kapat
+              },
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Future<void> drawPolyLineFromOriginToDestination() async {
+    var originPosition = Provider.of<AppInfo>(context, listen: false).userPickUpLocation;
+    var destinationPosition = Provider.of<AppInfo>(context, listen: false).userDropOffLocation;
+    var originLatLng = LatLng(originPosition!.locationLatitude!, originPosition.locationLongitude!);
+    var destinationLatLng = LatLng(destinationPosition!.locationLatitude!, destinationPosition.locationLongitude!);
+
+    showDialog(
+      context: context,
+      builder: (BuildContext context) => SearchDriverDialog(
+        context: context,
+      ),
+    );
+    var directionDetailsInfo = await AssistantMethods.obtainOriginToDestinationDirectionDetails(originLatLng, destinationLatLng);
+    Navigator.pop(context);
+
+    print("These are points = ");
+    print(directionDetailsInfo!.e_points);
+
+    PolylinePoints pPoints = PolylinePoints();
+    List<PointLatLng> decodedPolyLinePointsResultList = pPoints.decodePolyline(directionDetailsInfo.e_points!);
+
+    pLineCoOrdinatesList.clear();
+
+    if (decodedPolyLinePointsResultList.isNotEmpty) {
+      decodedPolyLinePointsResultList.forEach((PointLatLng pointLatLng) {
+        pLineCoOrdinatesList.add(LatLng(pointLatLng.latitude, pointLatLng.longitude));
+      });
+    }
+    polyLineSet.clear();
+
+    setState(() {
+      Polyline polyline = Polyline(
+        color: Colors.blue,
+        polylineId: const PolylineId("PolylineID"),
+        jointType: JointType.round,
+        points: pLineCoOrdinatesList,
+        startCap: Cap.roundCap,
+        endCap: Cap.roundCap,
+        geodesic: true,
+      );
+
+      polyLineSet.add(polyline);
+    });
+    LatLngBounds boundsLatLng;
+    if (originLatLng.latitude > destinationLatLng.latitude && originLatLng.longitude > destinationLatLng.longitude) {
+      boundsLatLng = LatLngBounds(southwest: destinationLatLng, northeast: originLatLng);
+    } else if (originLatLng.longitude > destinationLatLng.longitude) {
+      boundsLatLng = LatLngBounds(
+        southwest: LatLng(originLatLng.latitude, destinationLatLng.longitude),
+        northeast: LatLng(destinationLatLng.latitude, originLatLng.longitude),
+      );
+    } else if (originLatLng.latitude > destinationLatLng.latitude) {
+      boundsLatLng = LatLngBounds(
+        southwest: LatLng(destinationLatLng.latitude, originLatLng.longitude),
+        northeast: LatLng(originLatLng.latitude, destinationLatLng.longitude),
+      );
+    } else {
+      boundsLatLng = LatLngBounds(southwest: originLatLng, northeast: destinationLatLng);
+    }
+
+    newGoogleMapController!.animateCamera(CameraUpdate.newLatLngBounds(boundsLatLng, 95));
+
+    Marker originMarker = Marker(
+      markerId: const MarkerId("originID"),
+      infoWindow: InfoWindow(title: originPosition.locationName, snippet: directionDetailsInfo.duration_text),
+      position: originLatLng,
+      icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueYellow),
+    );
+
+    Marker destinationMarker = Marker(
+      markerId: const MarkerId("destinationID"),
+      infoWindow: InfoWindow(title: destinationPosition.locationName, snippet: directionDetailsInfo.distance_text),
+      position: destinationLatLng,
+      icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueOrange),
+    );
+    print(destinationLatLng);
+    print(destinationMarker);
+    print(destinationPosition);
+    setState(() {
+      markersSet.add(originMarker);
+      markersSet.add(destinationMarker);
+    });
   }
 }

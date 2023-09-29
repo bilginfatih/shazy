@@ -1,8 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:hexcolor/hexcolor.dart';
+
+import '../../core/assistants/request_assistant.dart';
+import '../../core/init/models/predicted_places.dart';
 import '../../utils/extensions/context_extension.dart';
-import '../../widgets/list_tile/search_list_tile.dart';
-import '../../widgets/textfields/search_text_form_field.dart';
+import '../../utils/theme/themes.dart';
+import '../../widgets/list_tile/place_prediction_tile.dart';
 
 import '../../widgets/padding/base_padding.dart';
 
@@ -14,22 +18,52 @@ class SearchPage extends StatefulWidget {
 }
 
 class _SearchPageState extends State<SearchPage> {
-  final TextEditingController _searchController = TextEditingController();
+  List<PredictedPlaces> placesPredictedList = [];
 
+  void findPlaceAutoCompleteSearch(String inputText) async {
+    if (inputText.length > 1) //2 or more than 2 input characters
+    {
+      String urlAutoCompleteSearch =
+          "https://maps.googleapis.com/maps/api/place/autocomplete/json?input=$inputText&key=AIzaSyB_8L6k1f0T1wHaV6oI5l3vH6WLRzRScGM&components=country:TUR";
+
+      var responseAutoCompleteSearch = await RequestAssistant.receiveRequest(urlAutoCompleteSearch);
+
+      if (responseAutoCompleteSearch == "Error Occurred, Failed. No Response.") {
+        return;
+      }
+
+      if (responseAutoCompleteSearch["status"] == "OK") {
+        var placePredictions = responseAutoCompleteSearch["predictions"];
+
+        var placePredictionsList = (placePredictions as List).map((jsonData) => PredictedPlaces.fromJson(jsonData)).toList();
+
+        setState(() {
+          placesPredictedList = placePredictionsList;
+        });
+      }
+    }
+  }
+
+  late TextEditingController _searchController = TextEditingController();
   Expanded _buildListView(BuildContext context) {
     return Expanded(
-      child: ListView.builder(
-          physics: const BouncingScrollPhysics(),
-          shrinkWrap: false,
-          itemCount: 20,
-          itemBuilder: (_, index) {
-            return SearchListTile(
-              text1: 'Burger Shop',
-              text2: '2972 Westheimer Rd. Santa Ana, Illinois 85486',
-              text3: '2.7km',
-              context: context,
-            );
-          }),
+      child: ListView.separated(
+        physics: const ClampingScrollPhysics(),
+        shrinkWrap: false,
+        itemCount: placesPredictedList.length,
+        itemBuilder: (_, index) {
+          return PlacePredictionTileDesign(
+            predictedPlaces: placesPredictedList[index],
+          );
+        },
+        separatorBuilder: (context, index) {
+          return const Divider(
+            height: 1,
+            color: Colors.grey,
+            thickness: 1,
+          );
+        },
+      ),
     );
   }
 
@@ -42,19 +76,43 @@ class _SearchPageState extends State<SearchPage> {
             ),
           ),
           Text(
-            ' "Shop"',
+            ' "${_searchController.text}"',
             style: context.textStyle.subheadLargeSemibold.copyWith(
               color: HexColor('#45847B'),
             ),
           ),
           const Spacer(),
           Text(
-            '7 found',
+            '${placesPredictedList.length} found',
             style: context.textStyle.subheadLargeSemibold.copyWith(
               color: HexColor('#45847B'),
             ),
           ),
         ],
+      );
+
+  Padding _buildMapIcon(BuildContext context) => Padding(
+        padding: const EdgeInsets.all(10.0),
+        child: SvgPicture.asset(
+          'assets/svg/map.svg',
+          colorFilter: ColorFilter.mode(context.isLight ? Colors.black : HexColor('#E8E8E8'), BlendMode.srcIn),
+        ),
+      );
+
+  GestureDetector _buildCancelButton(BuildContext context) => GestureDetector(
+        onTap: () {
+          setState(() {
+            _searchController.clear();
+            placesPredictedList.clear();
+          });
+        },
+        child: Padding(
+          padding: EdgeInsets.only(top: context.responsiveHeight(12)),
+          child: SvgPicture.asset(
+            'assets/svg/cancel.svg',
+            colorFilter: ColorFilter.mode(context.isLight ? Colors.black : HexColor('#E8E8E8'), BlendMode.srcIn),
+          ),
+        ),
       );
 
   @override
@@ -66,8 +124,32 @@ class _SearchPageState extends State<SearchPage> {
           children: [
             SizedBox(height: context.responsiveHeight(52)),
             SizedBox(
-                height: context.responsiveHeight(60),
-                child: SearchTextFormField(controller: _searchController)),
+              height: context.responsiveHeight(60),
+              child: TextFormField(
+                controller: _searchController,
+                style: context.textStyle.subheadLargeMedium,
+                textCapitalization: TextCapitalization.sentences,
+                decoration: InputDecoration(
+                  prefixIcon: _buildMapIcon(context),
+                  suffix: _buildCancelButton(context),
+                  fillColor: context.isLight ? null : HexColor('#35383F'),
+                  filled: true,
+                  hintText: 'Search',
+                  hintStyle: context.textStyle.subheadLargeMedium.copyWith(
+                    color: AppThemes.hintTextNeutral,
+                  ),
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(8),
+                    borderSide: BorderSide(
+                      color: AppThemes.borderSideColor,
+                    ),
+                  ),
+                ),
+                onChanged: (valueTyped) {
+                  findPlaceAutoCompleteSearch(valueTyped);
+                },
+              ),
+            ),
             SizedBox(height: context.responsiveHeight(19)),
             _buildResultText(context),
             SizedBox(height: context.responsiveHeight(21)),

@@ -52,10 +52,7 @@ class SearchDriverDialog extends Dialog {
                     width: context.responsiveWidth(110),
                     height: context.responsiveHeight(50),
                     text: 'Cancel Call',
-                    style: TextStyle(
-                        fontSize: 14,
-                        fontWeight: FontWeight.w500,
-                        color: HexColor('#2A2A2A')),
+                    style: TextStyle(fontSize: 14, fontWeight: FontWeight.w500, color: HexColor('#2A2A2A')),
                     context: context,
                     onPressed: () {}),
               ],
