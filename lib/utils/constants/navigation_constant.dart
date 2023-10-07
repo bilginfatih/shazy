@@ -15,7 +15,7 @@ mixin NavigationConstant {
   static const searchPage = '/searchPage';
 
   //Google Maps Ekranları
-  static const homeScreenTransport = '/';
+  static const homeScreenTransport = '/homeScreenTransport';
 
   // Payment
   static const paymentMethod = '/paymentMethod';
@@ -34,4 +34,7 @@ mixin NavigationConstant {
 
   // Offer
   static const offer = '/offer';
+
+  // notification
+  static const notification = '/';
 }
