@@ -6,15 +6,22 @@ import 'package:shazy/utils/extensions/context_extension.dart';
 import 'package:shazy/utils/theme/themes.dart';
 import 'package:shazy/widgets/app_bars/custom_app_bar.dart';
 import 'package:shazy/widgets/buttons/secondary_button.dart';
+import 'package:shazy/widgets/drawer/custom_drawer.dart';
 import 'package:shazy/widgets/padding/base_padding.dart';
 
+
 class HistoryUpcomingPage extends StatelessWidget {
-  const HistoryUpcomingPage({super.key});
+  HistoryUpcomingPage({super.key});
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: CustomAppBar(context: context),
+      key: _scaffoldKey,
+      appBar: CustomAppBar(
+        context: context,
+        scaffoldKey: _scaffoldKey,
+      ),
       body: BasePadding(
         context: context,
         child: ListView(
@@ -25,6 +32,11 @@ class HistoryUpcomingPage extends StatelessWidget {
             _buildContainer(context),
           ],
         ),
+      ),
+      drawer: CustomDrawer(
+        context: context,
+        name: 'M. Halil',
+        email: 'zubeyirx@email.com',
       ),
     );
   }

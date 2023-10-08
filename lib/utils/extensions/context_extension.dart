@@ -12,6 +12,10 @@ extension ContextExtension on BuildContext {
 
   double responsiveWidth(double value) => (value * width) / 393.0;
 
+  double customeHeight(double value) => height * value;
+
+  double customWidth(double value) => width * value;
+  
   Brightness get currentBrightness => Theme.of(this).brightness;
 
   bool get isLight => currentBrightness == Brightness.light;

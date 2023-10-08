@@ -27,7 +27,7 @@ mixin NavigationConstant {
   static const cancelRide = '/cancelRide';
 
   // History
-  static const historyUpcoming = '/historyUpcoming';
+  static const historyUpcoming = '/';
 
   // Wallet
   static const wallet = '/wallet';
@@ -36,5 +36,5 @@ mixin NavigationConstant {
   static const offer = '/offer';
 
   // notification
-  static const notification = '/';
+  static const notification = '/notification';
 }

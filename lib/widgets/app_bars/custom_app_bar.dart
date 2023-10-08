@@ -6,6 +6,7 @@ import '../buttons/shadow_button.dart';
 class CustomAppBar extends AppBar {
   CustomAppBar({
     Key? key,
+    GlobalKey<ScaffoldState>? scaffoldKey,
     required BuildContext context,
   }) : super(
           key: key,
@@ -20,7 +21,9 @@ class CustomAppBar extends AppBar {
                 Icons.menu,
                 color: Colors.black,
               ),
-              onTap: () {},
+              onTap: () {
+                scaffoldKey?.currentState?.openDrawer();
+              },
             ),
           ),
           actions: [

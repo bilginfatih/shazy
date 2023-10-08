@@ -71,7 +71,7 @@ class NavigationRouteManager {
       case NavigationConstant.cancelRide:
         return _navigationToDefault(const CancelRidePage(), args);
       case NavigationConstant.historyUpcoming:
-        return _navigationToDefault(const HistoryUpcomingPage(), args);
+        return _navigationToDefault(HistoryUpcomingPage(), args);
       case NavigationConstant.wallet:
         return _navigationToDefault(const WalletPage(), args);
       case NavigationConstant.offer:
