@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:shazy/pages/contact/cancel_ride_page.dart';
 import 'package:shazy/pages/contact/message_page.dart';
+import 'package:shazy/pages/home/home_page.dart';
 import 'package:shazy/pages/notification/notification_page.dart';
 import 'package:shazy/pages/offer/offer_page.dart';
 import 'package:shazy/pages/payment/add_card_page.dart';
@@ -78,6 +79,8 @@ class NavigationRouteManager {
         return _navigationToDefault(const OfferPage(), args);
       case NavigationConstant.notification:
         return _navigationToDefault(const NotificationPage(), args);
+      case NavigationConstant.homePage:
+        return _navigationToDefault(const HomePage(), args);
       default:
         return _navigationToDefault(MyApp(), args);
     }
