@@ -49,6 +49,8 @@ class _VerifyOtpPageState extends State<VerifyOtpPage> {
               ),
               OTPTextFormField(
                 context: context,
+                fieldWidth: 50,
+                width: MediaQuery.of(context).size.width,
               ),
               SizedBox(
                 height: context.responsiveHeight(20),
