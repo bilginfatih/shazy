@@ -49,6 +49,8 @@ class PhoneVerifiyOtpPage extends StatelessWidget {
               OTPTextFormField(
                 context: context,
                 controller: _pinController,
+                fieldWidth: 50,
+                width: MediaQuery.of(context).size.width,
               ),
               SizedBox(
                 height: context.responsiveHeight(20),
@@ -57,8 +59,7 @@ class PhoneVerifiyOtpPage extends StatelessWidget {
                 text: 'Verify',
                 context: context,
                 onPressed: () {
-                  NavigationManager.instance
-                      .navigationToPage(NavigationConstant.setNewPassword);
+                  NavigationManager.instance.navigationToPage(NavigationConstant.setNewPassword);
                 },
               ),
             ],

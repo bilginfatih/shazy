@@ -4,10 +4,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_polyline_points/flutter_polyline_points.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:geolocator/geolocator.dart' as geolocator;
+import 'package:otp_text_field/otp_field.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:permission_handler/permission_handler.dart' as ph;
 import 'package:provider/provider.dart';
@@ -19,8 +21,13 @@ import '../../utils/extensions/context_extension.dart';
 import '../../utils/theme/themes.dart';
 import '../../widgets/buttons/icon_button.dart';
 import '../../widgets/buttons/primary_button.dart';
+import '../../widgets/containers/payment_method_container.dart';
 import '../../widgets/dialogs/search_driver_dialog.dart';
+import '../../widgets/drawer/custom_drawer.dart';
 import '../../widgets/icons/circular_svg_icon.dart';
+import '../../widgets/profile/profile_widget.dart';
+import '../../widgets/textfields/otp_text_form_field.dart';
+import '../notification/notification_page.dart';
 
 class HomeScreenTransport extends StatefulWidget {
   HomeScreenTransport({Key? key}) : super(key: key);
@@ -33,6 +40,10 @@ class _HomeScreenTransportState extends State<HomeScreenTransport> {
   String mapTheme = '';
   final Completer<GoogleMapController> _controller = Completer<GoogleMapController>();
   GoogleMapController? newGoogleMapController;
+
+  final OtpFieldController _pinController = OtpFieldController();
+  late String _pinCheck;
+  late String _durationKm;
 
   List<LatLng> pLineCoOrdinatesList = [];
   Set<Polyline> polyLineSet = {};
@@ -171,7 +182,9 @@ class _HomeScreenTransportState extends State<HomeScreenTransport> {
                 color: Colors.black,
                 size: 18,
                 onPressed: () {
-                  debugPrint("object");
+                  NavigationManager.instance.navigationToPage(
+                    NavigationConstant.notification,
+                  );
                 },
               ),
               Padding(
@@ -288,6 +301,12 @@ class _HomeScreenTransportState extends State<HomeScreenTransport> {
                                 showModalBottomSheet(
                                   isDismissible: false,
                                   context: context,
+                                  shape: const RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.vertical(
+                                      top: Radius.circular(24),
+                                    ),
+                                  ),
+                                  clipBehavior: Clip.antiAliasWithSaveLayer,
                                   builder: (BuildContext context) {
                                     return Container(
                                       height: context.responsiveHeight(479),
@@ -308,59 +327,394 @@ class _HomeScreenTransportState extends State<HomeScreenTransport> {
           ),
         ),
       ),
-      drawer: Drawer(
-        child: ListView(
-          padding: EdgeInsets.zero,
-          children: <Widget>[
-            const DrawerHeader(
-              decoration: BoxDecoration(
-                color: Colors.blue,
-              ),
-              child: Text(
-                'Yan Menü',
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 24,
+      drawer: CustomDrawer(
+        context: context,
+        email: "deneme@gmail.com",
+        name: "Test",
+      ),
+    );
+  }
+
+  Widget _buildBottomSheet2(BuildContext context) {
+    return Container(
+      padding: EdgeInsets.only(top: 15.0),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          SvgPicture.asset(
+            "assets/svg/home-indicator.svg",
+            colorFilter: ColorFilter.mode(
+              context.isLight ? HexColor('#5A5A5A') : HexColor('#E8E8E8'),
+              BlendMode.srcIn,
+            ),
+          ),
+          GestureDetector(
+            onTap: () {
+              Navigator.pop(context);
+            },
+            child: Padding(
+              padding: EdgeInsets.only(left: 325.0),
+              child: SvgPicture.asset(
+                "assets/svg/cross.svg",
+                colorFilter: ColorFilter.mode(
+                  context.isLight ? HexColor('#5A5A5A') : HexColor('#E8E8E8'),
+                  BlendMode.srcIn,
                 ),
               ),
             ),
-            ListTile(
-              title: Text('Seçenek 1'),
-              onTap: () {},
-            ),
-            ListTile(
-              title: Text('Seçenek 2'),
-              onTap: () {},
-            ),
-          ],
-        ),
+          ),
+          Row(
+            children: [
+              Padding(
+                padding: const EdgeInsets.only(left: 15.0),
+                child: Container(
+                  height: context.responsiveHeight(23),
+                  width: context.responsiveWidth(167),
+                  child: Text(
+                    "Trip to Destionation",
+                    style: context.textStyle.subheadLargeMedium.copyWith(
+                      color: context.isLight ? HexColor('#5A5A5A') : HexColor('#E8E8E8'),
+                    ),
+                  ),
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.only(left: 135.0),
+                child: Container(
+                  height: context.responsiveHeight(23),
+                  width: context.responsiveWidth(70),
+                  child: Text(
+                    _durationKm,
+                    style: context.textStyle.subheadLargeMedium.copyWith(color: context.isLight ? HexColor('#5A5A5A') : HexColor('#E8E8E8')),
+                  ),
+                ),
+              )
+            ],
+          ),
+          SizedBox(height: context.responsiveWidth(15)),
+          Container(
+            height: context.responsiveHeight(1),
+            width: context.responsiveWidth(392),
+            color: HexColor('#DDDDDD'),
+          ),
+          SizedBox(height: context.responsiveWidth(19)),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              Padding(
+                padding: const EdgeInsets.only(left: 16.0),
+                child: Container(
+                  height: context.responsiveHeight(59),
+                  width: context.responsiveWidth(54),
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(4.0),
+                    color: Colors.grey, // Profil resminin rengini belirleyebilirsiniz
+                  ),
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(4.0),
+                    child: Image.network(
+                      "https://randomuser.me/api/portraits/men/93.jpg", // Profil resmi dosyasının yolu
+                      fit: BoxFit.cover,
+                    ),
+                  ),
+                ),
+              ),
+              SizedBox(width: context.responsiveWidth(9)),
+              Text(
+                "Zübeyir X",
+                style: context.textStyle.subheadLargeMedium.copyWith(
+                  color: HexColor("#2A2A2A"),
+                ),
+              ),
+              SizedBox(width: context.responsiveWidth(107)),
+              Row(
+                children: [
+                  Icon(
+                    Icons.star,
+                    color: Colors.yellow,
+                    size: 14,
+                  ),
+                  Text(
+                    "4.9 (531 reviews)",
+                    style: TextStyle(
+                      fontSize: 12,
+                      fontWeight: FontWeight.w400,
+                      color: context.isLight ? HexColor('#A0A0A0') : HexColor('#E8E8E8'),
+                    ),
+                  ),
+                ],
+              )
+            ],
+          ),
+          SizedBox(height: context.responsiveWidth(15)),
+          Container(
+            height: context.responsiveHeight(1),
+            width: context.responsiveWidth(392),
+            color: HexColor('#DDDDDD'),
+          ),
+          SizedBox(height: context.responsiveWidth(15)),
+          Row(
+            children: [
+              Padding(
+                padding: const EdgeInsets.only(left: 15.0),
+                child: Container(
+                  height: context.responsiveHeight(23),
+                  width: context.responsiveWidth(194),
+                  child: Text(
+                    "Share My Trip",
+                    style: context.textStyle.subheadLargeMedium.copyWith(
+                      color: context.isLight ? HexColor('#5A5A5A') : HexColor('#E8E8E8'),
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ),
+          Row(
+            children: [
+              Padding(
+                padding: const EdgeInsets.only(left: 15.0),
+                child: Container(
+                  height: context.responsiveHeight(23),
+                  width: context.responsiveWidth(334),
+                  child: Text(
+                    "Let family and friend see your location and trip status",
+                    style: TextStyle(
+                      fontSize: 12,
+                      fontWeight: FontWeight.w300,
+                      color: context.isLight ? HexColor('#5A5A5A') : HexColor('#E8E8E8'),
+                    ),
+                  ),
+                ),
+              ),
+              SvgPicture.asset(
+                "assets/svg/location.svg",
+              )
+            ],
+          ),
+        ],
       ),
     );
   }
 
   Widget _buildBottomSheet(BuildContext context) {
     return Container(
-      child: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: <Widget>[
-            ListTile(
-              title: Text('Option 1'),
-              onTap: () {
-                // Seçenek 1 seçildiğinde yapılacak işlemler
-                Navigator.pop(context); // Bottom Sheet'i kapat
-              },
+      padding: EdgeInsets.only(top: 15.0),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: <Widget>[
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Expanded(
+                child: SvgPicture.asset(
+                  "assets/svg/home-indicator.svg",
+                  colorFilter: ColorFilter.mode(
+                    context.isLight ? HexColor('#5A5A5A') : HexColor('#E8E8E8'),
+                    BlendMode.srcIn,
+                  ),
+                ),
+              ),
+              GestureDetector(
+                onTap: () {
+                  Navigator.pop(context);
+                },
+                child: Padding(
+                  padding: EdgeInsets.only(top: 11.0, right: 15.0),
+                  child: SvgPicture.asset(
+                    "assets/svg/cross.svg",
+                    colorFilter: ColorFilter.mode(
+                      context.isLight ? HexColor('#5A5A5A') : HexColor('#E8E8E8'),
+                      BlendMode.srcIn,
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ),
+          SizedBox(
+            height: context.responsiveHeight(14),
+          ),
+          Container(
+            padding: EdgeInsets.only(left: 20),
+            height: context.responsiveHeight(23),
+            width: context.responsiveWidth(392),
+            child: Text(
+              "Meeting Time 10:10",
+              style: context.textStyle.subheadLargeMedium.copyWith(
+                color: context.isLight ? HexColor('#5A5A5A') : HexColor('#E8E8E8'),
+              ),
             ),
-            ListTile(
-              title: Text('Option 2'),
-              onTap: () {
-                // Seçenek 2 seçildiğinde yapılacak işlemler
-                Navigator.pop(context); // Bottom Sheet'i kapat
-              },
+          ),
+          SizedBox(height: context.responsiveWidth(15)),
+          Container(
+            height: context.responsiveHeight(1),
+            width: context.responsiveWidth(392),
+            color: HexColor('#DDDDDD'),
+          ),
+          SizedBox(height: context.responsiveWidth(19)),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              Padding(
+                padding: const EdgeInsets.only(left: 16.0),
+                child: Container(
+                  height: context.responsiveHeight(59),
+                  width: context.responsiveWidth(54),
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(4.0),
+                    color: Colors.grey, // Profil resminin rengini belirleyebilirsiniz
+                  ),
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(4.0),
+                    child: Image.network(
+                      "https://randomuser.me/api/portraits/men/93.jpg", // Profil resmi dosyasının yolu
+                      fit: BoxFit.cover,
+                    ),
+                  ),
+                ),
+              ),
+              SizedBox(width: context.responsiveWidth(9)),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    "Zübeyir X",
+                    style: context.textStyle.subheadLargeMedium.copyWith(
+                      color: HexColor("#2A2A2A"),
+                    ),
+                  ),
+                  Row(
+                    children: [
+                      Icon(
+                        Icons.star,
+                        color: Colors.yellow,
+                        size: 14,
+                      ),
+                      Text(
+                        "4.9 (531 reviews)",
+                        style: TextStyle(
+                          fontSize: 12,
+                          fontWeight: FontWeight.w400,
+                          color: context.isLight ? HexColor('#A0A0A0') : HexColor('#E8E8E8'),
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              )
+            ],
+          ),
+          SizedBox(height: context.responsiveHeight(15)),
+          Container(
+            height: context.responsiveHeight(1),
+            width: context.responsiveWidth(392),
+            color: HexColor('#DDDDDD'),
+          ),
+          SizedBox(
+            height: context.responsiveHeight(22),
+          ),
+          Row(
+            children: [
+              Container(
+                padding: EdgeInsets.only(left: 11),
+                height: context.responsiveHeight(23),
+                width: context.responsiveWidth(194),
+                child: Text(
+                  "Payment method",
+                  style: context.textStyle.subheadLargeMedium.copyWith(
+                    color: context.isLight ? HexColor('#5A5A5A') : HexColor('#E8E8E8'),
+                  ),
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.only(left: 59.0),
+                child: Container(
+                  height: context.responsiveHeight(36),
+                  width: context.responsiveWidth(125),
+                  child: Text(
+                    "220.00₺",
+                    style: context.textStyle.titleLargeMedium,
+                  ),
+                ),
+              )
+            ],
+          ),
+          SizedBox(
+            height: context.responsiveHeight(12),
+          ),
+          Padding(
+            padding: const EdgeInsets.only(right: 22.0, left: 11),
+            child: PaymetMethodContainer(
+              context: context,
+              assetName: 'visa',
+              text1: '**** **** **** 8970',
+              text2: 'Expires: 12/26',
+              opacitiy: 1,
             ),
-          ],
-        ),
+          ),
+          SizedBox(
+            height: context.responsiveHeight(5),
+          ),
+          Text(
+            "Confirm Code",
+            style: TextStyle(
+              fontSize: 11,
+              fontWeight: FontWeight.w500,
+              color: context.isLight ? HexColor('#5A5A5A') : HexColor('#E8E8E8'),
+            ),
+          ),
+          SizedBox(
+            height: context.responsiveHeight(5),
+          ),
+          OTPTextFormField(
+            context: context,
+            controller: _pinController,
+            fieldWidth: 27,
+            contentPadding: EdgeInsets.only(left: 1, right: 1, top: 1, bottom: 1),
+            width: context.responsiveWidth(200),
+            onCompleted: (p0) {
+              Navigator.pop(context);
+              showModalBottomSheet(
+                isDismissible: false,
+                context: context,
+                shape: const RoundedRectangleBorder(
+                  borderRadius: BorderRadius.vertical(
+                    top: Radius.circular(24),
+                  ),
+                ),
+                clipBehavior: Clip.antiAliasWithSaveLayer,
+                builder: (BuildContext context) {
+                  return Container(
+                    height: context.responsiveHeight(281),
+                    child: _buildBottomSheet2(context),
+                  );
+                },
+              );
+            },
+          ),
+          SizedBox(
+            height: context.responsiveHeight(5),
+          ),
+          Row(
+            children: [
+              Padding(
+                padding: const EdgeInsets.only(left: 20.0),
+                child: CircularSvgIcon(context: context, assetName: "assets/svg/message.svg"),
+              ),
+              SizedBox(
+                width: context.responsiveWidth(132),
+              ),
+              PrimaryButton(
+                text: "Cancel",
+                height: context.responsiveHeight(44),
+                width: context.responsiveWidth(169),
+                context: context,
+                onPressed: () {},
+              )
+            ],
+          )
+        ],
       ),
     );
   }
@@ -378,6 +732,7 @@ class _HomeScreenTransportState extends State<HomeScreenTransport> {
       ),
     );
     var directionDetailsInfo = await AssistantMethods.obtainOriginToDestinationDirectionDetails(originLatLng, destinationLatLng);
+
     Navigator.pop(context);
 
     print("These are points = ");
@@ -394,7 +749,7 @@ class _HomeScreenTransportState extends State<HomeScreenTransport> {
       });
     }
     polyLineSet.clear();
-
+    _durationKm = directionDetailsInfo.distance_text.toString();
     setState(() {
       Polyline polyline = Polyline(
         color: Colors.blue,
@@ -440,9 +795,6 @@ class _HomeScreenTransportState extends State<HomeScreenTransport> {
       position: destinationLatLng,
       icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueOrange),
     );
-    print(destinationLatLng);
-    print(destinationMarker);
-    print(destinationPosition);
     setState(() {
       markersSet.add(originMarker);
       markersSet.add(destinationMarker);

@@ -93,7 +93,6 @@ class _CompleteYourProfilePageState extends State<CompleteYourProfilePage> {
                     width: context.responsiveWidth(15),
                   ),
                   Expanded(
-                    // Halile sor
                     child: PrimaryButton(
                       context: context,
                       onPressed: () {},
