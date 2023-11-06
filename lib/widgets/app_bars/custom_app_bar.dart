@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:shazy/utils/extensions/context_extension.dart';
 
 import '../buttons/shadow_button.dart';
 
@@ -13,22 +14,30 @@ class CustomAppBar extends AppBar {
           backgroundColor: Theme.of(context).scaffoldBackgroundColor,
           automaticallyImplyLeading: false,
           elevation: 0,
-          leading: Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: ShadowButton(
-              context: context,
-              icon: const Icon(
-                Icons.menu,
-                color: Colors.black,
+          leadingWidth: 100,
+          leading: Row(
+            children: [
+              SizedBox(
+                width: context.responsiveWidth(6),
               ),
-              onTap: () {
-                scaffoldKey?.currentState?.openDrawer();
-              },
-            ),
+              Padding(
+                padding: EdgeInsets.all(context.responsiveWidth(12)),
+                child: ShadowButton(
+                  context: context,
+                  icon: const Icon(
+                    Icons.menu,
+                    color: Colors.black,
+                  ),
+                  onTap: () {
+                    scaffoldKey?.currentState?.openDrawer();
+                  },
+                ),
+              ),
+            ],
           ),
           actions: [
             Padding(
-              padding: const EdgeInsets.all(8.0),
+              padding: EdgeInsets.all(context.responsiveWidth(12)),
               child: ShadowButton(
                 context: context,
                 icon: SvgPicture.asset(
@@ -36,7 +45,10 @@ class CustomAppBar extends AppBar {
                 ),
                 onTap: () {},
               ),
-            )
+            ),
+            SizedBox(
+              width: context.responsiveWidth(6),
+            ),
           ],
         );
 }
