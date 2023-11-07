@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:otp_text_field/otp_field.dart';
+
 import '../../core/init/navigation/navigation_manager.dart';
 import '../../utils/constants/navigation_constant.dart';
 import '../../utils/extensions/context_extension.dart';
 import '../../widgets/app_bars/back_app_bar.dart';
-import '../../widgets/padding/base_padding.dart';
-
 import '../../widgets/buttons/primary_button.dart';
+import '../../widgets/padding/base_padding.dart';
 import '../../widgets/textfields/otp_text_form_field.dart';
 
 class PhoneVerifiyOtpPage extends StatelessWidget {

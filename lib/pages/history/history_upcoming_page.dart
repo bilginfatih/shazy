@@ -2,12 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:hexcolor/hexcolor.dart';
-import 'package:shazy/utils/extensions/context_extension.dart';
-import 'package:shazy/utils/theme/themes.dart';
-import 'package:shazy/widgets/app_bars/custom_app_bar.dart';
-import 'package:shazy/widgets/buttons/secondary_button.dart';
-import 'package:shazy/widgets/drawer/custom_drawer.dart';
-import 'package:shazy/widgets/padding/base_padding.dart';
+import '../../utils/extensions/context_extension.dart';
+import '../../utils/theme/themes.dart';
+import '../../widgets/app_bars/custom_app_bar.dart';
+import '../../widgets/buttons/secondary_button.dart';
+import '../../widgets/drawer/custom_drawer.dart';
+import '../../widgets/padding/base_padding.dart';
 
 
 class HistoryUpcomingPage extends StatelessWidget {

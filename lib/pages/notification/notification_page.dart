@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:hexcolor/hexcolor.dart';
-import 'package:shazy/utils/extensions/context_extension.dart';
-import 'package:shazy/widgets/app_bars/back_app_bar.dart';
-import 'package:shazy/widgets/padding/base_padding.dart';
+import '../../utils/extensions/context_extension.dart';
+import '../../widgets/app_bars/back_app_bar.dart';
+import '../../widgets/padding/base_padding.dart';
 
 class NotificationPage extends StatelessWidget {
   const NotificationPage({super.key});

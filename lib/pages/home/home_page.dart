@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:hexcolor/hexcolor.dart';
-import 'package:shazy/pages/history/history_upcoming_page.dart';
-import 'package:shazy/pages/home/home_screen_transport.dart';
-import 'package:shazy/pages/offer/offer_page.dart';
-import 'package:shazy/pages/wallet/wallet_page.dart';
-import 'package:shazy/utils/extensions/context_extension.dart';
+import '../history/history_upcoming_page.dart';
+import 'home_screen_transport.dart';
+import '../offer/offer_page.dart';
+import '../wallet/wallet_page.dart';
+import '../../utils/extensions/context_extension.dart';
 
 import '../../utils/theme/themes.dart';
 

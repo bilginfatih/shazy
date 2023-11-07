@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:shazy/utils/extensions/context_extension.dart';
-import 'package:shazy/widgets/app_bars/back_app_bar.dart';
-import 'package:shazy/widgets/buttons/primary_button.dart';
-import 'package:shazy/widgets/padding/base_padding.dart';
-import 'package:shazy/widgets/textfields/name_text_from_field.dart';
+import '../../utils/extensions/context_extension.dart';
+import '../../widgets/app_bars/back_app_bar.dart';
+import '../../widgets/buttons/primary_button.dart';
+import '../../widgets/padding/base_padding.dart';
+import '../../widgets/textfields/name_text_from_field.dart';
 
 import '../../utils/theme/themes.dart';
 import '../../widgets/textfields/credit_card_text_form_field.dart';
