@@ -1,7 +1,5 @@
 import 'dart:convert';
-
 import 'package:dio/dio.dart';
-
 import '../../base/base_model.dart';
 import 'base_network_manager.dart';
 
@@ -40,6 +38,23 @@ class NetworkManager extends BaseNetworkManager {
     }
   }
 
+  /*@override
+  Future post<T extends BaseModel>(String path, {T? model}) async {
+    Map<String, dynamic> data = {};
+    try {
+      Response<dynamic> response = await dio.post('',
+          data: jsonEncode(model),
+          options: Options(
+            headers: {},
+            validateStatus: (status) => status is int && status < 500,
+          ));
+      data = jsonDecode(response.toString());
+    } catch (e) {
+      data['error'] = '';
+    }
+    return data;
+  }*/
+  
   @override
   Future post<T extends BaseModel>(String path,
       {T? model, Map<String, dynamic>? data}) async {
