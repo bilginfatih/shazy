@@ -11,5 +11,11 @@
     "enterOTPCode": "Enter your OTP code",
     "didReceiveCode": "Didn’t receive code? ",
     "resendAgain": "Resend again",
-    "verify": "Verify"
+    "verify": "Verify",
+    "setPassword": "Set password",
+    "setYourPassword": "Set your password",
+    "enterYourPassword": "Enter Your Password",
+    "confirmPassword": "Confirm Password",
+    "passwordControl": "At least 1 number or a special character",
+    "register": "Register"
 }

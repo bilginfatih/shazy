@@ -8,6 +8,10 @@ class NetworkManager extends BaseNetworkManager {
 
   static NetworkManager instance = NetworkManager._init();
 
+  final Map<String, String> _headers = {
+    'Accept': 'application/json',
+  };
+
   @override
   Future get<T extends BaseModel>(String path, {T? model}) async {
     try {
@@ -59,9 +63,26 @@ class NetworkManager extends BaseNetworkManager {
   Future post<T extends BaseModel>(String path,
       {T? model, Map<String, dynamic>? data}) async {
     try {
-      Response<dynamic> response;
-
-      if (model != null) {
+      var request = jsonEncode(model?.toJson());
+      print(path);
+      print('${dio.options.baseUrl}$path');
+      print(jsonEncode(model?.toJson()));
+      print(_headers.toString());
+      Response<dynamic> response = await dio.post(
+        path,
+        data: request,
+        options: Options(
+          followRedirects: false,
+          headers: _headers,
+          validateStatus: (status) {
+            return status is int && status < 500;
+          },
+        ),
+      );
+      print(jsonDecode(response.toString()));
+      return jsonDecode(response.toString());
+      // TODO: delete
+      /*if (model != null) {
         response = await dio.post(path, data: model.toJson());
       } else {
         response = await dio.post(path, data: jsonEncode(data));
@@ -74,7 +95,7 @@ class NetworkManager extends BaseNetworkManager {
           print(data);
           return data['data'];
         }
-      }
+      }*/
     } catch (e) {
       rethrow;
     }

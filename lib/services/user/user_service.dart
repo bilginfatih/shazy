@@ -1,3 +1,4 @@
+import 'package:flutter_session_manager/flutter_session_manager.dart';
 import 'package:shazy/core/init/network/network_manager.dart';
 import 'package:shazy/models/user/user_model.dart';
 
@@ -6,13 +7,19 @@ class UserService {
 
   static UserService instance = UserService();
 
-  Future<void> register(UserModel user) async {
+  Future<String?> register(UserModel user) async {
     try {
-      var response = NetworkManager.instance.post('/register', model: user);
-      print(response);
-      print(response.runtimeType);
+      var response =
+          await NetworkManager.instance.post('/register', model: user);
+      if (response.containsKey('message')) {
+        return response['message'];
+      } else {
+        await SessionManager().set('token', response['token']);
+        var token = await SessionManager().get('token');
+      }
     } catch (e) {
       rethrow;
     }
+    return null;
   }
 }

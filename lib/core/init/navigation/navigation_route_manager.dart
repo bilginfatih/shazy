@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:shazy/pages/test_pages.dart';
 import '../../../pages/contact/cancel_ride_page.dart';
 import '../../../pages/contact/message_page.dart';
 import '../../../pages/home/home_page.dart';
@@ -81,6 +82,8 @@ class NavigationRouteManager {
         return _navigationToDefault(const NotificationPage(), args);
       case NavigationConstant.homePage:
         return _navigationToDefault(const HomePage(), args);
+      case NavigationConstant.testPage:
+        return _navigationToDefault(const TestPage(), args);
       default:
         return _navigationToDefault(MyApp(), args);
     }

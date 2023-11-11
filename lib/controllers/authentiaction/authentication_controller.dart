@@ -7,11 +7,20 @@ import 'package:shazy/utils/extensions/string_extension.dart';
 class AuthController {
   AuthController();
 
-  Future<void> register(UserModel model, bool termsCheck) async {
+  Future<void> register(UserModel model) async {
     try {
-      await UserService.instance.register(model);
+      if (model.password != model.passwordConfirmation) {
+        // TODO: hata mesajı basacak
+      }
+      var response = await UserService.instance.register(model);
+      if (response != null) {
+        // TODO: hata mesajı basacak
+      } else {
+        NavigationManager.instance
+            .navigationToPageClear(NavigationConstant.homePage);
+      }
     } catch (e) {
-      // TODO: hata mesajı basacal
+      // TODO: hata mesajı basacak
     }
   }
 
