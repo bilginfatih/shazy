@@ -54,7 +54,7 @@ class NetworkManager extends BaseNetworkManager {
     }
     return data;
   }*/
-  
+
   @override
   Future post<T extends BaseModel>(String path,
       {T? model, Map<String, dynamic>? data}) async {
@@ -71,12 +71,8 @@ class NetworkManager extends BaseNetworkManager {
         if (data['success'] == 'false') {
           throw Exception(data['errorMessage']);
         } else {
-          if (model != null) {
-            print(path);
-            print(model.toJson());
-            print(data);
-            return model.fromJson(data['data']);
-          }
+          print(data);
+          return data['data'];
         }
       }
     } catch (e) {

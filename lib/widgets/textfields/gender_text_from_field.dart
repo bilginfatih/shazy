@@ -23,7 +23,8 @@ class GenderTextFormField extends DropdownButtonFormField {
               ),
             ),
           ),
-          iconEnabledColor: context.isLight ? HexColor("#414141") : HexColor("#D0D0D0"),
+          iconEnabledColor:
+              context.isLight ? HexColor("#414141") : HexColor("#D0D0D0"),
           icon: const Icon(Icons.keyboard_arrow_down),
           items: const [
             DropdownMenuItem(
@@ -36,7 +37,13 @@ class GenderTextFormField extends DropdownButtonFormField {
             ),
           ],
           onChanged: (v) {
-            v = controller;
+            if (controller != null) {
+              if (v == 0) {
+                controller.text = 'male';
+              } else {
+                controller.text = 'female';
+              }
+            }
           },
         );
 }

@@ -12,6 +12,7 @@ class EmailTextFormField extends TextFormField {
   }) : super(
           key: key,
           controller: controller,
+          keyboardType: TextInputType.emailAddress,
           decoration: InputDecoration(
             hintText: text,
             hintStyle: context.textStyle.subheadLargeMedium.copyWith(

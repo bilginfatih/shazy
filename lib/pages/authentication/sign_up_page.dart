@@ -1,9 +1,10 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:roundcheckbox/roundcheckbox.dart';
+import 'package:shazy/controllers/authentiaction/authentication_controller.dart';
+import 'package:shazy/models/user/user_model.dart';
 import '../../utils/extensions/context_extension.dart';
-import '../../core/init/navigation/navigation_manager.dart';
-import '../../utils/constants/navigation_constant.dart';
 import '../../utils/theme/themes.dart';
 import '../../widgets/app_bars/back_app_bar.dart';
 import '../../widgets/buttons/custom_text_button.dart';
@@ -15,15 +16,106 @@ import '../../widgets/textfields/gender_text_from_field.dart';
 import '../../widgets/textfields/name_text_from_field.dart';
 import '../../widgets/textfields/tc_text_form_field.dart';
 
-class SignUpPage extends StatefulWidget {
-  @override
-  _SignUpPageState createState() => _SignUpPageState();
-}
+class SignUpPage extends StatelessWidget {
+  SignUpPage({super.key});
 
-class _SignUpPageState extends State<SignUpPage> {
-  TextEditingController _emailController = TextEditingController();
-  TextEditingController _tcController = TextEditingController();
-  TextEditingController _genderController = TextEditingController();
+  final AuthController _controller = AuthController();
+  final TextEditingController _emailTextEditingController =
+      TextEditingController();
+
+  final TextEditingController _genderTextEditingController =
+      TextEditingController();
+
+  final TextEditingController _nameTextEditingController =
+      TextEditingController();
+
+  final TextEditingController _phoneTextEditingController =
+      TextEditingController();
+
+  final TextEditingController _tcTextEditingController =
+      TextEditingController();
+
+  var _termsCheck = false;
+
+  PrimaryButton _buildSignUpButton(BuildContext context) {
+    return PrimaryButton(
+              text: 'signUp'.tr(),
+              context: context,
+              onPressed: () async {
+                UserModel model = UserModel(
+                  name: _nameTextEditingController.text,
+                  email: _emailTextEditingController.text,
+                  identificationNumber: _tcTextEditingController.text,
+                  phone: _phoneTextEditingController.text,
+                  gender: _genderTextEditingController.text,
+                );
+                _controller.goToVerifyOTP(model, _termsCheck);
+                await _controller.register(model, _termsCheck);
+              },
+            );
+  }
+
+  Row _buildTermsCheck(BuildContext context) {
+    return Row(
+              children: [
+                Container(
+                  padding: const EdgeInsets.only(bottom: 13),
+                  child: RoundCheckBox(
+                    borderColor: Colors.green[600],
+                    checkedWidget: const Icon(Icons.check, size: 14),
+                    size: 16,
+                    onTap: (selected) {
+                      _termsCheck = selected ?? false;
+                    },
+                  ),
+                ),
+                SizedBox(width: context.responsiveWidth(10)),
+                Expanded(
+                  // Halile sor
+                  child: RichText(
+                    text: TextSpan(
+                      style: context.textStyle.bodySmallMedium,
+                      children: [
+                        TextSpan(
+                          text: 'signUpTerms1'.tr(),
+                          style: context.textStyle.bodySmallMedium.copyWith(
+                            color: AppThemes.borderSideColor,
+                          ),
+                        ),
+                        TextSpan(
+                          text: 'termsOfService'.tr(),
+                          style: context.textStyle.bodySmallMedium.copyWith(
+                            color: AppThemes.lightPrimary500,
+                          ),
+                          recognizer: TapGestureRecognizer()
+                            ..onTap = () {
+                              // TODO: yapılacak
+                            },
+                        ),
+                        TextSpan(
+                          text: ' ${'and'.tr()} ',
+                          style: context.textStyle.bodySmallMedium.copyWith(
+                            color: AppThemes.borderSideColor,
+                          ),
+                        ),
+                        TextSpan(
+                          text: 'privacyPolicy'.tr(),
+                          style: context.textStyle.bodySmallMedium.copyWith(
+                            color: AppThemes.lightPrimary500,
+                          ),
+                          recognizer: TapGestureRecognizer()
+                            ..onTap = () {
+                              // TODO: yapılacak
+                            },
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ],
+            );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -36,7 +128,7 @@ class _SignUpPageState extends State<SignUpPage> {
               Align(
                 alignment: Alignment.topLeft,
                 child: Text(
-                  'Sign Up',
+                  'signUp'.tr(),
                   style: context.textStyle.titleMedMedium,
                 ),
               ),
@@ -47,6 +139,7 @@ class _SignUpPageState extends State<SignUpPage> {
                 height: context.responsiveHeight(60),
                 width: context.responsiveWidth(362),
                 child: NameTextFormField(
+                  controller: _nameTextEditingController,
                   context: context,
                 ),
               ),
@@ -58,7 +151,7 @@ class _SignUpPageState extends State<SignUpPage> {
                 width: context.responsiveWidth(362),
                 child: EmailTextFormField(
                   context: context,
-                  controller: _emailController,
+                  controller: _emailTextEditingController,
                   text: 'Email',
                 ),
               ),
@@ -70,13 +163,14 @@ class _SignUpPageState extends State<SignUpPage> {
                 width: context.responsiveWidth(362),
                 child: TcTextFormField(
                   context: context,
-                  controller: _tcController,
+                  controller: _tcTextEditingController,
                 ),
               ),
               SizedBox(
                 height: context.responsiveHeight(20),
               ),
               CountryPhoneTextFormField(
+                controller: _phoneTextEditingController,
                 context: context,
               ),
               SizedBox(
@@ -87,90 +181,26 @@ class _SignUpPageState extends State<SignUpPage> {
                 width: context.responsiveWidth(362),
                 child: GenderTextFormField(
                   context: context,
-                  controller: _genderController,
-                  text: 'Gender',
+                  controller: _genderTextEditingController,
+                  text: 'gender'.tr(),
                 ),
               ),
               SizedBox(
                 height: context.responsiveHeight(20),
               ),
-              Row(
-                children: [
-                  Container(
-                    padding: const EdgeInsets.only(bottom: 13),
-                    child: RoundCheckBox(
-                      borderColor: Colors.green[600],
-                      checkedWidget: const Icon(Icons.check, size: 14),
-                      size: 16,
-                      onTap: (selected) {},
-                    ),
-                  ),
-                  SizedBox(width: context.responsiveWidth(10)),
-                  Expanded(
-                    // Halile sor
-                    child: RichText(
-                      text: TextSpan(
-                        style: context.textStyle.bodySmallMedium,
-                        children: [
-                          TextSpan(
-                            text: "By signing up. you agree to the ",
-                            style: context.textStyle.bodySmallMedium.copyWith(
-                              color: AppThemes.borderSideColor,
-                            ),
-                          ),
-                          TextSpan(
-                            text: "Terms of service",
-                            style: context.textStyle.bodySmallMedium.copyWith(
-                              color: AppThemes.lightPrimary500,
-                            ),
-                            recognizer: TapGestureRecognizer()
-                              ..onTap = () {
-                                NavigationManager.instance.navigationToPage(
-                                    NavigationConstant.setPassword);
-                              },
-                          ),
-                          TextSpan(
-                            text: " and ",
-                            style: context.textStyle.bodySmallMedium.copyWith(
-                              color: AppThemes.borderSideColor,
-                            ),
-                          ),
-                          TextSpan(
-                            text: "Privacy policy.",
-                            style: context.textStyle.bodySmallMedium.copyWith(
-                              color: AppThemes.lightPrimary500,
-                            ),
-                            recognizer: TapGestureRecognizer()
-                              ..onTap = () {
-                                NavigationManager.instance.navigationToPage(
-                                    NavigationConstant.completeProfile);
-                              },
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                ],
-              ),
+              _buildTermsCheck(context),
               SizedBox(
                 height: context.responsiveHeight(22),
               ),
-              PrimaryButton(
-                text: 'Sign Up',
-                context: context,
-                onPressed: () {},
-              ),
+              _buildSignUpButton(context),
               SizedBox(
                 height: context.responsiveHeight(80),
               ),
               CustomTextButton(
-                text1: 'Already have an account? ',
-                text2: 'Sign in',
+                text1: 'alreadyHaveAnAccount'.tr(),
+                text2: 'signIn'.tr(),
                 context: context,
-                onTap: () {
-                  NavigationManager.instance
-                      .navigationToPage(NavigationConstant.signIn);
-                },
+                onTap: _controller.goToSignInPage,
               ),
             ],
           ),

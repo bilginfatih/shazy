@@ -1,7 +1,7 @@
 // The paths of the pages are set here
 mixin NavigationConstant {
   static const signIn = '/signIn';
-  static const signUp = '/signUp';
+  static const signUp = '/';
   static const setPassword = '/setPassword';
   static const completeProfile = '/completeProfile';
   static const verifyOtp = '/verifyOtp';
@@ -13,10 +13,9 @@ mixin NavigationConstant {
 
   // Home
   static const searchPage = '/searchPage';
+  static const homePage = '/homePage';
 
   //Google Maps Ekranları
-
-  static const homePage = '/';
   static const homeScreenTransport = '/homeScreenTransport';
 
   // Payment

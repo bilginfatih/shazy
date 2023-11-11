@@ -1,3 +1,10 @@
 {
-    "hello": "hi"
+    "signUp": "Sign Up",
+    "gender": "Gender",
+    "signUpTerms1": "By signing up. you agree to the",
+    "termsOfService": "Terms of service",
+    "and": "and",
+    "privacyPolicy": "Privacy policy.",
+    "alreadyHaveAnAccount": "Already have an account? ",
+    "signIn": "Sign In"
 }

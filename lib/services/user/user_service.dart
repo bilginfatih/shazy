@@ -9,6 +9,8 @@ class UserService {
   Future<void> register(UserModel user) async {
     try {
       var response = NetworkManager.instance.post('/register', model: user);
+      print(response);
+      print(response.runtimeType);
     } catch (e) {
       rethrow;
     }
