@@ -6,5 +6,10 @@
     "and": "and",
     "privacyPolicy": "Privacy policy.",
     "alreadyHaveAnAccount": "Already have an account? ",
-    "signIn": "Sign In"
+    "signIn": "Sign In",
+    "phoneVerification": "Phone verification",
+    "enterOTPCode": "Enter your OTP code",
+    "didReceiveCode": "Didn’t receive code? ",
+    "resendAgain": "Resend again",
+    "verify": "Verify"
 }

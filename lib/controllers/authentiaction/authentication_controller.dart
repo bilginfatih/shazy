@@ -9,7 +9,6 @@ class AuthController {
 
   Future<void> register(UserModel model, bool termsCheck) async {
     try {
-      
       await UserService.instance.register(model);
     } catch (e) {
       // TODO: hata mesajı basacal
@@ -27,8 +26,22 @@ class AuthController {
         model.gender == '') {
       // TODO: hata mesaji
     } else {
-      NavigationManager.instance.navigationToPage(NavigationConstant.verifyOtp);
+      NavigationManager.instance
+          .navigationToPage(NavigationConstant.verifyOtp, args: model);
     }
+  }
+
+  void verifyOTP(UserModel model, String code) {
+    if (false) {
+      // TODO: burada numara doğrulaması yapılacak.
+    } else {
+      NavigationManager.instance
+          .navigationToPage(NavigationConstant.setPassword, args: model);
+    }
+  }
+
+  void resendCode() {
+    // TODO: resend
   }
 
   void goToSignInPage() {

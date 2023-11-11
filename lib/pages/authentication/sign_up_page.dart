@@ -41,7 +41,7 @@ class SignUpPage extends StatelessWidget {
     return PrimaryButton(
               text: 'signUp'.tr(),
               context: context,
-              onPressed: () async {
+              onPressed: () {
                 UserModel model = UserModel(
                   name: _nameTextEditingController.text,
                   email: _emailTextEditingController.text,
@@ -50,7 +50,6 @@ class SignUpPage extends StatelessWidget {
                   gender: _genderTextEditingController.text,
                 );
                 _controller.goToVerifyOTP(model, _termsCheck);
-                await _controller.register(model, _termsCheck);
               },
             );
   }
