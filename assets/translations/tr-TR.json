@@ -17,5 +17,9 @@
     "enterYourPassword": "Enter Your Password",
     "confirmPassword": "Confirm Password",
     "passwordControl": "At least 1 number or a special character",
-    "register": "Register"
+    "register": "Register",
+    "surname": "Surname",
+    "forgetPassword": "Forget password?",
+    "dontHaveAccount": "Don\"t have an account? ",
+    "emailOrPhone": "Email or Phone Number"
 }

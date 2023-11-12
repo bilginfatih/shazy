@@ -15,7 +15,20 @@ class UserService {
         return response['message'];
       } else {
         await SessionManager().set('token', response['token']);
-        var token = await SessionManager().get('token');
+      }
+    } catch (e) {
+      rethrow;
+    }
+    return null;
+  }
+
+  Future<String?> login(UserModel user) async {
+    try {
+      var response = await NetworkManager.instance.post('/login', model: user);
+      if (response.containsKey('message')) {
+        return response['message'];
+      } else {
+        await SessionManager().set('token', response['token']);
       }
     } catch (e) {
       rethrow;

@@ -32,6 +32,9 @@ class SignUpPage extends StatelessWidget {
   final TextEditingController _phoneTextEditingController =
       TextEditingController();
 
+  final TextEditingController _surnameTextEditingController =
+      TextEditingController();
+
   final TextEditingController _tcTextEditingController =
       TextEditingController();
 
@@ -39,80 +42,81 @@ class SignUpPage extends StatelessWidget {
 
   PrimaryButton _buildSignUpButton(BuildContext context) {
     return PrimaryButton(
-              text: 'signUp'.tr(),
-              context: context,
-              onPressed: () {
-                UserModel model = UserModel(
-                  name: _nameTextEditingController.text,
-                  email: _emailTextEditingController.text,
-                  identificationNumber: _tcTextEditingController.text,
-                  phone: _phoneTextEditingController.text,
-                  gender: _genderTextEditingController.text,
-                );
-                _controller.goToVerifyOTP(model, _termsCheck);
-              },
-            );
+      text: 'signUp'.tr(),
+      context: context,
+      onPressed: () {
+        UserModel model = UserModel(
+          name: _nameTextEditingController.text,
+          surname: _surnameTextEditingController.text,
+          email: _emailTextEditingController.text,
+          identificationNumber: _tcTextEditingController.text,
+          phone: _phoneTextEditingController.text,
+          gender: _genderTextEditingController.text,
+        );
+        _controller.goToVerifyOTP(model, _termsCheck);
+      },
+    );
   }
 
   Row _buildTermsCheck(BuildContext context) {
     return Row(
+      children: [
+        Container(
+          padding: const EdgeInsets.only(bottom: 13),
+          child: RoundCheckBox(
+            borderColor: Colors.green[600],
+            checkedWidget: const Icon(Icons.check, size: 14),
+            size: 16,
+            onTap: (selected) {
+              _termsCheck = selected ?? false;
+            },
+          ),
+        ),
+        SizedBox(width: context.responsiveWidth(10)),
+        Expanded(
+          // Halile sor
+          child: RichText(
+            text: TextSpan(
+              style: context.textStyle.bodySmallMedium,
               children: [
-                Container(
-                  padding: const EdgeInsets.only(bottom: 13),
-                  child: RoundCheckBox(
-                    borderColor: Colors.green[600],
-                    checkedWidget: const Icon(Icons.check, size: 14),
-                    size: 16,
-                    onTap: (selected) {
-                      _termsCheck = selected ?? false;
-                    },
+                TextSpan(
+                  text: 'signUpTerms1'.tr(),
+                  style: context.textStyle.bodySmallMedium.copyWith(
+                    color: AppThemes.borderSideColor,
                   ),
                 ),
-                SizedBox(width: context.responsiveWidth(10)),
-                Expanded(
-                  // Halile sor
-                  child: RichText(
-                    text: TextSpan(
-                      style: context.textStyle.bodySmallMedium,
-                      children: [
-                        TextSpan(
-                          text: 'signUpTerms1'.tr(),
-                          style: context.textStyle.bodySmallMedium.copyWith(
-                            color: AppThemes.borderSideColor,
-                          ),
-                        ),
-                        TextSpan(
-                          text: 'termsOfService'.tr(),
-                          style: context.textStyle.bodySmallMedium.copyWith(
-                            color: AppThemes.lightPrimary500,
-                          ),
-                          recognizer: TapGestureRecognizer()
-                            ..onTap = () {
-                              // TODO: yapılacak
-                            },
-                        ),
-                        TextSpan(
-                          text: ' ${'and'.tr()} ',
-                          style: context.textStyle.bodySmallMedium.copyWith(
-                            color: AppThemes.borderSideColor,
-                          ),
-                        ),
-                        TextSpan(
-                          text: 'privacyPolicy'.tr(),
-                          style: context.textStyle.bodySmallMedium.copyWith(
-                            color: AppThemes.lightPrimary500,
-                          ),
-                          recognizer: TapGestureRecognizer()
-                            ..onTap = () {
-                              // TODO: yapılacak
-                            },
-                        ),
-                      ],
-                    ),
+                TextSpan(
+                  text: 'termsOfService'.tr(),
+                  style: context.textStyle.bodySmallMedium.copyWith(
+                    color: AppThemes.lightPrimary500,
                   ),
+                  recognizer: TapGestureRecognizer()
+                    ..onTap = () {
+                      // TODO: yapılacak
+                    },
+                ),
+                TextSpan(
+                  text: ' ${'and'.tr()} ',
+                  style: context.textStyle.bodySmallMedium.copyWith(
+                    color: AppThemes.borderSideColor,
+                  ),
+                ),
+                TextSpan(
+                  text: 'privacyPolicy'.tr(),
+                  style: context.textStyle.bodySmallMedium.copyWith(
+                    color: AppThemes.lightPrimary500,
+                  ),
+                  recognizer: TapGestureRecognizer()
+                    ..onTap = () {
+                      // TODO: yapılacak
+                    },
                 ),
               ],
-            );
+            ),
+          ),
+        ),
+      ],
+    );
   }
 
   @override
@@ -139,6 +143,18 @@ class SignUpPage extends StatelessWidget {
                 width: context.responsiveWidth(362),
                 child: NameTextFormField(
                   controller: _nameTextEditingController,
+                  context: context,
+                ),
+              ),
+              SizedBox(
+                height: context.responsiveHeight(24),
+              ),
+              SizedBox(
+                height: context.responsiveHeight(60),
+                width: context.responsiveWidth(362),
+                child: NameTextFormField(
+                  controller: _surnameTextEditingController,
+                  hintText: 'surname'.tr(),
                   context: context,
                 ),
               ),

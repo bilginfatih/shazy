@@ -24,6 +24,26 @@ class AuthController {
     }
   }
 
+  Future<void> login(UserModel model) async {
+    try {
+      if (model.email == '') {
+        // TODO: hata mesajı basacak
+      } else if (model.password == '') {
+        // TODO: hata mesajı basacak
+      } else {
+        var response = await UserService.instance.login(model);
+        if (response != null) {
+          // TODO: hata mesajı basacak
+        } else {
+          NavigationManager.instance
+              .navigationToPageClear(NavigationConstant.homePage);
+        }
+      }
+    } catch (e) {
+      // TODO: hata mesajı basacak
+    }
+  }
+
   void goToVerifyOTP(UserModel model, bool termsCheck) {
     if (!termsCheck) {
       // TODO: hata mesajı
@@ -55,5 +75,11 @@ class AuthController {
 
   void goToSignInPage() {
     NavigationManager.instance.navigationToPage(NavigationConstant.signIn);
+  }
+  void goToSignUpPage() {
+    NavigationManager.instance.navigationToPage(NavigationConstant.signUp);
+  }
+  void goToForgetPasswordPage() {
+    NavigationManager.instance.navigationToPage(NavigationConstant.forgetPassword);
   }
 }

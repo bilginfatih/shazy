@@ -32,6 +32,16 @@ class TestPage extends StatelessWidget {
                 },
                 child: Text('Register'),
               ),
+              ElevatedButton(
+                onPressed: () async {
+                  UserModel model = UserModel(
+                    email: 'test23@gmail.com',
+                    password: 'test22',
+                  );
+                  await UserService.instance.login(model);
+                },
+                child: Text('Login'),
+              ),
             ],
           ),
         ),
