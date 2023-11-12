@@ -4,7 +4,7 @@ import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:hexcolor/hexcolor.dart';
-import 'package:shazy/pages/history/history_upcoming_controller.dart';
+import 'package:shazy/pages/history/controller/history_upcoming_controller.dart';
 import 'package:shazy/widgets/containers/two_select_container.dart';
 import '../../utils/extensions/context_extension.dart';
 import '../../utils/theme/themes.dart';
@@ -37,7 +37,7 @@ class HistoryUpcomingPage extends StatelessWidget {
                 onTap1: () {
                   _controller.userSelect(true);
                 },
-                onTap2: () {
+                onTap2: () { 
                   _controller.userSelect(false);
                 },
                 isSelectedDriver: _controller.isDriverSelected,
