@@ -15,6 +15,7 @@ class UserService {
         return response['message'];
       } else {
         await SessionManager().set('token', response['token']);
+        await SessionManager().set('id', response['user']['id']);
       }
     } catch (e) {
       rethrow;
@@ -29,6 +30,7 @@ class UserService {
         return response['message'];
       } else {
         await SessionManager().set('token', response['token']);
+        await SessionManager().set('id', response['user']['id']);
       }
     } catch (e) {
       rethrow;

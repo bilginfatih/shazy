@@ -21,5 +21,7 @@
     "surname": "Surname",
     "forgetPassword": "Forget password?",
     "dontHaveAccount": "Don\"t have an account? ",
-    "emailOrPhone": "Email or Phone Number"
+    "emailOrPhone": "Email or Phone Number",
+    "passenger": "Passenger",
+    "driver": "Driver"
 }

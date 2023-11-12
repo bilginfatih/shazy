@@ -20,13 +20,13 @@ class TestPage extends StatelessWidget {
                 onPressed: () async {
                   UserModel model = UserModel(
                     name: 'test2',
-                    email: 'test23@gmail.com',
-                    password: 'test22',
-                    passwordConfirmation: 'test22',
-                    identificationNumber: '222222221',
+                    email: 'test234@gmail.com',
+                    password: 'test222',
+                    passwordConfirmation: 'test222',
+                    identificationNumber: '222222223',
                     surname: 'test',
                     gender: 'male',
-                    phone: '99999999991',
+                    phone: '99999999998',
                   );
                   await UserService.instance.register(model);
                 },

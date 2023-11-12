@@ -1,7 +1,11 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:hexcolor/hexcolor.dart';
+import 'package:shazy/pages/history/history_upcoming_controller.dart';
+import 'package:shazy/widgets/containers/two_select_container.dart';
 import '../../utils/extensions/context_extension.dart';
 import '../../utils/theme/themes.dart';
 import '../../widgets/app_bars/custom_app_bar.dart';
@@ -9,11 +13,10 @@ import '../../widgets/buttons/secondary_button.dart';
 import '../../widgets/drawer/custom_drawer.dart';
 import '../../widgets/padding/base_padding.dart';
 
-
 class HistoryUpcomingPage extends StatelessWidget {
   HistoryUpcomingPage({super.key});
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
-
+  final _controller = HistoryUpcomingController();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -24,12 +27,36 @@ class HistoryUpcomingPage extends StatelessWidget {
       ),
       body: BasePadding(
         context: context,
-        child: ListView(
+        child: Column(
           children: [
-            _buildContainer(context),
-            _buildContainer(context, cancel: true),
-            _buildContainer(context),
-            _buildContainer(context),
+            Observer(
+              builder: (_) => TwoSelectContainer(
+                context: context,
+                text1: 'driver'.tr(),
+                text2: 'passenger'.tr(),
+                onTap1: () {
+                  _controller.userSelect(true);
+                },
+                onTap2: () {
+                  _controller.userSelect(false);
+                },
+                isSelectedDriver: _controller.isDriverSelected,
+              ),
+            ),
+            SizedBox(
+              height: context.responsiveHeight(20),
+            ),
+            SizedBox(
+              height: context.responsiveHeight(550),
+              child: ListView(
+                children: [
+                  _buildContainer(context),
+                  _buildContainer(context, cancel: true),
+                  _buildContainer(context),
+                  _buildContainer(context),
+                ],
+              ),
+            ),
           ],
         ),
       ),
