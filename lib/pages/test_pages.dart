@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:shazy/models/user/user_model.dart';
+import 'package:shazy/services/history/history_service.dart';
 import 'package:shazy/services/user/user_service.dart';
 import 'package:shazy/widgets/padding/base_padding.dart';
 
@@ -41,6 +42,22 @@ class TestPage extends StatelessWidget {
                   await UserService.instance.login(model);
                 },
                 child: Text('Login'),
+              ),
+              ElevatedButton(
+                onPressed: () async {
+                  var response =
+                      await HistoryService.instance.getDriverHistory();
+                  print(response);
+                },
+                child: Text('GetDriverHistory'),
+              ),
+              ElevatedButton(
+                onPressed: () async {
+                  var response =
+                      await HistoryService.instance.getDriverHistory();
+                  print(response);
+                },
+                child: Text('GetPassengerHistory'),
               ),
             ],
           ),

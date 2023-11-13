@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:dio/dio.dart';
+import 'package:flutter_session_manager/flutter_session_manager.dart';
 import '../../base/base_model.dart';
 import 'base_network_manager.dart';
 
@@ -10,13 +11,31 @@ class NetworkManager extends BaseNetworkManager {
 
   final Map<String, String> _headers = {
     'Accept': 'application/json',
+    'Content-Type': 'application/json',
   };
 
   @override
   Future get<T extends BaseModel>(String path, {T? model}) async {
     try {
-      var response = await dio.get(path);
-      Map<String, dynamic> data = response.data;
+      var token = await SessionManager().get('token');
+      if (token != null) {
+        print('token: $token');
+        _headers['Authorization'] = 'Bearer $token';
+      }
+      print(_headers);
+      print(dio.options.baseUrl + path);
+      var response = await dio.get(
+        path,
+        options: Options(
+          followRedirects: false,
+          headers: _headers,
+          validateStatus: (status) {
+            return status is int && status < 500;
+          },
+        ),
+      );
+      print(response);
+      /*Map<String, dynamic> data = response.data;
       print(path);
       print(data);
       if (data['success'] == 'false') {
@@ -35,7 +54,7 @@ class NetworkManager extends BaseNetworkManager {
             return model.fromJson(data['data']);
           }
         }
-      }
+      }*/
     } catch (e) {
       print(e);
       rethrow;
