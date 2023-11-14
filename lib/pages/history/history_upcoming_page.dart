@@ -13,11 +13,23 @@ import '../../widgets/buttons/secondary_button.dart';
 import '../../widgets/drawer/custom_drawer.dart';
 import '../../widgets/padding/base_padding.dart';
 
-class HistoryUpcomingPage extends StatelessWidget {
-  HistoryUpcomingPage({super.key});
+// TODO: kayitli veri eklendiğinde statikten çıkarılacaktır.
+class HistoryUpcomingPage extends StatefulWidget {
+  const HistoryUpcomingPage({super.key});
 
+  @override
+  State<HistoryUpcomingPage> createState() => _HistoryUpcomingPageState();
+}
+
+class _HistoryUpcomingPageState extends State<HistoryUpcomingPage> {
   final _controller = HistoryUpcomingController();
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+
+  @override
+  void initState() {
+    super.initState();
+    _controller.init();
+  }
 
   Padding _buildContainer(
       BuildContext context,

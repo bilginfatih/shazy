@@ -20,7 +20,7 @@ class _HomePageState extends State<HomePage> {
   final List _pages = [
     HomeScreenTransport(),
     HistoryUpcomingPage(),
-    const WalletPage(),
+     WalletPage(),
     const OfferPage(),
     const OfferPage(),
   ];
