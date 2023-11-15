@@ -1,46 +1,51 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:hexcolor/hexcolor.dart';
-import 'package:shazy/utils/extensions/context_extension.dart';
-import 'package:shazy/utils/theme/themes.dart';
-import 'package:shazy/widgets/app_bars/custom_app_bar.dart';
-import 'package:shazy/widgets/buttons/secondary_button.dart';
-import 'package:shazy/widgets/drawer/custom_drawer.dart';
-import 'package:shazy/widgets/padding/base_padding.dart';
+import 'package:shazy/pages/history/controller/history_upcoming_controller.dart';
+import 'package:shazy/widgets/containers/two_select_container.dart';
+import '../../utils/extensions/context_extension.dart';
+import '../../utils/theme/themes.dart';
+import '../../widgets/app_bars/custom_app_bar.dart';
+import '../../widgets/buttons/secondary_button.dart';
+import '../../widgets/drawer/custom_drawer.dart';
+import '../../widgets/padding/base_padding.dart';
 
-class HistoryUpcomingPage extends StatelessWidget {
-  HistoryUpcomingPage({super.key});
+
+// TODO: kayitli veri eklendiğinde statikten çıkarılacaktır.
+class HistoryUpcomingPage extends StatefulWidget {
+  const HistoryUpcomingPage({super.key});
+
+  @override
+  State<HistoryUpcomingPage> createState() => _HistoryUpcomingPageState();
+}
+
+class _HistoryUpcomingPageState extends State<HistoryUpcomingPage> {
+  final _controller = HistoryUpcomingController();
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
   @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      key: _scaffoldKey,
-      appBar: CustomAppBar(
-        context: context,
-        scaffoldKey: _scaffoldKey,
-      ),
-      body: BasePadding(
-        context: context,
-        child: ListView(
-          children: [
-            _buildContainer(context),
-            _buildContainer(context, cancel: true),
-            _buildContainer(context),
-            _buildContainer(context),
-          ],
-        ),
-      ),
-      drawer: CustomDrawer(
-        context: context,
-        name: 'M. Halil',
-        email: 'zubeyirx@email.com',
-      ),
-    );
+  void initState() {
+    super.initState();
+    _controller.init();
   }
 
-  Padding _buildContainer(BuildContext context, {bool cancel = false}) {
+  Padding _buildContainer(
+      BuildContext context,
+      String name,
+      String star,
+      String startingLocation1,
+      String startingLocation2,
+      String endLocation1,
+      String endLocation2,
+      String date,
+      String time,
+      String price,
+      String color,
+      String buttonText,
+      {bool cancel = false}) {
     return Padding(
       padding: const EdgeInsets.only(bottom: 16),
       child: Container(
@@ -67,7 +72,7 @@ class HistoryUpcomingPage extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        'Zübeyir X.',
+                        name,
                         style: context.textStyle.subheadSmallRegular,
                       ),
                       Row(
@@ -77,7 +82,7 @@ class HistoryUpcomingPage extends StatelessWidget {
                             width: 10,
                           ),
                           Text(
-                            '4.9 (531 reviews)',
+                            star,
                             style: GoogleFonts.poppins(
                               fontSize: 8,
                               fontWeight: FontWeight.w400,
@@ -104,9 +109,9 @@ class HistoryUpcomingPage extends StatelessWidget {
             _buildLocationRow(
               context,
               'map5',
-              'Current location',
-              '4140 Parker Rd. Allentown, New...',
-              text3: '29.08.2023',
+              startingLocation1,
+              startingLocation2,
+              text3: date,
             ),
             SizedBox(
               height: context.responsiveHeight(11),
@@ -114,8 +119,8 @@ class HistoryUpcomingPage extends StatelessWidget {
             _buildLocationRow(
               context,
               'map4',
-              'Shop',
-              '2972 Westheimer Rd. Santa Ana, Illinois 85486 ',
+              endLocation1,
+              endLocation2,
             ),
             SizedBox(
               height: context.responsiveHeight(10),
@@ -123,7 +128,9 @@ class HistoryUpcomingPage extends StatelessWidget {
             SizedBox(
               width: context.responsiveWidth(253),
               height: context.responsiveHeight(32),
-              child: SecondaryButton(text: 'Review Trip', context: context, onPressed: () {}),
+
+              child: SecondaryButton(
+                  text: buttonText, context: context, onPressed: () {}),
             ),
             SizedBox(
               height: context.responsiveHeight(7),
@@ -134,36 +141,42 @@ class HistoryUpcomingPage extends StatelessWidget {
             SizedBox(
               height: context.responsiveHeight(43),
               child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
-                  Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Text(
-                        '16:38 - 16.42',
-                        style: GoogleFonts.poppins(
-                          fontSize: 10,
-                          fontWeight: FontWeight.w500,
-                          color: HexColor('#5A5A5A'),
+                  Expanded(
+                    flex: 2,
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text(
+                          time,
+                          style: GoogleFonts.poppins(
+                            fontSize: 10,
+                            fontWeight: FontWeight.w500,
+                            color: HexColor('#5A5A5A'),
+                          ),
                         ),
-                      ),
-                      Text(
-                        'Saat',
-                        style: GoogleFonts.poppins(
-                          fontSize: 8,
-                          fontWeight: FontWeight.w400,
-                          color: HexColor('#B8B8B8'),
+                        Text(
+                          'Saat',
+                          style: GoogleFonts.poppins(
+                            fontSize: 8,
+                            fontWeight: FontWeight.w400,
+                            color: HexColor('#B8B8B8'),
+                          ),
                         ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
                   const VerticalDivider(
                     color: Color.fromARGB(255, 199, 198, 198),
                   ),
-                  Text(
-                    '220.00₺',
-                    style: context.textStyle.subheadLargeMedium.copyWith(
-                      color: HexColor('#5A5A5A'),
+                  Expanded(
+                    flex: 2,
+                    child: Text(
+                      price,
+                      textAlign: TextAlign.center,
+                      style: context.textStyle.subheadLargeMedium.copyWith(
+                        color: HexColor(color),
+                      ),
                     ),
                   )
                 ],
@@ -226,4 +239,90 @@ class HistoryUpcomingPage extends StatelessWidget {
           ],
         ),
       );
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      key: _scaffoldKey,
+      appBar: CustomAppBar(
+        context: context,
+        scaffoldKey: _scaffoldKey,
+      ),
+      body: BasePadding(
+        context: context,
+        child: Column(
+          children: [
+            Observer(
+              builder: (_) => TwoSelectContainer(
+                context: context,
+                text1: 'driver'.tr(),
+                text2: 'passenger'.tr(),
+                onTap1: () {
+                  _controller.userSelect(true);
+                },
+                onTap2: () async {
+                  _controller.userSelect(false);
+                },
+                isSelectedDriver: _controller.isDriverSelected,
+              ),
+            ),
+            SizedBox(
+              height: context.responsiveHeight(20),
+            ),
+            Observer(builder: (_) {
+              return SizedBox(
+                height: context.responsiveHeight(550),
+                child: _controller.isDriverSelected
+                    ? ListView.builder(
+                        itemCount: 5, //_controller.driverList.length,
+                        itemBuilder: (BuildContext context, int index) {
+                          return _buildContainer(
+                            context,
+                            'Zübeyir X',
+                            '4.9 (531 reviews)',
+                            'Starting Location',
+                            '4140 Parker Rd. Allentown, New...',
+                            'Shop',
+                            '2972 Westheimer Rd. Santa Ana, Illinois 85486 ',
+                            '29.08.2023',
+                            '16:38 - 16.42',
+                            '+220.00₺',
+                            '#388E3D',
+                            'Review Passenger',
+                            cancel: true,
+                          );
+                        },
+                      )
+                    : ListView.builder(
+                        itemCount: 5, //_controller.passengerList.length,
+                        itemBuilder: (BuildContext context, int index) {
+                          return _buildContainer(
+                            context,
+                            'Toygun X.',
+                            '4.2 (531 reviews)',
+                            'Starting Location',
+                            '4140 Parker Rd. Allentown, New...',
+                            'Shop',
+                            '2972 Westheimer Rd. Santa Ana, Illinois 85486 ',
+                            '29.08.2023',
+                            '16:38 - 16.42',
+                            '220.00₺',
+                            '#5A5A5A',
+                            'Review Trip',
+                            cancel: true,
+                          );
+                        },
+                      ),
+              );
+            }),
+          ],
+        ),
+      ),
+      drawer: CustomDrawer(
+        context: context,
+        name: 'M. Halil',
+        email: 'zubeyirx@email.com',
+      ),
+    );
+  }
 }

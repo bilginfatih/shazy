@@ -1,13 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:shazy/pages/contact/cancel_ride_page.dart';
-import 'package:shazy/pages/contact/message_page.dart';
-import 'package:shazy/pages/home/home_page.dart';
-import 'package:shazy/pages/notification/notification_page.dart';
-import 'package:shazy/pages/offer/offer_page.dart';
-import 'package:shazy/pages/payment/add_card_page.dart';
-import 'package:shazy/pages/payment/payment_method_page.dart';
-import 'package:shazy/pages/payment/payment_tip_page.dart';
-import 'package:shazy/pages/wallet/wallet_page.dart';
+import 'package:shazy/pages/test_pages.dart';
+import '../../../pages/contact/cancel_ride_page.dart';
+import '../../../pages/contact/message_page.dart';
+import '../../../pages/home/home_page.dart';
+import '../../../pages/notification/notification_page.dart';
+import '../../../pages/offer/offer_page.dart';
+import '../../../pages/payment/add_card_page.dart';
+import '../../../pages/payment/payment_method_page.dart';
+import '../../../pages/payment/payment_tip_page.dart';
+import '../../../pages/wallet/wallet_page.dart';
 import '../../../pages/authentication/forget_password_page.dart';
 import '../../../pages/authentication/phone_verifiy_otp_page.dart';
 import '../../../pages/authentication/send_verification_page.dart';
@@ -74,13 +75,15 @@ class NavigationRouteManager {
       case NavigationConstant.historyUpcoming:
         return _navigationToDefault(HistoryUpcomingPage(), args);
       case NavigationConstant.wallet:
-        return _navigationToDefault(const WalletPage(), args);
+        return _navigationToDefault( WalletPage(), args);
       case NavigationConstant.offer:
         return _navigationToDefault(const OfferPage(), args);
       case NavigationConstant.notification:
         return _navigationToDefault(const NotificationPage(), args);
       case NavigationConstant.homePage:
         return _navigationToDefault(const HomePage(), args);
+      case NavigationConstant.testPage:
+        return _navigationToDefault(const TestPage(), args);
       default:
         return _navigationToDefault(MyApp(), args);
     }

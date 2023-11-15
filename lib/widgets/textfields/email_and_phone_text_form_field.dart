@@ -1,4 +1,6 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+
 import '../../utils/extensions/context_extension.dart';
 import '../../utils/extensions/string_extension.dart';
 import '../../utils/theme/themes.dart';
@@ -12,7 +14,7 @@ class EmailAndPhoneTextFormField extends TextFormField {
           key: key,
           controller: controller,
           decoration: InputDecoration(
-            hintText: 'Email or Phone Number',
+            hintText: 'emailOrPhone'.tr(),
             hintStyle: context.textStyle.subheadLargeMedium.copyWith(
               color: AppThemes.hintTextNeutral,
             ),

@@ -21,4 +21,6 @@ extension ContextExtension on BuildContext {
   bool get isLight => currentBrightness == Brightness.light;
 
   AppTextStyles get textStyle => AppTextStyles(this);
+
+  double responsiveFont(double fontSize) => (fontSize / 852) * height;
 }

@@ -1,7 +1,7 @@
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:provider/provider.dart';
-import 'package:shazy/core/assistants/request_assistant.dart';
+import 'request_assistant.dart';
 import '../base/app_info.dart';
 import '../init/models/direction_details_info.dart';
 import '../init/models/directions.dart';
