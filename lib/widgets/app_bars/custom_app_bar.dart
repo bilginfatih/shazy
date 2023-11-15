@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:hexcolor/hexcolor.dart';
 import 'package:shazy/utils/extensions/context_extension.dart';
 
 import '../buttons/shadow_button.dart';
@@ -8,6 +9,7 @@ class CustomAppBar extends AppBar {
   CustomAppBar({
     Key? key,
     GlobalKey<ScaffoldState>? scaffoldKey,
+    Text? title,
     required BuildContext context,
   }) : super(
           key: key,
@@ -15,6 +17,9 @@ class CustomAppBar extends AppBar {
           automaticallyImplyLeading: false,
           elevation: 0,
           leadingWidth: 100,
+          title: title,
+          titleTextStyle: context.textStyle.headlineSmallMedium.copyWith(color: HexColor("#2A2A2A")),
+          centerTitle: true,
           leading: Row(
             children: [
               SizedBox(

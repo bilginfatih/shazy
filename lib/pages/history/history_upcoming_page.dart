@@ -9,7 +9,6 @@ import 'package:shazy/widgets/buttons/secondary_button.dart';
 import 'package:shazy/widgets/drawer/custom_drawer.dart';
 import 'package:shazy/widgets/padding/base_padding.dart';
 
-
 class HistoryUpcomingPage extends StatelessWidget {
   HistoryUpcomingPage({super.key});
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
@@ -90,10 +89,7 @@ class HistoryUpcomingPage extends StatelessWidget {
                           ),
                           Text(
                             cancel ? 'Canceled' : '',
-                            style: GoogleFonts.poppins(
-                                fontSize: 11,
-                                fontWeight: FontWeight.w500,
-                                color: HexColor('#F44336')),
+                            style: GoogleFonts.poppins(fontSize: 11, fontWeight: FontWeight.w500, color: HexColor('#F44336')),
                           )
                         ],
                       )
@@ -127,8 +123,7 @@ class HistoryUpcomingPage extends StatelessWidget {
             SizedBox(
               width: context.responsiveWidth(253),
               height: context.responsiveHeight(32),
-              child: SecondaryButton(
-                  text: 'Review Trip', context: context, onPressed: () {}),
+              child: SecondaryButton(text: 'Review Trip', context: context, onPressed: () {}),
             ),
             SizedBox(
               height: context.responsiveHeight(7),
@@ -183,10 +178,7 @@ class HistoryUpcomingPage extends StatelessWidget {
     );
   }
 
-  Padding _buildLocationRow(
-          BuildContext context, String assetName, String text1, String text2,
-          {String text3 = ''}) =>
-      Padding(
+  Padding _buildLocationRow(BuildContext context, String assetName, String text1, String text2, {String text3 = ''}) => Padding(
         padding: EdgeInsets.only(
           left: context.responsiveWidth(8),
           right: context.responsiveWidth(15),
@@ -195,10 +187,7 @@ class HistoryUpcomingPage extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Padding(
-              padding: EdgeInsets.only(
-                  top: context.responsiveHeight(4),
-                  left: context.responsiveWidth(10),
-                  right: context.responsiveWidth(6)),
+              padding: EdgeInsets.only(top: context.responsiveHeight(4), left: context.responsiveWidth(10), right: context.responsiveWidth(6)),
               child: SvgPicture.asset('assets/svg/$assetName.svg'),
             ),
             Column(
