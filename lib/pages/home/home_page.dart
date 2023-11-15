@@ -8,6 +8,7 @@ import '../wallet/wallet_page.dart';
 import '../../utils/extensions/context_extension.dart';
 
 import '../../utils/theme/themes.dart';
+import '../profile/profile_page.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -22,7 +23,7 @@ class _HomePageState extends State<HomePage> {
     HistoryUpcomingPage(),
      WalletPage(),
     const OfferPage(),
-    const OfferPage(),
+    ProfilePage(),
   ];
   int _currentIndex = 0;
   @override
@@ -39,9 +40,7 @@ class _HomePageState extends State<HomePage> {
           backgroundColor: Colors.transparent,
           type: BottomNavigationBarType.fixed,
           selectedItemColor: AppThemes.lightPrimary500,
-          unselectedItemColor: context.isLight
-              ? AppThemes.contentSecondary
-              : HexColor('#D0D0D0'),
+          unselectedItemColor: context.isLight ? AppThemes.contentSecondary : HexColor('#D0D0D0'),
           showUnselectedLabels: true,
           currentIndex: _currentIndex,
           onTap: (index) {
@@ -61,8 +60,7 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  BottomNavigationBarItem _buildBottomNavigationBarItem(
-      String asset, String label, int index) {
+  BottomNavigationBarItem _buildBottomNavigationBarItem(String asset, String label, int index) {
     return BottomNavigationBarItem(
       icon: SvgPicture.asset(
         height: context.responsiveHeight(24),

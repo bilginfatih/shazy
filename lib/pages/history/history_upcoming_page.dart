@@ -13,6 +13,7 @@ import '../../widgets/buttons/secondary_button.dart';
 import '../../widgets/drawer/custom_drawer.dart';
 import '../../widgets/padding/base_padding.dart';
 
+
 // TODO: kayitli veri eklendiğinde statikten çıkarılacaktır.
 class HistoryUpcomingPage extends StatefulWidget {
   const HistoryUpcomingPage({super.key});
@@ -93,10 +94,7 @@ class _HistoryUpcomingPageState extends State<HistoryUpcomingPage> {
                           ),
                           Text(
                             cancel ? 'Canceled' : '',
-                            style: GoogleFonts.poppins(
-                                fontSize: 11,
-                                fontWeight: FontWeight.w500,
-                                color: HexColor('#F44336')),
+                            style: GoogleFonts.poppins(fontSize: 11, fontWeight: FontWeight.w500, color: HexColor('#F44336')),
                           )
                         ],
                       )
@@ -130,6 +128,7 @@ class _HistoryUpcomingPageState extends State<HistoryUpcomingPage> {
             SizedBox(
               width: context.responsiveWidth(253),
               height: context.responsiveHeight(32),
+
               child: SecondaryButton(
                   text: buttonText, context: context, onPressed: () {}),
             ),
@@ -192,10 +191,7 @@ class _HistoryUpcomingPageState extends State<HistoryUpcomingPage> {
     );
   }
 
-  Padding _buildLocationRow(
-          BuildContext context, String assetName, String text1, String text2,
-          {String text3 = ''}) =>
-      Padding(
+  Padding _buildLocationRow(BuildContext context, String assetName, String text1, String text2, {String text3 = ''}) => Padding(
         padding: EdgeInsets.only(
           left: context.responsiveWidth(8),
           right: context.responsiveWidth(15),
@@ -204,10 +200,7 @@ class _HistoryUpcomingPageState extends State<HistoryUpcomingPage> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Padding(
-              padding: EdgeInsets.only(
-                  top: context.responsiveHeight(4),
-                  left: context.responsiveWidth(10),
-                  right: context.responsiveWidth(6)),
+              padding: EdgeInsets.only(top: context.responsiveHeight(4), left: context.responsiveWidth(10), right: context.responsiveWidth(6)),
               child: SvgPicture.asset('assets/svg/$assetName.svg'),
             ),
             Column(

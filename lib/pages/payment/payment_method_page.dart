@@ -91,7 +91,7 @@ class _PaymetnMethodPageState extends State<PaymetnMethodPage> {
                 context,
                 'map3',
                 Provider.of<AppInfo>(context).userDropOffLocation != null
-                    ? Provider.of<AppInfo>(context).userDropOffLocation!.locationName.toString()
+                    ? "${Provider.of<AppInfo>(context).userDropOffLocation!.locationName.toString().substring(0, 24)}..."
                     : 'undefined',
                 Provider.of<AppInfo>(context).userDropOffLocation != null
                     ? "${Provider.of<AppInfo>(context).userDropOffLocation!.currentLocationName.toString().substring(0, 24)}..."
@@ -172,7 +172,7 @@ class _PaymetnMethodPageState extends State<PaymetnMethodPage> {
               context: context,
               onPressed: () {
                 NavigationManager.instance.navigationToPage(
-                  NavigationConstant.homeScreenTransport,
+                  NavigationConstant.homePage,
                 );
               },
             ),
