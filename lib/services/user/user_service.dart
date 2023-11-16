@@ -1,4 +1,5 @@
 import 'package:flutter_session_manager/flutter_session_manager.dart';
+import 'package:shazy/core/init/cache/cache_manager.dart';
 import 'package:shazy/core/init/network/network_manager.dart';
 import 'package:shazy/models/user/user_model.dart';
 
@@ -14,6 +15,10 @@ class UserService {
       if (response.containsKey('message')) {
         return response['message'];
       } else {
+        var cacheManager = CacheManager('user');
+        await cacheManager.putData('email', user.email.toString());
+        await cacheManager.putData('phone', user.phone.toString());
+        await cacheManager.putData('password', user.password.toString());
         await SessionManager().set('token', response['token']);
         await SessionManager().set('id', response['user']['id']);
       }
@@ -29,6 +34,10 @@ class UserService {
       if (response.containsKey('message')) {
         return response['message'];
       } else {
+        var cacheManager = CacheManager('user');
+        await cacheManager.putData('email', user.email.toString());
+        await cacheManager.putData('phone', user.phone.toString());
+        await cacheManager.putData('password', user.password.toString());
         await SessionManager().set('token', response['token']);
         await SessionManager().set('id', response['user']['id']);
       }
