@@ -15,10 +15,12 @@ class UserService {
       if (response.containsKey('message')) {
         return response['message'];
       } else {
-        var cacheManager = CacheManager('user');
-        await cacheManager.putData('email', user.email.toString());
-        await cacheManager.putData('phone', user.phone.toString());
-        await cacheManager.putData('password', user.password.toString());
+        await CacheManager.instance
+            .putData('user', 'email', user.email.toString());
+        await CacheManager.instance
+            .putData('user', 'phone', user.phone.toString());
+        await CacheManager.instance
+            .putData('user', 'password', user.password.toString());
         await SessionManager().set('token', response['token']);
         await SessionManager().set('id', response['user']['id']);
       }
@@ -34,10 +36,12 @@ class UserService {
       if (response.containsKey('message')) {
         return response['message'];
       } else {
-        var cacheManager = CacheManager('user');
-        await cacheManager.putData('email', user.email.toString());
-        await cacheManager.putData('phone', user.phone.toString());
-        await cacheManager.putData('password', user.password.toString());
+        await CacheManager.instance
+            .putData('user', 'email', user.email.toString());
+        await CacheManager.instance
+            .putData('user', 'phone', user.phone.toString());
+        await CacheManager.instance
+            .putData('user', 'password', user.password.toString());
         await SessionManager().set('token', response['token']);
         await SessionManager().set('id', response['user']['id']);
       }
@@ -45,5 +49,15 @@ class UserService {
       rethrow;
     }
     return null;
+  }
+
+  Future<UserModel?> getUser() async {
+    try {
+      UserModel model = UserModel();
+      model = await NetworkManager.instance.get<UserModel>('/user', model: model);
+      return model;
+    } catch (e) {
+      rethrow;
+    }
   }
 }

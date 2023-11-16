@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:shazy/core/init/cache/cache_manager.dart';
 import 'package:shazy/models/user/user_model.dart';
 import 'package:shazy/services/history/history_service.dart';
 import 'package:shazy/services/user/user_service.dart';
@@ -58,6 +59,20 @@ class TestPage extends StatelessWidget {
                   print(response);
                 },
                 child: Text('GetPassengerHistory'),
+              ),
+              ElevatedButton(
+                onPressed: () async {
+                  var data = await CacheManager.instance.getData('user', 'email');
+                  print(data);
+                },
+                child: Text('HiveTest'),
+              ),
+              ElevatedButton(
+                onPressed: () async {
+                  var data = await UserService.instance.getUser();
+                  print(data);
+                },
+                child: Text('User'),
               ),
             ],
           ),

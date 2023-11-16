@@ -2,6 +2,7 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:hive_flutter/adapters.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
 import 'core/init/language/language_manager.dart';
@@ -19,9 +20,9 @@ void main() async {
     runApp(EasyLocalization(
       supportedLocales: LanguageManager.instance.supportedLocales,
       path: 'assets/translations',
-      child: const MyApp(),
       fallbackLocale: LanguageManager.instance.enLocale,
       saveLocale: true,
+      child: const MyApp(),
     ));
   } else {
     SystemChannels.platform.invokeMethod(
@@ -31,6 +32,7 @@ void main() async {
 
 _init() async {
   WidgetsFlutterBinding.ensureInitialized();
+  await Hive.initFlutter();
   await EasyLocalization.ensureInitialized();
 }
 

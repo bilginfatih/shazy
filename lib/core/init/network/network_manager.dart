@@ -34,27 +34,10 @@ class NetworkManager extends BaseNetworkManager {
           },
         ),
       );
-      print(response);
-      /*Map<String, dynamic> data = response.data;
-      print(path);
-      print(data);
-      if (data['success'] == 'false') {
-        throw Exception(data['errorMessage']);
-      } else {
-        if (data['data'] is List) {
-          if (model != null) {
-            List list = [];
-            for (var e in data['data']) {
-              list.add(model.fromJson(e));
-            }
-            return list;
-          }
-        } else {
-          if (model != null) {
-            return model.fromJson(data['data']);
-          }
-        }
-      }*/
+      if (model != null) {
+        return model.fromJson(response.data);
+      }
+      return response.data;
     } catch (e) {
       print(e);
       rethrow;

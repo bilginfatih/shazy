@@ -2,20 +2,90 @@ import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:hexcolor/hexcolor.dart';
+import 'package:shazy/pages/profile/controller/profile_controller.dart';
 import 'package:shazy/utils/extensions/context_extension.dart';
 
 import '../../utils/theme/themes.dart';
 import '../../widgets/app_bars/custom_app_bar.dart';
 import '../../widgets/padding/base_padding.dart';
 
-class ProfilePage extends StatefulWidget {
-  ProfilePage({Key? key}) : super(key: key);
+class ProfilePage extends StatelessWidget {
+  ProfilePage({super.key});
+  final ProfileController _controller = ProfileController();
 
-  @override
-  State<ProfilePage> createState() => _ProfilePageState();
-}
+  Padding _buildTransectionContainer(BuildContext context, text1, text2) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 16),
+      child: Container(
+        decoration: BoxDecoration(
+          border: Border.all(
+            color: AppThemes.lightPrimary500,
+          ),
+          borderRadius: BorderRadius.circular(8),
+        ),
+        child: Padding(
+          padding: EdgeInsets.only(
+            top: context.responsiveHeight(12),
+            bottom: context.responsiveHeight(12),
+            left: context.responsiveWidth(12),
+            right: context.responsiveWidth(17),
+          ),
+          child: Row(
+            children: [
+              CircleAvatar(
+                radius: 32,
+                child: Image.asset('assets/png/no_data.png'),
+                backgroundColor: Colors.white,
+              ),
+              SizedBox(
+                width: context.responsiveWidth(13),
+              ),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    text1,
+                    style: context.textStyle.subheadSmallRegular
+                        .copyWith(color: HexColor('#121212')),
+                  ),
+                  SizedBox(
+                    height: context.responsiveHeight(6),
+                  ),
+                  RatingBar.builder(
+                    initialRating: 3.5,
+                    minRating: 1,
+                    direction: Axis.horizontal,
+                    allowHalfRating: true,
+                    itemCount: 5,
+                    itemSize: 15,
+                    updateOnDrag: false,
+                    tapOnlyMode: false,
+                    itemPadding: EdgeInsets.symmetric(horizontal: 1.0),
+                    itemBuilder: (context, _) => SvgPicture.asset(
+                      'assets/svg/star.svg',
+                      width: context.responsiveWidth(20),
+                    ),
+                    onRatingUpdate: (rating) {
+                      print(rating);
+                    },
+                  ),
+                  SizedBox(
+                    height: context.responsiveHeight(7),
+                  ),
+                  Text(
+                    text2,
+                    style: context.textStyle.bodySmallRegular
+                        .copyWith(color: HexColor('#5A5A5A')),
+                  ),
+                ],
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
 
-class _ProfilePageState extends State<ProfilePage> {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   @override
   Widget build(BuildContext context) {
@@ -69,7 +139,8 @@ class _ProfilePageState extends State<ProfilePage> {
                   children: [
                     Text(
                       "Elif X.",
-                      style: context.textStyle.titleLargeMedium.copyWith(color: HexColor("#5A5A5A")),
+                      style: context.textStyle.titleLargeMedium
+                          .copyWith(color: HexColor("#5A5A5A")),
                     ),
                     SizedBox(
                       height: context.responsiveHeight(31),
@@ -178,14 +249,22 @@ class _ProfilePageState extends State<ProfilePage> {
             Expanded(
               child: ListView(
                 children: [
-                  _buildTransectionContainer(context, 'Nathsam', 'Lorem ipsum dolor sit amet,'),
-                  _buildTransectionContainer(context, 'Nathsam', 'Lorem ipsum dolor sit amet,'),
-                  _buildTransectionContainer(context, 'Nathsam', 'Lorem ipsum dolor sit amet,'),
-                  _buildTransectionContainer(context, 'Nathsam', 'Lorem ipsum dolor sit amet,'),
-                  _buildTransectionContainer(context, 'Nathsam', 'Lorem ipsum dolor sit amet,'),
-                  _buildTransectionContainer(context, 'Nathsam', 'Lorem ipsum dolor sit amet,'),
-                  _buildTransectionContainer(context, 'Nathsam', 'Lorem ipsum dolor sit amet,'),
-                  _buildTransectionContainer(context, 'Nathsam', 'Lorem ipsum dolor sit amet,'),
+                  _buildTransectionContainer(
+                      context, 'Nathsam', 'Lorem ipsum dolor sit amet,'),
+                  _buildTransectionContainer(
+                      context, 'Nathsam', 'Lorem ipsum dolor sit amet,'),
+                  _buildTransectionContainer(
+                      context, 'Nathsam', 'Lorem ipsum dolor sit amet,'),
+                  _buildTransectionContainer(
+                      context, 'Nathsam', 'Lorem ipsum dolor sit amet,'),
+                  _buildTransectionContainer(
+                      context, 'Nathsam', 'Lorem ipsum dolor sit amet,'),
+                  _buildTransectionContainer(
+                      context, 'Nathsam', 'Lorem ipsum dolor sit amet,'),
+                  _buildTransectionContainer(
+                      context, 'Nathsam', 'Lorem ipsum dolor sit amet,'),
+                  _buildTransectionContainer(
+                      context, 'Nathsam', 'Lorem ipsum dolor sit amet,'),
                 ],
               ),
             ),
@@ -194,75 +273,4 @@ class _ProfilePageState extends State<ProfilePage> {
       ),
     );
   }
-}
-
-Padding _buildTransectionContainer(BuildContext context, text1, text2) {
-  return Padding(
-    padding: const EdgeInsets.only(bottom: 16),
-    child: Container(
-      decoration: BoxDecoration(
-        border: Border.all(
-          color: AppThemes.lightPrimary500,
-        ),
-        borderRadius: BorderRadius.circular(8),
-      ),
-      child: Padding(
-        padding: EdgeInsets.only(
-          top: context.responsiveHeight(12),
-          bottom: context.responsiveHeight(12),
-          left: context.responsiveWidth(12),
-          right: context.responsiveWidth(17),
-        ),
-        child: Row(
-          children: [
-            CircleAvatar(
-              radius: 32,
-              child: Image.asset('assets/png/no_data.png'),
-              backgroundColor: Colors.white,
-            ),
-            SizedBox(
-              width: context.responsiveWidth(13),
-            ),
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  text1,
-                  style: context.textStyle.subheadSmallRegular.copyWith(color: HexColor('#121212')),
-                ),
-                SizedBox(
-                  height: context.responsiveHeight(6),
-                ),
-                RatingBar.builder(
-                  initialRating: 3.5,
-                  minRating: 1,
-                  direction: Axis.horizontal,
-                  allowHalfRating: true,
-                  itemCount: 5,
-                  itemSize: 15,
-                  updateOnDrag: false,
-                  tapOnlyMode: false,
-                  itemPadding: EdgeInsets.symmetric(horizontal: 1.0),
-                  itemBuilder: (context, _) => SvgPicture.asset(
-                    'assets/svg/star.svg',
-                    width: context.responsiveWidth(20),
-                  ),
-                  onRatingUpdate: (rating) {
-                    print(rating);
-                  },
-                ),
-                SizedBox(
-                  height: context.responsiveHeight(7),
-                ),
-                Text(
-                  text2,
-                  style: context.textStyle.bodySmallRegular.copyWith(color: HexColor('#5A5A5A')),
-                ),
-              ],
-            ),
-          ],
-        ),
-      ),
-    ),
-  );
 }

@@ -1,41 +1,23 @@
 import 'package:hive/hive.dart';
 
-import '../../base/base_model.dart';
-
 class CacheManager {
-  CacheManager(String boxName) {
-    Hive.openBox(boxName).then((value) => _box = value);
-  }
+  CacheManager._init();
 
-  late final Box _box;
+  static CacheManager instance = CacheManager._init();
 
-  Future<dynamic> getAll<T extends BaseModel>({T? model}) async {
+  Future<dynamic> getData(String boxName, String value) async {
     try {
-      return model?.fromJson(_box.toMap());
+      var box = await Hive.openBox(boxName);
+      return await box.get(value);
     } catch (e) {
       rethrow;
     }
   }
 
-  Future<dynamic> getData(String value) async {
+  Future<void> putData(String boxName, String key, String value) async {
     try {
-      return await _box.get(value);
-    } catch (e) {
-      rethrow;
-    }
-  }
-
-  Future<void> putAll<T extends BaseModel>(T model) async {
-    try {
-      await _box.putAll(model.toJson());
-    } catch (e) {
-      rethrow;
-    }
-  }
-
-  Future<void> putData(String key, String value) async {
-    try {
-      await _box.put(key, value);
+      var box = await Hive.openBox(boxName);
+      await box.put(key, value);
     } catch (e) {
       rethrow;
     }
