@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:hexcolor/hexcolor.dart';
-import 'package:shazy/pages/wallet/controller/wallet_controller.dart';
+import 'controller/wallet_controller.dart';
 import '../../utils/extensions/context_extension.dart';
 import '../../widgets/app_bars/custom_app_bar.dart';
 import '../../widgets/padding/base_padding.dart';

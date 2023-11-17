@@ -1,8 +1,8 @@
-import 'package:shazy/core/init/navigation/navigation_manager.dart';
-import 'package:shazy/models/user/user_model.dart';
-import 'package:shazy/services/user/user_service.dart';
-import 'package:shazy/utils/constants/navigation_constant.dart';
-import 'package:shazy/utils/extensions/string_extension.dart';
+import '../../core/init/navigation/navigation_manager.dart';
+import '../../models/user/user_model.dart';
+import '../../services/user/user_service.dart';
+import '../../utils/constants/navigation_constant.dart';
+import '../../utils/extensions/string_extension.dart';
 
 class AuthController {
   AuthController();

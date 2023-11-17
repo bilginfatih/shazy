@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:hexcolor/hexcolor.dart';
-import 'package:shazy/pages/profile/controller/profile_controller.dart';
-import 'package:shazy/utils/extensions/context_extension.dart';
+import 'controller/profile_controller.dart';
+import '../../utils/extensions/context_extension.dart';
 
 import '../../utils/theme/themes.dart';
 import '../../widgets/app_bars/custom_app_bar.dart';

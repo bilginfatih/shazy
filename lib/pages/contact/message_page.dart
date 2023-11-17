@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:hexcolor/hexcolor.dart';
-import '../../utils/extensions/context_extension.dart';
-import '../../widgets/app_bars/back_app_bar.dart';
 
+import '../../utils/extensions/context_extension.dart';
 import '../../utils/theme/themes.dart';
+import '../../widgets/app_bars/back_app_bar.dart';
 import '../../widgets/padding/base_padding.dart';
 
 // TODO: back-end tamamlandıktan sonra builder yapısı olucak ve tarih eklenecek

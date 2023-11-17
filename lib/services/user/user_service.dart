@@ -1,7 +1,7 @@
 import 'package:flutter_session_manager/flutter_session_manager.dart';
-import 'package:shazy/core/init/cache/cache_manager.dart';
-import 'package:shazy/core/init/network/network_manager.dart';
-import 'package:shazy/models/user/user_model.dart';
+import '../../core/init/cache/cache_manager.dart';
+import '../../core/init/network/network_manager.dart';
+import '../../models/user/user_model.dart';
 
 class UserService {
   UserService();

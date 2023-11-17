@@ -1,4 +1,5 @@
 import 'package:mobx/mobx.dart';
+
 part 'profile_controller.g.dart';
 
 class ProfileController = _ProfileControllerBase with _$ProfileController;

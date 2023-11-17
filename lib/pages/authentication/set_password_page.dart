@@ -1,8 +1,8 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:hexcolor/hexcolor.dart';
-import 'package:shazy/controllers/authentiaction/authentication_controller.dart';
-import 'package:shazy/models/user/user_model.dart';
+import '../../controllers/authentiaction/authentication_controller.dart';
+import '../../models/user/user_model.dart';
 import '../../utils/extensions/context_extension.dart';
 import '../../widgets/app_bars/back_app_bar.dart';
 import '../../widgets/buttons/primary_button.dart';

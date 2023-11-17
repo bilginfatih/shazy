@@ -1,6 +1,6 @@
 import 'package:flutter_session_manager/flutter_session_manager.dart';
-import 'package:shazy/core/init/network/network_manager.dart';
-import 'package:shazy/models/history/history_model.dart';
+import '../../core/init/network/network_manager.dart';
+import '../../models/history/history_model.dart';
 
 class HistoryService {
   HistoryService._init();

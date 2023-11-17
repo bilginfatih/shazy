@@ -1,6 +1,6 @@
 import 'package:mobx/mobx.dart';
-import 'package:shazy/models/history/history_model.dart';
-import 'package:shazy/services/history/history_service.dart';
+import '../../../models/history/history_model.dart';
+import '../../../services/history/history_service.dart';
 part 'history_upcoming_controller.g.dart';
 
 class HistoryUpcomingController = _HistoryUpcomingControllerBase

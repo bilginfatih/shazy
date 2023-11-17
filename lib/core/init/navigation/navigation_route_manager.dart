@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:shazy/pages/test_pages.dart';
+import '../../../pages/authentication/splash_page.dart';
+import '../../../pages/test_pages.dart';
 import '../../../pages/contact/cancel_ride_page.dart';
 import '../../../pages/contact/message_page.dart';
 import '../../../pages/home/home_page.dart';
@@ -38,6 +39,8 @@ class NavigationRouteManager {
 
   Route<dynamic> generateRoute(RouteSettings args) {
     switch (args.name) {
+      case NavigationConstant.splash:
+        return _navigationToDefault(const SplashPage(), args);
       case NavigationConstant.welcome:
         return _navigationToDefault(const WelcomePage(), args);
       case NavigationConstant.signUp:

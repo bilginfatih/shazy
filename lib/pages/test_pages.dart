@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:shazy/core/init/cache/cache_manager.dart';
-import 'package:shazy/models/user/user_model.dart';
-import 'package:shazy/services/history/history_service.dart';
-import 'package:shazy/services/user/user_service.dart';
-import 'package:shazy/widgets/padding/base_padding.dart';
+import '../core/init/cache/cache_manager.dart';
+import '../models/user/user_model.dart';
+import '../services/history/history_service.dart';
+import '../services/user/user_service.dart';
+import '../widgets/padding/base_padding.dart';
 
 // TODO: End pointleri test etmek için olan sayfa proda çıkmadan kaldırılacak
 class TestPage extends StatelessWidget {

@@ -1,11 +1,12 @@
 // The paths of the pages are set here
 mixin NavigationConstant {
+  static const splash = '/';
   static const signIn = '/signIn';
   static const signUp = '/signUp';
   static const setPassword = '/setPassword';
   static const completeProfile = '/completeProfile';
   static const verifyOtp = '/verifyOtp';
-  static const welcome = '/';
+  static const welcome = '/welcome';
   static const sendVerification = '/sendVerification';
   static const forgetPassword = '/forgetPassword';
   static const phoneVerifiyOtpPage = '/phoneVerifiyOtpPage';

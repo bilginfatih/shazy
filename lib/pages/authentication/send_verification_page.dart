@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
+
 import '../../utils/extensions/context_extension.dart';
 import '../../widgets/app_bars/back_app_bar.dart';
+import '../../widgets/buttons/primary_button.dart';
 import '../../widgets/padding/base_padding.dart';
 import '../../widgets/textfields/email_and_phone_text_form_field.dart';
-
-import '../../widgets/buttons/primary_button.dart';
 
 class SendVerificationPage extends StatelessWidget {
   SendVerificationPage({super.key});

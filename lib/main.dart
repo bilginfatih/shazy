@@ -1,13 +1,12 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:hive_flutter/adapters.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
-import 'core/init/language/language_manager.dart';
 
 import 'core/base/app_info.dart';
+import 'core/init/language/language_manager.dart';
 import 'core/init/navigation/navigation_manager.dart';
 import 'core/init/navigation/navigation_route_manager.dart';
 import 'utils/theme/themes.dart';
