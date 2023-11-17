@@ -27,5 +27,8 @@
     "Welcome": "Welcome",
     "WelcomePageDescription": "WelcomePageDescription",
     "CreateAccount": "Create an account",
-    "LogIn": "Log In"
+    "LogIn": "Log In",
+    "submit": "Submit",
+    "writeYourText": "Write Your Text",
+    "excellent": "Excellent"
 }

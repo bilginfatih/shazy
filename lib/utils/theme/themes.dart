@@ -19,6 +19,7 @@ class AppThemes {
   static Color success700 = HexColor('#388E3D');
   static Color error700 = HexColor('#D32F2F');
   static Color darkBg = HexColor('#1F212A');
+  static Color warningYellow700 = HexColor('#FBC02D');
 
   static ThemeData lightTheme = ThemeData(
     primaryColor: ThemeData.light().scaffoldBackgroundColor,

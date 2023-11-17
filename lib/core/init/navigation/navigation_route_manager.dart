@@ -86,7 +86,7 @@ class NavigationRouteManager {
       case NavigationConstant.homePage:
         return _navigationToDefault(const HomePage(), args);
       case NavigationConstant.testPage:
-        return _navigationToDefault(const TestPage(), args);
+        return _navigationToDefault( TestPage(), args);
       default:
         return _navigationToDefault(MyApp(), args);
     }

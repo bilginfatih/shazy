@@ -1,4 +1,15 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
+import 'package:hexcolor/hexcolor.dart';
+import 'package:shazy/utils/extensions/context_extension.dart';
+import 'package:shazy/utils/theme/themes.dart';
+import 'package:shazy/widgets/buttons/primary_button.dart';
+import 'package:shazy/widgets/containers/payment_method_container.dart';
+import 'package:shazy/widgets/icons/circular_svg_icon.dart';
+import 'package:shazy/widgets/modal_bottom_sheet/comment_bottom_sheet.dart';
+import 'package:shazy/widgets/rating_bars/star_rating_bar.dart';
+import 'package:shazy/widgets/textfields/otp_text_form_field.dart';
 import '../core/init/cache/cache_manager.dart';
 import '../models/user/user_model.dart';
 import '../services/history/history_service.dart';
@@ -7,11 +18,13 @@ import '../widgets/padding/base_padding.dart';
 
 // TODO: End pointleri test etmek için olan sayfa proda çıkmadan kaldırılacak
 class TestPage extends StatelessWidget {
-  const TestPage({super.key});
+  TestPage({super.key});
+  final _scaffoldKey = GlobalKey<ScaffoldState>();
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      key: _scaffoldKey,
       body: BasePadding(
         context: context,
         child: Center(
@@ -62,7 +75,8 @@ class TestPage extends StatelessWidget {
               ),
               ElevatedButton(
                 onPressed: () async {
-                  var data = await CacheManager.instance.getData('user', 'email');
+                  var data =
+                      await CacheManager.instance.getData('user', 'email');
                   print(data);
                 },
                 child: Text('HiveTest'),
@@ -73,6 +87,25 @@ class TestPage extends StatelessWidget {
                   print(data);
                 },
                 child: Text('User'),
+              ),
+              ElevatedButton(
+                onPressed: () async {
+                  showModalBottomSheet(
+                    shape: const RoundedRectangleBorder(
+                      borderRadius: BorderRadius.only(
+                        topLeft: Radius.circular(24),
+                        topRight: Radius.circular(24),
+                      ),
+                    ),
+                    context: context,
+                    builder: (_) => CommentBottomSheet(
+                      selectedIndex: 0,
+                      context: context,
+                      text: 'You rated Zübeyir X 5 star',
+                    ),
+                  );
+                },
+                child: Text('CommentBottomSheetBar'),
               ),
             ],
           ),
