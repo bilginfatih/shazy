@@ -5,7 +5,7 @@ mixin NavigationConstant {
   static const setPassword = '/setPassword';
   static const completeProfile = '/completeProfile';
   static const verifyOtp = '/verifyOtp';
-  static const welcome = '/welcome';
+  static const welcome = '/';
   static const sendVerification = '/sendVerification';
   static const forgetPassword = '/forgetPassword';
   static const phoneVerifiyOtpPage = '/phoneVerifiyOtpPage';
@@ -13,7 +13,7 @@ mixin NavigationConstant {
 
   // Home
   static const searchPage = '/searchPage';
-  static const homePage = '/';
+  static const homePage = '/homePage';
 
   //Google Maps Ekranları
   static const homeScreenTransport = '/homeScreenTransport';

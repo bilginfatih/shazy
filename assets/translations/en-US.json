@@ -23,5 +23,9 @@
     "dontHaveAccount": "Don\"t have an account? ",
     "emailOrPhone": "Email or Phone Number",
     "passenger": "Passenger",
-    "driver": "Driver"
+    "driver": "Driver",
+    "Welcome": "Welcome",
+    "WelcomePageDescription": "WelcomePageDescription",
+    "CreateAccount": "Create an account",
+    "LogIn": "Log In"
 }

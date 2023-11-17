@@ -18,8 +18,11 @@ class SecondaryButton extends SizedBox {
           child: FilledButton(
             onPressed: onPressed,
             style: FilledButton.styleFrom(
-                backgroundColor: Colors.white,
-                foregroundColor: context.isLight ? AppThemes.lightPrimary500 : Colors.grey[500],
+                backgroundColor:
+                    context.isLight ? Colors.white : Colors.transparent,
+                foregroundColor: context.isLight
+                    ? AppThemes.lightPrimary500
+                    : Colors.grey[500],
                 side: BorderSide(
                   strokeAlign: 1,
                   width: 2,
@@ -27,7 +30,10 @@ class SecondaryButton extends SizedBox {
                 )),
             child: Text(
               text,
-              style: style ?? context.textStyle.subheadLargeMedium,
+              style: style ??
+                  context.textStyle.subheadLargeMedium.copyWith(
+                      color:
+                          !context.isLight ? AppThemes.lightPrimary500 : null),
             ),
           ),
         );
