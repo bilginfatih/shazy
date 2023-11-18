@@ -59,7 +59,7 @@ class AppTextStyles {
         fontSize: 20,
         fontWeight: FontWeight.w500,
         height: 0.07,
-        color: HexColor('#2A2A2A'),
+        color: _context.isLight ? HexColor('#2A2A2A') : null,
       );
 
   TextStyle get headlineSmallRegular => GoogleFonts.poppins(

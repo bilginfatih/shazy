@@ -91,6 +91,7 @@ class TestPage extends StatelessWidget {
               ElevatedButton(
                 onPressed: () async {
                   showModalBottomSheet(
+                    isScrollControlled: true,
                     shape: const RoundedRectangleBorder(
                       borderRadius: BorderRadius.only(
                         topLeft: Radius.circular(24),
@@ -101,6 +102,8 @@ class TestPage extends StatelessWidget {
                     builder: (_) => CommentBottomSheet(
                       selectedIndex: 0,
                       context: context,
+                      textController: TextEditingController(),
+                      onPressed: () {},
                       text: 'You rated Zübeyir X 5 star',
                     ),
                   );
