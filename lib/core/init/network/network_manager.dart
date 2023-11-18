@@ -34,6 +34,7 @@ class NetworkManager extends BaseNetworkManager {
           },
         ),
       );
+      print(response);
       if (model != null) {
         return model.fromJson(response.data);
       }
@@ -65,6 +66,11 @@ class NetworkManager extends BaseNetworkManager {
   Future post<T extends BaseModel>(String path,
       {T? model, Map<String, dynamic>? data}) async {
     try {
+      var token = await SessionManager().get('token');
+      if (token != null) {
+        print('token: $token');
+        _headers['Authorization'] = 'Bearer $token';
+      }
       var request = jsonEncode(model?.toJson());
       print(path);
       print('${dio.options.baseUrl}$path');

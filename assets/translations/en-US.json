@@ -30,5 +30,6 @@
     "LogIn": "Log In",
     "submit": "Submit",
     "writeYourText": "Write Your Text",
-    "excellent": "Excellent"
+    "excellent": "Excellent",
+    "commentError": "commentError"
 }

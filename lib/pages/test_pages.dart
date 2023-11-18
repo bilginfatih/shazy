@@ -1,7 +1,10 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_session_manager/flutter_session_manager.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:hexcolor/hexcolor.dart';
+import 'package:shazy/models/comment/comment_model.dart';
+import 'package:shazy/services/comment/comment_service.dart';
 import 'package:shazy/utils/extensions/context_extension.dart';
 import 'package:shazy/utils/theme/themes.dart';
 import 'package:shazy/widgets/buttons/primary_button.dart';
@@ -19,6 +22,7 @@ import '../widgets/padding/base_padding.dart';
 // TODO: End pointleri test etmek için olan sayfa proda çıkmadan kaldırılacak
 class TestPage extends StatelessWidget {
   TestPage({super.key});
+
   final _scaffoldKey = GlobalKey<ScaffoldState>();
 
   @override
@@ -109,6 +113,25 @@ class TestPage extends StatelessWidget {
                   );
                 },
                 child: Text('CommentBottomSheetBar'),
+              ),
+              ElevatedButton(
+                onPressed: () async {
+                  var userId = await SessionManager().get('id');
+                  CommentModel model = CommentModel(
+                    commentorUserId: userId,
+                    comment: 'test',
+                    point: '5',
+                  );
+                  await CommentService.instance.comment(model);
+                },
+                child: Text('Comment'),
+              ),
+              ElevatedButton(
+                onPressed: () async {
+                  var userId = await SessionManager().get('id');
+                  await CommentService.instance.getComment(userId);
+                },
+                child: Text('My Comment'),
               ),
             ],
           ),
