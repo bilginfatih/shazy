@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
-import '../../utils/extensions/context_extension.dart';
 
+import '../../utils/extensions/context_extension.dart';
 import '../../utils/theme/themes.dart';
 
 class CircularSvgIcon extends Container {

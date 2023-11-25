@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import '../../utils/extensions/context_extension.dart';
 
+import '../../utils/extensions/context_extension.dart';
 import '../../widgets/app_bars/back_app_bar.dart';
 import '../../widgets/buttons/primary_button.dart';
 import '../../widgets/buttons/secondary_button.dart';

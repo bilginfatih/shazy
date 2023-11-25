@@ -1,10 +1,10 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:hexcolor/hexcolor.dart';
+
 import '../../core/init/navigation/navigation_manager.dart';
 import '../../utils/constants/navigation_constant.dart';
 import '../../utils/extensions/context_extension.dart';
-
 import '../../widgets/buttons/primary_button.dart';
 import '../../widgets/buttons/secondary_button.dart';
 import '../../widgets/padding/base_padding.dart';

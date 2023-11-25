@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:shazy/utils/extensions/context_extension.dart';
+import '../../utils/extensions/context_extension.dart';
 
 import '../../utils/theme/themes.dart';
 
+// ignore: must_be_immutable
 class StarRatingBar extends StatefulWidget {
   StarRatingBar({super.key, required this.selectedIndex});
 

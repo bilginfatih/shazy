@@ -151,9 +151,7 @@
     
     },
     "terminal.integrated.fontFamily": "monospace",
-    "yaml.schemas": {
-        "file:///Users/muhammedhalilakkaynak/.vscode/extensions/docsmsft.docs-yaml-1.0.1/dist/toc.schema.json": "/toc\\.yml/i"
-    },
+    "yaml.schemas": {},
     "git.autofetch": true,
     "[python]": {
         "editor.formatOnType": true

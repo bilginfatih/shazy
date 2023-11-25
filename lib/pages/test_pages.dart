@@ -3,16 +3,19 @@ import 'package:flutter/material.dart';
 import 'package:flutter_session_manager/flutter_session_manager.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:hexcolor/hexcolor.dart';
-import 'package:shazy/models/comment/comment_model.dart';
-import 'package:shazy/services/comment/comment_service.dart';
-import 'package:shazy/utils/extensions/context_extension.dart';
-import 'package:shazy/utils/theme/themes.dart';
-import 'package:shazy/widgets/buttons/primary_button.dart';
-import 'package:shazy/widgets/containers/payment_method_container.dart';
-import 'package:shazy/widgets/icons/circular_svg_icon.dart';
-import 'package:shazy/widgets/modal_bottom_sheet/comment_bottom_sheet.dart';
-import 'package:shazy/widgets/rating_bars/star_rating_bar.dart';
-import 'package:shazy/widgets/textfields/otp_text_form_field.dart';
+import '../models/comment/comment_model.dart';
+import '../models/drive/drive_model.dart';
+import '../services/comment/comment_service.dart';
+import '../services/drive/drive_service.dart';
+import '../services/security/security_service.dart';
+import '../utils/extensions/context_extension.dart';
+import '../utils/theme/themes.dart';
+import '../widgets/buttons/primary_button.dart';
+import '../widgets/containers/payment_method_container.dart';
+import '../widgets/icons/circular_svg_icon.dart';
+import '../widgets/modal_bottom_sheet/comment_bottom_sheet.dart';
+import '../widgets/rating_bars/star_rating_bar.dart';
+import '../widgets/textfields/otp_text_form_field.dart';
 import '../core/init/cache/cache_manager.dart';
 import '../models/user/user_model.dart';
 import '../services/history/history_service.dart';
@@ -132,6 +135,72 @@ class TestPage extends StatelessWidget {
                   await CommentService.instance.getComment(userId);
                 },
                 child: Text('My Comment'),
+              ),
+              ElevatedButton(
+                onPressed: () async {
+                  var userId = await SessionManager().get('id');
+                  DriveModel model = DriveModel(driverId: userId);
+                  await DriveService.instance.driverActive(model);
+                },
+                child: Text('Driver Active'),
+              ),
+              ElevatedButton(
+                onPressed: () async {
+                  var userId = await SessionManager().get('id');
+                  DriveModel model = DriveModel(driverId: userId);
+                  await DriveService.instance.driveCancel(model);
+                },
+                child: Text('Drive Cancel'),
+              ),
+              ElevatedButton(
+                onPressed: () async {
+                  var userId = await SessionManager().get('id');
+                  DriveModel model = DriveModel(driverId: userId);
+                  await DriveService.instance.driverPassive(model);
+                },
+                child: Text('Driver Passive'),
+              ),
+              ElevatedButton(
+                onPressed: () async {
+                  var userId = await SessionManager().get('id');
+                  var now = DateTime.now();
+                  var timeTo =
+                      DateTime(now.year, now.month, now.day, 23, 23, 23);
+                  DriveModel model = DriveModel(
+                    driverId: userId,
+                    to: 'id',
+                    timeFrom: now.toString(),
+                    timeTo: timeTo.toString(),
+                  );
+                  await DriveService.instance.driveMatched(model);
+                },
+                child: Text('Driver Matched'),
+              ),
+              ElevatedButton(
+                onPressed: () async {
+                  var userId = await SessionManager().get('id');
+                  DriveModel model = DriveModel(
+                    callerId: userId,
+                  );
+                  await DriveService.instance.driveConfirmed(model);
+                },
+                child: Text('Driver Confirmed'),
+              ),
+              ElevatedButton(
+                onPressed: () async {
+                  var userId = await SessionManager().get('id');
+                  DriveModel model = DriveModel(
+                    driverId: userId,
+                  );
+                  await DriveService.instance.driving(model);
+                },
+                child: Text('Driving'),
+              ),
+              ElevatedButton(
+                onPressed: () async {
+                  await SecurityService.intance.callerCode('sadsda');
+                },
+                child: Text('Caller Code'),
               ),
             ],
           ),

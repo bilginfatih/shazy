@@ -1,6 +1,8 @@
 import 'dart:convert';
+
 import 'package:dio/dio.dart';
 import 'package:flutter_session_manager/flutter_session_manager.dart';
+
 import '../../base/base_model.dart';
 import 'base_network_manager.dart';
 
@@ -31,7 +33,7 @@ class NetworkManager extends BaseNetworkManager {
           headers: _headers,
           validateStatus: (status) {
             return status is int && status < 500;
-          },
+          }, 
         ),
       );
       print(response);

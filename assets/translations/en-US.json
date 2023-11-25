@@ -31,5 +31,6 @@
     "submit": "Submit",
     "writeYourText": "Write Your Text",
     "excellent": "Excellent",
-    "commentError": "commentError"
+    "commentError": "commentError",
+    "driveError": "driveError"
 }

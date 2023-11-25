@@ -1,11 +1,11 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:hexcolor/hexcolor.dart';
-import 'package:shazy/utils/extensions/context_extension.dart';
-import 'package:shazy/utils/theme/themes.dart';
-import 'package:shazy/widgets/buttons/primary_button.dart';
-import 'package:shazy/widgets/padding/base_padding.dart';
-import 'package:shazy/widgets/rating_bars/star_rating_bar.dart';
+import '../../utils/extensions/context_extension.dart';
+import '../../utils/theme/themes.dart';
+import '../buttons/primary_button.dart';
+import '../padding/base_padding.dart';
+import '../rating_bars/star_rating_bar.dart';
 
 class CommentBottomSheet extends Padding {
   CommentBottomSheet({

@@ -1,12 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:hexcolor/hexcolor.dart';
+
 import '../../utils/extensions/context_extension.dart';
 import '../../widgets/app_bars/back_app_bar.dart';
-import '../../widgets/dialogs/congratulation_dialog.dart';
+import '../../widgets/buttons/primary_button.dart';
 import '../../widgets/padding/base_padding.dart';
 import '../../widgets/textfields/password_text_form_field.dart';
-
-import '../../widgets/buttons/primary_button.dart';
 
 class SetNewPassword extends StatelessWidget {
   SetNewPassword({super.key});

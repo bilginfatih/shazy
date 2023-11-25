@@ -1,16 +1,15 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+
 import '../../controllers/authentiaction/authentication_controller.dart';
 import '../../models/user/user_model.dart';
 import '../../utils/extensions/context_extension.dart';
 import '../../widgets/app_bars/back_app_bar.dart';
 import '../../widgets/buttons/custom_text_button.dart';
 import '../../widgets/buttons/primary_button.dart';
+import '../../widgets/padding/base_padding.dart';
 import '../../widgets/textfields/email_and_phone_text_form_field.dart';
 import '../../widgets/textfields/password_text_form_field.dart';
-import '../../core/init/navigation/navigation_manager.dart';
-import '../../utils/constants/navigation_constant.dart';
-import '../../widgets/padding/base_padding.dart';
 
 class SignInPage extends StatelessWidget {
   SignInPage({super.key});
