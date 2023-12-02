@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:hexcolor/hexcolor.dart';
+import 'package:shazy/pages/home/driver_home/driver_home_page.dart';
 
 import '../../utils/extensions/context_extension.dart';
 import '../../utils/theme/themes.dart';
@@ -19,9 +20,10 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   final List _pages = [
-    HomeScreenTransport(),
+    //HomeScreenTransport(),
+    DriverHomePage(),
     HistoryUpcomingPage(),
-     WalletPage(),
+    WalletPage(),
     const OfferPage(),
     ProfilePage(),
   ];
@@ -40,7 +42,9 @@ class _HomePageState extends State<HomePage> {
           backgroundColor: Colors.transparent,
           type: BottomNavigationBarType.fixed,
           selectedItemColor: AppThemes.lightPrimary500,
-          unselectedItemColor: context.isLight ? AppThemes.contentSecondary : HexColor('#D0D0D0'),
+          unselectedItemColor: context.isLight
+              ? AppThemes.contentSecondary
+              : HexColor('#D0D0D0'),
           showUnselectedLabels: true,
           currentIndex: _currentIndex,
           onTap: (index) {
@@ -60,7 +64,8 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  BottomNavigationBarItem _buildBottomNavigationBarItem(String asset, String label, int index) {
+  BottomNavigationBarItem _buildBottomNavigationBarItem(
+      String asset, String label, int index) {
     return BottomNavigationBarItem(
       icon: SvgPicture.asset(
         height: context.responsiveHeight(24),

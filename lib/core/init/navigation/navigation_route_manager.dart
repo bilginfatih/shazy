@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../../pages/authentication/splash_page.dart';
+import '../../../pages/home/driver_home/driver_home_page.dart';
 import '../../../pages/test_pages.dart';
 import '../../../pages/contact/cancel_ride_page.dart';
 import '../../../pages/contact/message_page.dart';
@@ -85,6 +86,8 @@ class NavigationRouteManager {
         return _navigationToDefault(const NotificationPage(), args);
       case NavigationConstant.homePage:
         return _navigationToDefault(const HomePage(), args);
+      case NavigationConstant.driverHomePage:
+        return _navigationToDefault(DriverHomePage(), args);
       case NavigationConstant.testPage:
         return _navigationToDefault( TestPage(), args);
       default:
