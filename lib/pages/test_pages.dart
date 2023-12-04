@@ -37,8 +37,7 @@ class TestPage extends StatelessWidget {
       body: BasePadding(
         context: context,
         child: Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
+          child: ListView(
             children: [
               ElevatedButton(
                 onPressed: () async {
@@ -296,7 +295,22 @@ class TestPage extends StatelessWidget {
                           );
                         });
                   },
-                  child: Text('Driver dialog'))
+                  child: Text('Driver dialog')),
+              ElevatedButton.icon(
+                onPressed: () {},
+                style: ElevatedButton.styleFrom(
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(15),
+                  ),
+                  backgroundColor: HexColor('#469AD8'),
+                  maximumSize: const Size(150, 40),
+                ),
+                icon: const Icon(Icons.navigation),
+                label: Text(
+                  'navigate'.tr(),
+                  style: context.textStyle.subheadSmallRegular,
+                ),
+              ),
             ],
           ),
         ),

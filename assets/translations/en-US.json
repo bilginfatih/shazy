@@ -34,5 +34,6 @@
     "commentError": "commentError",
     "driveError": "driveError",
     "cancel": "Cancel",
-    "accept": "Accept"
+    "accept": "Accept",
+    "navigate": "NAVIGATE"
 }

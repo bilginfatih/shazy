@@ -10,7 +10,8 @@ class DriveService {
 
   final String _request = '/drive-request';
 
-  // Sürücüyü aktif eder.
+  /// Sürücüyü aktif eder.
+  /// model paremetreleri: driver_id
   Future<String?> driverActive(DriveModel model) async {
     try {
       var response = await NetworkManager.instance
@@ -26,6 +27,10 @@ class DriveService {
     }
     return null;
   }
+
+  /// Sürüş id' sini getirir.
+  Future<String?> getDriveId() async =>
+      await CacheManager.instance.getData('drive', 'drive_id');
 
   // Sürüşü iptal eder
   Future<String?> driveCancel(DriveModel model) async {
@@ -74,8 +79,8 @@ class DriveService {
 
   Future<String?> driving(DriveModel model) async {
     try {
-      var response = await NetworkManager.instance
-          .post('$_request/Driving', model: model);
+      var response =
+          await NetworkManager.instance.post('$_request/Driving', model: model);
       if (response.containsKey('errors')) {
         return response['message'];
       }
