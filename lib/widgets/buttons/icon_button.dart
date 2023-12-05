@@ -12,8 +12,8 @@ class CustomIconButton extends Positioned {
     double? bottom,
     Color? color,
     IconData? icon,
+    VoidCallback? onPressed,
     required BuildContext context,
-    required VoidCallback onPressed,
   }) : super(
           key: key,
           top: top,
@@ -28,10 +28,12 @@ class CustomIconButton extends Positioned {
                   color: Colors.white,
                   boxShadow: [
                     BoxShadow(
-                      color: Colors.black.withOpacity(0.2), // Kabartma rengi ve opaklık
+                      color: Colors.black
+                          .withOpacity(0.2), // Kabartma rengi ve opaklık
                       spreadRadius: 2, // Ne kadar genişlemesi gerektiği
                       blurRadius: 4, // Görüntü bulanıklığı
-                      offset: const Offset(0, 2), // X ve Y eksenindeki ofset değeri
+                      offset:
+                          const Offset(0, 2), // X ve Y eksenindeki ofset değeri
                     ),
                   ],
                 ),
@@ -48,7 +50,7 @@ class CustomIconButton extends Positioned {
                     if (icon == Icons.menu) {
                       Scaffold.of(context).openDrawer();
                     }
-                    onPressed();
+                    if (onPressed != null) onPressed();
                   },
                 ),
               );

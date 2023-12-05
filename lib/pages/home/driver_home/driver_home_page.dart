@@ -12,6 +12,7 @@ import 'package:permission_handler/permission_handler.dart';
 import 'package:permission_handler/permission_handler.dart' as ph;
 import 'package:provider/provider.dart';
 import 'package:shazy/pages/home/driver_home/driver_controller/driver_controller.dart';
+import 'package:shazy/widgets/dialogs/drive_dialog.dart';
 
 import '../../../core/assistants/asistant_methods.dart';
 import '../../../core/base/app_info.dart';
@@ -31,14 +32,6 @@ class DriverHomePage extends StatefulWidget {
 }
 
 class _DriverHomePageState extends State<DriverHomePage> {
-  String _mapTheme = '';
-  final Set<Marker> _markersSet = {};
-  GoogleMapController? _newGoogleMapController;
-  final List<LatLng> _pLineCoOrdinatesList = [];
-  final Set<Polyline> _polyLineSet = {};
-  Position? _userCurrentPosition;
-  final DriverController _driverController = DriverController();
-
   static const CameraPosition _kGooglePlex = CameraPosition(
     target: LatLng(37.42796133580664, -122.085749655962),
     zoom: 14.4746,
@@ -47,11 +40,16 @@ class _DriverHomePageState extends State<DriverHomePage> {
   final Completer<GoogleMapController> _controller =
       Completer<GoogleMapController>();
 
+  final DriverController _driverController = DriverController();
+  String _mapTheme = '';
+  final Set<Marker> _markersSet = {};
+  GoogleMapController? _newGoogleMapController;
+  final Set<Polyline> _polyLineSet = {};
+  Position? _userCurrentPosition;
+
   @override
   void initState() {
     super.initState();
-    _getLocationPermission(); // İzin kontrolü eklendi
-    // _subscribeToLocationChanges(); // Geolocation Aboneliği eklendi
     DefaultAssetBundle.of(context)
         .loadString('assets/maptheme/night_theme.json')
         .then(
@@ -81,43 +79,6 @@ class _DriverHomePageState extends State<DriverHomePage> {
           await AssistantMethods.searchAddressForGeographicCoOrdinates(
               _userCurrentPosition!, context);
     }
-    print("this is your address = " + humanReadableAddress);
-  }
-
-  // İzinleri kontrol eden fonksiyon
-  Future<void> _getLocationPermission() async {
-    ph.PermissionStatus status = await Permission.locationWhenInUse.request();
-    if (status.isGranted) {
-      print('Lokasyon izni verildi.');
-    } else if (status.isDenied) {
-      print('Lokasyon izni verilmedi.');
-    } else if (status.isPermanentlyDenied) {
-      print('Lokasyon izni kalıcı olarak rededildi.');
-      _showPermissionSettingsDialog(); // Ayarlara gitme işlemi için fonksiyonu çağır
-    }
-  }
-
-  // Ayarlara gitme işlemi için bir diyalog gösteren fonksiyon
-  void _showPermissionSettingsDialog() {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: Text('Lokasyon İzinleri'),
-          content: Text(
-              'Uygulamanın konum izni gerektiği için ayarlara gitmek istiyor musunuz?'),
-          actions: [
-            TextButton(
-              onPressed: () {
-                ph.openAppSettings(); // Ayarlara gitmek için izinleri ayarlar
-                Navigator.of(context).pop();
-              },
-              child: const Text('Ayarlara Git'),
-            ),
-          ],
-        );
-      },
-    );
   }
 
   GoogleMap _buildGoogleMap(BuildContext context) {
@@ -141,6 +102,24 @@ class _DriverHomePageState extends State<DriverHomePage> {
     );
   }
 
+  void _showDriverDialog() {
+    showDialog(
+      barrierDismissible: false,
+      context: context,
+      builder: (BuildContext context) => DriverDialog(
+        context: context,
+        price: '200₺',
+        star: '2',
+        location1TextTitle: 'location1TextTitle',
+        location1Text: 'location1Text',
+        location2TextTitle: 'location2TextTitle',
+        location2Text: 'location2Text',
+        cancelOnPressed: _driverController.driveCancel,
+        acceptOnPressed: _driverController.driverAccept,
+      ),
+    );
+  }
+
   ElevatedButton _buildNavigationButton() => ElevatedButton.icon(
         onPressed: () {},
         style: ElevatedButton.styleFrom(
@@ -155,6 +134,39 @@ class _DriverHomePageState extends State<DriverHomePage> {
           'navigate'.tr(),
           style: context.textStyle.subheadSmallRegular,
         ),
+      );
+
+  CustomIconButton _buildRightTopButton(BuildContext context) =>
+      _driverController.driverActive
+          ? _buildCustomIconButton(
+              false, Icons.close, _driverController.driverPassive)
+          : _buildCustomIconButton(false, Icons.notifications_none_outlined,
+              () {
+              NavigationManager.instance
+                  .navigationToPage(NavigationConstant.notification);
+            });
+
+  Widget _buildTopLeftButton(BuildContext context) =>
+      _driverController.driverActive
+          ? const SizedBox()
+          : _buildCustomIconButton(true, Icons.menu, () {
+              // TODO: test amaçlı yapılmış olup kaldırılacaktır!
+              _showDriverDialog();
+            });
+
+  CustomIconButton _buildCustomIconButton(
+          bool isLeft, IconData icon, VoidCallback onPressed) =>
+      CustomIconButton(
+        context: context,
+        top: context.responsiveHeight(60),
+        left: isLeft ? context.responsiveWidth(15) : null,
+        right: !isLeft ? context.responsiveWidth(15) : null,
+        height: context.responsiveHeight(34),
+        width: context.responsiveWidth(34),
+        icon: icon,
+        color: Colors.black,
+        size: 18,
+        onPressed: onPressed,
       );
 
   @override
@@ -172,25 +184,7 @@ class _DriverHomePageState extends State<DriverHomePage> {
                 _buildGoogleMap(context),
                 _buildTopLeftButton(context),
                 _buildRightTopButton(context),
-                Padding(
-                  // sayfanın alt kısmı
-                  padding: EdgeInsets.only(
-                    top: context.responsiveHeight(480) -
-                        keyboardSize +
-                        (keyboardSize != 0 ? context.responsiveHeight(150) : 0),
-                    right: context.responsiveWidth(15),
-                    left: context.responsiveWidth(14),
-                  ),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.end,
-                    children: [
-                      const Center(
-                        // TODO: UI burası değişebilir
-                        child: CircularProgressIndicator(),
-                      ),
-                    ],
-                  ),
-                ),
+                _buildBottomOfBody(context, keyboardSize),
               ],
             );
           }),
@@ -204,53 +198,27 @@ class _DriverHomePageState extends State<DriverHomePage> {
     );
   }
 
-  CustomIconButton _buildRightTopButton(BuildContext context) {
-    return _driverController.driverActive
-        ? CustomIconButton(
-            context: context,
-            top: context.responsiveHeight(60),
-            right: context.responsiveWidth(15),
-            height: context.responsiveHeight(34),
-            width: context.responsiveWidth(34),
-            icon: Icons.close,
-            color: Colors.black,
-            size: 18,
-            onPressed: () {
-              NavigationManager.instance.navigationToPage(
-                NavigationConstant.notification,
+  Padding _buildBottomOfBody(BuildContext context, double keyboardSize) {
+    return Padding(
+                // sayfanın alt kısmı
+                padding: EdgeInsets.only(
+                  top: context.responsiveHeight(480) -
+                      keyboardSize +
+                      (keyboardSize != 0 ? context.responsiveHeight(150) : 0),
+                  right: context.responsiveWidth(15),
+                  left: context.responsiveWidth(14),
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.end,
+                  children: [
+                    true
+                        ? SizedBox()
+                        : const Center(
+                            // TODO: UI burası değişebilir
+                            child: CircularProgressIndicator(),
+                          ),
+                  ],
+                ),
               );
-            },
-          )
-        : CustomIconButton(
-            context: context,
-            top: context.responsiveHeight(60),
-            right: context.responsiveWidth(15),
-            height: context.responsiveHeight(34),
-            width: context.responsiveWidth(34),
-            icon: Icons.notifications_none_outlined,
-            color: Colors.black,
-            size: 18,
-            onPressed: () {
-              NavigationManager.instance.navigationToPage(
-                NavigationConstant.notification,
-              );
-            },
-          );
-  }
-
-  Widget _buildTopLeftButton(BuildContext context) {
-    return _driverController.driverActive
-        ? const SizedBox()
-        : CustomIconButton(
-            context: context,
-            top: context.responsiveHeight(60),
-            left: context.responsiveWidth(15),
-            height: context.responsiveHeight(34),
-            width: context.responsiveWidth(34),
-            icon: Icons.menu,
-            color: Colors.black,
-            size: 18,
-            onPressed: () {},
-          );
   }
 }

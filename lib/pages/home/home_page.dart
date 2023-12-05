@@ -20,8 +20,8 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   final List _pages = [
-    HomeScreenTransport(),
-    //DriverHomePage(),
+    //HomeScreenTransport(),
+    DriverHomePage(),
     HistoryUpcomingPage(),
     WalletPage(),
     const OfferPage(),

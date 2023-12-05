@@ -33,6 +33,14 @@ mixin _$DriverController on _DriverControllerBase, Store {
     return _$activeAsyncAction.run(() => super.active());
   }
 
+  late final _$driveInformationAsyncAction =
+      AsyncAction('_DriverControllerBase.driveInformation', context: context);
+
+  @override
+  Future<void> driveInformation() {
+    return _$driveInformationAsyncAction.run(() => super.driveInformation());
+  }
+
   @override
   String toString() {
     return '''

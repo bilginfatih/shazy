@@ -24,8 +24,8 @@ class DriverDialog extends Padding {
   }) : super(
           key: key,
           padding: EdgeInsets.only(
-            top: context.responsiveHeight(400),
-            bottom: context.responsiveHeight(16),
+            top: context.responsiveHeight(340),
+            bottom: context.responsiveHeight(76),
             left: context.responsiveWidth(14),
             right: context.responsiveWidth(14),
           ),
