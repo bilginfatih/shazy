@@ -5,6 +5,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:shazy/widgets/buttons/secondary_button.dart';
+import 'package:shazy/widgets/modal_bottom_sheet/drive_bottom_sheet.dart';
 import '../models/comment/comment_model.dart';
 import '../models/drive/drive_model.dart';
 import '../services/comment/comment_service.dart';
@@ -33,6 +34,7 @@ class TestPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       key: _scaffoldKey,
       body: BasePadding(
         context: context,
@@ -310,6 +312,130 @@ class TestPage extends StatelessWidget {
                   'navigate'.tr(),
                   style: context.textStyle.subheadSmallRegular,
                 ),
+              ),
+              ElevatedButton(
+                onPressed: () {
+                  showModalBottomSheet(
+                    context: context,
+                    isScrollControlled: true,
+                    shape: const RoundedRectangleBorder(
+                      borderRadius: BorderRadius.only(
+                        topLeft: Radius.circular(24),
+                        topRight: Radius.circular(24),
+                      ),
+                    ),
+                    builder: (_) {
+                      return DriveBottomSheet(
+                        context: context,
+                        pickingUpText: 'pickingUpText',
+                        imagePath: 'https://via.placeholder.com/54x59',
+                        customerName: 'customerName',
+                        startText: 'startText',
+                        location1Text: 'location1Text',
+                        location1TextTitle: 'location1TextTitle',
+                        location2Text: 'location2Text',
+                        location2TextTitle: 'location2TextTitle',
+                        onPressed: () {},
+                      );
+                    },
+                  );
+                },
+                child: Text('Drive bottom sheet bar 1'),
+              ),
+              ElevatedButton(
+                onPressed: () {
+                  showModalBottomSheet(
+                    context: context,
+                    isScrollControlled: true,
+                    shape: const RoundedRectangleBorder(
+                      borderRadius: BorderRadius.only(
+                        topLeft: Radius.circular(24),
+                        topRight: Radius.circular(24),
+                      ),
+                    ),
+                    builder: (_) {
+                      return Container(
+                        padding: EdgeInsets.only(
+                          bottom: MediaQuery.of(context).viewInsets.bottom,
+                        ),
+                        child: DriveBottomSheet(
+                          context: context,
+                          height: 0.60,
+                          buttonText: 'startTheTrip'.tr(),
+                          pickingUpText: 'pickingUpText',
+                          imagePath: 'https://via.placeholder.com/54x59',
+                          customerName: 'customerName',
+                          startText: 'startText',
+                          location1Text: 'location1Text',
+                          location1TextTitle: 'location1TextTitle',
+                          location2Text: 'location2Text',
+                          location2TextTitle: 'location2TextTitle',
+                          onPressed: () {},
+                        ),
+                      );
+                    },
+                  );
+                },
+                child: Text('Drive bottom sheet bar 2'),
+              ),
+              ElevatedButton(
+                onPressed: () {
+                  showModalBottomSheet(
+                    context: context,
+                    isScrollControlled: true,
+                    shape: const RoundedRectangleBorder(
+                      borderRadius: BorderRadius.only(
+                        topLeft: Radius.circular(24),
+                        topRight: Radius.circular(24),
+                      ),
+                    ),
+                    builder: (_) {
+                      return Container(
+                        height: context.customeHeight(0.12),
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.only(
+                            topLeft: Radius.circular(24),
+                            topRight: Radius.circular(24),
+                          ),
+                        ),
+                        child: Column(
+                          children: [
+                            Align(
+                              alignment: Alignment.topRight,
+                              child: IconButton(
+                                onPressed: () {},
+                                icon: Icon(Icons.close),
+                              ),
+                            ),
+                            Padding(
+                              padding: EdgeInsets.symmetric(
+                                horizontal: context.responsiveWidth(20),
+                              ),
+                              child: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Text(
+                                    'pickingUpText',
+                                    style: context.textStyle.subheadLargeMedium,
+                                  ),
+                                  Text(
+                                    'pickingUpText',
+                                    style: context.textStyle.subheadLargeMedium,
+                                  ),
+                                ],
+                              ),
+                            ),
+                            SizedBox(
+                              height: context.responsiveHeight(8),
+                            )
+                          ],
+                        ),
+                      );
+                    },
+                  );
+                },
+                child: Text('Drive bottom sheet bar short'),
               ),
             ],
           ),

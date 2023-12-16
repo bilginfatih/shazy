@@ -35,5 +35,7 @@
     "driveError": "driveError",
     "cancel": "Cancel",
     "accept": "Accept",
-    "navigate": "NAVIGATE"
+    "navigate": "NAVIGATE",
+    "startTheTrip": "Start The Trip",
+    "enterCode": "Enter Code"
 }
