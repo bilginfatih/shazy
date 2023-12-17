@@ -1,4 +1,7 @@
+import 'package:shazy/models/user/user_profile_model.dart';
+
 import '../../core/base/base_model.dart';
+import '../user/user_model.dart';
 
 class HistoryModel extends BaseModel {
   HistoryModel({
@@ -9,6 +12,8 @@ class HistoryModel extends BaseModel {
     this.financeId,
     this.createdAt,
     this.updatedAt,
+    this.userProfile,
+    this.user,
   });
 
   HistoryModel._fromJson(o) {
@@ -31,6 +36,8 @@ class HistoryModel extends BaseModel {
   String? financeId;
   String? id;
   String? updatedAt;
+  UserProfileModel? userProfile;
+  UserModel? user; // TODO: silinebilinir.
 
   @override
   Map<String, dynamic> toJson() {

@@ -1,4 +1,5 @@
 import 'package:flutter_session_manager/flutter_session_manager.dart';
+import 'package:shazy/models/user/user_profile_model.dart';
 import '../../core/init/cache/cache_manager.dart';
 import '../../core/init/network/network_manager.dart';
 import '../../models/user/user_model.dart';
@@ -54,7 +55,19 @@ class UserService {
   Future<UserModel?> getUser() async {
     try {
       UserModel model = UserModel();
-      model = await NetworkManager.instance.get<UserModel>('/user', model: model);
+      model =
+          await NetworkManager.instance.get<UserModel>('/user', model: model);
+      return model;
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  Future<UserProfileModel?> getAnotherUser(String id) async {
+    try {
+      UserProfileModel model = UserProfileModel();
+      var response = await NetworkManager.instance.get('/user-profile/$id');
+      model = model.fromJson(response[0]);
       return model;
     } catch (e) {
       rethrow;

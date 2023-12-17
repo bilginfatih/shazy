@@ -71,14 +71,13 @@ class TestPage extends StatelessWidget {
                 onPressed: () async {
                   var response =
                       await HistoryService.instance.getDriverHistory();
-                  print(response);
                 },
                 child: Text('GetDriverHistory'),
               ),
               ElevatedButton(
                 onPressed: () async {
                   var response =
-                      await HistoryService.instance.getDriverHistory();
+                      await HistoryService.instance.getPassengerHistory();
                   print(response);
                 },
                 child: Text('GetPassengerHistory'),
@@ -97,6 +96,13 @@ class TestPage extends StatelessWidget {
                   print(data);
                 },
                 child: Text('User'),
+              ),
+              ElevatedButton(
+                onPressed: () async {
+                  await UserService.instance
+                      .getAnotherUser('9a9659af-6549-41d0-be1a-f75ba16e2c60');
+                },
+                child: Text('Another User'),
               ),
               ElevatedButton(
                 onPressed: () async {

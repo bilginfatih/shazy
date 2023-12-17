@@ -1,6 +1,9 @@
 import 'package:flutter_session_manager/flutter_session_manager.dart';
+import 'package:shazy/services/comment/comment_service.dart';
+import 'package:shazy/services/user/user_service.dart';
 import '../../core/init/network/network_manager.dart';
 import '../../models/history/history_model.dart';
+import '../../models/user/user_profile_model.dart';
 
 class HistoryService {
   HistoryService._init();
@@ -8,24 +11,40 @@ class HistoryService {
   static HistoryService instance = HistoryService._init();
 
   Future<List<HistoryModel>> getDriverHistory() async {
-    List<HistoryModel> model = [];
+    List<HistoryModel> historyModelList = [];
     try {
       var id = await SessionManager().get('id');
-      var response = await NetworkManager.instance.get('/history/driver/$id');
+      var historyResponse =
+          await NetworkManager.instance.get('/history/driver/$id');
+      for (var item in historyResponse) {
+        HistoryModel model = HistoryModel();
+        model = model.fromJson(item);
+        model.userProfile =
+            await UserService.instance.getAnotherUser(item['caller_id']);
+        historyModelList.add(model);
+      }
     } catch (e) {
       rethrow;
     }
-    return model;
+    return historyModelList;
   }
 
   Future<List<HistoryModel>> getPassengerHistory() async {
-    List<HistoryModel> model = [];
+    List<HistoryModel> historyModelList = [];
     try {
       var id = await SessionManager().get('id');
-      var response = await NetworkManager.instance.get('/history/caller/$id');
+      var historyResponse =
+          await NetworkManager.instance.get('/history/caller/$id');
+      for (var item in historyResponse) {
+        HistoryModel model = HistoryModel();
+        model.userProfile =
+            await UserService.instance.getAnotherUser(item['driver_id']);
+
+        historyModelList.add(model);
+      }
     } catch (e) {
       rethrow;
     }
-    return model;
+    return historyModelList;
   }
 }
