@@ -1,5 +1,5 @@
 // The paths of the pages are set here
-mixin NavigationConstant {
+class NavigationConstant {
   static const splash = '/';
   static const signIn = '/signIn';
   static const signUp = '/signUp';

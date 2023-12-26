@@ -1,9 +1,7 @@
 import 'package:flutter_session_manager/flutter_session_manager.dart';
-import 'package:shazy/services/comment/comment_service.dart';
 import 'package:shazy/services/user/user_service.dart';
 import '../../core/init/network/network_manager.dart';
 import '../../models/history/history_model.dart';
-import '../../models/user/user_profile_model.dart';
 
 class HistoryService {
   HistoryService._init();

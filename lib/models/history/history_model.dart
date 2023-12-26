@@ -13,7 +13,6 @@ class HistoryModel extends BaseModel {
     this.createdAt,
     this.updatedAt,
     this.userProfile,
-    this.user,
   });
 
   HistoryModel._fromJson(o) {
@@ -37,7 +36,6 @@ class HistoryModel extends BaseModel {
   String? id;
   String? updatedAt;
   UserProfileModel? userProfile;
-  UserModel? user; // TODO: silinebilinir.
 
   @override
   Map<String, dynamic> toJson() {

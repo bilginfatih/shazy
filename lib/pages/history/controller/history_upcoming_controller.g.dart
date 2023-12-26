@@ -42,17 +42,34 @@ mixin _$HistoryUpcomingController on _HistoryUpcomingControllerBase, Store {
     });
   }
 
+  late final _$starSelectedIndexAtom = Atom(
+      name: '_HistoryUpcomingControllerBase.starSelectedIndex',
+      context: context);
+
+  @override
+  int get starSelectedIndex {
+    _$starSelectedIndexAtom.reportRead();
+    return super.starSelectedIndex;
+  }
+
+  @override
+  set starSelectedIndex(int value) {
+    _$starSelectedIndexAtom.reportWrite(value, super.starSelectedIndex, () {
+      super.starSelectedIndex = value;
+    });
+  }
+
   late final _$passengerListAtom = Atom(
       name: '_HistoryUpcomingControllerBase.passengerList', context: context);
 
   @override
-  List<HistoryModel> get passengerList {
+  ObservableList<HistoryModel> get passengerList {
     _$passengerListAtom.reportRead();
     return super.passengerList;
   }
 
   @override
-  set passengerList(List<HistoryModel> value) {
+  set passengerList(ObservableList<HistoryModel> value) {
     _$passengerListAtom.reportWrite(value, super.passengerList, () {
       super.passengerList = value;
     });
@@ -82,10 +99,23 @@ mixin _$HistoryUpcomingController on _HistoryUpcomingControllerBase, Store {
   }
 
   @override
+  void changeStarSelectedIndex(int index) {
+    final _$actionInfo =
+        _$_HistoryUpcomingControllerBaseActionController.startAction(
+            name: '_HistoryUpcomingControllerBase.changeStarSelectedIndex');
+    try {
+      return super.changeStarSelectedIndex(index);
+    } finally {
+      _$_HistoryUpcomingControllerBaseActionController.endAction(_$actionInfo);
+    }
+  }
+
+  @override
   String toString() {
     return '''
 driverList: ${driverList},
 isDriverSelected: ${isDriverSelected},
+starSelectedIndex: ${starSelectedIndex},
 passengerList: ${passengerList}
     ''';
   }

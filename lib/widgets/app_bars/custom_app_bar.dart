@@ -19,7 +19,8 @@ class CustomAppBar extends AppBar {
           elevation: 0,
           leadingWidth: 100,
           title: title,
-          titleTextStyle: context.textStyle.headlineSmallMedium.copyWith(color: HexColor("#2A2A2A")),
+          titleTextStyle: context.textStyle.headlineSmallMedium
+              .copyWith(color: HexColor("#2A2A2A")),
           centerTitle: true,
           leading: Row(
             children: [

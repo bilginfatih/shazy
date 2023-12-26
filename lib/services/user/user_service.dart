@@ -67,7 +67,7 @@ class UserService {
     try {
       UserProfileModel model = UserProfileModel();
       var response = await NetworkManager.instance.get('/user-profile/$id');
-      model = model.fromJson(response[0]);
+      model = model.fromJson(response);
       return model;
     } catch (e) {
       rethrow;

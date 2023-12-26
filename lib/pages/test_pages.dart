@@ -60,8 +60,8 @@ class TestPage extends StatelessWidget {
               ElevatedButton(
                 onPressed: () async {
                   UserModel model = UserModel(
-                    email: 'test23@gmail.com',
-                    password: 'test22',
+                    email: 'test234@gmail.com',
+                    password: 'test222',
                   );
                   await UserService.instance.login(model);
                 },
@@ -116,6 +116,7 @@ class TestPage extends StatelessWidget {
                     ),
                     context: context,
                     builder: (_) => CommentBottomSheet(
+                      onPressedRatingBar: (i){},
                       selectedIndex: 0,
                       context: context,
                       textController: TextEditingController(),

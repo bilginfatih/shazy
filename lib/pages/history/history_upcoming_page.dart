@@ -4,6 +4,7 @@ import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:hexcolor/hexcolor.dart';
+import '../../widgets/modal_bottom_sheet/comment_bottom_sheet.dart';
 import 'controller/history_upcoming_controller.dart';
 import '../../widgets/containers/two_select_container.dart';
 import '../../utils/extensions/context_extension.dart';
@@ -13,8 +14,6 @@ import '../../widgets/buttons/secondary_button.dart';
 import '../../widgets/drawer/custom_drawer.dart';
 import '../../widgets/padding/base_padding.dart';
 
-
-// TODO: kayitli veri eklendiğinde statikten çıkarılacaktır.
 class HistoryUpcomingPage extends StatefulWidget {
   const HistoryUpcomingPage({super.key});
 
@@ -94,7 +93,10 @@ class _HistoryUpcomingPageState extends State<HistoryUpcomingPage> {
                           ),
                           Text(
                             cancel ? 'Canceled' : '',
-                            style: GoogleFonts.poppins(fontSize: 11, fontWeight: FontWeight.w500, color: HexColor('#F44336')),
+                            style: GoogleFonts.poppins(
+                                fontSize: 11,
+                                fontWeight: FontWeight.w500,
+                                color: HexColor('#F44336')),
                           )
                         ],
                       )
@@ -125,15 +127,43 @@ class _HistoryUpcomingPageState extends State<HistoryUpcomingPage> {
             SizedBox(
               height: context.responsiveHeight(10),
             ),
+            buttonText != ''
+                ? SizedBox(
+                    // comment button
+                    width: context.responsiveWidth(253),
+                    height: context.responsiveHeight(32),
+                    child: SecondaryButton(
+                      text: buttonText,
+                      context: context,
+                      onPressed: () {
+                        showModalBottomSheet(
+                          isScrollControlled: true,
+                          shape: const RoundedRectangleBorder(
+                            borderRadius: BorderRadius.only(
+                              topLeft: Radius.circular(24),
+                              topRight: Radius.circular(24),
+                            ),
+                          ),
+                          context: context,
+                          builder: (_) => Observer(builder: (context) {
+                            return CommentBottomSheet(
+                              selectedIndex: _controller.starSelectedIndex,
+                              context: context,
+                              textController: TextEditingController(),
+                              onPressed: () {},
+                              onPressedRatingBar:
+                                  _controller.changeStarSelectedIndex,
+                              text:
+                                  '${'youRated'.tr()} $name${' ${_controller.starSelectedIndex}'} ${'star'.tr()}',
+                            );
+                          }),
+                        );
+                      },
+                    ),
+                  )
+                : const SizedBox(),
             SizedBox(
-              width: context.responsiveWidth(253),
-              height: context.responsiveHeight(32),
-
-              child: SecondaryButton(
-                  text: buttonText, context: context, onPressed: () {}),
-            ),
-            SizedBox(
-              height: context.responsiveHeight(7),
+              height: context.responsiveHeight(buttonText != '' ? 7 : 0),
             ),
             const Divider(
               color: Color.fromARGB(255, 199, 198, 198),
@@ -191,7 +221,10 @@ class _HistoryUpcomingPageState extends State<HistoryUpcomingPage> {
     );
   }
 
-  Padding _buildLocationRow(BuildContext context, String assetName, String text1, String text2, {String text3 = ''}) => Padding(
+  Padding _buildLocationRow(
+          BuildContext context, String assetName, String text1, String text2,
+          {String text3 = ''}) =>
+      Padding(
         padding: EdgeInsets.only(
           left: context.responsiveWidth(8),
           right: context.responsiveWidth(15),
@@ -200,7 +233,10 @@ class _HistoryUpcomingPageState extends State<HistoryUpcomingPage> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Padding(
-              padding: EdgeInsets.only(top: context.responsiveHeight(4), left: context.responsiveWidth(10), right: context.responsiveWidth(6)),
+              padding: EdgeInsets.only(
+                  top: context.responsiveHeight(4),
+                  left: context.responsiveWidth(10),
+                  right: context.responsiveWidth(6)),
               child: SvgPicture.asset('assets/svg/$assetName.svg'),
             ),
             Column(
@@ -274,12 +310,14 @@ class _HistoryUpcomingPageState extends State<HistoryUpcomingPage> {
                 height: context.responsiveHeight(550),
                 child: _controller.isDriverSelected
                     ? ListView.builder(
-                        itemCount: 5, //_controller.driverList.length,
+                        itemCount: _controller.driverList.length,
                         itemBuilder: (BuildContext context, int index) {
                           return _buildContainer(
                             context,
-                            'Zübeyir X',
-                            '4.9 (531 reviews)',
+                            _controller.driverList[0].userProfile?.userModel
+                                    ?.name ??
+                                '',
+                            '${_controller.driverList[0].userProfile?.avaragePoint} (531 reviews)',
                             'Starting Location',
                             '4140 Parker Rd. Allentown, New...',
                             'Shop',
@@ -288,18 +326,23 @@ class _HistoryUpcomingPageState extends State<HistoryUpcomingPage> {
                             '16:38 - 16.42',
                             '+220.00₺',
                             '#388E3D',
-                            'Review Passenger',
+                            _controller.driverList[0].commentId == null ||
+                                    _controller.driverList[0].commentId == ''
+                                ? 'reviewPassenger'.tr()
+                                : '',
                             cancel: true,
                           );
                         },
                       )
                     : ListView.builder(
-                        itemCount: 5, //_controller.passengerList.length,
+                        itemCount: _controller.passengerList.length,
                         itemBuilder: (BuildContext context, int index) {
                           return _buildContainer(
                             context,
-                            'Toygun X.',
-                            '4.2 (531 reviews)',
+                            _controller.driverList[0].userProfile?.userModel
+                                    ?.name ??
+                                '',
+                            '${_controller.driverList[0].userProfile?.avaragePoint} (531 reviews)',
                             'Starting Location',
                             '4140 Parker Rd. Allentown, New...',
                             'Shop',
@@ -308,7 +351,10 @@ class _HistoryUpcomingPageState extends State<HistoryUpcomingPage> {
                             '16:38 - 16.42',
                             '220.00₺',
                             '#5A5A5A',
-                            'Review Trip',
+                            _controller.driverList[0].commentId == 'null' ||
+                                    _controller.driverList[0].commentId == ''
+                                ? 'reviewTrip'.tr()
+                                : '',
                             cancel: true,
                           );
                         },

@@ -14,6 +14,7 @@ class CommentBottomSheet extends Padding {
     required int selectedIndex,
     required BuildContext context,
     required VoidCallback onPressed,
+    required Function(int index) onPressedRatingBar,
     required TextEditingController textController,
   }) : super(
           key: key,
@@ -38,7 +39,11 @@ class CommentBottomSheet extends Padding {
                   SizedBox(
                     height: context.responsiveHeight(34),
                   ),
-                  StarRatingBar(selectedIndex: selectedIndex),
+                  StarRatingBar(
+                    context: context,
+                    selectedIndex: selectedIndex,
+                    onTap: onPressedRatingBar,
+                  ),
                   SizedBox(
                     height: context.responsiveHeight(24),
                   ),

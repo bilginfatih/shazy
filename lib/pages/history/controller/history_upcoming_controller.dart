@@ -17,7 +17,10 @@ abstract class _HistoryUpcomingControllerBase with Store {
   bool isDriverSelected = true;
 
   @observable
-  List<HistoryModel> passengerList = [];
+  int starSelectedIndex = 0;
+
+  @observable
+  ObservableList<HistoryModel> passengerList = ObservableList<HistoryModel>();
 
   @action
   void userSelect(bool isSelected) {
@@ -26,8 +29,13 @@ abstract class _HistoryUpcomingControllerBase with Store {
 
   @action
   Future<void> init() async {
-    passengerList = await HistoryService.instance.getPassengerHistory();
+    passengerList.addAll(await HistoryService.instance.getPassengerHistory());
     driverList = await HistoryService.instance.getDriverHistory();
+  }
+
+  @action
+  void changeStarSelectedIndex(int index) {
+    starSelectedIndex = index;
   }
 
   // TODO: bu fonksiyonu view' a ekle

@@ -37,5 +37,9 @@
     "accept": "Accept",
     "navigate": "NAVIGATE",
     "startTheTrip": "Start The Trip",
-    "enterCode": "Enter Code"
+    "enterCode": "Enter Code",
+    "reviewPassenger": "Review Passenger",
+    "reviewTrip": "Review Trip",
+    "star": "star",
+    "youRated": "You rated"
 }
