@@ -41,5 +41,10 @@
     "reviewPassenger": "Review Passenger",
     "reviewTrip": "Review Trip",
     "star": "star",
-    "youRated": "You rated"
+    "youRated": "You rated",
+    "rating": "Rating",
+    "reviews": "Reviews",
+    "editProfile": "Edit Profile",
+    "profile": "Profile",
+    "comments": "Comments"
 }

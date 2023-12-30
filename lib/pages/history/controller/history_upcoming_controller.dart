@@ -17,10 +17,10 @@ abstract class _HistoryUpcomingControllerBase with Store {
   bool isDriverSelected = true;
 
   @observable
-  int starSelectedIndex = 0;
+  ObservableList<HistoryModel> passengerList = ObservableList<HistoryModel>();
 
   @observable
-  ObservableList<HistoryModel> passengerList = ObservableList<HistoryModel>();
+  int starSelectedIndex = 0;
 
   @action
   void userSelect(bool isSelected) {
@@ -38,8 +38,9 @@ abstract class _HistoryUpcomingControllerBase with Store {
     starSelectedIndex = index;
   }
 
-  // TODO: bu fonksiyonu view' a ekle
-  Future<void> sendComment(CommentModel model) async {
+  Future<void> sendComment(String comment) async {
+    var model =
+        CommentModel(comment: comment, point: starSelectedIndex.toDouble());
     model.commentorUserId = await SessionManager().get('id');
     var response = await CommentService.instance.comment(model);
     if (response != null) {

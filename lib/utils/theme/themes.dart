@@ -39,6 +39,7 @@ class AppThemes {
   static ThemeData darkTheme = ThemeData(
     primaryColor: ThemeData.dark().scaffoldBackgroundColor,
     colorScheme: const ColorScheme.dark().copyWith(
+      background: HexColor('#2A2A2A'),
       primary: _appThemes.darkPrimaryColor,
     ),
     filledButtonTheme: FilledButtonThemeData(

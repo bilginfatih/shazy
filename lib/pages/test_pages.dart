@@ -133,7 +133,7 @@ class TestPage extends StatelessWidget {
                   CommentModel model = CommentModel(
                     commentorUserId: userId,
                     comment: 'test',
-                    point: '5',
+                    point: 5,
                   );
                   await CommentService.instance.comment(model);
                 },

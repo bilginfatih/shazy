@@ -42,6 +42,22 @@ mixin _$HistoryUpcomingController on _HistoryUpcomingControllerBase, Store {
     });
   }
 
+  late final _$passengerListAtom = Atom(
+      name: '_HistoryUpcomingControllerBase.passengerList', context: context);
+
+  @override
+  ObservableList<HistoryModel> get passengerList {
+    _$passengerListAtom.reportRead();
+    return super.passengerList;
+  }
+
+  @override
+  set passengerList(ObservableList<HistoryModel> value) {
+    _$passengerListAtom.reportWrite(value, super.passengerList, () {
+      super.passengerList = value;
+    });
+  }
+
   late final _$starSelectedIndexAtom = Atom(
       name: '_HistoryUpcomingControllerBase.starSelectedIndex',
       context: context);
@@ -56,22 +72,6 @@ mixin _$HistoryUpcomingController on _HistoryUpcomingControllerBase, Store {
   set starSelectedIndex(int value) {
     _$starSelectedIndexAtom.reportWrite(value, super.starSelectedIndex, () {
       super.starSelectedIndex = value;
-    });
-  }
-
-  late final _$passengerListAtom = Atom(
-      name: '_HistoryUpcomingControllerBase.passengerList', context: context);
-
-  @override
-  ObservableList<HistoryModel> get passengerList {
-    _$passengerListAtom.reportRead();
-    return super.passengerList;
-  }
-
-  @override
-  set passengerList(ObservableList<HistoryModel> value) {
-    _$passengerListAtom.reportWrite(value, super.passengerList, () {
-      super.passengerList = value;
     });
   }
 
@@ -115,8 +115,8 @@ mixin _$HistoryUpcomingController on _HistoryUpcomingControllerBase, Store {
     return '''
 driverList: ${driverList},
 isDriverSelected: ${isDriverSelected},
-starSelectedIndex: ${starSelectedIndex},
-passengerList: ${passengerList}
+passengerList: ${passengerList},
+starSelectedIndex: ${starSelectedIndex}
     ''';
   }
 }

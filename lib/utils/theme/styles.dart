@@ -134,7 +134,7 @@ class AppTextStyles {
         fontSize: _context.mediaQueryData.textScaleFactor * 12,
         fontWeight: FontWeight.w400,
       );
-
+    
   TextStyle get labelSmallMedium => GoogleFonts.poppins(
         fontSize: _context.mediaQueryData.textScaleFactor * 12,
         fontWeight: FontWeight.w500,

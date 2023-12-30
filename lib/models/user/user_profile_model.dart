@@ -21,7 +21,7 @@ class UserProfileModel extends BaseModel {
     id = userProfile['id'];
     lisanceVerification = userProfile['lisance_verification'] == 1 &&
         userProfile['lisance_verification'] != 'null';
-    profilePicturePath = o['profile_picture_path'];
+    profilePicturePath = userProfile['profile_picture_path'];
     profileVerification = userProfile['profile_verification'] == 1 &&
         userProfile['profile_verification'] != 'null';
     userId = userProfile['user_id'];

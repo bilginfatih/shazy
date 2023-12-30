@@ -10,30 +10,33 @@ class UserModel extends BaseModel {
     this.identificationNumber,
     this.gender,
     this.phone,
+    this.id,
   });
 
   UserModel._fromJson(o) {
-    name = o['name'];
-    surname = o['surname'];
+    name = o['name'] ?? o['userName'];
+    surname = o['surname'] ?? o['userSurname'];
     email = o['email'];
     password = o['password'];
     passwordConfirmation = o['password_confirmation'];
     identificationNumber = o['identification_number'];
-    gender = o['gender'];
+    gender = o['gender'] ?? o['userGender'];
     phone = o['phone'];
+    id = o['id'];
   }
-
-  String? name;
-  String? surname;
-  String? email;
-  String? password;
-  String? passwordConfirmation;
-  String? identificationNumber;
-  String? gender;
-  String? phone;
 
   @override
   fromJson(json) => UserModel._fromJson(json);
+
+  String? email;
+  String? gender;
+  String? id;
+  String? identificationNumber;
+  String? name;
+  String? password;
+  String? passwordConfirmation;
+  String? phone;
+  String? surname;
 
   @override
   Map<String, dynamic> toJson() {
@@ -50,6 +53,7 @@ class UserModel extends BaseModel {
     }
     if (gender != null) map['gender'] = gender;
     if (phone != null) map['phone'] = phone;
+    if (id != null) map['id'] = id;
     return map;
   }
 }

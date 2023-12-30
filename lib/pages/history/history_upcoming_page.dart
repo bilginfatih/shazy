@@ -4,6 +4,7 @@ import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:hexcolor/hexcolor.dart';
+import 'package:shazy/models/comment/comment_model.dart';
 import '../../widgets/modal_bottom_sheet/comment_bottom_sheet.dart';
 import 'controller/history_upcoming_controller.dart';
 import '../../widgets/containers/two_select_container.dart';
@@ -23,6 +24,7 @@ class HistoryUpcomingPage extends StatefulWidget {
 
 class _HistoryUpcomingPageState extends State<HistoryUpcomingPage> {
   final _controller = HistoryUpcomingController();
+  final TextEditingController _commentTextController = TextEditingController();
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
   @override
@@ -149,8 +151,11 @@ class _HistoryUpcomingPageState extends State<HistoryUpcomingPage> {
                             return CommentBottomSheet(
                               selectedIndex: _controller.starSelectedIndex,
                               context: context,
-                              textController: TextEditingController(),
-                              onPressed: () {},
+                              textController: _commentTextController,
+                              onPressed: () {
+                                _controller
+                                    .sendComment(_commentTextController.text);
+                              },
                               onPressedRatingBar:
                                   _controller.changeStarSelectedIndex,
                               text:
@@ -303,7 +308,7 @@ class _HistoryUpcomingPageState extends State<HistoryUpcomingPage> {
               ),
             ),
             SizedBox(
-              height: context.responsiveHeight(20),
+              height: context.responsiveHeight(19),
             ),
             Observer(builder: (_) {
               return SizedBox(
