@@ -16,8 +16,9 @@ class CustomAppBar extends AppBar {
           key: key,
           backgroundColor: Theme.of(context).scaffoldBackgroundColor,
           automaticallyImplyLeading: false,
+          scrolledUnderElevation: 0,
           elevation: 0,
-          leadingWidth: 100,
+          leadingWidth: context.responsiveWidth(100),
           title: title,
           titleTextStyle: context.textStyle.headlineSmallMedium
               .copyWith(color: HexColor("#2A2A2A")),

@@ -138,6 +138,22 @@ mixin _$ProfileController on _ProfileControllerBase, Store {
     });
   }
 
+  late final _$emailAtom =
+      Atom(name: '_ProfileControllerBase.email', context: context);
+
+  @override
+  String get email {
+    _$emailAtom.reportRead();
+    return super.email;
+  }
+
+  @override
+  set email(String value) {
+    _$emailAtom.reportWrite(value, super.email, () {
+      super.email = value;
+    });
+  }
+
   late final _$initAsyncAction =
       AsyncAction('_ProfileControllerBase.init', context: context);
 
@@ -156,7 +172,8 @@ isAnotherProfile: ${isAnotherProfile},
 lisanceVertification: ${lisanceVertification},
 name: ${name},
 reviews: ${reviews},
-star: ${star}
+star: ${star},
+email: ${email}
     ''';
   }
 }

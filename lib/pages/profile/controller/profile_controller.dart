@@ -1,5 +1,5 @@
-import 'package:flutter_session_manager/flutter_session_manager.dart';
 import 'package:mobx/mobx.dart';
+import 'package:shazy/core/init/cache/cache_manager.dart';
 import 'package:shazy/models/user/user_profile_model.dart';
 import 'package:shazy/services/comment/comment_service.dart';
 import 'package:shazy/services/user/user_service.dart';
@@ -36,6 +36,9 @@ abstract class _ProfileControllerBase with Store {
 
   @observable
   String star = '0.0';
+
+  @observable
+  String email = '';
 
   @action
   Future<void> init({String? id}) async {
@@ -77,6 +80,7 @@ abstract class _ProfileControllerBase with Store {
     description = userProfile.description.toString();
     description = description.substring(0, description.length - 1);
     star = userProfile.avaragePoint.toString();
+    email = await CacheManager.instance.getData('user', 'email');
     imagePath = '$baseUrl/${userProfile.profilePicturePath}';
     lisanceVertification = userProfile.lisanceVerification ?? false;
     if (description == 'null') {
