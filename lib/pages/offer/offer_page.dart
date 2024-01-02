@@ -39,7 +39,7 @@ class OfferPage extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.only(bottom: 16),
       child: Container(
-        padding: const EdgeInsets.all(20),
+        padding: EdgeInsets.all(context.responsiveWidth(20)),
         decoration: BoxDecoration(
           border: Border.all(
             color: AppThemes.lightPrimary500,
@@ -59,10 +59,14 @@ class OfferPage extends StatelessWidget {
                   'Discount 15% off',
                   style: context.textStyle.headlineSmallBold,
                 ),
-                Text(
-                  'Special Promo valid for Black Friday',
-                  style: context.textStyle.bodySmallMedium
-                      .copyWith(color: HexColor('#B8B8B8')),
+                SizedBox(
+                  width: context.customWidth(0.62),
+                  child: Text(
+                    'Special Promo valid for Black Friday',
+                    maxLines: 2,
+                    style: context.textStyle.bodySmallMedium
+                        .copyWith(color: HexColor('#B8B8B8')),
+                  ),
                 ),
               ],
             )

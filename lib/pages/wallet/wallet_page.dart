@@ -124,6 +124,8 @@ class WalletPage extends StatelessWidget {
 
   GestureDetector _buildTopContainer(BuildContext context, String text1,
       String text2, Color color, bool isSelected, bool selectValue) {
+    double width = context.width;
+    print(width);
     return GestureDetector(
       onTap: () {
         _controller.select(selectValue);
@@ -131,7 +133,7 @@ class WalletPage extends StatelessWidget {
       child: Container(
         padding: EdgeInsets.symmetric(
             vertical: context.responsiveHeight(36.0),
-            horizontal: context.responsiveWidth(35)),
+            horizontal: context.customWidth(width < 330 ? 0.06 : 0.088)),
         decoration: BoxDecoration(
           border: Border.all(
             color: isSelected ? color : HexColor('#D0D0D0'),

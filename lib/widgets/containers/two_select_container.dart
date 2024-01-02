@@ -27,7 +27,7 @@ class TwoSelectContainer extends Container {
               GestureDetector(
                 onTap: onTap1,
                 child: Container(
-                  width: context.responsiveWidth(178),
+                  width: context.customWidth(0.45),
                   height: context.responsiveHeight(40),
                   decoration: _selectedDecoration(isSelectedDriver),
                   child: Center(
@@ -41,7 +41,7 @@ class TwoSelectContainer extends Container {
               GestureDetector(
                 onTap: onTap2,
                 child: Container(
-                  width: context.responsiveWidth(179),
+                  width: context.customWidth(0.45),
                   height: context.responsiveHeight(40),
                   decoration: _selectedDecoration(!isSelectedDriver),
                   child: Center(
