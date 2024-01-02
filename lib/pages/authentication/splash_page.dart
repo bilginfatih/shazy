@@ -23,8 +23,12 @@ class _SplashPageState extends State<SplashPage> {
   }
 
   Future<void> _init() async {
-    String email = await CacheManager.instance.getData('user', 'email');
-    String password = await CacheManager.instance.getData('user', 'password');
+    String? email = await CacheManager.instance.getData('user', 'email');
+    String? password = await CacheManager.instance.getData('user', 'password');
+    if (email == null || password == null) {
+      NavigationManager.instance
+          .navigationToPageClear(NavigationConstant.welcome);
+    }
     UserModel model = UserModel(email: email, password: password);
     String? data = await UserService.instance.login(model);
     if (data != null) {

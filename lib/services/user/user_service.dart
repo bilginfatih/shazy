@@ -13,6 +13,7 @@ class UserService {
     try {
       var response =
           await NetworkManager.instance.post('/register', model: user);
+      print(response);
       if (response.containsKey('message')) {
         return response['message'];
       } else {

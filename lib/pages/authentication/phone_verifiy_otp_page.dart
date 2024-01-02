@@ -59,7 +59,8 @@ class PhoneVerifiyOtpPage extends StatelessWidget {
                 text: 'Verify',
                 context: context,
                 onPressed: () {
-                  NavigationManager.instance.navigationToPage(NavigationConstant.setNewPassword);
+                  NavigationManager.instance
+                      .navigationToPage(NavigationConstant.homePage);
                 },
               ),
             ],

@@ -17,7 +17,7 @@ class SetPasswordPage extends StatelessWidget {
 
   final AuthController _controller = AuthController();
   final TextEditingController _passwordTextEditingController = TextEditingController();
-  late final UserModel _user;
+  UserModel _user = UserModel();
 
   SingleChildScrollView _buildBody(BuildContext context) {
     return SingleChildScrollView(
