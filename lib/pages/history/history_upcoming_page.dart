@@ -46,6 +46,7 @@ class _HistoryUpcomingPageState extends State<HistoryUpcomingPage> {
       String price,
       String color,
       String buttonText,
+      int index,
       {bool cancel = false}) {
     return Padding(
       padding: const EdgeInsets.only(bottom: 16),
@@ -153,8 +154,8 @@ class _HistoryUpcomingPageState extends State<HistoryUpcomingPage> {
                               context: context,
                               textController: _commentTextController,
                               onPressed: () {
-                                _controller
-                                    .sendComment(_commentTextController.text);
+                                _controller.sendComment(
+                                    _commentTextController.text, index);
                               },
                               onPressedRatingBar:
                                   _controller.changeStarSelectedIndex,
@@ -319,10 +320,10 @@ class _HistoryUpcomingPageState extends State<HistoryUpcomingPage> {
                         itemBuilder: (BuildContext context, int index) {
                           return _buildContainer(
                             context,
-                            _controller.driverList[0].userProfile?.userModel
+                            _controller.driverList[index].userProfile?.userModel
                                     ?.name ??
                                 '',
-                            '${_controller.driverList[0].userProfile?.avaragePoint} (531 reviews)',
+                            '${_controller.driverList[index].userProfile?.avaragePoint} (531 reviews)',
                             'Starting Location',
                             '4140 Parker Rd. Allentown, New...',
                             'Shop',
@@ -331,10 +332,12 @@ class _HistoryUpcomingPageState extends State<HistoryUpcomingPage> {
                             '16:38 - 16.42',
                             '+220.00₺',
                             '#388E3D',
-                            _controller.driverList[0].commentId == null ||
-                                    _controller.driverList[0].commentId == ''
+                            _controller.driverList[index].commentId == null ||
+                                    _controller.driverList[index].commentId ==
+                                        ''
                                 ? 'reviewPassenger'.tr()
                                 : '',
+                            index,
                             cancel: true,
                           );
                         },
@@ -344,10 +347,10 @@ class _HistoryUpcomingPageState extends State<HistoryUpcomingPage> {
                         itemBuilder: (BuildContext context, int index) {
                           return _buildContainer(
                             context,
-                            _controller.driverList[0].userProfile?.userModel
-                                    ?.name ??
+                            _controller.passengerList[index].userProfile
+                                    ?.userModel?.name ??
                                 '',
-                            '${_controller.driverList[0].userProfile?.avaragePoint} (531 reviews)',
+                            '${_controller.passengerList[index].userProfile?.avaragePoint} (531 reviews)',
                             'Starting Location',
                             '4140 Parker Rd. Allentown, New...',
                             'Shop',
@@ -356,11 +359,14 @@ class _HistoryUpcomingPageState extends State<HistoryUpcomingPage> {
                             '16:38 - 16.42',
                             '220.00₺',
                             '#5A5A5A',
-                            _controller.driverList[0].commentId == 'null' ||
-                                    _controller.driverList[0].commentId == ''
+                            _controller.passengerList[index].commentId ==
+                                        'null' ||
+                                    _controller.driverList[index].commentId ==
+                                        ''
                                 ? 'reviewTrip'.tr()
                                 : '',
                             cancel: true,
+                            index,
                           );
                         },
                       ),

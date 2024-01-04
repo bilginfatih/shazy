@@ -1,5 +1,6 @@
 import 'package:flutter_session_manager/flutter_session_manager.dart';
 import 'package:mobx/mobx.dart';
+import '../../../core/init/navigation/navigation_manager.dart';
 import '../../../models/comment/comment_model.dart';
 import '../../../services/comment/comment_service.dart';
 import '../../../models/history/history_model.dart';
@@ -38,11 +39,13 @@ abstract class _HistoryUpcomingControllerBase with Store {
     starSelectedIndex = index;
   }
 
-  Future<void> sendComment(String comment) async {
+  Future<void> sendComment(String comment, int index) async {
     var model =
         CommentModel(comment: comment, point: starSelectedIndex.toDouble());
     model.commentorUserId = await SessionManager().get('id');
     var response = await CommentService.instance.comment(model);
+    init();
+    NavigationManager.instance.navigationToPop();
     if (response != null) {
       // TODO: hata mesajı basacak
     }
