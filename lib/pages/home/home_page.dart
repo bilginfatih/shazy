@@ -20,8 +20,8 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   final List _pages = [
-    //HomeScreenTransport(),
-    DriverHomePage(),
+    HomeScreenTransport(),
+    //DriverHomePage(),
     HistoryUpcomingPage(),
     WalletPage(),
     const OfferPage(),
@@ -42,9 +42,7 @@ class _HomePageState extends State<HomePage> {
           backgroundColor: Colors.transparent,
           type: BottomNavigationBarType.fixed,
           selectedItemColor: AppThemes.lightPrimary500,
-          unselectedItemColor: context.isLight
-              ? AppThemes.contentSecondary
-              : HexColor('#D0D0D0'),
+          unselectedItemColor: context.isLight ? AppThemes.contentSecondary : HexColor('#D0D0D0'),
           showUnselectedLabels: true,
           currentIndex: _currentIndex,
           onTap: (index) {
@@ -64,8 +62,7 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  BottomNavigationBarItem _buildBottomNavigationBarItem(
-      String asset, String label, int index) {
+  BottomNavigationBarItem _buildBottomNavigationBarItem(String asset, String label, int index) {
     return BottomNavigationBarItem(
       icon: SvgPicture.asset(
         height: context.responsiveHeight(24),

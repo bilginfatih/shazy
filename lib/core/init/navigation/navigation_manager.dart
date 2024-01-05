@@ -20,22 +20,20 @@ class NavigationManager implements INavigationManager {
   @override
   Future<void> navigationToPageClear(String path, {Object? args}) async {
     // To go to another page and remove the previous page
-    await navigationKey.currentState
-        ?.pushNamedAndRemoveUntil(path, _removeOldPage, arguments: args);
+    await navigationKey.currentState?.pushNamedAndRemoveUntil(path, _removeOldPage, arguments: args);
   }
 
   @override
-  Future<void> navigationToPageClearWithDelay(String path,
-      {Object? args}) async {
+  Future<void> navigationToPageClearWithDelay(String path, {Object? args}) async {
     // To go to another page and remove the previous page  with delay
-    Future.delayed(const Duration(milliseconds: 200)).then((value) async =>
-        await navigationKey.currentState
-            ?.pushNamedAndRemoveUntil(path, _removeOldPage, arguments: args));
+    Future.delayed(const Duration(milliseconds: 200))
+        .then((value) async => await navigationKey.currentState?.pushNamedAndRemoveUntil(path, _removeOldPage, arguments: args));
   }
 
   @override
   void navigationToPop() {
     // To go to previous page
+    print("object");
     navigationKey.currentState?.pop();
   }
 

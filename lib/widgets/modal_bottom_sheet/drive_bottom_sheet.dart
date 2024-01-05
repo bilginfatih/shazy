@@ -9,7 +9,7 @@ import 'package:shazy/widgets/textfields/otp_text_form_field.dart';
 
 import '../../utils/theme/themes.dart';
 import '../buttons/primary_button.dart';
-import '../icons/circular_svg_icon.dart';
+import '../buttons/secondary_button.dart';
 
 class DriveBottomSheet extends Container {
   DriveBottomSheet({
@@ -90,50 +90,44 @@ class DriveBottomSheet extends Container {
           ),
         );
 
-  static Widget _buildCodeColumn(BuildContext context, String? buttonText) =>
-      buttonText == null
-          ? SizedBox(
-              height: context.responsiveHeight(18),
-            )
-          : Center(
-              child: Column(
-                children: [
-                  SizedBox(
-                    height: context.responsiveHeight(8),
-                  ),
-                  Text(
-                    'enterCode'.tr(),
-                    style: const TextStyle(
-                      fontSize: 11,
-                      fontFamily: 'Poppins',
-                      fontWeight: FontWeight.w500,
-                      height: 0.19,
-                    ),
-                  ),
-                  SizedBox(
-                    height: context.responsiveHeight(8),
-                  ),
-                  OTPTextFormField(
-                      context: context,
-                      width: context.responsiveWidth(200),
-                      fieldWidth: 27,
-                      contentPadding: const EdgeInsets.symmetric(
-                          horizontal: 2, vertical: 10),
-                      textStyle: context.textStyle.bodySmallMedium),
-                  SizedBox(
-                    height: context.responsiveHeight(20),
-                  ),
-                ],
+  static Widget _buildCodeColumn(BuildContext context, String? buttonText) => buttonText == null
+      ? SizedBox(
+          height: context.responsiveHeight(18),
+        )
+      : Center(
+          child: Column(
+            children: [
+              SizedBox(
+                height: context.responsiveHeight(8),
               ),
-            );
+              Text(
+                'enterCode'.tr(),
+                style: const TextStyle(
+                  fontSize: 11,
+                  fontFamily: 'Poppins',
+                  fontWeight: FontWeight.w500,
+                  height: 0.19,
+                ),
+              ),
+              SizedBox(
+                height: context.responsiveHeight(8),
+              ),
+              OTPTextFormField(
+                  context: context,
+                  width: context.responsiveWidth(200),
+                  fieldWidth: 27,
+                  contentPadding: const EdgeInsets.symmetric(horizontal: 2, vertical: 10),
+                  textStyle: context.textStyle.bodySmallMedium),
+              SizedBox(
+                height: context.responsiveHeight(20),
+              ),
+            ],
+          ),
+        );
 
-  static Padding _buildCustomerInfo(BuildContext context, String imagePath,
-      String customerName, String startText) {
+  static Padding _buildCustomerInfo(BuildContext context, String imagePath, String customerName, String startText) {
     return Padding(
-      padding: EdgeInsets.only(
-          top: context.responsiveHeight(19),
-          left: context.responsiveWidth(14),
-          bottom: context.responsiveHeight(16)),
+      padding: EdgeInsets.only(top: context.responsiveHeight(19), left: context.responsiveWidth(14), bottom: context.responsiveHeight(16)),
       child: Row(
         children: [
           Container(
@@ -144,8 +138,7 @@ class DriveBottomSheet extends Container {
                 image: NetworkImage(imagePath),
                 fit: BoxFit.fill,
               ),
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(4)),
+              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
             ),
           ),
           SizedBox(
@@ -184,18 +177,14 @@ class DriveBottomSheet extends Container {
     );
   }
 
-  static Padding _buildBottomButtons(
-      BuildContext context, String? buttonText, VoidCallback onPressed) {
+  static Padding _buildBottomButtons(BuildContext context, String? buttonText, VoidCallback onPressed) {
     return Padding(
       padding: EdgeInsets.only(
-          top: context.responsiveHeight(26),
-          left: context.responsiveWidth(14),
-          right: context.responsiveWidth(14),
-          bottom: context.responsiveHeight(23)),
+          top: context.responsiveHeight(26), left: context.responsiveWidth(14), right: context.responsiveWidth(14), bottom: context.responsiveHeight(23)),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          GestureDetector(
+          /*GestureDetector(
             onTap: () {
               // TODO: ne olacağını sor
             },
@@ -203,10 +192,16 @@ class DriveBottomSheet extends Container {
               context: context,
               assetName: 'assets/svg/sms.svg',
             ),
+          ),*/
+          SecondaryButton(
+            width: 159,
+            text: buttonText ?? 'Cancel'.tr(),
+            context: context,
+            onPressed: onPressed,
           ),
           PrimaryButton(
-            width: 189,
-            text: buttonText ?? 'cancel'.tr(),
+            width: 159,
+            text: buttonText ?? 'Start the Trip'.tr(),
             context: context,
             onPressed: onPressed,
           ),
@@ -230,10 +225,7 @@ class DriveBottomSheet extends Container {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Padding(
-              padding: EdgeInsets.only(
-                  top: context.responsiveHeight(4),
-                  left: context.responsiveWidth(10),
-                  right: context.responsiveWidth(6)),
+              padding: EdgeInsets.only(top: context.responsiveHeight(4), left: context.responsiveWidth(10), right: context.responsiveWidth(6)),
               child: SvgPicture.asset('assets/svg/$assetName.svg'),
             ),
             Column(

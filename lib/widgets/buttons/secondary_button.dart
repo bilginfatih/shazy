@@ -9,6 +9,7 @@ class SecondaryButton extends SizedBox {
     double? width,
     double? height,
     TextStyle? style,
+    Color? borderColor,
     required String text,
     required BuildContext context,
     required VoidCallback onPressed,
@@ -27,7 +28,7 @@ class SecondaryButton extends SizedBox {
                 side: BorderSide(
                   strokeAlign: 1,
                   width: 2,
-                  color: AppThemes.lightPrimary500,
+                  color: borderColor ?? AppThemes.lightPrimary500,
                 )),
             child: Text(
               text,

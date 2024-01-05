@@ -67,19 +67,20 @@ class SuccessDialog extends Dialog {
               Text(
                 title,
                 style: context.textStyle.titleSmallMedium,
+                textAlign: TextAlign.center,
               ),
               SizedBox(height: context.responsiveHeight(7)),
               Padding(
-                padding: EdgeInsets.symmetric(
-                    horizontal: context.responsiveWidth(50)),
+                padding: EdgeInsets.symmetric(horizontal: context.responsiveWidth(50)),
                 child: Text(
                   text1,
-                  style: context.textStyle.bodySmallMedium
-                      .copyWith(color: HexColor('#898989')),
+                  style: context.textStyle.bodySmallMedium.copyWith(color: HexColor('#898989')),
                   textAlign: TextAlign.center,
                 ),
               ),
-              SizedBox(height: context.responsiveHeight(24),),
+              SizedBox(
+                height: context.responsiveHeight(24),
+              ),
               widget ?? const SizedBox(),
             ],
           ),
