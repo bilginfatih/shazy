@@ -66,6 +66,22 @@ class _PaymetnMethodPageState extends State<PaymetnMethodPage> {
 
   @override
   Widget build(BuildContext context) {
+    var userDropOffLocation = Provider.of<AppInfo>(context).userDropOffLocation;
+    var dropOffLocationName = userDropOffLocation?.locationName;
+
+    if (dropOffLocationName != null && dropOffLocationName.length > 24) {
+      dropOffLocationName = dropOffLocationName.substring(0, 24);
+    }
+
+    dropOffLocationName ??= 'undefined';
+
+    var currentLocationName = userDropOffLocation?.currentLocationName;
+
+    if (currentLocationName != null && currentLocationName.length > 24) {
+      currentLocationName = currentLocationName.substring(0, 24);
+    }
+
+    currentLocationName ??= 'undefined';
     return Scaffold(
       appBar: BackAppBar(
         context: context,
@@ -88,15 +104,12 @@ class _PaymetnMethodPageState extends State<PaymetnMethodPage> {
               height: context.responsiveHeight(29),
             ),
             _buildLocationRow(
-                context,
-                'map3',
-                Provider.of<AppInfo>(context).userDropOffLocation != null
-                    ? "${Provider.of<AppInfo>(context).userDropOffLocation!.locationName.toString().substring(0, 24)}..."
-                    : 'undefined',
-                Provider.of<AppInfo>(context).userDropOffLocation != null
-                    ? "${Provider.of<AppInfo>(context).userDropOffLocation!.currentLocationName.toString().substring(0, 24)}..."
-                    : 'undefined',
-                text3: '2.7km'),
+              context,
+              'map3',
+              dropOffLocationName,
+              currentLocationName,
+              text3: '2.7km',
+            ),
             SizedBox(
               height: context.responsiveHeight(20),
             ),

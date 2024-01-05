@@ -5,6 +5,7 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:flutter_polyline_points/flutter_polyline_points.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:hexcolor/hexcolor.dart';
@@ -21,8 +22,12 @@ import '../../../utils/constants/navigation_constant.dart';
 import '../../../utils/extensions/context_extension.dart';
 import '../../../widgets/buttons/icon_button.dart';
 
+import '../../../widgets/buttons/primary_button.dart';
+import '../../../widgets/containers/payment_method_container.dart';
 import '../../../widgets/dialogs/search_driver_dialog.dart';
 import '../../../widgets/drawer/custom_drawer.dart';
+import '../../../widgets/icons/circular_svg_icon.dart';
+import '../../../widgets/modal_bottom_sheet/drive_bottom_sheet.dart';
 
 class DriverHomePage extends StatefulWidget {
   DriverHomePage({Key? key}) : super(key: key);
@@ -37,8 +42,7 @@ class _DriverHomePageState extends State<DriverHomePage> {
     zoom: 14.4746,
   );
 
-  final Completer<GoogleMapController> _controller =
-      Completer<GoogleMapController>();
+  final Completer<GoogleMapController> _controller = Completer<GoogleMapController>();
 
   final DriverController _driverController = DriverController();
   String _mapTheme = '';
@@ -50,9 +54,7 @@ class _DriverHomePageState extends State<DriverHomePage> {
   @override
   void initState() {
     super.initState();
-    DefaultAssetBundle.of(context)
-        .loadString('assets/maptheme/night_theme.json')
-        .then(
+    DefaultAssetBundle.of(context).loadString('assets/maptheme/night_theme.json').then(
       (value) {
         _mapTheme = value;
       },
@@ -61,23 +63,17 @@ class _DriverHomePageState extends State<DriverHomePage> {
   }
 
   locateUserPosition() async {
-    Position cPosition = await Geolocator.getCurrentPosition(
-        desiredAccuracy: LocationAccuracy.high);
+    Position cPosition = await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
     _userCurrentPosition = cPosition;
 
-    LatLng latLngPosition =
-        LatLng(_userCurrentPosition!.latitude, _userCurrentPosition!.longitude);
+    LatLng latLngPosition = LatLng(_userCurrentPosition!.latitude, _userCurrentPosition!.longitude);
 
-    CameraPosition cameraPosition =
-        CameraPosition(target: latLngPosition, zoom: 14);
+    CameraPosition cameraPosition = CameraPosition(target: latLngPosition, zoom: 14);
 
-    _newGoogleMapController!
-        .animateCamera(CameraUpdate.newCameraPosition(cameraPosition));
+    _newGoogleMapController!.animateCamera(CameraUpdate.newCameraPosition(cameraPosition));
     String humanReadableAddress = '';
     if (mounted) {
-      humanReadableAddress =
-          await AssistantMethods.searchAddressForGeographicCoOrdinates(
-              _userCurrentPosition!, context);
+      humanReadableAddress = await AssistantMethods.searchAddressForGeographicCoOrdinates(_userCurrentPosition!, context);
     }
   }
 
@@ -108,14 +104,35 @@ class _DriverHomePageState extends State<DriverHomePage> {
       context: context,
       builder: (BuildContext context) => DriverDialog(
         context: context,
-        price: '200₺',
-        star: '2',
+        price: '220₺',
+        star: '4.9',
         location1TextTitle: 'location1TextTitle',
         location1Text: 'location1Text',
         location2TextTitle: 'location2TextTitle',
         location2Text: 'location2Text',
         cancelOnPressed: _driverController.driveCancel,
-        acceptOnPressed: _driverController.driverAccept,
+        acceptOnPressed: () {
+          _driverController.driverAccept();
+          _showDriverBottomSheet();
+        },
+      ),
+    );
+  }
+
+  void _showDriverBottomSheet() {
+    showModalBottomSheet(
+      context: context,
+      builder: (BuildContext context) => DriveBottomSheet(
+        context: context,
+        customerName: "ssd",
+        imagePath: "https://randomuser.me/api/portraits/men/93.jpg",
+        location1Text: "sda",
+        location1TextTitle: "dads",
+        location2Text: "asdsda",
+        location2TextTitle: "dssad",
+        pickingUpText: "aaaaa",
+        startText: "sssss",
+        onPressed: () {},
       ),
     );
   }
@@ -136,27 +153,20 @@ class _DriverHomePageState extends State<DriverHomePage> {
         ),
       );
 
-  CustomIconButton _buildRightTopButton(BuildContext context) =>
-      _driverController.driverActive
-          ? _buildCustomIconButton(
-              false, Icons.close, _driverController.driverPassive)
-          : _buildCustomIconButton(false, Icons.notifications_none_outlined,
-              () {
-              NavigationManager.instance
-                  .navigationToPage(NavigationConstant.notification);
-            });
+  CustomIconButton _buildRightTopButton(BuildContext context) => _driverController.driverActive
+      ? _buildCustomIconButton(false, Icons.close, _driverController.driverPassive)
+      : _buildCustomIconButton(false, Icons.notifications_none_outlined, () {
+          NavigationManager.instance.navigationToPage(NavigationConstant.notification);
+        });
 
-  Widget _buildTopLeftButton(BuildContext context) =>
-      _driverController.driverActive
-          ? const SizedBox()
-          : _buildCustomIconButton(true, Icons.menu, () {
-              // TODO: test amaçlı yapılmış olup kaldırılacaktır!
-              _showDriverDialog();
-            });
+  Widget _buildTopLeftButton(BuildContext context) => _driverController.driverActive
+      ? _buildCustomIconButton(true, Icons.menu, () {
+          // TODO: test amaçlı yapılmış olup kaldırılacaktır!
+          _showDriverDialog();
+        })
+      : SizedBox();
 
-  CustomIconButton _buildCustomIconButton(
-          bool isLeft, IconData icon, VoidCallback onPressed) =>
-      CustomIconButton(
+  CustomIconButton _buildCustomIconButton(bool isLeft, IconData icon, VoidCallback onPressed) => CustomIconButton(
         context: context,
         top: context.responsiveHeight(60),
         left: isLeft ? context.responsiveWidth(15) : null,
@@ -200,25 +210,23 @@ class _DriverHomePageState extends State<DriverHomePage> {
 
   Padding _buildBottomOfBody(BuildContext context, double keyboardSize) {
     return Padding(
-                // sayfanın alt kısmı
-                padding: EdgeInsets.only(
-                  top: context.responsiveHeight(480) -
-                      keyboardSize +
-                      (keyboardSize != 0 ? context.responsiveHeight(150) : 0),
-                  right: context.responsiveWidth(15),
-                  left: context.responsiveWidth(14),
+      // sayfanın alt kısmı
+      padding: EdgeInsets.only(
+        top: context.responsiveHeight(480) - keyboardSize + (keyboardSize != 0 ? context.responsiveHeight(150) : 0),
+        right: context.responsiveWidth(15),
+        left: context.responsiveWidth(14),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.end,
+        children: [
+          true
+              ? SizedBox()
+              : const Center(
+                  // TODO: UI burası değişebilir
+                  child: CircularProgressIndicator(),
                 ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.end,
-                  children: [
-                    true
-                        ? SizedBox()
-                        : const Center(
-                            // TODO: UI burası değişebilir
-                            child: CircularProgressIndicator(),
-                          ),
-                  ],
-                ),
-              );
+        ],
+      ),
+    );
   }
 }

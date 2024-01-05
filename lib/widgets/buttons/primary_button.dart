@@ -8,6 +8,7 @@ class PrimaryButton extends SizedBox {
     double? width,
     double? height,
     TextStyle? style,
+    ButtonStyle? buttonStyle,
     required String text,
     required BuildContext context,
     required VoidCallback onPressed,
@@ -17,7 +18,7 @@ class PrimaryButton extends SizedBox {
           height: context.responsiveHeight(height ?? 54),
           child: FilledButton(
             onPressed: onPressed,
-            style: FilledButton.styleFrom(backgroundColor: AppThemes.lightPrimary500),
+            style: buttonStyle ?? FilledButton.styleFrom(backgroundColor: AppThemes.lightPrimary500),
             child: Text(
               text,
               style: style ?? context.textStyle.subheadLargeRegular.copyWith(color: Colors.white),

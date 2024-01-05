@@ -30,14 +30,9 @@ class DriverDialog extends Padding {
             right: context.responsiveWidth(14),
           ),
           child: Container(
-            decoration: ShapeDecoration(
-                shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(8)),
-                color: Colors.white),
+            decoration: ShapeDecoration(shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)), color: Colors.white),
             child: Padding(
-              padding: EdgeInsets.symmetric(
-                  vertical: context.responsiveHeight(15),
-                  horizontal: context.responsiveWidth(15)),
+              padding: EdgeInsets.symmetric(vertical: context.responsiveHeight(15), horizontal: context.responsiveWidth(15)),
               child: Column(
                 children: [
                   Text(
@@ -88,13 +83,13 @@ class DriverDialog extends Padding {
                     children: [
                       SecondaryButton(
                         width: context.responsiveWidth(160),
-                        text: 'cancel'.tr(),
+                        text: 'Cancel'.tr(),
                         context: context,
                         onPressed: cancelOnPressed,
                       ),
                       PrimaryButton(
                         width: context.responsiveWidth(160),
-                        text: 'accept'.tr(),
+                        text: 'Accept'.tr(),
                         context: context,
                         onPressed: acceptOnPressed,
                       ),
@@ -121,10 +116,7 @@ class DriverDialog extends Padding {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Padding(
-              padding: EdgeInsets.only(
-                  top: context.responsiveHeight(4),
-                  left: context.responsiveWidth(10),
-                  right: context.responsiveWidth(6)),
+              padding: EdgeInsets.only(top: context.responsiveHeight(4), left: context.responsiveWidth(10), right: context.responsiveWidth(6)),
               child: SvgPicture.asset('assets/svg/$assetName.svg'),
             ),
             Column(

@@ -1,6 +1,14 @@
 import 'package:flutter/material.dart';
 import '../../../pages/authentication/splash_page.dart';
 import '../../../pages/home/driver_home/driver_home_page.dart';
+import '../../../pages/menu_side/about_us.dart';
+import '../../../pages/menu_side/change_language_page.dart';
+import '../../../pages/menu_side/change_password_page.dart';
+import '../../../pages/menu_side/complain.dart';
+import '../../../pages/menu_side/contact_us_page.dart';
+import '../../../pages/menu_side/delete_account_page.dart';
+import '../../../pages/menu_side/driver_choose_page.dart';
+import '../../../pages/menu_side/settings_page.dart';
 import '../../../pages/test_pages.dart';
 import '../../../pages/contact/cancel_ride_page.dart';
 import '../../../pages/contact/message_page.dart';
@@ -79,7 +87,7 @@ class NavigationRouteManager {
       case NavigationConstant.historyUpcoming:
         return _navigationToDefault(HistoryUpcomingPage(), args);
       case NavigationConstant.wallet:
-        return _navigationToDefault( WalletPage(), args);
+        return _navigationToDefault(WalletPage(), args);
       case NavigationConstant.offer:
         return _navigationToDefault(const OfferPage(), args);
       case NavigationConstant.notification:
@@ -88,13 +96,28 @@ class NavigationRouteManager {
         return _navigationToDefault(const HomePage(), args);
       case NavigationConstant.driverHomePage:
         return _navigationToDefault(DriverHomePage(), args);
+      case NavigationConstant.complain:
+        return _navigationToDefault(ComplainPage(), args);
+      case NavigationConstant.settings:
+        return _navigationToDefault(SettingsPage(), args);
+      case NavigationConstant.aboutUs:
+        return _navigationToDefault(AboutUsPage(), args);    
+      case NavigationConstant.changePassword:
+        return _navigationToDefault(ChangePasswordPage(), args);  
+      case NavigationConstant.contactUs:
+        return _navigationToDefault(ContactUsPage(), args);
+      case NavigationConstant.deleteAccount:
+        return _navigationToDefault(DeleteAccountPage(), args);  
+      case NavigationConstant.driverChoose:
+        return _navigationToDefault(DriverChoosePage(), args);   
+      case NavigationConstant.changeLanguage:
+        return _navigationToDefault(ChangeLanguagePage(), args);      
       case NavigationConstant.testPage:
-        return _navigationToDefault( TestPage(), args);
+        return _navigationToDefault(TestPage(), args);
       default:
         return _navigationToDefault(MyApp(), args);
     }
   }
 
-  MaterialPageRoute _navigationToDefault(Widget page, RouteSettings args) =>
-      MaterialPageRoute(builder: (context) => page, settings: args);
+  MaterialPageRoute _navigationToDefault(Widget page, RouteSettings args) => MaterialPageRoute(builder: (context) => page, settings: args);
 }
