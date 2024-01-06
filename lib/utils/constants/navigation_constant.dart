@@ -49,7 +49,10 @@ class NavigationConstant {
   static const contactUs = '/contactUs';
   static const deleteAccount = '/deleteAccount';
   static const driverChoose = '/driverChoose';
-  static const changeLanguage = '/';
+  static const changeLanguage = '/changeLanguage';
+
+  // Profile
+  static const profileEdit = '/';
 
   static const testPage = '/testPage';
 }

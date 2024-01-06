@@ -46,5 +46,8 @@
     "reviews": "Reviews",
     "editProfile": "Edit Profile",
     "profile": "Profile",
-    "comments": "Comments"
+    "comments": "Comments",
+    "fullName": "Full Name",
+    "aboutYou": "About You",
+    "save": "Save"
 }

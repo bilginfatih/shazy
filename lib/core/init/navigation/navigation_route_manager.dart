@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:shazy/pages/profile/profile_edit_page.dart';
 import '../../../pages/authentication/splash_page.dart';
 import '../../../pages/home/driver_home/driver_home_page.dart';
 import '../../../pages/menu_side/about_us.dart';
@@ -112,6 +113,8 @@ class NavigationRouteManager {
         return _navigationToDefault(DriverChoosePage(), args);   
       case NavigationConstant.changeLanguage:
         return _navigationToDefault(ChangeLanguagePage(), args);      
+      case NavigationConstant.profileEdit:
+        return _navigationToDefault(ProfileEditPage(), args);      
       case NavigationConstant.testPage:
         return _navigationToDefault(TestPage(), args);
       default:
