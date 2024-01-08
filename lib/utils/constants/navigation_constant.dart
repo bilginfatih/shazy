@@ -27,7 +27,7 @@ class NavigationConstant {
 
   // Contact
   static const message = '/message';
-  static const cancelRide = '/cancelRide';
+  static const cancelRide = '/';
 
   // History
   static const historyUpcoming = '/historyUpcoming';
@@ -52,7 +52,7 @@ class NavigationConstant {
   static const changeLanguage = '/changeLanguage';
 
   // Profile
-  static const profileEdit = '/';
+  static const profileEdit = '/profileEdit';
 
   static const testPage = '/testPage';
 }

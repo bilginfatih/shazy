@@ -166,6 +166,7 @@ class _CancelRidePageState extends State<CancelRidePage> {
             Text(
               'Please select the reason of cancellation.',
               style: context.textStyle.subheadSmallMedium,
+              textAlign: TextAlign.center,
             ),
             SizedBox(
               height: context.responsiveHeight(16),

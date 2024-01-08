@@ -37,27 +37,32 @@ class ProfileEditPage extends StatelessWidget {
             SizedBox(
               height: context.responsiveHeight(30),
             ),
-            Center(
-              child: Stack(
-                children: [
-                  CircleAvatar(
-                    radius: 35,
-                    backgroundColor: Colors.white,
-                    child: Image.asset(
-                      'assets/png/no_data.png',
-                      width: context.responsiveWidth(120),
-                      height: context.responsiveHeight(127),
+            GestureDetector(
+              onTap: (){
+                
+              },
+              child: Center(
+                child: Stack(
+                  children: [
+                    CircleAvatar(
+                      radius: 35,
+                      backgroundColor: Colors.white,
+                      child: Image.asset(
+                        'assets/png/no_data.png',
+                        width: context.responsiveWidth(120),
+                        height: context.responsiveHeight(127),
+                      ),
                     ),
-                  ),
-                  Positioned(
-                    left: 50,
-                    bottom: 0,
-                    child: SvgPicture.asset(
-                      'assets/svg/camera-2.svg',
-                      width: context.responsiveWidth(20),
-                    ),
-                  )
-                ],
+                    Positioned(
+                      left: 50,
+                      bottom: 0,
+                      child: SvgPicture.asset(
+                        'assets/svg/camera-2.svg',
+                        width: context.responsiveWidth(20),
+                      ),
+                    )
+                  ],
+                ),
               ),
             ),
             Padding(
