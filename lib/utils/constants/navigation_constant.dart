@@ -14,7 +14,7 @@ class NavigationConstant {
 
   // Home
   static const searchPage = '/searchPage';
-  static const homePage = '/homePage';
+  static const homePage = '/';
   static const driverHomePage = '/driverHomePage';
 
   //Google Maps Ekranları
@@ -27,7 +27,7 @@ class NavigationConstant {
 
   // Contact
   static const message = '/message';
-  static const cancelRide = '/';
+  static const cancelRide = '/cancelRide';
 
   // History
   static const historyUpcoming = '/historyUpcoming';
