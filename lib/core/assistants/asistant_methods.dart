@@ -5,38 +5,46 @@ import 'package:provider/provider.dart';
 import '../base/app_info.dart';
 import '../init/models/direction_details_info.dart';
 import '../init/models/directions.dart';
+import '../init/network/network_manager.dart';
 import 'request_assistant.dart';
 
 class AssistantMethods {
   static Future<String> searchAddressForGeographicCoOrdinates(Position position, context) async {
-    String apiUrl =
-        "https://maps.googleapis.com/maps/api/geocode/json?latlng=${position.latitude},${position.longitude}&key=AIzaSyB_8L6k1f0T1wHaV6oI5l3vH6WLRzRScGM";
+    try {
+      String apiUrl = "/google/geocode/${position.latitude}/${position.longitude}";
 
-    String humanReadableAddress = "";
+      var requestResponse = await NetworkManager.instance.get(apiUrl);
 
-    var requestResponse = await RequestAssistant.receiveRequest(apiUrl);
+      if (requestResponse != null) {
+        String humanReadableAddress = requestResponse["results"][0]["formatted_address"];
 
-    if (requestResponse != "Error Occurred, Failed. No Response.") {
-      humanReadableAddress = requestResponse["results"][0]["formatted_address"];
+        Directions userPickUpAddress = Directions();
+        userPickUpAddress.locationLatitude = position.latitude;
+        userPickUpAddress.locationLongitude = position.longitude;
+        userPickUpAddress.locationName = humanReadableAddress;
 
-      Directions userPickUpAddress = Directions();
-      userPickUpAddress.locationLatitude = position.latitude;
-      userPickUpAddress.locationLongitude = position.longitude;
-      userPickUpAddress.locationName = humanReadableAddress;
+        Provider.of<AppInfo>(context, listen: false).updatePickUpLocationAddress(userPickUpAddress);
 
-      Provider.of<AppInfo>(context, listen: false).updatePickUpLocationAddress(userPickUpAddress);
+        return humanReadableAddress;
+      } else {
+        // Handle the case where the response is null or not as expected
+        return "Error Occurred, Failed. No Response.";
+      }
+    } catch (e) {
+      // Handle exceptions or errors here
+      print(e);
+      return "Error Occurred, Failed. Exception.";
     }
-    return humanReadableAddress;
   }
 
   static Future<DirectionDetailsInfo?> obtainOriginToDestinationDirectionDetails(LatLng origionPosition, LatLng destinationPosition) async {
-    String urlOriginToDestinationDirectionDetails =
-        "https://maps.googleapis.com/maps/api/directions/json?origin=${origionPosition.latitude},${origionPosition.longitude}&destination=${destinationPosition.latitude},${destinationPosition.longitude}&key=AIzaSyB_8L6k1f0T1wHaV6oI5l3vH6WLRzRScGM";
-    
+  try {
+    String urlOriginToDestinationDirectionDetails = "/google/directions/${origionPosition.latitude}/${origionPosition.longitude}/${destinationPosition.latitude}/${destinationPosition.longitude}";
 
-    var responseDirectionApi = await RequestAssistant.receiveRequest(urlOriginToDestinationDirectionDetails);
+    var responseDirectionApi = await NetworkManager.instance.get(urlOriginToDestinationDirectionDetails);
 
-    if (responseDirectionApi == "Error Occurred, Failed. No Response.") {
+    if (responseDirectionApi == null) {
+      // Handle the case where the response is null
       return null;
     }
 
@@ -50,5 +58,11 @@ class AssistantMethods {
     directionDetailsInfo.duration_value = responseDirectionApi["routes"][0]["legs"][0]["duration"]["value"];
 
     return directionDetailsInfo;
+  } catch (e) {
+    // Handle exceptions or errors here
+    print(e);
+    return null;
   }
+}
+
 }
