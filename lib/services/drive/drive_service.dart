@@ -4,6 +4,7 @@ import '../../models/drive/drive_model.dart';
 import '../../core/init/network/network_manager.dart';
 
 class DriveService {
+  DriveService();
   DriveService._init();
 
   static DriveService instance = DriveService._init();
@@ -14,13 +15,11 @@ class DriveService {
   /// model paremetreleri: driver_id
   Future<String?> driverActive(DriveModel model) async {
     try {
-      var response = await NetworkManager.instance
-          .post('/drive-request/Active', model: model);
+      var response = await NetworkManager.instance.post('/drive-request/Active', model: model);
       if (response.containsKey('errors')) {
         return response['message'];
       } else {
-        await CacheManager.instance
-            .putData('drive', 'drive_id', response['id']);
+        await CacheManager.instance.putData('drive', 'drive_id', response['id']);
       }
     } catch (e) {
       rethrow;
@@ -29,14 +28,12 @@ class DriveService {
   }
 
   /// Sürüş id' sini getirir.
-  Future<String?> getDriveId() async =>
-      await CacheManager.instance.getData('drive', 'drive_id');
+  Future<String?> getDriveId() async => await CacheManager.instance.getData('drive', 'drive_id');
 
   // Sürüşü iptal eder
   Future<String?> driveCancel(DriveModel model) async {
     try {
-      var response =
-          await NetworkManager.instance.post('$_request/Cancel', model: model);
+      var response = await NetworkManager.instance.post('$_request/Cancel', model: model);
     } catch (e) {
       rethrow;
     }
@@ -46,8 +43,7 @@ class DriveService {
   // Sürücüyü pasif eder
   Future<String?> driverPassive(DriveModel model) async {
     try {
-      var response =
-          await NetworkManager.instance.post('$_request/Passive', model: model);
+      var response = await NetworkManager.instance.post('$_request/Passive', model: model);
     } catch (e) {
       rethrow;
     }
@@ -56,8 +52,7 @@ class DriveService {
 
   Future<String?> driveMatched(DriveModel model) async {
     try {
-      var response =
-          await NetworkManager.instance.post('$_request/Matched', model: model);
+      var response = await NetworkManager.instance.post('$_request/Matched', model: model);
     } catch (e) {
       rethrow;
     }
@@ -66,8 +61,7 @@ class DriveService {
 
   Future<String?> driveConfirmed(DriveModel model) async {
     try {
-      var response = await NetworkManager.instance
-          .post('$_request/Confirmed', model: model);
+      var response = await NetworkManager.instance.post('$_request/Confirmed', model: model);
       if (response.containsKey('errors')) {
         return response['message'];
       }
@@ -79,8 +73,7 @@ class DriveService {
 
   Future<String?> driving(DriveModel model) async {
     try {
-      var response =
-          await NetworkManager.instance.post('$_request/Driving', model: model);
+      var response = await NetworkManager.instance.post('$_request/Driving', model: model);
       if (response.containsKey('errors')) {
         return response['message'];
       }

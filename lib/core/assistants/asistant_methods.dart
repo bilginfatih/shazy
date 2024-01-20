@@ -6,7 +6,6 @@ import '../base/app_info.dart';
 import '../init/models/direction_details_info.dart';
 import '../init/models/directions.dart';
 import '../init/network/network_manager.dart';
-import 'request_assistant.dart';
 
 class AssistantMethods {
   static Future<String> searchAddressForGeographicCoOrdinates(Position position, context) async {
@@ -50,6 +49,7 @@ class AssistantMethods {
 
     DirectionDetailsInfo directionDetailsInfo = DirectionDetailsInfo();
     directionDetailsInfo.e_points = responseDirectionApi["routes"][0]["overview_polyline"]["points"];
+    directionDetailsInfo.e_pointsDrive = responseDirectionApi["routes"][0]["overview_polyline"]["points"];
 
     directionDetailsInfo.distance_text = responseDirectionApi["routes"][0]["legs"][0]["distance"]["text"];
     directionDetailsInfo.distance_value = responseDirectionApi["routes"][0]["legs"][0]["distance"]["value"];

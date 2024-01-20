@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:hexcolor/hexcolor.dart';
+import '../../utils/constants/navigation_constant.dart';
 import '../../utils/extensions/context_extension.dart';
 
 import '../../core/init/navigation/navigation_manager.dart';
@@ -104,7 +105,9 @@ class CustomDrawer extends SizedBox {
                   const Divider(
                     thickness: 1,
                   ),
-                  _buildTextRow(context, 'assets/svg/car.svg', 'Driver', () {}),
+                  _buildTextRow(context, 'assets/svg/car.svg', 'Driver', () {
+                    NavigationManager.instance.navigationToPage(NavigationConstant.driverChoose);
+                  }),
                   const Divider(
                     thickness: 1,
                   ),
