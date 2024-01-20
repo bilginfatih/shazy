@@ -59,6 +59,12 @@ class TestPage extends StatelessWidget {
               ),
               ElevatedButton(
                 onPressed: () async {
+                  CacheManager.clearAll('user');
+                },
+                child: Text('cache delete'),
+              ),
+              ElevatedButton(
+                onPressed: () async {
                   UserModel model = UserModel(
                     email: 'test234@gmail.com',
                     password: 'test222',
@@ -69,23 +75,20 @@ class TestPage extends StatelessWidget {
               ),
               ElevatedButton(
                 onPressed: () async {
-                  var response =
-                      await HistoryService.instance.getDriverHistory();
+                  var response = await HistoryService.instance.getDriverHistory();
                 },
                 child: Text('GetDriverHistory'),
               ),
               ElevatedButton(
                 onPressed: () async {
-                  var response =
-                      await HistoryService.instance.getPassengerHistory();
+                  var response = await HistoryService.instance.getPassengerHistory();
                   print(response);
                 },
                 child: Text('GetPassengerHistory'),
               ),
               ElevatedButton(
                 onPressed: () async {
-                  var data =
-                      await CacheManager.instance.getData('user', 'email');
+                  var data = await CacheManager.instance.getData('user', 'email');
                   print(data);
                 },
                 child: Text('HiveTest'),
@@ -99,8 +102,7 @@ class TestPage extends StatelessWidget {
               ),
               ElevatedButton(
                 onPressed: () async {
-                  await UserService.instance
-                      .getAnotherUser('9a9659af-6549-41d0-be1a-f75ba16e2c60');
+                  await UserService.instance.getAnotherUser('9a9659af-6549-41d0-be1a-f75ba16e2c60');
                 },
                 child: Text('Another User'),
               ),
@@ -116,7 +118,7 @@ class TestPage extends StatelessWidget {
                     ),
                     context: context,
                     builder: (_) => CommentBottomSheet(
-                      onPressedRatingBar: (i){},
+                      onPressedRatingBar: (i) {},
                       selectedIndex: 0,
                       context: context,
                       textController: TextEditingController(),
@@ -149,7 +151,7 @@ class TestPage extends StatelessWidget {
               ElevatedButton(
                 onPressed: () async {
                   var userId = await SessionManager().get('id');
-                  DriveModel model = DriveModel(driverId: userId);
+                  DriveModel model = DriveModel(driverId: userId, driverLat: 40.0, driverLang: 28.0);
                   await DriveService.instance.driverActive(model);
                 },
                 child: Text('Driver Active'),
@@ -174,11 +176,9 @@ class TestPage extends StatelessWidget {
                 onPressed: () async {
                   var userId = await SessionManager().get('id');
                   var now = DateTime.now();
-                  var timeTo =
-                      DateTime(now.year, now.month, now.day, 23, 23, 23);
+                  var timeTo = DateTime(now.year, now.month, now.day, 23, 23, 23);
                   DriveModel model = DriveModel(
                     driverId: userId,
-                    to: 'id',
                     timeFrom: now.toString(),
                     timeTo: timeTo.toString(),
                   );
@@ -225,22 +225,14 @@ class TestPage extends StatelessWidget {
                               right: context.responsiveWidth(14),
                             ),
                             child: Container(
-                              decoration: ShapeDecoration(
-                                  shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(8)),
-                                  color: Colors.white),
+                              decoration: ShapeDecoration(shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)), color: Colors.white),
                               child: Padding(
-                                padding: EdgeInsets.symmetric(
-                                    vertical: context.responsiveHeight(15),
-                                    horizontal: context.responsiveWidth(15)),
+                                padding: EdgeInsets.symmetric(vertical: context.responsiveHeight(15), horizontal: context.responsiveWidth(15)),
                                 child: Column(
                                   children: [
-                                    Text('220₺',
-                                        style: context
-                                            .textStyle.titleXlargeRegular),
+                                    Text('220₺', style: context.textStyle.titleXlargeRegular),
                                     Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
+                                      mainAxisAlignment: MainAxisAlignment.center,
                                       children: [
                                         Icon(
                                           Icons.star,
@@ -248,8 +240,7 @@ class TestPage extends StatelessWidget {
                                         ),
                                         Text(
                                           '4.9',
-                                          style: context
-                                              .textStyle.bodySmallRegular,
+                                          style: context.textStyle.bodySmallRegular,
                                         ),
                                       ],
                                     ),
@@ -280,8 +271,7 @@ class TestPage extends StatelessWidget {
                                     ),
                                     Spacer(),
                                     Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceBetween,
+                                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                       children: [
                                         SecondaryButton(
                                           width: context.responsiveWidth(160),
@@ -419,8 +409,7 @@ class TestPage extends StatelessWidget {
                                 horizontal: context.responsiveWidth(20),
                               ),
                               child: Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                 children: [
                                   Text(
                                     'pickingUpText',
@@ -466,10 +455,7 @@ class TestPage extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Padding(
-              padding: EdgeInsets.only(
-                  top: context.responsiveHeight(4),
-                  left: context.responsiveWidth(10),
-                  right: context.responsiveWidth(6)),
+              padding: EdgeInsets.only(top: context.responsiveHeight(4), left: context.responsiveWidth(10), right: context.responsiveWidth(6)),
               child: SvgPicture.asset('assets/svg/$assetName.svg'),
             ),
             Column(

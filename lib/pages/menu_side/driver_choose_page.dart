@@ -1,6 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_session_manager/flutter_session_manager.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:shazy/utils/extensions/context_extension.dart';
+import '../../core/init/navigation/navigation_manager.dart';
+import '../../models/drive/drive_model.dart';
+import '../../services/drive/drive_service.dart';
+import '../../utils/constants/navigation_constant.dart';
 import '../../widgets/app_bars/back_app_bar.dart';
 import '../../widgets/buttons/secondary_button.dart';
 
@@ -12,6 +18,7 @@ class DriverChoosePage extends StatefulWidget {
 }
 
 class _DriverChoosePageState extends State<DriverChoosePage> {
+  final DriveService _driveService = DriveService(); // DriveService örneği
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -55,7 +62,10 @@ class _DriverChoosePageState extends State<DriverChoosePage> {
                   text: 'Fit to Drive',
                   height: context.responsiveHeight(54),
                   width: context.responsiveWidth(140),
-                  onPressed: () {},
+                  onPressed: () {
+                    fitToDriveButtonPressed();
+                    NavigationManager.instance.navigationToPage(NavigationConstant.homePage, args: true);
+                  },
                 ),
               ],
             ),
@@ -63,5 +73,46 @@ class _DriverChoosePageState extends State<DriverChoosePage> {
         ),
       ),
     );
+  }
+
+  void fitToDriveButtonPressed() async {
+    var userId = await SessionManager().get('id'); // SessionManager'daki uygun metod
+    if (userId != null) {
+      // Kullanıcının konumunu al
+      Position cPosition = await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
+
+      // DriveModel oluştur ve servisi çağır
+      DriveModel model = DriveModel(
+        driverId: userId,
+        driverLat: cPosition.latitude,
+        driverLang: cPosition.longitude,
+      );
+
+      try {
+        // DriverActive servisini çağır
+        String? result = await _driveService.driverActive(model);
+
+        // Sonucu kontrol et
+        if (result != null) {
+          // Hata durumunda kullanıcıya bildirim veya işlem yapabilirsiniz
+          // Örneğin:
+          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+            content: Text(result),
+          ));
+        } else {
+          // Başarılı durumda
+          // Yapılacak işlemler...
+        }
+      } catch (e) {
+        // Hata durumunda kullanıcıya bildirim veya işlem yapabilirsiniz
+        // Örneğin:
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+          content: Text("An error occurred: $e"),
+        ));
+      }
+    } else {
+      // Hata durumu, kullanıcı oturum açmamışsa veya ID alınamamışsa yapılacak işlemler
+      print("Kullanıcı oturum açmamış veya ID alınamamış.");
+    }
   }
 }

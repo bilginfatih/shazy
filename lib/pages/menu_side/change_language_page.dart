@@ -29,6 +29,7 @@ class _ChangeLanguagePageState extends State<ChangeLanguagePage> {
     Language(flag: '🇵🇹', name: 'Portugal'),
     Language(flag: '🇹🇷', name: 'Turkey'),
     Language(flag: '🇳🇱', name: 'Netherlands'),
+    Language(flag: '🇳🇱', name: 'Netherlands'),
   ];
 
   int selectedLanguageIndex = 0;
@@ -45,7 +46,7 @@ class _ChangeLanguagePageState extends State<ChangeLanguagePage> {
         child: ListView.builder(
           itemCount: languages.length,
           itemBuilder: (context, index) {
-            if (index == 7) {
+            if (index == 8) {
               return Column(
                 children: [
                   SizedBox(
