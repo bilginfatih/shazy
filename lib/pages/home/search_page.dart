@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:hexcolor/hexcolor.dart';
-
-import '../../core/assistants/request_assistant.dart';
 import '../../core/init/models/predicted_places.dart';
+import '../../core/init/network/network_manager.dart';
 import '../../utils/extensions/context_extension.dart';
 import '../../utils/theme/themes.dart';
 import '../../widgets/list_tile/place_prediction_tile.dart';
@@ -23,10 +22,12 @@ class _SearchPageState extends State<SearchPage> {
   void findPlaceAutoCompleteSearch(String inputText) async {
     if (inputText.length > 1) //2 or more than 2 input characters
     {
-      String urlAutoCompleteSearch =
-          "https://maps.googleapis.com/maps/api/place/autocomplete/json?input=$inputText&key=AIzaSyB_8L6k1f0T1wHaV6oI5l3vH6WLRzRScGM&components=country:TUR";
+     String urlAutoCompleteSearch =
+          '/google/autocomplete/$inputText';
+      
 
-      var responseAutoCompleteSearch = await RequestAssistant.receiveRequest(urlAutoCompleteSearch);
+      var responseAutoCompleteSearch =
+          await NetworkManager.instance.get(urlAutoCompleteSearch);
 
       if (responseAutoCompleteSearch == "Error Occurred, Failed. No Response.") {
         return;

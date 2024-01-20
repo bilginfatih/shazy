@@ -3,6 +3,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:shazy/services/user/user_service.dart';
 import 'package:shazy/utils/constants/navigation_constant.dart';
+import '../../utils/constants/navigation_constant.dart';
 import '../../utils/extensions/context_extension.dart';
 
 import '../../core/init/navigation/navigation_manager.dart';
@@ -140,6 +141,10 @@ class CustomDrawer extends SizedBox {
                       () {
                     NavigationManager.instance
                         .navigationToPage(NavigationConstant.complain);
+                  }),
+                  _buildTextRow(context, 'assets/svg/car.svg', 'Driver', () {
+                    NavigationManager.instance
+                        .navigationToPage(NavigationConstant.driverChoose);
                   }),
                   const Divider(
                     thickness: 1,

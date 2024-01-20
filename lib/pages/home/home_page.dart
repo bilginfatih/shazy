@@ -56,6 +56,11 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
+    bool? isDriver = ModalRoute.of(context)?.settings.arguments as bool?;
+    if (isDriver != null && isDriver) {
+      _pages[0] = DriverHomePage();
+      setState(() {});
+    }
     return Scaffold(
       key: _scaffoldKey,
       body: _pages[_currentIndex],

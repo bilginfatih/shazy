@@ -50,7 +50,7 @@ class NavigationConstant {
   static const deleteAccount = '/deleteAccount';
   static const driverChoose = '/driverChoose';
   static const changeLanguage = '/changeLanguage';
-
+  
   // Profile
   static const profileEdit = '/profileEdit';
 

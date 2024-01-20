@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_polyline_points/flutter_polyline_points.dart';
+import 'package:flutter_session_manager/flutter_session_manager.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -16,6 +17,10 @@ import 'package:provider/provider.dart';
 import '../../core/assistants/asistant_methods.dart';
 import '../../core/base/app_info.dart';
 import '../../core/init/navigation/navigation_manager.dart';
+import '../../models/drive/drive_model.dart';
+import '../../models/searchDistance/search_distance_model.dart';
+import '../../services/drive/drive_service.dart';
+import '../../services/searchDistance/search_distance_service.dart';
 import '../../utils/constants/navigation_constant.dart';
 import '../../utils/extensions/context_extension.dart';
 import '../../utils/theme/themes.dart';
@@ -45,8 +50,10 @@ class _HomeScreenTransportState extends State<HomeScreenTransport> {
   GoogleMapController? newGoogleMapController;
 
   final OtpFieldController _pinController = OtpFieldController();
-  late String _pinCheck;
   late String _durationKm;
+
+  final SearchDistanceService _searchDistanceService = SearchDistanceService.instance;
+  final DriveService _driveService = DriveService();
 
   List<LatLng> pLineCoOrdinatesList = [];
   Set<Polyline> polyLineSet = {};
@@ -74,6 +81,7 @@ class _HomeScreenTransportState extends State<HomeScreenTransport> {
         await AssistantMethods.searchAddressForGeographicCoOrdinates(
             userCurrentPosition!, context);
     print("this is your address = " + humanReadableAddress);
+    print('customer_lat: ' + userCurrentPosition!.latitude.toString() + ' customer_long:' + userCurrentPosition!.longitude.toString());
   }
 
   static const CameraPosition _kGooglePlex = CameraPosition(
@@ -346,6 +354,8 @@ class _HomeScreenTransportState extends State<HomeScreenTransport> {
                                     );
                                   },
                                 );
+                                await onButtonPressed();
+                                //await fitToDriveButtonPressed();
                               },
                             ),
                           ],
@@ -865,5 +875,38 @@ class _HomeScreenTransportState extends State<HomeScreenTransport> {
       markersSet.add(originMarker);
       markersSet.add(destinationMarker);
     });
+  }
+
+  Future<void> fitToDriveButtonPressed() async {
+    var destinationPosition = Provider.of<AppInfo>(context, listen: false).userDropOffLocation;
+
+    // Kullanıcının konumunu al
+    Position cPosition = await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
+
+    // DriveModel oluştur ve servisi çağır
+    DriveModel model = DriveModel(
+      fromLat: cPosition.latitude,
+      fromLang: cPosition.longitude,
+      toLat: destinationPosition!.locationLatitude!,
+      toLang: destinationPosition.locationLongitude!,
+    );
+
+    await _driveService.driverActive(model);
+  }
+
+  Future<void> onButtonPressed() async {
+    // Kullanıcının konumunu al
+    Position cPosition = await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
+
+    var destinationPosition = Provider.of<AppInfo>(context, listen: false).userDropOffLocation;
+
+    SearchDistanceModel model = SearchDistanceModel(
+      fromLat: cPosition.latitude,
+      fromLang: cPosition.longitude,
+      toLat: destinationPosition!.locationLatitude,
+      toLang: destinationPosition.locationLongitude,
+    );
+
+    await _searchDistanceService.searchDistance(model);
   }
 }

@@ -23,7 +23,7 @@ class PlacePredictionTileDesign extends StatelessWidget {
     );
 
     String placeDirectionDetailsUrl =
-        "https://maps.googleapis.com/maps/api/place/details/json?place_id=$placeId&key=AIzaSyB_8L6k1f0T1wHaV6oI5l3vH6WLRzRScGM&components=country:TUR";
+        "https://maps.googleapis.com/maps/api/place/details/json?place_id=$placeId&key=AIzaSyBBUxugp8yhxrqwchNXN7f2eesZwMRg5jg&components=country:TUR";
     print("place:" + placeDirectionDetailsUrl);
 
     var responseApi = await RequestAssistant.receiveRequest(placeDirectionDetailsUrl);
