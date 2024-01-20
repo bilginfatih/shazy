@@ -4,7 +4,9 @@ import 'package:shazy/models/user/user_profile_model.dart';
 import 'package:shazy/services/comment/comment_service.dart';
 import 'package:shazy/services/user/user_service.dart';
 import 'package:shazy/utils/constants/app_constant.dart';
+import 'package:shazy/utils/constants/navigation_constant.dart';
 
+import '../../../core/init/navigation/navigation_manager.dart';
 import '../../../models/comment/comment_model.dart';
 import '../../../models/user/user_model.dart';
 
@@ -86,5 +88,21 @@ abstract class _ProfileControllerBase with Store {
     if (description == 'null') {
       description = '';
     }
+  }
+
+  Future<void> updateUserProfile(UserProfileModel model) async {
+    try {
+      
+    } catch (e) {
+      // TODO: 
+    }
+  }
+
+  void goToEditPage() {
+    NavigationManager.instance.navigationToPage(NavigationConstant.profileEdit);
+  }
+
+  void goToBackPage() {
+    NavigationManager.instance.navigationToPop();
   }
 }

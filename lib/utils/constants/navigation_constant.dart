@@ -14,7 +14,7 @@ class NavigationConstant {
 
   // Home
   static const searchPage = '/searchPage';
-  static const homePage = '/homePage';
+  static const homePage = '/';
   static const driverHomePage = '/driverHomePage';
 
   //Google Maps Ekranları
@@ -50,9 +50,9 @@ class NavigationConstant {
   static const deleteAccount = '/deleteAccount';
   static const driverChoose = '/driverChoose';
   static const changeLanguage = '/changeLanguage';
-
-  static const makeAnApplication = '/makeAnApplication';
-  static const edevletWebView = '/edevletWebView';
+  
+  // Profile
+  static const profileEdit = '/profileEdit';
 
   static const testPage = '/testPage';
 }

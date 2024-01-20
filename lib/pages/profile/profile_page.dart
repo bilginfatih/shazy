@@ -243,9 +243,7 @@ class _ProfilePageState extends State<ProfilePage> {
 
   GestureDetector _buildEditButton(BuildContext context) {
     return GestureDetector(
-      onTap: () {
-        // TODO: eklenecek
-      },
+      onTap: _controller.goToEditPage,
       child: Container(
         decoration: ShapeDecoration(
           color: context.isLight ? Colors.white : HexColor('#35383F'),

@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "319375681693",
+    "project_id": "shazy-c4d86",
+    "storage_bucket": "shazy-c4d86.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:319375681693:android:e3d09358dcaae179f40c74",
+        "android_client_info": {
+          "package_name": "com.shazyteknoloji.shazy"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBFn51SizoOvRHpItJtyOOhIzcEznXYKDc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
