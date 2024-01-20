@@ -2,9 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:shazy/pages/home/driver_home/driver_home_page.dart';
+import 'package:shazy/widgets/app_bars/custom_app_bar.dart';
 
 import '../../utils/extensions/context_extension.dart';
 import '../../utils/theme/themes.dart';
+import '../../widgets/drawer/custom_drawer.dart';
 import '../history/history_upcoming_page.dart';
 import '../offer/offer_page.dart';
 import '../profile/profile_page.dart';
@@ -19,19 +21,49 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  final List _pages = [
-    HomeScreenTransport(),
-    //DriverHomePage(),
-    HistoryUpcomingPage(),
-    WalletPage(),
-    const OfferPage(),
-    ProfilePage(),
-  ];
   int _currentIndex = 0;
+  late List _pages = [];
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+
+  @override
+  void initState() {
+    _pages = [
+      HomeScreenTransport(scaffoldKey: _scaffoldKey),
+      //DriverHomePage(),
+      HistoryUpcomingPage(scaffoldKey: _scaffoldKey),
+      WalletPage(scaffoldKey: _scaffoldKey),
+      OfferPage(scaffoldKey: _scaffoldKey),
+      ProfilePage(scaffoldKey: _scaffoldKey),
+    ];
+    super.initState();
+  }
+
+  BottomNavigationBarItem _buildBottomNavigationBarItem(
+      String asset, String label, int index) {
+    return BottomNavigationBarItem(
+      icon: SvgPicture.asset(
+        height: context.responsiveHeight(24),
+        'assets/svg/$asset.svg',
+        colorFilter: index == _currentIndex
+            ? ColorFilter.mode(AppThemes.lightPrimary500, BlendMode.srcIn)
+            : context.isLight
+                ? null
+                : ColorFilter.mode(HexColor('#D0D0D0'), BlendMode.srcIn),
+      ),
+      label: label,
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      key: _scaffoldKey,
       body: _pages[_currentIndex],
+      drawer: CustomDrawer(
+        context: context,
+        email: "deneme@gmail.com",
+        name: "Test",
+      ),
       bottomNavigationBar: Theme(
         data: ThemeData(
           splashColor: Colors.transparent,
@@ -42,7 +74,9 @@ class _HomePageState extends State<HomePage> {
           backgroundColor: Colors.transparent,
           type: BottomNavigationBarType.fixed,
           selectedItemColor: AppThemes.lightPrimary500,
-          unselectedItemColor: context.isLight ? AppThemes.contentSecondary : HexColor('#D0D0D0'),
+          unselectedItemColor: context.isLight
+              ? AppThemes.contentSecondary
+              : HexColor('#D0D0D0'),
           showUnselectedLabels: true,
           currentIndex: _currentIndex,
           onTap: (index) {
@@ -59,21 +93,6 @@ class _HomePageState extends State<HomePage> {
           ],
         ),
       ),
-    );
-  }
-
-  BottomNavigationBarItem _buildBottomNavigationBarItem(String asset, String label, int index) {
-    return BottomNavigationBarItem(
-      icon: SvgPicture.asset(
-        height: context.responsiveHeight(24),
-        'assets/svg/$asset.svg',
-        colorFilter: index == _currentIndex
-            ? ColorFilter.mode(AppThemes.lightPrimary500, BlendMode.srcIn)
-            : context.isLight
-                ? null
-                : ColorFilter.mode(HexColor('#D0D0D0'), BlendMode.srcIn),
-      ),
-      label: label,
     );
   }
 }

@@ -14,7 +14,7 @@ class NavigationConstant {
 
   // Home
   static const searchPage = '/searchPage';
-  static const homePage = '/';
+  static const homePage = '/homePage';
   static const driverHomePage = '/driverHomePage';
 
   //Google Maps Ekranları

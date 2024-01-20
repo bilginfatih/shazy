@@ -16,7 +16,8 @@ import '../../widgets/drawer/custom_drawer.dart';
 import '../../widgets/padding/base_padding.dart';
 
 class HistoryUpcomingPage extends StatefulWidget {
-  const HistoryUpcomingPage({super.key});
+  const HistoryUpcomingPage({super.key, this.scaffoldKey});
+  final GlobalKey<ScaffoldState>? scaffoldKey;
 
   @override
   State<HistoryUpcomingPage> createState() => _HistoryUpcomingPageState();
@@ -25,7 +26,6 @@ class HistoryUpcomingPage extends StatefulWidget {
 class _HistoryUpcomingPageState extends State<HistoryUpcomingPage> {
   final _controller = HistoryUpcomingController();
   final TextEditingController _commentTextController = TextEditingController();
-  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
   @override
   void initState() {
@@ -285,10 +285,9 @@ class _HistoryUpcomingPageState extends State<HistoryUpcomingPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      key: _scaffoldKey,
       appBar: CustomAppBar(
         context: context,
-        scaffoldKey: _scaffoldKey,
+        scaffoldKey: widget.scaffoldKey,
       ),
       body: BasePadding(
         context: context,

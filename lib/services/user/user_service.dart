@@ -74,4 +74,6 @@ class UserService {
       rethrow;
     }
   }
+
+  Future<void> logout() async{}
 }
