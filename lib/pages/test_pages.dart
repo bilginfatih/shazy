@@ -37,12 +37,20 @@ class TestPage extends StatefulWidget {
   State<TestPage> createState() => _TestPageState();
 }
 
-class _TestPageState extends State<TestPage> {
+class _TestPageState extends State<TestPage>
+    with SingleTickerProviderStateMixin {
   final _scaffoldKey = GlobalKey<ScaffoldState>();
 
   final _key = GlobalKey();
-
+  Duration _duration = Duration(milliseconds: 500);
+  final Tween<Offset> _tween = Tween(begin: Offset(0, 1), end: Offset(0, 0));
   double _size = 0;
+  late AnimationController _controller;
+  @override
+  void initState() {
+    super.initState();
+    _controller = AnimationController(vsync: this, duration: _duration);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -490,6 +498,82 @@ class _TestPageState extends State<TestPage> {
                   _showDriverDialog(context);
                 },
                 child: Text('Driver dialog2'),
+              ),
+              ElevatedButton(
+                onPressed: () {
+                  if (_controller.isDismissed)
+                    _controller.forward();
+                  else if (_controller.isCompleted) _controller.reverse();
+
+                  /*DraggableScrollableSheet(
+                    builder: (_, controller) => DriveBottomSheet(
+                      context: context,
+                      pickingUpText: 'pickingUpText',
+                      imagePath: 'https://via.placeholder.com/54x59',
+                      customerName: 'customerName',
+                      startText: 'startText',
+                      location1Text: 'location1Text',
+                      location1TextTitle: 'location1TextTitle',
+                      location2Text: 'location2Text',
+                      location2TextTitle: 'location2TextTitle',
+                      onPressed: () {},
+                    ),
+                  );*/
+                  /*showModalBottomSheet(
+                    context: context,
+                    isScrollControlled: true,
+                    shape: const RoundedRectangleBorder(
+                      borderRadius: BorderRadius.only(
+                        topLeft: Radius.circular(24),
+                        topRight: Radius.circular(24),
+                      ),
+                    ),
+                    builder: (_) {
+                      return DraggableScrollableSheet(
+                          builder: (context, controller) {
+                        return DriveBottomSheet(
+                          context: context,
+                          pickingUpText: 'pickingUpText',
+                          imagePath: 'https://via.placeholder.com/54x59',
+                          customerName: 'customerName',
+                          startText: 'startText',
+                          location1Text: 'location1Text',
+                          location1TextTitle: 'location1TextTitle',
+                          location2Text: 'location2Text',
+                          location2TextTitle: 'location2TextTitle',
+                          onPressed: () {},
+                        );
+                      });
+                    },
+                  ); */
+                },
+                child:
+                    Text('Drive bottom sheet bar (Elifin dediği gibi çalışan)'),
+              ),
+              SizedBox(
+                height: context.height,
+                child: SlideTransition(
+                  position: _tween.animate(_controller),
+                  child: DraggableScrollableSheet(
+                    minChildSize: 0.1,
+                    maxChildSize: 0.7,
+                    initialChildSize: 0.1,
+                    builder: (BuildContext context,
+                            ScrollController scrollController) =>
+                        DriveBottomSheet(
+                      context: context,
+                      pickingUpText: 'pickingUpText',
+                      imagePath: 'https://via.placeholder.com/54x59',
+                      customerName: 'customerName',
+                      startText: 'startText',
+                      location1Text: 'location1Text',
+                      location1TextTitle: 'location1TextTitle',
+                      location2Text: 'location2Text',
+                      location2TextTitle: 'location2TextTitle',
+                      onPressed: () {},
+                    ),
+                  ),
+                ),
               ),
             ],
           ),

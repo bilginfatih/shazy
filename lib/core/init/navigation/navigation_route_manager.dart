@@ -10,6 +10,7 @@ import '../../../pages/menu_side/contact_us_page.dart';
 import '../../../pages/menu_side/delete_account_page.dart';
 import '../../../pages/menu_side/driver_choose_page.dart';
 import '../../../pages/menu_side/settings_page.dart';
+import '../../../pages/test_2_page.dart';
 import '../../../pages/test_pages.dart';
 import '../../../pages/contact/cancel_ride_page.dart';
 import '../../../pages/contact/message_page.dart';
@@ -102,25 +103,28 @@ class NavigationRouteManager {
       case NavigationConstant.settings:
         return _navigationToDefault(SettingsPage(), args);
       case NavigationConstant.aboutUs:
-        return _navigationToDefault(AboutUsPage(), args);    
+        return _navigationToDefault(AboutUsPage(), args);
       case NavigationConstant.changePassword:
-        return _navigationToDefault(ChangePasswordPage(), args);  
+        return _navigationToDefault(ChangePasswordPage(), args);
       case NavigationConstant.contactUs:
         return _navigationToDefault(ContactUsPage(), args);
       case NavigationConstant.deleteAccount:
-        return _navigationToDefault(DeleteAccountPage(), args);  
+        return _navigationToDefault(DeleteAccountPage(), args);
       case NavigationConstant.driverChoose:
-        return _navigationToDefault(DriverChoosePage(), args);   
+        return _navigationToDefault(DriverChoosePage(), args);
       case NavigationConstant.changeLanguage:
-        return _navigationToDefault(ChangeLanguagePage(), args);    
+        return _navigationToDefault(ChangeLanguagePage(), args);
       case NavigationConstant.profileEdit:
-        return _navigationToDefault(ProfileEditPage(), args); 
+        return _navigationToDefault(ProfileEditPage(), args);
       case NavigationConstant.testPage:
         return _navigationToDefault(TestPage(), args);
+      case NavigationConstant.testPage2:
+        return _navigationToDefault(Test2Page(), args);
       default:
         return _navigationToDefault(MyApp(), args);
     }
   }
 
-  MaterialPageRoute _navigationToDefault(Widget page, RouteSettings args) => MaterialPageRoute(builder: (context) => page, settings: args);
+  MaterialPageRoute _navigationToDefault(Widget page, RouteSettings args) =>
+      MaterialPageRoute(builder: (context) => page, settings: args);
 }
