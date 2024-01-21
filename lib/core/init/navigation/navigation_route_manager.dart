@@ -26,8 +26,6 @@ import '../../../pages/authentication/send_verification_page.dart';
 import '../../../pages/authentication/set_new_password_page.dart';
 import '../../../pages/history/history_upcoming_page.dart';
 import '../../../pages/home/search_page.dart';
-import '../../../services/drive/edevletWebView.dart';
-import '../../../services/drive/make_an_app.dart';
 import '../../../utils/constants/navigation_constant.dart';
 
 import '../../../main.dart';

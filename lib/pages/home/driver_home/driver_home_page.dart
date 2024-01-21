@@ -16,7 +16,6 @@ import 'package:permission_handler/permission_handler.dart' as ph;
 import 'package:provider/provider.dart';
 import 'package:shazy/pages/home/driver_home/driver_controller/driver_controller.dart';
 import 'package:shazy/widgets/dialogs/drive_dialog.dart';
-import 'package:url_launcher/url_launcher.dart';
 
 import '../../../core/assistants/asistant_methods.dart';
 import '../../../core/base/app_info.dart';
