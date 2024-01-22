@@ -38,25 +38,27 @@ class _DriverHomePageState extends State<DriverHomePage>
   List<LatLng> pLineCoOrdinatesList2 = [];
   late double toLatitude;
   late double toLongitude;
-  late AnimationController _bottomSheetController;
-  final Duration _duration = const Duration(milliseconds: 500);
-  final Tween<Offset> _tween =
-      Tween(begin: const Offset(0, 1), end: Offset(0, 0));
 
   static const CameraPosition _kGooglePlex = CameraPosition(
     target: LatLng(37.42796133580664, -122.085749655962),
     zoom: 14.4746,
   );
 
+  late AnimationController _bottomSheetController;
   final Completer<GoogleMapController> _controller =
       Completer<GoogleMapController>();
+
   final DriverController _driverController = DriverController();
+  final Duration _duration = const Duration(milliseconds: 500);
   late String _durationKm;
   String _mapTheme = '';
   final Set<Marker> _markersSet = {};
   GoogleMapController? _newGoogleMapController;
   final Set<Polyline> _polyLineSet = {};
   late Timer _timer;
+  final Tween<Offset> _tween =
+      Tween(begin: const Offset(0, 1), end: Offset(0, 0));
+
   Position? _userCurrentPosition;
 
   @override
@@ -333,17 +335,18 @@ class _DriverHomePageState extends State<DriverHomePage>
         ),
       );
 
-  CustomIconButton _buildRightTopButton(BuildContext context) => _driverController
-          .driverActive
-      ? _buildCustomIconButton(false, Icons.close, () {
-          _showDriverBottomSheet();
-        })
-      /*? _buildCustomIconButton(
-              false, Icons.close, _driverController.driverPassive)*/
-      : _buildCustomIconButton(false, Icons.notifications_none_outlined, () {
-          NavigationManager.instance
-              .navigationToPage(NavigationConstant.notification);
-        });
+  CustomIconButton _buildRightTopButton(BuildContext context) =>
+      _driverController.driverActive
+          ? _buildCustomIconButton(
+              false,
+              Icons.close,
+              _driverController.driverPassive,
+            )
+          : _buildCustomIconButton(false, Icons.notifications_none_outlined,
+              () {
+              NavigationManager.instance
+                  .navigationToPage(NavigationConstant.notification);
+            });
 
   Widget _buildTopLeftButton(BuildContext context) =>
       _driverController.driverActive
@@ -406,15 +409,17 @@ class _DriverHomePageState extends State<DriverHomePage>
               _buildRightTopButton(context),
               _buildBottomOfBody(context, keyboardSize),
               SizedBox.expand(
+                // drive bottom sheet
                 child: SlideTransition(
                   position: _tween.animate(_bottomSheetController),
                   child: DraggableScrollableSheet(
-                    initialChildSize: 0.52,
+                    initialChildSize: 0.51,
                     minChildSize: 0.1,
-                    maxChildSize: 0.52,
+                    maxChildSize: 0.51,
                     builder: (BuildContext context,
                             ScrollController scrollController) =>
                         SingleChildScrollView(
+                      physics: ClampingScrollPhysics(),
                       controller: scrollController,
                       child: DriveBottomSheet(
                         context: context,
