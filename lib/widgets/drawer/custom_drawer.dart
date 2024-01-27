@@ -3,7 +3,6 @@ import 'package:flutter_svg/svg.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:shazy/services/user/user_service.dart';
 import 'package:shazy/utils/constants/navigation_constant.dart';
-import '../../utils/constants/navigation_constant.dart';
 import '../../utils/extensions/context_extension.dart';
 
 import '../../core/init/navigation/navigation_manager.dart';
@@ -135,7 +134,7 @@ class CustomDrawer extends SizedBox {
                         .navigationToPage(NavigationConstant.driverChoose);
                   }),
                   const Divider(
-                    thickness: 1,
+                    thickness: 0.2,
                   ),
                   _buildTextRow(context, 'assets/svg/complain.svg', 'Complain',
                       () {
@@ -143,14 +142,14 @@ class CustomDrawer extends SizedBox {
                         .navigationToPage(NavigationConstant.complain);
                   }),
                   const Divider(
-                    thickness: 1,
+                    thickness: 0.2,
                   ),
                   _buildTextRow(context, 'assets/svg/car.svg', 'Driver', () {
                     NavigationManager.instance
                         .navigationToPage(NavigationConstant.driverChoose);
                   }),
                   const Divider(
-                    thickness: 1,
+                    thickness: 0.2,
                   ),
                   _buildTextRow(context, 'assets/svg/about-us.svg', 'About Us',
                       () {
@@ -158,7 +157,7 @@ class CustomDrawer extends SizedBox {
                         .navigationToPage(NavigationConstant.aboutUs);
                   }),
                   const Divider(
-                    thickness: 1,
+                    thickness: 0.2,
                   ),
                   _buildTextRow(context, 'assets/svg/settings.svg', 'Settings',
                       () {
@@ -166,7 +165,7 @@ class CustomDrawer extends SizedBox {
                         .navigationToPage(NavigationConstant.settings);
                   }),
                   const Divider(
-                    thickness: 1,
+                    thickness: 0.2,
                   ),
                   _buildTextRow(context, 'assets/svg/logout.svg', 'Logout',
                       UserService.instance.logout),

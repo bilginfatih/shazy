@@ -24,6 +24,7 @@ class AppThemes {
   static ThemeData lightTheme = ThemeData(
     primaryColor: ThemeData.light().scaffoldBackgroundColor,
     colorScheme: const ColorScheme.light().copyWith(
+      surfaceTint: Colors.white,
       primary: AppThemes.lightPrimary500,
       secondary: _appThemes.lightSecondary400,
       tertiary: _appThemes.lightTertiary400,
@@ -41,6 +42,7 @@ class AppThemes {
     primaryColor: ThemeData.dark().scaffoldBackgroundColor,
     colorScheme: const ColorScheme.dark().copyWith(
       background: HexColor('#2A2A2A'),
+      surfaceTint: HexColor('#2A2A2A'),
       primary: _appThemes.darkPrimaryColor,
     ),
     filledButtonTheme: FilledButtonThemeData(

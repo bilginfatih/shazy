@@ -36,9 +36,9 @@ import '../notification/notification_page.dart';
 
 class HomeScreenTransport extends StatefulWidget {
   const HomeScreenTransport({Key? key, this.scaffoldKey}) : super(key: key);
-  
+
   final GlobalKey<ScaffoldState>? scaffoldKey;
-  
+
   @override
   State<HomeScreenTransport> createState() => _HomeScreenTransportState();
 }
@@ -52,7 +52,8 @@ class _HomeScreenTransportState extends State<HomeScreenTransport> {
   final OtpFieldController _pinController = OtpFieldController();
   late String _durationKm;
 
-  final SearchDistanceService _searchDistanceService = SearchDistanceService.instance;
+  final SearchDistanceService _searchDistanceService =
+      SearchDistanceService.instance;
   final DriveService _driveService = DriveService();
 
   List<LatLng> pLineCoOrdinatesList = [];
@@ -81,7 +82,10 @@ class _HomeScreenTransportState extends State<HomeScreenTransport> {
         await AssistantMethods.searchAddressForGeographicCoOrdinates(
             userCurrentPosition!, context);
     print("this is your address = " + humanReadableAddress);
-    print('customer_lat: ' + userCurrentPosition!.latitude.toString() + ' customer_long:' + userCurrentPosition!.longitude.toString());
+    print('customer_lat: ' +
+        userCurrentPosition!.latitude.toString() +
+        ' customer_long:' +
+        userCurrentPosition!.longitude.toString());
   }
 
   static const CameraPosition _kGooglePlex = CameraPosition(
@@ -112,7 +116,7 @@ class _HomeScreenTransportState extends State<HomeScreenTransport> {
       print('Lokasyon izni verilmedi.');
     } else if (status.isPermanentlyDenied) {
       print('Lokasyon izni kalıcı olarak rededildi.');
-      _showPermissionSettingsDialog(); // Ayarlara gitme işlemi için fonksiyonu çağır
+      //_showPermissionSettingsDialog(); // Ayarlara gitme işlemi için fonksiyonu çağır
     }
   }
 
@@ -878,10 +882,12 @@ class _HomeScreenTransportState extends State<HomeScreenTransport> {
   }
 
   Future<void> fitToDriveButtonPressed() async {
-    var destinationPosition = Provider.of<AppInfo>(context, listen: false).userDropOffLocation;
+    var destinationPosition =
+        Provider.of<AppInfo>(context, listen: false).userDropOffLocation;
 
     // Kullanıcının konumunu al
-    Position cPosition = await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
+    Position cPosition = await Geolocator.getCurrentPosition(
+        desiredAccuracy: LocationAccuracy.high);
 
     // DriveModel oluştur ve servisi çağır
     DriveModel model = DriveModel(
@@ -896,9 +902,11 @@ class _HomeScreenTransportState extends State<HomeScreenTransport> {
 
   Future<void> onButtonPressed() async {
     // Kullanıcının konumunu al
-    Position cPosition = await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
+    Position cPosition = await Geolocator.getCurrentPosition(
+        desiredAccuracy: LocationAccuracy.high);
 
-    var destinationPosition = Provider.of<AppInfo>(context, listen: false).userDropOffLocation;
+    var destinationPosition =
+        Provider.of<AppInfo>(context, listen: false).userDropOffLocation;
 
     SearchDistanceModel model = SearchDistanceModel(
       fromLat: cPosition.latitude,

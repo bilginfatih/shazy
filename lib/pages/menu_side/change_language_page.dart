@@ -43,25 +43,22 @@ class _ChangeLanguagePageState extends State<ChangeLanguagePage> {
       ),
       body: BasePadding(
         context: context,
-        child: ListView.builder(
-          itemCount: languages.length,
-          itemBuilder: (context, index) {
-            if (index == 8) {
-              return Column(
-                children: [
-                  SizedBox(
-                    height: context.responsiveHeight(16),
-                  ),
-                  PrimaryButton(
-                    text: 'Save',
-                    context: context,
-                    onPressed: () {},
-                  ),
-                ],
-              );
-            }
-            return _buildLanguageItem(index);
-          },
+        child: Column(
+          children: [
+            Expanded(
+              child: ListView.builder(
+                itemCount: languages.length,
+                itemBuilder: (context, index) {
+                  return _buildLanguageItem(index);
+                },
+              ),
+            ),
+            PrimaryButton(
+              text: 'Save',
+              context: context,
+              onPressed: () {},
+            ),
+          ],
         ),
       ),
     );
@@ -74,7 +71,7 @@ class _ChangeLanguagePageState extends State<ChangeLanguagePage> {
     return Container(
       height: context.responsiveHeight(64),
       width: context.responsiveWidth(362),
-      margin: EdgeInsets.symmetric(vertical: 8),
+      margin: const EdgeInsets.symmetric(vertical: 8),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(8),
         border: Border.all(
@@ -89,7 +86,7 @@ class _ChangeLanguagePageState extends State<ChangeLanguagePage> {
         },
         leading: Text(
           language.flag,
-          style: TextStyle(fontSize: 40),
+          style: const TextStyle(fontSize: 40),
         ),
         title: Text(
           language.name,
@@ -103,7 +100,10 @@ class _ChangeLanguagePageState extends State<ChangeLanguagePage> {
                 Icons.check_circle,
                 color: AppThemes.lightPrimary500,
               )
-            : Icon(Icons.check_circle_outline),
+            : const Icon(
+                Icons.check_circle_outline,
+                color: Colors.black38,
+              ),
       ),
     );
   }
