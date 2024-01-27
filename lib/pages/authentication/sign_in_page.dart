@@ -54,7 +54,7 @@ class SignInPage extends StatelessWidget {
             ),
             _buildSignInButton(context),
             SizedBox(
-              height: context.responsiveHeight(110),
+              height: context.responsiveHeight(20),
             ),
             _buildSignUpButton(context),
           ],

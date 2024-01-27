@@ -1,7 +1,7 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:roundcheckbox/roundcheckbox.dart';
+import 'package:flutter_check_box_rounded/flutter_check_box_rounded.dart';
 import '../../controllers/authentiaction/authentication_controller.dart';
 import '../../models/user/user_model.dart';
 import '../../utils/extensions/context_extension.dart';
@@ -16,9 +16,14 @@ import '../../widgets/textfields/gender_text_from_field.dart';
 import '../../widgets/textfields/name_text_from_field.dart';
 import '../../widgets/textfields/tc_text_form_field.dart';
 
-class SignUpPage extends StatelessWidget {
-  SignUpPage({super.key});
+class SignUpPage extends StatefulWidget {
+  const SignUpPage({super.key});
 
+  @override
+  State<SignUpPage> createState() => _SignUpPageState();
+}
+
+class _SignUpPageState extends State<SignUpPage> {
   final AuthController _controller = AuthController();
   final TextEditingController _emailTextEditingController =
       TextEditingController();
@@ -44,6 +49,7 @@ class SignUpPage extends StatelessWidget {
     return PrimaryButton(
       text: 'signUp'.tr(),
       context: context,
+      isDisable: !_termsCheck,
       onPressed: () {
         UserModel model = UserModel(
           name: _nameTextEditingController.text,
@@ -63,14 +69,25 @@ class SignUpPage extends StatelessWidget {
       children: [
         Container(
           padding: const EdgeInsets.only(bottom: 13),
-          child: RoundCheckBox(
+          child: CheckBoxRounded(
+            size: 16,
+            borderColor: Colors.green[600],
+            checkedWidget: const Icon(Icons.check, size: 14,color: Colors.white,),
+            onTap: (bool? value) {
+              setState(() {
+                _termsCheck = value ?? false;
+              });
+            },
+          ),
+
+          /*   RoundCheckBox(
             borderColor: Colors.green[600],
             checkedWidget: const Icon(Icons.check, size: 14),
             size: 16,
             onTap: (selected) {
               _termsCheck = selected ?? false;
             },
-          ),
+          ), */
         ),
         SizedBox(width: context.responsiveWidth(10)),
         Expanded(
@@ -189,7 +206,7 @@ class SignUpPage extends StatelessWidget {
                 context: context,
               ),
               SizedBox(
-                height: context.responsiveHeight(10),
+                height: context.responsiveHeight(5),
               ),
               SizedBox(
                 height: context.responsiveHeight(60),
@@ -209,7 +226,7 @@ class SignUpPage extends StatelessWidget {
               ),
               _buildSignUpButton(context),
               SizedBox(
-                height: context.responsiveHeight(80),
+                height: context.responsiveHeight(20),
               ),
               CustomTextButton(
                 text1: 'alreadyHaveAnAccount'.tr(),

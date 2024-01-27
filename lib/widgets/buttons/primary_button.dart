@@ -18,7 +18,7 @@ class PrimaryButton extends SizedBox {
           width: context.responsiveWidth(width ?? 362),
           height: context.responsiveHeight(height ?? 54),
           child: FilledButton(
-            onPressed: onPressed,
+            onPressed: isDisable ? () {} : onPressed,
             style: buttonStyle ??
                 FilledButton.styleFrom(
                   backgroundColor: isDisable

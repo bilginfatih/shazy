@@ -75,5 +75,7 @@ class UserService {
     }
   }
 
-  Future<void> logout() async{}
+  void logout() {
+    CacheManager.instance.clearAll('user');
+  }
 }
