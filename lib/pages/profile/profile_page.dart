@@ -13,7 +13,9 @@ import '../../widgets/app_bars/custom_app_bar.dart';
 import '../../widgets/padding/base_padding.dart';
 
 class ProfilePage extends StatefulWidget {
-  const ProfilePage({super.key});
+  const ProfilePage({super.key, this.scaffoldKey});
+
+  final GlobalKey<ScaffoldState>? scaffoldKey;
 
   @override
   State<ProfilePage> createState() => _ProfilePageState();
@@ -21,7 +23,6 @@ class ProfilePage extends StatefulWidget {
 
 class _ProfilePageState extends State<ProfilePage> {
   final ProfileController _controller = ProfileController();
-  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
   @override
   void initState() {
@@ -323,10 +324,9 @@ class _ProfilePageState extends State<ProfilePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      key: _scaffoldKey,
       appBar: CustomAppBar(
         context: context,
-        scaffoldKey: _scaffoldKey,
+        scaffoldKey: widget.scaffoldKey,
         title: Text(
           'profile'.tr(),
           style:

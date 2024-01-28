@@ -8,32 +8,9 @@ import '../../widgets/padding/base_padding.dart';
 import '../../utils/theme/themes.dart';
 
 class OfferPage extends StatelessWidget {
-  const OfferPage({super.key});
+  const OfferPage({super.key, this.scaffoldKey});
 
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: CustomAppBar(context: context),
-      body: BasePadding(
-          context: context,
-          child: ListView(
-            children: [
-              _buildContainer(context),
-              _buildContainer(context),
-              _buildContainer(context),
-              _buildContainer(context),
-              _buildContainer(context),
-              _buildContainer(context),
-              _buildContainer(context),
-              _buildContainer(context),
-              _buildContainer(context),
-              _buildContainer(context),
-              _buildContainer(context),
-              _buildContainer(context),
-            ],
-          )),
-    );
-  }
+  final GlobalKey<ScaffoldState>? scaffoldKey;
 
   Padding _buildContainer(BuildContext context) {
     return Padding(
@@ -73,6 +50,34 @@ class OfferPage extends StatelessWidget {
           ],
         ),
       ),
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: CustomAppBar(
+        context: context,
+        scaffoldKey: scaffoldKey,
+      ),
+      body: BasePadding(
+          context: context,
+          child: ListView(
+            children: [
+              _buildContainer(context),
+              _buildContainer(context),
+              _buildContainer(context),
+              _buildContainer(context),
+              _buildContainer(context),
+              _buildContainer(context),
+              _buildContainer(context),
+              _buildContainer(context),
+              _buildContainer(context),
+              _buildContainer(context),
+              _buildContainer(context),
+              _buildContainer(context),
+            ],
+          )),
     );
   }
 }

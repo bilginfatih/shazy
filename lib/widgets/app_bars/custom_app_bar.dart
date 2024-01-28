@@ -2,6 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 
 import 'package:hexcolor/hexcolor.dart';
+import 'package:shazy/core/init/navigation/navigation_manager.dart';
+import 'package:shazy/utils/constants/navigation_constant.dart';
+import 'package:shazy/widgets/buttons/icon_button.dart';
 import '../../utils/extensions/context_extension.dart';
 
 import '../buttons/shadow_button.dart';
@@ -26,36 +29,37 @@ class CustomAppBar extends AppBar {
           leading: Row(
             children: [
               SizedBox(
-                width: context.responsiveWidth(6),
+                width: context.responsiveWidth(16),
               ),
-              Padding(
-                padding: EdgeInsets.all(context.responsiveWidth(12)),
-                child: ShadowButton(
-                  context: context,
-                  icon: const Icon(
-                    Icons.menu,
-                    color: Colors.black,
-                  ),
-                  onTap: () {
-                    scaffoldKey?.currentState?.openDrawer();
-                  },
-                ),
+              CustomIconButton(
+                context: context,
+                height: context.responsiveHeight(34),
+                width: context.responsiveWidth(34),
+                icon: Icons.menu,
+                color: Colors.black,
+                size: 18,
+                onPressed: () {
+                  scaffoldKey?.currentState?.openDrawer();
+                },
               ),
             ],
           ),
           actions: [
-            Padding(
-              padding: EdgeInsets.all(context.responsiveWidth(12)),
-              child: ShadowButton(
-                context: context,
-                icon: SvgPicture.asset(
-                  'assets/svg/notification.svg',
-                ),
-                onTap: () {},
-              ),
+            CustomIconButton(
+              context: context,
+              height: context.responsiveHeight(34),
+              width: context.responsiveWidth(34),
+              icon: Icons.notifications_none_outlined,
+              color: Colors.black,
+              size: 18,
+              onPressed: () {
+                NavigationManager.instance.navigationToPage(
+                  NavigationConstant.notification,
+                );
+              },
             ),
             SizedBox(
-              width: context.responsiveWidth(6),
+              width: context.responsiveWidth(16),
             ),
           ],
         );

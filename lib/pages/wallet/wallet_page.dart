@@ -10,65 +10,11 @@ import '../../widgets/padding/base_padding.dart';
 import '../../utils/theme/themes.dart';
 
 class WalletPage extends StatelessWidget {
-  WalletPage({super.key});
-  final WalletController _controller = WalletController();
+  WalletPage({super.key, this.scaffoldKey});
 
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: CustomAppBar(context: context),
-      body: BasePadding(
-        context: context,
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Observer(builder: (_) {
-              return Row(
-                children: [
-                  _buildTopContainer(context, '\$500', 'Total Income',
-                      AppThemes.success700, _controller.isSelectedIncome, true),
-                  SizedBox(
-                    width: context.responsiveWidth(30),
-                  ),
-                  _buildTopContainer(context, '\$200', 'Total Expend',
-                      AppThemes.error700, !_controller.isSelectedIncome, false),
-                ],
-              );
-            }),
-            SizedBox(
-              height: context.responsiveHeight(30),
-            ),
-            Text(
-              'Transections',
-              style: context.textStyle.subheadLargeSemibold,
-            ),
-            SizedBox(
-              height: context.responsiveHeight(16),
-            ),
-            Observer(builder: (_) {
-              return Expanded(
-                child: _controller.isSelectedIncome
-                    ? ListView.builder(
-                        itemCount: 10,
-                        itemBuilder: (_, int index) {
-                          return _buildTransectionContainer(context, 'Nathsam',
-                              'Today at 09:20 am', '\$570.00', 'down');
-                        },
-                      )
-                    : ListView.builder(
-                        itemCount: 10,
-                        itemBuilder: (_, int index) {
-                          return _buildTransectionContainer(context, 'Nathsam',
-                              'Today at 09:20 am', '-\$570.00', 'up');
-                        },
-                      ),
-              );
-            }),
-          ],
-        ),
-      ),
-    );
-  }
+  final GlobalKey<ScaffoldState>? scaffoldKey;
+
+  final WalletController _controller = WalletController();
 
   Padding _buildTransectionContainer(
       BuildContext context, text1, text2, text3, String path) {
@@ -151,6 +97,66 @@ class WalletPage extends StatelessWidget {
               style:
                   context.textStyle.subheadSmallMedium.copyWith(color: color),
             ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: CustomAppBar(
+        context: context,
+        scaffoldKey: scaffoldKey,
+      ),
+      body: BasePadding(
+        context: context,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Observer(builder: (_) {
+              return Row(
+                children: [
+                  _buildTopContainer(context, '\$500', 'Total Income',
+                      AppThemes.success700, _controller.isSelectedIncome, true),
+                  SizedBox(
+                    width: context.responsiveWidth(30),
+                  ),
+                  _buildTopContainer(context, '\$200', 'Total Expend',
+                      AppThemes.error700, !_controller.isSelectedIncome, false),
+                ],
+              );
+            }),
+            SizedBox(
+              height: context.responsiveHeight(30),
+            ),
+            Text(
+              'Transections',
+              style: context.textStyle.subheadLargeSemibold,
+            ),
+            SizedBox(
+              height: context.responsiveHeight(16),
+            ),
+            Observer(builder: (_) {
+              return Expanded(
+                child: _controller.isSelectedIncome
+                    ? ListView.builder(
+                        itemCount: 10,
+                        itemBuilder: (_, int index) {
+                          return _buildTransectionContainer(context, 'Nathsam',
+                              'Today at 09:20 am', '\$570.00', 'down');
+                        },
+                      )
+                    : ListView.builder(
+                        itemCount: 10,
+                        itemBuilder: (_, int index) {
+                          return _buildTransectionContainer(context, 'Nathsam',
+                              'Today at 09:20 am', '-\$570.00', 'up');
+                        },
+                      ),
+              );
+            }),
           ],
         ),
       ),

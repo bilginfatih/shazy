@@ -15,6 +15,7 @@ class OTPTextFormField extends OTPTextField {
     required BuildContext context,
     required double width,
     required double fieldWidth,
+    void Function(String)? onChanged,
     void Function(String)? onCompleted,
   }) : super(
           key: key,
@@ -39,7 +40,7 @@ class OTPTextFormField extends OTPTextField {
             backgroundColor: Colors.white,
           ),
           spaceBetween: context.responsiveWidth(spaceBetween ?? 10),
-          onChanged: (pin) {},
+          onChanged: onChanged,
           onCompleted: onCompleted,
         );
 }

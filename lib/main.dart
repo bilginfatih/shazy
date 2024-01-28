@@ -5,6 +5,7 @@ import 'package:flutter/services.dart';
 import 'package:hive_flutter/adapters.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
+import 'package:shazy/core/init/firebase/firebase_notification_manager.dart';
 
 import 'core/base/app_info.dart';
 import 'core/init/language/language_manager.dart';
@@ -33,6 +34,7 @@ void main() async {
 _init() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
+  await FirebaseNotificationManager.instance.init();
   await Hive.initFlutter();
   await EasyLocalization.ensureInitialized();
 }

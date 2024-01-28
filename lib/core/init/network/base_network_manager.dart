@@ -10,4 +10,6 @@ abstract class BaseNetworkManager {
   Future<dynamic> get<T extends BaseModel>(String path, {T? model});
 
   Future<dynamic> post<T extends BaseModel>(String path, {T? model});
+
+  Future<bool> checkNetwork();
 }

@@ -23,7 +23,7 @@ class CacheManager {
     }
   }
 
-  static Future<void> clearAll(String name) async {
+  void clearAll(String name) {
     try {
       Hive.deleteBoxFromDisk(name);
     } catch (e) {

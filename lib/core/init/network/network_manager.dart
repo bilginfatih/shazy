@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:dio/dio.dart';
 import 'package:flutter_session_manager/flutter_session_manager.dart';
@@ -33,7 +34,7 @@ class NetworkManager extends BaseNetworkManager {
           headers: _headers,
           validateStatus: (status) {
             return status is int && status < 500;
-          }, 
+          },
         ),
       );
       print(response);
@@ -108,6 +109,16 @@ class NetworkManager extends BaseNetworkManager {
       }*/
     } catch (e) {
       rethrow;
+    }
+  }
+
+  @override
+  Future<bool> checkNetwork() async {
+    try {
+      final result = await InternetAddress.lookup('google.com');
+      return result.isNotEmpty && result[0].rawAddress.isNotEmpty;
+    } catch (_) {
+      return false;
     }
   }
 }

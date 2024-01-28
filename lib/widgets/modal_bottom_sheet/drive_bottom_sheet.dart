@@ -30,6 +30,7 @@ class DriveBottomSheet extends Container {
           key: key,
           height: context.customeHeight(height ?? 0.51),
           decoration: BoxDecoration(
+            color: Colors.white,
             borderRadius: BorderRadius.only(
               topLeft: Radius.circular(context.responsiveWidth(24)),
               topRight: Radius.circular(context.responsiveWidth(24)),
@@ -85,49 +86,55 @@ class DriveBottomSheet extends Container {
                 location2TextTitle,
                 location2Text,
               ),
-              _buildBottomButtons(context, buttonText, onPressed)
+              _buildBottomButtons(context, buttonText, onPressed),
             ],
           ),
         );
 
-  static Widget _buildCodeColumn(BuildContext context, String? buttonText) => buttonText == null
-      ? SizedBox(
-          height: context.responsiveHeight(18),
-        )
-      : Center(
-          child: Column(
-            children: [
-              SizedBox(
-                height: context.responsiveHeight(8),
+  static Widget _buildCodeColumn(BuildContext context, String? buttonText) =>
+      buttonText == null
+          ? SizedBox(
+              height: context.responsiveHeight(18),
+            )
+          : Center(
+              child: Column(
+                children: [
+                  SizedBox(
+                    height: context.responsiveHeight(8),
+                  ),
+                  Text(
+                    'enterCode'.tr(),
+                    style: const TextStyle(
+                      fontSize: 11,
+                      fontFamily: 'Poppins',
+                      fontWeight: FontWeight.w500,
+                      height: 0.19,
+                    ),
+                  ),
+                  SizedBox(
+                    height: context.responsiveHeight(8),
+                  ),
+                  OTPTextFormField(
+                      context: context,
+                      width: context.responsiveWidth(200),
+                      fieldWidth: 27,
+                      contentPadding: const EdgeInsets.symmetric(
+                          horizontal: 2, vertical: 10),
+                      textStyle: context.textStyle.bodySmallMedium),
+                  SizedBox(
+                    height: context.responsiveHeight(20),
+                  ),
+                ],
               ),
-              Text(
-                'enterCode'.tr(),
-                style: const TextStyle(
-                  fontSize: 11,
-                  fontFamily: 'Poppins',
-                  fontWeight: FontWeight.w500,
-                  height: 0.19,
-                ),
-              ),
-              SizedBox(
-                height: context.responsiveHeight(8),
-              ),
-              OTPTextFormField(
-                  context: context,
-                  width: context.responsiveWidth(200),
-                  fieldWidth: 27,
-                  contentPadding: const EdgeInsets.symmetric(horizontal: 2, vertical: 10),
-                  textStyle: context.textStyle.bodySmallMedium),
-              SizedBox(
-                height: context.responsiveHeight(20),
-              ),
-            ],
-          ),
-        );
+            );
 
-  static Padding _buildCustomerInfo(BuildContext context, String imagePath, String customerName, String startText) {
+  static Padding _buildCustomerInfo(BuildContext context, String imagePath,
+      String customerName, String startText) {
     return Padding(
-      padding: EdgeInsets.only(top: context.responsiveHeight(19), left: context.responsiveWidth(14), bottom: context.responsiveHeight(16)),
+      padding: EdgeInsets.only(
+          top: context.responsiveHeight(19),
+          left: context.responsiveWidth(14),
+          bottom: context.responsiveHeight(16)),
       child: Row(
         children: [
           Container(
@@ -138,7 +145,8 @@ class DriveBottomSheet extends Container {
                 image: NetworkImage(imagePath),
                 fit: BoxFit.fill,
               ),
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(4)),
             ),
           ),
           SizedBox(
@@ -177,10 +185,14 @@ class DriveBottomSheet extends Container {
     );
   }
 
-  static Padding _buildBottomButtons(BuildContext context, String? buttonText, VoidCallback onPressed) {
+  static Padding _buildBottomButtons(
+      BuildContext context, String? buttonText, VoidCallback onPressed) {
     return Padding(
       padding: EdgeInsets.only(
-          top: context.responsiveHeight(26), left: context.responsiveWidth(14), right: context.responsiveWidth(14), bottom: context.responsiveHeight(23)),
+          top: context.responsiveHeight(26),
+          left: context.responsiveWidth(14),
+          right: context.responsiveWidth(14),
+          bottom: context.responsiveHeight(23)),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
@@ -225,7 +237,10 @@ class DriveBottomSheet extends Container {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Padding(
-              padding: EdgeInsets.only(top: context.responsiveHeight(4), left: context.responsiveWidth(10), right: context.responsiveWidth(6)),
+              padding: EdgeInsets.only(
+                  top: context.responsiveHeight(4),
+                  left: context.responsiveWidth(10),
+                  right: context.responsiveWidth(6)),
               child: SvgPicture.asset('assets/svg/$assetName.svg'),
             ),
             Column(

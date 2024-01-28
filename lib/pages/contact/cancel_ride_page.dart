@@ -33,6 +33,8 @@ class _CancelRidePageState extends State<CancelRidePage> {
   Future<dynamic> _submitOnPressed(BuildContext context) => showDialog(
         context: context,
         builder: (BuildContext context) => Dialog(
+          backgroundColor: Colors.white,
+          surfaceTintColor: Colors.transparent,
           insetPadding: EdgeInsets.symmetric(
             vertical: context.responsiveHeight(230),
             horizontal: context.responsiveWidth(16),

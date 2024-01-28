@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_session_manager/flutter_session_manager.dart';
@@ -5,6 +7,8 @@ import 'package:flutter_svg/svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:shazy/widgets/buttons/secondary_button.dart';
+import 'package:shazy/widgets/dialogs/drive_dialog.dart';
+import 'package:shazy/widgets/divider/counter_divider.dart';
 import 'package:shazy/widgets/modal_bottom_sheet/drive_bottom_sheet.dart';
 import '../models/comment/comment_model.dart';
 import '../models/drive/drive_model.dart';
@@ -26,10 +30,27 @@ import '../services/user/user_service.dart';
 import '../widgets/padding/base_padding.dart';
 
 // TODO: End pointleri test etmek için olan sayfa proda çıkmadan kaldırılacak
-class TestPage extends StatelessWidget {
+class TestPage extends StatefulWidget {
   TestPage({super.key});
 
+  @override
+  State<TestPage> createState() => _TestPageState();
+}
+
+class _TestPageState extends State<TestPage>
+    with SingleTickerProviderStateMixin {
   final _scaffoldKey = GlobalKey<ScaffoldState>();
+
+  final _key = GlobalKey();
+  Duration _duration = Duration(milliseconds: 500);
+  final Tween<Offset> _tween = Tween(begin: Offset(0, 1), end: Offset(0, 0));
+  double _size = 0;
+  late AnimationController _controller;
+  @override
+  void initState() {
+    super.initState();
+    _controller = AnimationController(vsync: this, duration: _duration);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -41,6 +62,28 @@ class TestPage extends StatelessWidget {
         child: Center(
           child: ListView(
             children: [
+              ElevatedButton(
+                onPressed: () {
+                  double widgetWidth = _key.currentContext?.size?.width ?? 0;
+                  double halfWidgetWidth = widgetWidth / 2;
+                  double indent = halfWidgetWidth / 30;
+                  int seconds = 0;
+                  Timer timer = Timer.periodic(Duration(seconds: 1), (timer) {
+                    setState(() {
+                      _size = indent * seconds;
+                    });
+                    seconds++;
+                    print('$seconds:$_size');
+                  });
+                  Future.delayed(Duration(seconds: 30), () {
+                    timer.cancel();
+                    setState(() {
+                      _size = halfWidgetWidth;
+                    });
+                  });
+                },
+                child: Text('Genel Test'),
+              ),
               ElevatedButton(
                 onPressed: () async {
                   UserModel model = UserModel(
@@ -59,9 +102,15 @@ class TestPage extends StatelessWidget {
               ),
               ElevatedButton(
                 onPressed: () async {
-                  CacheManager.clearAll('user');
+                  CacheManager.instance.clearAll('user');
                 },
                 child: Text('cache delete'),
+              ),
+              ElevatedButton(
+                onPressed: () {
+                  UserService.instance.logout();
+                },
+                child: Text('logout'),
               ),
               ElevatedButton(
                 onPressed: () async {
@@ -75,20 +124,23 @@ class TestPage extends StatelessWidget {
               ),
               ElevatedButton(
                 onPressed: () async {
-                  var response = await HistoryService.instance.getDriverHistory();
+                  var response =
+                      await HistoryService.instance.getDriverHistory();
                 },
                 child: Text('GetDriverHistory'),
               ),
               ElevatedButton(
                 onPressed: () async {
-                  var response = await HistoryService.instance.getPassengerHistory();
+                  var response =
+                      await HistoryService.instance.getPassengerHistory();
                   print(response);
                 },
                 child: Text('GetPassengerHistory'),
               ),
               ElevatedButton(
                 onPressed: () async {
-                  var data = await CacheManager.instance.getData('user', 'email');
+                  var data =
+                      await CacheManager.instance.getData('user', 'email');
                   print(data);
                 },
                 child: Text('HiveTest'),
@@ -102,7 +154,8 @@ class TestPage extends StatelessWidget {
               ),
               ElevatedButton(
                 onPressed: () async {
-                  await UserService.instance.getAnotherUser('9a9659af-6549-41d0-be1a-f75ba16e2c60');
+                  await UserService.instance
+                      .getAnotherUser('9a9659af-6549-41d0-be1a-f75ba16e2c60');
                 },
                 child: Text('Another User'),
               ),
@@ -151,7 +204,8 @@ class TestPage extends StatelessWidget {
               ElevatedButton(
                 onPressed: () async {
                   var userId = await SessionManager().get('id');
-                  DriveModel model = DriveModel(driverId: userId, driverLat: 40.0, driverLang: 28.0);
+                  DriveModel model = DriveModel(
+                      driverId: userId, driverLat: 40.0, driverLang: 28.0);
                   await DriveService.instance.driverActive(model);
                 },
                 child: Text('Driver Active'),
@@ -176,7 +230,8 @@ class TestPage extends StatelessWidget {
                 onPressed: () async {
                   var userId = await SessionManager().get('id');
                   var now = DateTime.now();
-                  var timeTo = DateTime(now.year, now.month, now.day, 23, 23, 23);
+                  var timeTo =
+                      DateTime(now.year, now.month, now.day, 23, 23, 23);
                   DriveModel model = DriveModel(
                     driverId: userId,
                     timeFrom: now.toString(),
@@ -225,14 +280,22 @@ class TestPage extends StatelessWidget {
                               right: context.responsiveWidth(14),
                             ),
                             child: Container(
-                              decoration: ShapeDecoration(shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)), color: Colors.white),
+                              decoration: ShapeDecoration(
+                                  shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(8)),
+                                  color: Colors.white),
                               child: Padding(
-                                padding: EdgeInsets.symmetric(vertical: context.responsiveHeight(15), horizontal: context.responsiveWidth(15)),
+                                padding: EdgeInsets.symmetric(
+                                    vertical: context.responsiveHeight(15),
+                                    horizontal: context.responsiveWidth(15)),
                                 child: Column(
                                   children: [
-                                    Text('220₺', style: context.textStyle.titleXlargeRegular),
+                                    Text('220₺',
+                                        style: context
+                                            .textStyle.titleXlargeRegular),
                                     Row(
-                                      mainAxisAlignment: MainAxisAlignment.center,
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
                                       children: [
                                         Icon(
                                           Icons.star,
@@ -240,7 +303,8 @@ class TestPage extends StatelessWidget {
                                         ),
                                         Text(
                                           '4.9',
-                                          style: context.textStyle.bodySmallRegular,
+                                          style: context
+                                              .textStyle.bodySmallRegular,
                                         ),
                                       ],
                                     ),
@@ -271,7 +335,8 @@ class TestPage extends StatelessWidget {
                                     ),
                                     Spacer(),
                                     Row(
-                                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
                                       children: [
                                         SecondaryButton(
                                           width: context.responsiveWidth(160),
@@ -409,7 +474,8 @@ class TestPage extends StatelessWidget {
                                 horizontal: context.responsiveWidth(20),
                               ),
                               child: Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
                                 children: [
                                   Text(
                                     'pickingUpText',
@@ -433,9 +499,109 @@ class TestPage extends StatelessWidget {
                 },
                 child: Text('Drive bottom sheet bar short'),
               ),
+              ElevatedButton(
+                onPressed: () {
+                  _showDriverDialog(context);
+                },
+                child: Text('Driver dialog2'),
+              ),
+              ElevatedButton(
+                onPressed: () {
+                  if (_controller.isDismissed)
+                    _controller.forward();
+                  else if (_controller.isCompleted) _controller.reverse();
+
+                  /*DraggableScrollableSheet(
+                    builder: (_, controller) => DriveBottomSheet(
+                      context: context,
+                      pickingUpText: 'pickingUpText',
+                      imagePath: 'https://via.placeholder.com/54x59',
+                      customerName: 'customerName',
+                      startText: 'startText',
+                      location1Text: 'location1Text',
+                      location1TextTitle: 'location1TextTitle',
+                      location2Text: 'location2Text',
+                      location2TextTitle: 'location2TextTitle',
+                      onPressed: () {},
+                    ),
+                  );*/
+                  /*showModalBottomSheet(
+                    context: context,
+                    isScrollControlled: true,
+                    shape: const RoundedRectangleBorder(
+                      borderRadius: BorderRadius.only(
+                        topLeft: Radius.circular(24),
+                        topRight: Radius.circular(24),
+                      ),
+                    ),
+                    builder: (_) {
+                      return DraggableScrollableSheet(
+                          builder: (context, controller) {
+                        return DriveBottomSheet(
+                          context: context,
+                          pickingUpText: 'pickingUpText',
+                          imagePath: 'https://via.placeholder.com/54x59',
+                          customerName: 'customerName',
+                          startText: 'startText',
+                          location1Text: 'location1Text',
+                          location1TextTitle: 'location1TextTitle',
+                          location2Text: 'location2Text',
+                          location2TextTitle: 'location2TextTitle',
+                          onPressed: () {},
+                        );
+                      });
+                    },
+                  ); */
+                },
+                child:
+                    Text('Drive bottom sheet bar (Elifin dediği gibi çalışan)'),
+              ),
+              SizedBox(
+                height: context.height,
+                child: SlideTransition(
+                  position: _tween.animate(_controller),
+                  child: DraggableScrollableSheet(
+                    minChildSize: 0.1,
+                    maxChildSize: 0.7,
+                    initialChildSize: 0.1,
+                    builder: (BuildContext context,
+                            ScrollController scrollController) =>
+                        DriveBottomSheet(
+                      context: context,
+                      pickingUpText: 'pickingUpText',
+                      imagePath: 'https://via.placeholder.com/54x59',
+                      customerName: 'customerName',
+                      startText: 'startText',
+                      location1Text: 'location1Text',
+                      location1TextTitle: 'location1TextTitle',
+                      location2Text: 'location2Text',
+                      location2TextTitle: 'location2TextTitle',
+                      onPressed: () {},
+                    ),
+                  ),
+                ),
+              ),
             ],
           ),
         ),
+      ),
+    );
+  }
+
+  void _showDriverDialog(BuildContext context) {
+    showDialog(
+      barrierDismissible: false,
+      context: context,
+      builder: (BuildContext context) => DriverDialog(
+        context: context,
+        price: '220₺',
+        star: '4.9',
+        location1TextTitle: 'kocaeli',
+        location1Text: 'İzmit',
+        location2TextTitle: 'Bursa',
+        location2Text: 'Demirtaş Paşa',
+        cancelOnPressed: () {},
+        acceptOnPressed: () {},
       ),
     );
   }
@@ -455,7 +621,10 @@ class TestPage extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Padding(
-              padding: EdgeInsets.only(top: context.responsiveHeight(4), left: context.responsiveWidth(10), right: context.responsiveWidth(6)),
+              padding: EdgeInsets.only(
+                  top: context.responsiveHeight(4),
+                  left: context.responsiveWidth(10),
+                  right: context.responsiveWidth(6)),
               child: SvgPicture.asset('assets/svg/$assetName.svg'),
             ),
             Column(

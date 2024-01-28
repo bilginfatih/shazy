@@ -74,4 +74,8 @@ class UserService {
       rethrow;
     }
   }
+
+  void logout() {
+    CacheManager.instance.clearAll('user');
+  }
 }
