@@ -16,7 +16,6 @@ import 'package:permission_handler/permission_handler.dart' as ph;
 import 'package:provider/provider.dart';
 import 'package:shazy/pages/home/driver_home/driver_controller/driver_controller.dart';
 import 'package:shazy/widgets/dialogs/drive_dialog.dart';
-import 'package:url_launcher/url_launcher.dart';
 
 import '../../../core/assistants/asistant_methods.dart';
 import '../../../core/base/app_info.dart';
@@ -75,7 +74,7 @@ class _DriverHomePageState extends State<DriverHomePage> {
         _mapTheme = value;
       },
     );
-    _timer = Timer.periodic(Duration(seconds: 10), (timer) {
+    _timer = Timer.periodic(Duration(seconds: 30), (timer) {
       // Her 5 saniyede bir istek gönder
       sendRequest();
     });
@@ -127,6 +126,8 @@ class _DriverHomePageState extends State<DriverHomePage> {
     }
   }
 
+  String humanReadableAddress = '';
+
   locateUserPosition() async {
     Position cPosition = await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
     _userCurrentPosition = cPosition;
@@ -136,9 +137,10 @@ class _DriverHomePageState extends State<DriverHomePage> {
     CameraPosition cameraPosition = CameraPosition(target: latLngPosition, zoom: 14);
 
     _newGoogleMapController!.animateCamera(CameraUpdate.newCameraPosition(cameraPosition));
-    String humanReadableAddress = '';
+    //String humanReadableAddress = '';
     if (mounted) {
       humanReadableAddress = await AssistantMethods.searchAddressForGeographicCoOrdinates(_userCurrentPosition!, context);
+      print('dsadsa: ' + humanReadableAddress);
     }
   }
 
@@ -275,10 +277,10 @@ class _DriverHomePageState extends State<DriverHomePage> {
         context: context,
         price: '220₺',
         star: '4.9',
-        location1TextTitle: 'kocaeli',
-        location1Text: 'İzmit',
-        location2TextTitle: 'Bursa',
-        location2Text: 'Demirtaş Paşa',
+        location1TextTitle: 'undefined',
+        location1Text: humanReadableAddress.length > 36 ? "${humanReadableAddress.substring(0, 36)}..." : humanReadableAddress,
+        location2TextTitle: 'undefined',
+        location2Text: 'Kadıköy/İstanbul',
         cancelOnPressed: _driverController.driveCancel,
         acceptOnPressed: () {
           _driverController.driverAccept();
@@ -295,11 +297,11 @@ class _DriverHomePageState extends State<DriverHomePage> {
         context: context,
         customerName: "Zübeyir X",
         imagePath: "https://randomuser.me/api/portraits/men/93.jpg",
-        location1Text: "Bursa",
-        location1TextTitle: "Demirtaş Paşa",
-        location2Text: "Yalova",
-        location2TextTitle: "Yalova",
-        pickingUpText: "Test",
+        location1Text: "undefined",
+        location1TextTitle: humanReadableAddress.length > 36 ? "${humanReadableAddress.substring(0, 36)}..." : humanReadableAddress,
+        location2Text: "undefined",
+        location2TextTitle: "undefined",
+        pickingUpText: "undefined",
         startText: "4.9",
         onPressed: () async {},
       ),

@@ -16,7 +16,7 @@ void main() async {
   await _init();
   // Konum izni kontrolü
   final locationPermissionStatus = await Permission.locationWhenInUse.request();
-  if (locationPermissionStatus.isGranted) {
+  if (true) {
     runApp(EasyLocalization(
       supportedLocales: LanguageManager.instance.supportedLocales,
       path: 'assets/translations',

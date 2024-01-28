@@ -234,7 +234,7 @@ class DriveBottomSheet extends Container {
                 Text(
                   text1,
                   style: GoogleFonts.poppins(
-                    fontSize: 15,
+                    fontSize: 18,
                     fontWeight: FontWeight.w500,
                     color: context.isLight ? HexColor('#5A5A5A') : Colors.white,
                   ),
@@ -242,9 +242,9 @@ class DriveBottomSheet extends Container {
                 Text(
                   text2,
                   style: GoogleFonts.poppins(
-                    fontSize: 9,
+                    fontSize: 12,
                     fontWeight: FontWeight.w400,
-                    color: HexColor('#B8B8B8'),
+                    color: HexColor('#5A5A5A'),
                   ),
                 ),
               ],
