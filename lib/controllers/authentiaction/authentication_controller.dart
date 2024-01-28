@@ -44,6 +44,11 @@ class AuthController {
     }
   }
 
+  Future<void> verifyPhone(String phone) async {
+    NavigationManager.instance
+        .navigationToPage(NavigationConstant.phoneVerifiyOtpPage);
+  }
+
   void goToVerifyOTP(UserModel model, bool termsCheck) {
     if (!termsCheck) {
       // TODO: hata mesajı
@@ -76,10 +81,13 @@ class AuthController {
   void goToSignInPage() {
     NavigationManager.instance.navigationToPage(NavigationConstant.signIn);
   }
+
   void goToSignUpPage() {
     NavigationManager.instance.navigationToPage(NavigationConstant.signUp);
   }
+
   void goToForgetPasswordPage() {
-    NavigationManager.instance.navigationToPage(NavigationConstant.forgetPassword);
+    NavigationManager.instance
+        .navigationToPage(NavigationConstant.forgetPassword);
   }
 }

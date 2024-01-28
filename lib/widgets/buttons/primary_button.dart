@@ -9,6 +9,7 @@ class PrimaryButton extends SizedBox {
     double? height,
     TextStyle? style,
     ButtonStyle? buttonStyle,
+    bool isDisable = false,
     required String text,
     required BuildContext context,
     required VoidCallback onPressed,
@@ -17,11 +18,18 @@ class PrimaryButton extends SizedBox {
           width: context.responsiveWidth(width ?? 362),
           height: context.responsiveHeight(height ?? 54),
           child: FilledButton(
-            onPressed: onPressed,
-            style: buttonStyle ?? FilledButton.styleFrom(backgroundColor: AppThemes.lightPrimary500),
+            onPressed: isDisable ? () {} : onPressed,
+            style: buttonStyle ??
+                FilledButton.styleFrom(
+                  backgroundColor: isDisable
+                      ? AppThemes.lightenedColor
+                      : AppThemes.lightPrimary500,
+                ),
             child: Text(
               text,
-              style: style ?? context.textStyle.subheadLargeRegular.copyWith(color: Colors.white),
+              style: style ??
+                  context.textStyle.subheadLargeRegular
+                      .copyWith(color: Colors.white),
             ),
           ),
         );

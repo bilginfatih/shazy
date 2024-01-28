@@ -55,4 +55,5 @@ class NavigationConstant {
   static const profileEdit = '/profileEdit';
 
   static const testPage = '/testPage';
+  static const testPage2 = '/testPage2';
 }

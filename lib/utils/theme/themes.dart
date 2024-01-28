@@ -32,9 +32,11 @@ class AppThemes {
   static ThemeData lightTheme = ThemeData(
     primaryColor: ThemeData.light().scaffoldBackgroundColor,
     colorScheme: const ColorScheme.light().copyWith(
+      surfaceTint: Colors.white,
       primary: AppThemes.lightPrimary500,
       secondary: _appThemes.lightSecondary400,
       tertiary: _appThemes.lightTertiary400,
+      background: Colors.white,
     ),
     filledButtonTheme: FilledButtonThemeData(
         style: ButtonStyle(
@@ -47,6 +49,7 @@ class AppThemes {
     primaryColor: ThemeData.dark().scaffoldBackgroundColor,
     colorScheme: const ColorScheme.dark().copyWith(
       background: HexColor('#2A2A2A'),
+      surfaceTint: HexColor('#2A2A2A'),
       primary: _appThemes.darkPrimaryColor,
     ),
     filledButtonTheme: FilledButtonThemeData(
@@ -55,6 +58,15 @@ class AppThemes {
       borderRadius: BorderRadius.circular(8.0),
     )))),
   );
+
+  static Color lightenColor(Color color, double factor) {
+    final hslColor = HSLColor.fromColor(color);
+    final lightenedColor =
+        hslColor.withLightness((hslColor.lightness + factor).clamp(0.0, 1.0));
+    return lightenedColor.toColor();
+  }
+
+  static Color lightenedColor = lightenColor(lightPrimary50, -0.2);
 }
 
 AppThemes _appThemes = AppThemes();

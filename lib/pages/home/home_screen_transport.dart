@@ -17,6 +17,7 @@ import 'package:provider/provider.dart';
 import '../../core/assistants/asistant_methods.dart';
 import '../../core/base/app_info.dart';
 import '../../core/init/navigation/navigation_manager.dart';
+import '../../core/init/network/network_manager.dart';
 import '../../models/drive/drive_model.dart';
 import '../../models/searchDistance/search_distance_model.dart';
 import '../../services/drive/drive_service.dart';
@@ -36,9 +37,9 @@ import '../notification/notification_page.dart';
 
 class HomeScreenTransport extends StatefulWidget {
   const HomeScreenTransport({Key? key, this.scaffoldKey}) : super(key: key);
-  
+
   final GlobalKey<ScaffoldState>? scaffoldKey;
-  
+
   @override
   State<HomeScreenTransport> createState() => _HomeScreenTransportState();
 }
@@ -52,12 +53,13 @@ class _HomeScreenTransportState extends State<HomeScreenTransport> {
   final OtpFieldController _pinController = OtpFieldController();
   late String _durationKm;
 
-  final SearchDistanceService _searchDistanceService = SearchDistanceService.instance;
+  final SearchDistanceService _searchDistanceService =
+      SearchDistanceService.instance;
   final DriveService _driveService = DriveService();
 
   List<LatLng> pLineCoOrdinatesList = [];
   Set<Polyline> polyLineSet = {};
-
+  late Timer _timer;
   Set<Marker> markersSet = {};
 
   Position? userCurrentPosition;
@@ -81,7 +83,10 @@ class _HomeScreenTransportState extends State<HomeScreenTransport> {
         await AssistantMethods.searchAddressForGeographicCoOrdinates(
             userCurrentPosition!, context);
     print("this is your address = " + humanReadableAddress);
-    print('customer_lat: ' + userCurrentPosition!.latitude.toString() + ' customer_long:' + userCurrentPosition!.longitude.toString());
+    print('customer_lat: ' +
+        userCurrentPosition!.latitude.toString() +
+        ' customer_long:' +
+        userCurrentPosition!.longitude.toString());
   }
 
   static const CameraPosition _kGooglePlex = CameraPosition(
@@ -92,7 +97,7 @@ class _HomeScreenTransportState extends State<HomeScreenTransport> {
   @override
   void initState() {
     super.initState();
-    _getLocationPermission(); // İzin kontrolü eklendi
+    //_getLocationPermission(); // İzin kontrolü eklendi
     // _subscribeToLocationChanges(); // Geolocation Aboneliği eklendi
     DefaultAssetBundle.of(context)
         .loadString('assets/maptheme/night_theme.json')
@@ -103,6 +108,71 @@ class _HomeScreenTransportState extends State<HomeScreenTransport> {
     );
   }
 
+  @override
+  void dispose() {
+    _timer.cancel();
+    super.dispose();
+  }
+
+  Future<void> sendRequest() async {
+    try {
+      String userId = await SessionManager().get('id');
+      String id = "/drive-request/caller/$userId/matched";
+      var requestId = await NetworkManager.instance.get(id);
+
+      var statusId = requestId[0]["id"];
+
+      final String requestId2 = statusId;
+      String apiUrl = "/drive-request/$requestId2";
+
+      var requestResponse = await NetworkManager.instance.get(apiUrl);
+
+      if (requestResponse != null) {
+        String status = requestResponse["status"];
+
+        if (status == 'matched') {
+          //_showDriverDialog();
+          _timer.cancel();
+          Navigator.pop(context);
+
+          showModalBottomSheet(
+            isDismissible: false,
+            context: context,
+            shape: const RoundedRectangleBorder(
+              borderRadius: BorderRadius.vertical(
+                top: Radius.circular(24),
+              ),
+            ),
+            clipBehavior: Clip.antiAliasWithSaveLayer,
+            builder: (BuildContext context) {
+              return Container(
+                height: context.responsiveHeight(479),
+                child: _buildBottomSheet(context),
+              );
+            },
+          );
+
+          //drawPolyLineFromOriginToDestination();
+        }
+      } else {
+        // Handle the case where the response is null or not as expected
+        print("Error Occurred, Failed. No Response.");
+      }
+    } catch (e) {
+      // Handle exceptions or errors here
+      print("Error Occurred, Failed. Exception: $e");
+    }
+  }
+
+  void startSendingRequests() async {
+    _timer = Timer.periodic(Duration(seconds: 40), (timer) async {
+      // Her 5 saniyede bir istek gönder
+      await sendRequest();
+    });
+  }
+
+  int flag = 0;
+
   // İzinleri kontrol eden fonksiyon
   Future<void> _getLocationPermission() async {
     ph.PermissionStatus status = await Permission.locationWhenInUse.request();
@@ -112,7 +182,7 @@ class _HomeScreenTransportState extends State<HomeScreenTransport> {
       print('Lokasyon izni verilmedi.');
     } else if (status.isPermanentlyDenied) {
       print('Lokasyon izni kalıcı olarak rededildi.');
-      _showPermissionSettingsDialog(); // Ayarlara gitme işlemi için fonksiyonu çağır
+      //_showPermissionSettingsDialog(); // Ayarlara gitme işlemi için fonksiyonu çağır
     }
   }
 
@@ -154,6 +224,12 @@ class _HomeScreenTransportState extends State<HomeScreenTransport> {
 
   @override
   Widget build(BuildContext context) {
+    if (Provider.of<AppInfo>(context).userDropOffLocation != null && flag == 0) {
+      drawPolyLineFromOriginToDestination();
+      flag = 1;
+    } else {
+      print('işlem yapılmadı');
+    }
     double keyboardSize = MediaQuery.of(context).viewInsets.bottom;
     return Scaffold(
       body: SingleChildScrollView(
@@ -335,28 +411,21 @@ class _HomeScreenTransportState extends State<HomeScreenTransport> {
                               text: 'Call Driver',
                               height: context.responsiveHeight(48),
                               width: context.responsiveWidth(334),
-                              onPressed: () async {
-                                await drawPolyLineFromOriginToDestination();
-                                // ignore: use_build_context_synchronously
-                                showModalBottomSheet(
-                                  isDismissible: false,
-                                  context: context,
-                                  shape: const RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.vertical(
-                                      top: Radius.circular(24),
-                                    ),
-                                  ),
-                                  clipBehavior: Clip.antiAliasWithSaveLayer,
-                                  builder: (BuildContext context) {
-                                    return Container(
-                                      height: context.responsiveHeight(479),
-                                      child: _buildBottomSheet(context),
-                                    );
-                                  },
-                                );
-                                await onButtonPressed();
-                                //await fitToDriveButtonPressed();
-                              },
+                              buttonStyle: Provider.of<AppInfo>(context).userDropOffLocation != null
+                                  ? FilledButton.styleFrom(backgroundColor: AppThemes.lightPrimary500)
+                                  : FilledButton.styleFrom(backgroundColor: AppThemes.lightPrimary500),
+                              onPressed: Provider.of<AppInfo>(context).userDropOffLocation != null
+                                  ? () async {
+                                      await onButtonPressed();
+                                      showDialog(
+                                        context: context,
+                                        builder: (BuildContext context) => SearchDriverDialog(
+                                          context: context,
+                                        ),
+                                      );
+                                      startSendingRequests();
+                                    }
+                                  : () {},
                             ),
                           ],
                         ),
@@ -789,6 +858,9 @@ class _HomeScreenTransportState extends State<HomeScreenTransport> {
     var destinationLatLng = LatLng(destinationPosition!.locationLatitude!,
         destinationPosition.locationLongitude!);
 
+
+    var directionDetailsInfo = await AssistantMethods.obtainOriginToDestinationDirectionDetails(originLatLng, destinationLatLng);
+    
     showDialog(
       context: context,
       builder: (BuildContext context) => SearchDriverDialog(
@@ -799,7 +871,7 @@ class _HomeScreenTransportState extends State<HomeScreenTransport> {
         await AssistantMethods.obtainOriginToDestinationDirectionDetails(
             originLatLng, destinationLatLng);
 
-    Navigator.pop(context);
+    // Navigator.pop(context);
 
     print("These are points = ");
     print(directionDetailsInfo!.e_points);
@@ -878,10 +950,12 @@ class _HomeScreenTransportState extends State<HomeScreenTransport> {
   }
 
   Future<void> fitToDriveButtonPressed() async {
-    var destinationPosition = Provider.of<AppInfo>(context, listen: false).userDropOffLocation;
+    var destinationPosition =
+        Provider.of<AppInfo>(context, listen: false).userDropOffLocation;
 
     // Kullanıcının konumunu al
-    Position cPosition = await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
+    Position cPosition = await Geolocator.getCurrentPosition(
+        desiredAccuracy: LocationAccuracy.high);
 
     // DriveModel oluştur ve servisi çağır
     DriveModel model = DriveModel(
@@ -896,9 +970,11 @@ class _HomeScreenTransportState extends State<HomeScreenTransport> {
 
   Future<void> onButtonPressed() async {
     // Kullanıcının konumunu al
-    Position cPosition = await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
+    Position cPosition = await Geolocator.getCurrentPosition(
+        desiredAccuracy: LocationAccuracy.high);
 
-    var destinationPosition = Provider.of<AppInfo>(context, listen: false).userDropOffLocation;
+    var destinationPosition =
+        Provider.of<AppInfo>(context, listen: false).userDropOffLocation;
 
     SearchDistanceModel model = SearchDistanceModel(
       fromLat: cPosition.latitude,

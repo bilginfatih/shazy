@@ -18,13 +18,15 @@ class OptionContainer extends GestureDetector {
           key: key,
           onTap: onTap,
           child: Container(
-            height: context.responsiveHeight(context.height < 600 ? 100 :  (height ?? 60)),
+            height: context
+                .responsiveHeight(context.height < 600 ? 100 : (height ?? 60)),
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(4),
               border: border,
-              color: color ?? (!context.isLight
-                  ? (select ? AppThemes.teriary400 : HexColor('#1F212A'))
-                  : null),
+              color: color ??
+                  (!context.isLight
+                      ? (select ? AppThemes.teriary400 : HexColor('#1F212A'))
+                      : null),
             ),
             child: Padding(
               padding: EdgeInsets.symmetric(

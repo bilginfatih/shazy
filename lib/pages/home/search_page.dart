@@ -22,12 +22,9 @@ class _SearchPageState extends State<SearchPage> {
   void findPlaceAutoCompleteSearch(String inputText) async {
     if (inputText.length > 1) //2 or more than 2 input characters
     {
-     String urlAutoCompleteSearch =
-          '/google/autocomplete/$inputText';
-      
+      String urlAutoCompleteSearch = '/google/autocomplete/$inputText';
 
-      var responseAutoCompleteSearch =
-          await NetworkManager.instance.get(urlAutoCompleteSearch);
+      var responseAutoCompleteSearch = await NetworkManager.instance.get(urlAutoCompleteSearch);
 
       if (responseAutoCompleteSearch == "Error Occurred, Failed. No Response.") {
         return;
@@ -59,8 +56,8 @@ class _SearchPageState extends State<SearchPage> {
         },
         separatorBuilder: (context, index) {
           return const Divider(
-            height: 1,
-            color: Colors.grey,
+            height: 2,
+            color: Colors.white,
             thickness: 1,
           );
         },

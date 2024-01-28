@@ -10,9 +10,15 @@ import '../../widgets/buttons/primary_button.dart';
 import '../../widgets/padding/base_padding.dart';
 import '../../widgets/textfields/otp_text_form_field.dart';
 
-class PhoneVerifiyOtpPage extends StatelessWidget {
-  PhoneVerifiyOtpPage({super.key});
+class PhoneVerifiyOtpPage extends StatefulWidget {
+  const PhoneVerifiyOtpPage({super.key});
 
+  @override
+  State<PhoneVerifiyOtpPage> createState() => _PhoneVerifiyOtpPageState();
+}
+
+class _PhoneVerifiyOtpPageState extends State<PhoneVerifiyOtpPage> {
+  String _pin = '';
   final OtpFieldController _pinController = OtpFieldController();
 
   @override
@@ -51,6 +57,10 @@ class PhoneVerifiyOtpPage extends StatelessWidget {
                 controller: _pinController,
                 fieldWidth: 50,
                 width: MediaQuery.of(context).size.width,
+                onChanged: (value) {
+                  _pin = value;
+                  setState(() {});
+                },
               ),
               SizedBox(
                 height: context.responsiveHeight(20),
@@ -58,6 +68,7 @@ class PhoneVerifiyOtpPage extends StatelessWidget {
               PrimaryButton(
                 text: 'Verify',
                 context: context,
+                isDisable: _pin.length != 5,
                 onPressed: () {
                   NavigationManager.instance
                       .navigationToPage(NavigationConstant.homePage);

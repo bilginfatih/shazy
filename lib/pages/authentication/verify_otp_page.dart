@@ -14,12 +14,20 @@ import '../../widgets/padding/base_padding.dart';
 import '../../widgets/textfields/otp_text_form_field.dart';
 
 // ignore: must_be_immutable
-class VerifyOtpPage extends StatelessWidget {
-  VerifyOtpPage({super.key});
+class VerifyOtpPage extends StatefulWidget {
+  const VerifyOtpPage({super.key});
 
+  @override
+  State<VerifyOtpPage> createState() => _VerifyOtpPageState();
+}
+
+class _VerifyOtpPageState extends State<VerifyOtpPage> {
   final AuthController _controller = AuthController();
+
   final OtpFieldController _otpController = OtpFieldController();
+
   String _pin = '';
+
   late UserModel _user;
 
   @override
@@ -55,8 +63,10 @@ class VerifyOtpPage extends StatelessWidget {
                 context: context,
                 fieldWidth: 50,
                 width: MediaQuery.of(context).size.width,
-                onCompleted: (pin) {
-                  _pin = pin;
+                onChanged: (pin) {
+                  setState(() {
+                    _pin = pin;
+                  });
                 },
               ),
               SizedBox(
@@ -74,6 +84,7 @@ class VerifyOtpPage extends StatelessWidget {
               PrimaryButton(
                 text: 'verify'.tr(),
                 context: context,
+                isDisable: _pin.length != 5,
                 onPressed: () {
                   _controller.verifyOTP(_user, _pin);
                 },

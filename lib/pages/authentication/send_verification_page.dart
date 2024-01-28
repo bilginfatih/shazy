@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:shazy/controllers/authentiaction/authentication_controller.dart';
 
 import '../../utils/extensions/context_extension.dart';
 import '../../widgets/app_bars/back_app_bar.dart';
@@ -8,6 +9,7 @@ import '../../widgets/textfields/email_and_phone_text_form_field.dart';
 
 class SendVerificationPage extends StatelessWidget {
   SendVerificationPage({super.key});
+  final AuthController _controller = AuthController();
 
   final TextEditingController _emailAndPhoneController =
       TextEditingController();
@@ -36,12 +38,15 @@ class SendVerificationPage extends StatelessWidget {
                 controller: _emailAndPhoneController,
               ),
               SizedBox(
-                height: context.responsiveHeight(464),
+                height: context.responsiveHeight(20),
               ),
               PrimaryButton(
                 text: 'Send OTP',
                 context: context,
-                onPressed: () {},
+                onPressed: () {
+                  // TODO:
+                  _controller.verifyPhone('phone');
+                },
               ),
             ],
           ),

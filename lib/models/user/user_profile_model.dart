@@ -17,7 +17,7 @@ class UserProfileModel extends BaseModel {
   UserProfileModel._fromJson(o) {
     var userProfile = o['user-profile'][0];
     avaragePoint = double.tryParse(userProfile['avarage_point']);
-    description = userProfile['description'];
+    description = userProfile['description'] ?? '';
     id = userProfile['id'];
     lisanceVerification = userProfile['lisance_verification'] == 1 &&
         userProfile['lisance_verification'] != 'null';
