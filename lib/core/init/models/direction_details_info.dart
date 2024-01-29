@@ -7,6 +7,8 @@ class DirectionDetailsInfo {
   String? e_pointsDrive;
   String? distance_text;
   String? duration_text;
+  String? end_address;
+  String? start_address;
 
   DirectionDetailsInfo({
     this.distance_text,
@@ -15,5 +17,7 @@ class DirectionDetailsInfo {
     this.e_pointsDrive,
     this.distance_value,
     this.duration_text,
+    this.end_address,
+    this.start_address,
   });
 }

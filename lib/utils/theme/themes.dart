@@ -21,14 +21,6 @@ class AppThemes {
   static Color darkBg = HexColor('#1F212A');
   static Color warningYellow700 = HexColor('#FBC02D');
 
-  static Color lightenColor(Color color, double factor) {
-    final hslColor = HSLColor.fromColor(color);
-    final lightenedColor = hslColor.withLightness((hslColor.lightness + factor).clamp(0.0, 1.0));
-    return lightenedColor.toColor();
-  }
-
-  static Color lightenedColor = lightenColor(lightPrimary50, -0.2);
-
   static ThemeData lightTheme = ThemeData(
     primaryColor: ThemeData.light().scaffoldBackgroundColor,
     colorScheme: const ColorScheme.light().copyWith(
@@ -61,8 +53,7 @@ class AppThemes {
 
   static Color lightenColor(Color color, double factor) {
     final hslColor = HSLColor.fromColor(color);
-    final lightenedColor =
-        hslColor.withLightness((hslColor.lightness + factor).clamp(0.0, 1.0));
+    final lightenedColor = hslColor.withLightness((hslColor.lightness + factor).clamp(0.0, 1.0));
     return lightenedColor.toColor();
   }
 

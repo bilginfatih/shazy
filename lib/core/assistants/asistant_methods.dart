@@ -56,6 +56,10 @@ class AssistantMethods {
 
     directionDetailsInfo.duration_text = responseDirectionApi["routes"][0]["legs"][0]["duration"]["text"];
     directionDetailsInfo.duration_value = responseDirectionApi["routes"][0]["legs"][0]["duration"]["value"];
+    
+    directionDetailsInfo.end_address = responseDirectionApi["routes"][0]["legs"][0]["end_address"];
+    directionDetailsInfo.start_address = responseDirectionApi["routes"][0]["legs"][0]["start_address"];
+    
 
     return directionDetailsInfo;
   } catch (e) {

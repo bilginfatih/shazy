@@ -46,15 +46,15 @@ class HomeScreenTransport extends StatefulWidget {
 
 class _HomeScreenTransportState extends State<HomeScreenTransport> {
   String mapTheme = '';
-  final Completer<GoogleMapController> _controller =
-      Completer<GoogleMapController>();
+  final Completer<GoogleMapController> _controller = Completer<GoogleMapController>();
   GoogleMapController? newGoogleMapController;
 
   final OtpFieldController _pinController = OtpFieldController();
   late String _durationKm;
 
-  final SearchDistanceService _searchDistanceService =
-      SearchDistanceService.instance;
+  String? fiveDigitSecurityCode;
+
+  final SearchDistanceService _searchDistanceService = SearchDistanceService.instance;
   final DriveService _driveService = DriveService();
 
   List<LatLng> pLineCoOrdinatesList = [];
@@ -66,27 +66,18 @@ class _HomeScreenTransportState extends State<HomeScreenTransport> {
   var geoLocator = Geolocator();
 
   locateUserPosition() async {
-    Position cPosition = await Geolocator.getCurrentPosition(
-        desiredAccuracy: LocationAccuracy.high);
+    Position cPosition = await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
     userCurrentPosition = cPosition;
 
-    LatLng latLngPosition =
-        LatLng(userCurrentPosition!.latitude, userCurrentPosition!.longitude);
+    LatLng latLngPosition = LatLng(userCurrentPosition!.latitude, userCurrentPosition!.longitude);
 
-    CameraPosition cameraPosition =
-        CameraPosition(target: latLngPosition, zoom: 14);
+    CameraPosition cameraPosition = CameraPosition(target: latLngPosition, zoom: 14);
 
-    newGoogleMapController!
-        .animateCamera(CameraUpdate.newCameraPosition(cameraPosition));
+    newGoogleMapController!.animateCamera(CameraUpdate.newCameraPosition(cameraPosition));
 
-    String humanReadableAddress =
-        await AssistantMethods.searchAddressForGeographicCoOrdinates(
-            userCurrentPosition!, context);
+    String humanReadableAddress = await AssistantMethods.searchAddressForGeographicCoOrdinates(userCurrentPosition!, context);
     print("this is your address = " + humanReadableAddress);
-    print('customer_lat: ' +
-        userCurrentPosition!.latitude.toString() +
-        ' customer_long:' +
-        userCurrentPosition!.longitude.toString());
+    print('customer_lat: ' + userCurrentPosition!.latitude.toString() + ' customer_long:' + userCurrentPosition!.longitude.toString());
   }
 
   static const CameraPosition _kGooglePlex = CameraPosition(
@@ -99,9 +90,7 @@ class _HomeScreenTransportState extends State<HomeScreenTransport> {
     super.initState();
     //_getLocationPermission(); // İzin kontrolü eklendi
     // _subscribeToLocationChanges(); // Geolocation Aboneliği eklendi
-    DefaultAssetBundle.of(context)
-        .loadString('assets/maptheme/night_theme.json')
-        .then(
+    DefaultAssetBundle.of(context).loadString('assets/maptheme/night_theme.json').then(
       (value) {
         mapTheme = value;
       },
@@ -131,10 +120,22 @@ class _HomeScreenTransportState extends State<HomeScreenTransport> {
         String status = requestResponse["status"];
 
         if (status == 'matched') {
+          String securityCodeUrl = "/security-code/callerCode/$userId";
+          var requestSecurityCode = await NetworkManager.instance.get(securityCodeUrl);
+          var statusSecurityCode = requestSecurityCode["security-code"]["caller"];
+
+          List<String> callerParts = statusSecurityCode.split(',');
+          String? secondPart = callerParts.length > 1 ? callerParts[1] : null;
+          fiveDigitSecurityCode = secondPart != null && secondPart.length >= 5 ? secondPart.substring(0, 5) : null;
+
+          print('securiy code: ' + fiveDigitSecurityCode!);
+
           //_showDriverDialog();
           _timer.cancel();
+          // ignore: use_build_context_synchronously
           Navigator.pop(context);
 
+          // ignore: use_build_context_synchronously
           showModalBottomSheet(
             isDismissible: false,
             context: context,
@@ -165,7 +166,7 @@ class _HomeScreenTransportState extends State<HomeScreenTransport> {
   }
 
   void startSendingRequests() async {
-    _timer = Timer.periodic(Duration(seconds: 40), (timer) async {
+    _timer = Timer.periodic(Duration(seconds: 10), (timer) async {
       // Her 5 saniyede bir istek gönder
       await sendRequest();
     });
@@ -193,8 +194,7 @@ class _HomeScreenTransportState extends State<HomeScreenTransport> {
       builder: (BuildContext context) {
         return AlertDialog(
           title: Text('Lokasyon İzinleri'),
-          content: Text(
-              'Uygulamanın konum izni gerektiği için ayarlara gitmek istiyor musunuz?'),
+          content: Text('Uygulamanın konum izni gerektiği için ayarlara gitmek istiyor musunuz?'),
           actions: [
             TextButton(
               onPressed: () {
@@ -287,9 +287,7 @@ class _HomeScreenTransportState extends State<HomeScreenTransport> {
               ),
               Padding(
                 padding: EdgeInsets.only(
-                  top: context.responsiveHeight(480) -
-                      keyboardSize +
-                      (keyboardSize != 0 ? context.responsiveHeight(150) : 0),
+                  top: context.responsiveHeight(480) - keyboardSize + (keyboardSize != 0 ? context.responsiveHeight(150) : 0),
                   right: context.responsiveWidth(15),
                   left: context.responsiveWidth(14),
                 ),
@@ -304,21 +302,17 @@ class _HomeScreenTransportState extends State<HomeScreenTransport> {
                         color: context.isLight ? Colors.white : Colors.black,
                         boxShadow: [
                           BoxShadow(
-                            color: Colors.black
-                                .withOpacity(0.2), // Kabartma rengi ve opaklık
+                            color: Colors.black.withOpacity(0.2), // Kabartma rengi ve opaklık
                             spreadRadius: 2, // Ne kadar genişlemesi gerektiği
                             blurRadius: 4, // Görüntü bulanıklığı
-                            offset: const Offset(
-                                0, 2), // X ve Y eksenindeki ofset değeri
+                            offset: const Offset(0, 2), // X ve Y eksenindeki ofset değeri
                           ),
                         ],
                       ),
                       child: IconButton(
                         icon: Icon(
                           Icons.my_location_outlined,
-                          color: context.isLight
-                              ? HexColor('#61BAAD')
-                              : AppThemes.lightPrimary500,
+                          color: context.isLight ? HexColor('#61BAAD') : AppThemes.lightPrimary500,
                           size: 19,
                         ),
                         padding: const EdgeInsets.all(5),
@@ -331,13 +325,9 @@ class _HomeScreenTransportState extends State<HomeScreenTransport> {
                     Container(
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(4),
-                        color: context.isLight
-                            ? Colors.white
-                            : HexColor('#1F212A'),
+                        color: context.isLight ? Colors.white : HexColor('#1F212A'),
                         border: Border.all(
-                          color: context.isLight
-                              ? Colors.white
-                              : AppThemes.lightPrimary500,
+                          color: context.isLight ? Colors.white : AppThemes.lightPrimary500,
                           width: 1,
                         ),
                         boxShadow: [
@@ -372,21 +362,13 @@ class _HomeScreenTransportState extends State<HomeScreenTransport> {
                                   ),
                                   prefixIcon: CircularSvgIcon(
                                     context: context,
-                                    assetName: context.isLight
-                                        ? 'assets/svg/search.svg'
-                                        : 'assets/svg/search_dark.svg',
+                                    assetName: context.isLight ? 'assets/svg/search.svg' : 'assets/svg/search_dark.svg',
                                     decoration: const BoxDecoration(),
                                   ),
-                                  hintText: Provider.of<AppInfo>(context)
-                                              .userDropOffLocation !=
-                                          null
-                                      ? Provider.of<AppInfo>(context)
-                                          .userDropOffLocation!
-                                          .locationName
+                                  hintText: Provider.of<AppInfo>(context).userDropOffLocation != null
+                                      ? Provider.of<AppInfo>(context).userDropOffLocation!.locationName
                                       : 'Where would you go?',
-                                  hintStyle: context
-                                      .textStyle.subheadLargeMedium
-                                      .copyWith(
+                                  hintStyle: context.textStyle.subheadLargeMedium.copyWith(
                                     color: AppThemes.hintTextNeutral,
                                   ),
                                   border: OutlineInputBorder(
@@ -413,7 +395,7 @@ class _HomeScreenTransportState extends State<HomeScreenTransport> {
                               width: context.responsiveWidth(334),
                               buttonStyle: Provider.of<AppInfo>(context).userDropOffLocation != null
                                   ? FilledButton.styleFrom(backgroundColor: AppThemes.lightPrimary500)
-                                  : FilledButton.styleFrom(backgroundColor: AppThemes.lightPrimary500),
+                                  : FilledButton.styleFrom(backgroundColor: AppThemes.lightenedColor),
                               onPressed: Provider.of<AppInfo>(context).userDropOffLocation != null
                                   ? () async {
                                       await onButtonPressed();
@@ -479,9 +461,7 @@ class _HomeScreenTransportState extends State<HomeScreenTransport> {
                   child: Text(
                     "Trip to Destionation",
                     style: context.textStyle.subheadLargeMedium.copyWith(
-                      color: context.isLight
-                          ? HexColor('#5A5A5A')
-                          : HexColor('#E8E8E8'),
+                      color: context.isLight ? HexColor('#5A5A5A') : HexColor('#E8E8E8'),
                     ),
                   ),
                 ),
@@ -493,10 +473,7 @@ class _HomeScreenTransportState extends State<HomeScreenTransport> {
                   width: context.responsiveWidth(70),
                   child: Text(
                     _durationKm,
-                    style: context.textStyle.subheadLargeMedium.copyWith(
-                        color: context.isLight
-                            ? HexColor('#5A5A5A')
-                            : HexColor('#E8E8E8')),
+                    style: context.textStyle.subheadLargeMedium.copyWith(color: context.isLight ? HexColor('#5A5A5A') : HexColor('#E8E8E8')),
                   ),
                 ),
               )
@@ -519,8 +496,7 @@ class _HomeScreenTransportState extends State<HomeScreenTransport> {
                   width: context.responsiveWidth(54),
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(4.0),
-                    color: Colors
-                        .grey, // Profil resminin rengini belirleyebilirsiniz
+                    color: Colors.grey, // Profil resminin rengini belirleyebilirsiniz
                   ),
                   child: ClipRRect(
                     borderRadius: BorderRadius.circular(4.0),
@@ -551,9 +527,7 @@ class _HomeScreenTransportState extends State<HomeScreenTransport> {
                     style: TextStyle(
                       fontSize: 12,
                       fontWeight: FontWeight.w400,
-                      color: context.isLight
-                          ? HexColor('#A0A0A0')
-                          : HexColor('#E8E8E8'),
+                      color: context.isLight ? HexColor('#A0A0A0') : HexColor('#E8E8E8'),
                     ),
                   ),
                 ],
@@ -577,9 +551,7 @@ class _HomeScreenTransportState extends State<HomeScreenTransport> {
                   child: Text(
                     "Share My Trip",
                     style: context.textStyle.subheadLargeMedium.copyWith(
-                      color: context.isLight
-                          ? HexColor('#5A5A5A')
-                          : HexColor('#E8E8E8'),
+                      color: context.isLight ? HexColor('#5A5A5A') : HexColor('#E8E8E8'),
                     ),
                   ),
                 ),
@@ -598,9 +570,7 @@ class _HomeScreenTransportState extends State<HomeScreenTransport> {
                     style: TextStyle(
                       fontSize: 12,
                       fontWeight: FontWeight.w300,
-                      color: context.isLight
-                          ? HexColor('#5A5A5A')
-                          : HexColor('#E8E8E8'),
+                      color: context.isLight ? HexColor('#5A5A5A') : HexColor('#E8E8E8'),
                     ),
                   ),
                 ),
@@ -642,9 +612,7 @@ class _HomeScreenTransportState extends State<HomeScreenTransport> {
                   child: SvgPicture.asset(
                     "assets/svg/cross.svg",
                     colorFilter: ColorFilter.mode(
-                      context.isLight
-                          ? HexColor('#5A5A5A')
-                          : HexColor('#E8E8E8'),
+                      context.isLight ? HexColor('#5A5A5A') : HexColor('#E8E8E8'),
                       BlendMode.srcIn,
                     ),
                   ),
@@ -662,8 +630,7 @@ class _HomeScreenTransportState extends State<HomeScreenTransport> {
             child: Text(
               "Meeting Time 10:10",
               style: context.textStyle.subheadLargeMedium.copyWith(
-                color:
-                    context.isLight ? HexColor('#5A5A5A') : HexColor('#E8E8E8'),
+                color: context.isLight ? HexColor('#5A5A5A') : HexColor('#E8E8E8'),
               ),
             ),
           ),
@@ -684,8 +651,7 @@ class _HomeScreenTransportState extends State<HomeScreenTransport> {
                   width: context.responsiveWidth(54),
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(4.0),
-                    color: Colors
-                        .grey, // Profil resminin rengini belirleyebilirsiniz
+                    color: Colors.grey, // Profil resminin rengini belirleyebilirsiniz
                   ),
                   child: ClipRRect(
                     borderRadius: BorderRadius.circular(4.0),
@@ -718,9 +684,7 @@ class _HomeScreenTransportState extends State<HomeScreenTransport> {
                         style: TextStyle(
                           fontSize: 12,
                           fontWeight: FontWeight.w400,
-                          color: context.isLight
-                              ? HexColor('#A0A0A0')
-                              : HexColor('#E8E8E8'),
+                          color: context.isLight ? HexColor('#A0A0A0') : HexColor('#E8E8E8'),
                         ),
                       ),
                     ],
@@ -747,9 +711,7 @@ class _HomeScreenTransportState extends State<HomeScreenTransport> {
                 child: Text(
                   "Payment method",
                   style: context.textStyle.subheadLargeMedium.copyWith(
-                    color: context.isLight
-                        ? HexColor('#5A5A5A')
-                        : HexColor('#E8E8E8'),
+                    color: context.isLight ? HexColor('#5A5A5A') : HexColor('#E8E8E8'),
                   ),
                 ),
               ),
@@ -783,44 +745,17 @@ class _HomeScreenTransportState extends State<HomeScreenTransport> {
             height: context.responsiveHeight(5),
           ),
           Text(
-            "Confirm Code",
+            "Verification Code",
             style: TextStyle(
               fontSize: 11,
               fontWeight: FontWeight.w500,
-              color:
-                  context.isLight ? HexColor('#5A5A5A') : HexColor('#E8E8E8'),
+              color: context.isLight ? HexColor('#5A5A5A') : HexColor('#E8E8E8'),
             ),
           ),
           SizedBox(
             height: context.responsiveHeight(5),
           ),
-          OTPTextFormField(
-            context: context,
-            controller: _pinController,
-            fieldWidth: 27,
-            contentPadding:
-                EdgeInsets.only(left: 1, right: 1, top: 1, bottom: 1),
-            width: context.responsiveWidth(200),
-            onCompleted: (p0) {
-              Navigator.pop(context);
-              showModalBottomSheet(
-                isDismissible: false,
-                context: context,
-                shape: const RoundedRectangleBorder(
-                  borderRadius: BorderRadius.vertical(
-                    top: Radius.circular(24),
-                  ),
-                ),
-                clipBehavior: Clip.antiAliasWithSaveLayer,
-                builder: (BuildContext context) {
-                  return Container(
-                    height: context.responsiveHeight(281),
-                    child: _buildBottomSheet2(context),
-                  );
-                },
-              );
-            },
-          ),
+          Text(fiveDigitSecurityCode.toString()),
           SizedBox(
             height: context.responsiveHeight(5),
           ),
@@ -828,8 +763,7 @@ class _HomeScreenTransportState extends State<HomeScreenTransport> {
             children: [
               Padding(
                 padding: const EdgeInsets.only(left: 20.0),
-                child: CircularSvgIcon(
-                    context: context, assetName: "assets/svg/message.svg"),
+                child: CircularSvgIcon(context: context, assetName: "assets/svg/message.svg"),
               ),
               SizedBox(
                 width: context.responsiveWidth(132),
@@ -849,27 +783,12 @@ class _HomeScreenTransportState extends State<HomeScreenTransport> {
   }
 
   Future<void> drawPolyLineFromOriginToDestination() async {
-    var originPosition =
-        Provider.of<AppInfo>(context, listen: false).userPickUpLocation;
-    var destinationPosition =
-        Provider.of<AppInfo>(context, listen: false).userDropOffLocation;
-    var originLatLng = LatLng(
-        originPosition!.locationLatitude!, originPosition.locationLongitude!);
-    var destinationLatLng = LatLng(destinationPosition!.locationLatitude!,
-        destinationPosition.locationLongitude!);
-
+    var originPosition = Provider.of<AppInfo>(context, listen: false).userPickUpLocation;
+    var destinationPosition = Provider.of<AppInfo>(context, listen: false).userDropOffLocation;
+    var originLatLng = LatLng(originPosition!.locationLatitude!, originPosition.locationLongitude!);
+    var destinationLatLng = LatLng(destinationPosition!.locationLatitude!, destinationPosition.locationLongitude!);
 
     var directionDetailsInfo = await AssistantMethods.obtainOriginToDestinationDirectionDetails(originLatLng, destinationLatLng);
-    
-    showDialog(
-      context: context,
-      builder: (BuildContext context) => SearchDriverDialog(
-        context: context,
-      ),
-    );
-    var directionDetailsInfo =
-        await AssistantMethods.obtainOriginToDestinationDirectionDetails(
-            originLatLng, destinationLatLng);
 
     // Navigator.pop(context);
 
@@ -877,15 +796,13 @@ class _HomeScreenTransportState extends State<HomeScreenTransport> {
     print(directionDetailsInfo!.e_points);
 
     PolylinePoints pPoints = PolylinePoints();
-    List<PointLatLng> decodedPolyLinePointsResultList =
-        pPoints.decodePolyline(directionDetailsInfo.e_points!);
+    List<PointLatLng> decodedPolyLinePointsResultList = pPoints.decodePolyline(directionDetailsInfo.e_points!);
 
     pLineCoOrdinatesList.clear();
 
     if (decodedPolyLinePointsResultList.isNotEmpty) {
       decodedPolyLinePointsResultList.forEach((PointLatLng pointLatLng) {
-        pLineCoOrdinatesList
-            .add(LatLng(pointLatLng.latitude, pointLatLng.longitude));
+        pLineCoOrdinatesList.add(LatLng(pointLatLng.latitude, pointLatLng.longitude));
       });
     }
     polyLineSet.clear();
@@ -904,10 +821,8 @@ class _HomeScreenTransportState extends State<HomeScreenTransport> {
       polyLineSet.add(polyline);
     });
     LatLngBounds boundsLatLng;
-    if (originLatLng.latitude > destinationLatLng.latitude &&
-        originLatLng.longitude > destinationLatLng.longitude) {
-      boundsLatLng =
-          LatLngBounds(southwest: destinationLatLng, northeast: originLatLng);
+    if (originLatLng.latitude > destinationLatLng.latitude && originLatLng.longitude > destinationLatLng.longitude) {
+      boundsLatLng = LatLngBounds(southwest: destinationLatLng, northeast: originLatLng);
     } else if (originLatLng.longitude > destinationLatLng.longitude) {
       boundsLatLng = LatLngBounds(
         southwest: LatLng(originLatLng.latitude, destinationLatLng.longitude),
@@ -919,27 +834,21 @@ class _HomeScreenTransportState extends State<HomeScreenTransport> {
         northeast: LatLng(originLatLng.latitude, destinationLatLng.longitude),
       );
     } else {
-      boundsLatLng =
-          LatLngBounds(southwest: originLatLng, northeast: destinationLatLng);
+      boundsLatLng = LatLngBounds(southwest: originLatLng, northeast: destinationLatLng);
     }
 
-    newGoogleMapController!
-        .animateCamera(CameraUpdate.newLatLngBounds(boundsLatLng, 95));
+    newGoogleMapController!.animateCamera(CameraUpdate.newLatLngBounds(boundsLatLng, 95));
 
     Marker originMarker = Marker(
       markerId: const MarkerId("originID"),
-      infoWindow: InfoWindow(
-          title: originPosition.locationName,
-          snippet: directionDetailsInfo.duration_text),
+      infoWindow: InfoWindow(title: originPosition.locationName, snippet: directionDetailsInfo.duration_text),
       position: originLatLng,
       icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueYellow),
     );
 
     Marker destinationMarker = Marker(
       markerId: const MarkerId("destinationID"),
-      infoWindow: InfoWindow(
-          title: destinationPosition.locationName,
-          snippet: directionDetailsInfo.distance_text),
+      infoWindow: InfoWindow(title: destinationPosition.locationName, snippet: directionDetailsInfo.distance_text),
       position: destinationLatLng,
       icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueOrange),
     );
@@ -950,12 +859,10 @@ class _HomeScreenTransportState extends State<HomeScreenTransport> {
   }
 
   Future<void> fitToDriveButtonPressed() async {
-    var destinationPosition =
-        Provider.of<AppInfo>(context, listen: false).userDropOffLocation;
+    var destinationPosition = Provider.of<AppInfo>(context, listen: false).userDropOffLocation;
 
     // Kullanıcının konumunu al
-    Position cPosition = await Geolocator.getCurrentPosition(
-        desiredAccuracy: LocationAccuracy.high);
+    Position cPosition = await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
 
     // DriveModel oluştur ve servisi çağır
     DriveModel model = DriveModel(
@@ -970,11 +877,9 @@ class _HomeScreenTransportState extends State<HomeScreenTransport> {
 
   Future<void> onButtonPressed() async {
     // Kullanıcının konumunu al
-    Position cPosition = await Geolocator.getCurrentPosition(
-        desiredAccuracy: LocationAccuracy.high);
+    Position cPosition = await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
 
-    var destinationPosition =
-        Provider.of<AppInfo>(context, listen: false).userDropOffLocation;
+    var destinationPosition = Provider.of<AppInfo>(context, listen: false).userDropOffLocation;
 
     SearchDistanceModel model = SearchDistanceModel(
       fromLat: cPosition.latitude,

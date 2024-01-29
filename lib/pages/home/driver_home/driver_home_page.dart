@@ -18,6 +18,7 @@ import '../../../utils/constants/navigation_constant.dart';
 import '../../../utils/extensions/context_extension.dart';
 import '../../../widgets/buttons/icon_button.dart';
 
+import '../../../widgets/dialogs/security_code_dialog.dart';
 import '../../../widgets/drawer/custom_drawer.dart';
 import '../../../widgets/modal_bottom_sheet/drive_bottom_sheet.dart';
 
@@ -28,8 +29,7 @@ class DriverHomePage extends StatefulWidget {
   State<DriverHomePage> createState() => _DriverHomePageState();
 }
 
-class _DriverHomePageState extends State<DriverHomePage>
-    with SingleTickerProviderStateMixin {
+class _DriverHomePageState extends State<DriverHomePage> with SingleTickerProviderStateMixin {
   late double driverLatitude;
   late double driverLongitude;
   late double fromLatitude;
@@ -45,19 +45,27 @@ class _DriverHomePageState extends State<DriverHomePage>
   );
 
   late AnimationController _bottomSheetController;
-  final Completer<GoogleMapController> _controller =
-      Completer<GoogleMapController>();
+  final Completer<GoogleMapController> _controller = Completer<GoogleMapController>();
 
   final DriverController _driverController = DriverController();
   final Duration _duration = const Duration(milliseconds: 500);
-  late String _durationKm;
+
+  late String _durationKmDriverToCaller;
+  late String _durationTimeDriverToCaller;
+  late String _startAddressDriverToCaller;
+  late String _endAddressDriverToCaller;
+
+  late String _durationKmCallerToDestination;
+  late String _durationTimeCallerToDestination;
+  late String _startAddressCallerToDestination;
+  late String _endAddressCallerToDestination;
+
   String _mapTheme = '';
   final Set<Marker> _markersSet = {};
   GoogleMapController? _newGoogleMapController;
   final Set<Polyline> _polyLineSet = {};
   late Timer _timer;
-  final Tween<Offset> _tween =
-      Tween(begin: const Offset(0, 1), end: Offset(0, 0));
+  final Tween<Offset> _tween = Tween(begin: const Offset(0, 1), end: Offset(0, 0));
 
   Position? _userCurrentPosition;
 
@@ -71,17 +79,14 @@ class _DriverHomePageState extends State<DriverHomePage>
   @override
   void initState() {
     super.initState();
-    _bottomSheetController =
-        AnimationController(vsync: this, duration: _duration);
+    _bottomSheetController = AnimationController(vsync: this, duration: _duration);
 
-    DefaultAssetBundle.of(context)
-        .loadString('assets/maptheme/night_theme.json')
-        .then(
+    DefaultAssetBundle.of(context).loadString('assets/maptheme/night_theme.json').then(
       (value) {
         _mapTheme = value;
       },
     );
-    _timer = Timer.periodic(Duration(seconds: 30), (timer) {
+    _timer = Timer.periodic(Duration(seconds: 20), (timer) {
       // Her 5 saniyede bir istek gönder
       sendRequest();
     });
@@ -112,7 +117,6 @@ class _DriverHomePageState extends State<DriverHomePage>
         toLongitude = double.parse(requestResponse["to_lang"]);
 
         if (status == 'matched') {
-          _showDriverDialog();
           _timer.cancel();
           drawPolyLineFromOriginToDestination();
         }
@@ -129,54 +133,44 @@ class _DriverHomePageState extends State<DriverHomePage>
   String humanReadableAddress = '';
 
   locateUserPosition() async {
-    Position cPosition = await Geolocator.getCurrentPosition(
-        desiredAccuracy: LocationAccuracy.high);
+    Position cPosition = await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
     _userCurrentPosition = cPosition;
 
-    LatLng latLngPosition =
-        LatLng(_userCurrentPosition!.latitude, _userCurrentPosition!.longitude);
+    LatLng latLngPosition = LatLng(_userCurrentPosition!.latitude, _userCurrentPosition!.longitude);
 
-    CameraPosition cameraPosition =
-        CameraPosition(target: latLngPosition, zoom: 14);
+    CameraPosition cameraPosition = CameraPosition(target: latLngPosition, zoom: 14);
 
+    _newGoogleMapController!.animateCamera(CameraUpdate.newCameraPosition(cameraPosition));
 
-
-    _newGoogleMapController!
-        .animateCamera(CameraUpdate.newCameraPosition(cameraPosition));
-    String humanReadableAddress = '';
     if (mounted) {
-      humanReadableAddress =
-          await AssistantMethods.searchAddressForGeographicCoOrdinates(
-              _userCurrentPosition!, context);
-
+      humanReadableAddress = await AssistantMethods.searchAddressForGeographicCoOrdinates(_userCurrentPosition!, context);
     }
   }
 
   Future<void> drawPolyLineFromOriginToDestination() async {
     //kullanıcı konum alma lazım olursa diye****
-    Position cPosition = await Geolocator.getCurrentPosition(
-        desiredAccuracy: LocationAccuracy.high);
+    Position cPosition = await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
     _userCurrentPosition = cPosition;
 
-    var driverOriginLatLng =
-        LatLng(_userCurrentPosition!.latitude, _userCurrentPosition!.longitude);
+    var driverOriginLatLng = LatLng(_userCurrentPosition!.latitude, _userCurrentPosition!.longitude);
     var originLatLng = LatLng(fromLatitude, fromLongitude);
     var destinationLatLng = LatLng(toLatitude, toLongitude);
 
-    var driverDirectionDetailsInfo =
-        await AssistantMethods.obtainOriginToDestinationDirectionDetails(
-            driverOriginLatLng, originLatLng);
+    var driverDirectionDetailsInfo = await AssistantMethods.obtainOriginToDestinationDirectionDetails(driverOriginLatLng, originLatLng);
+
+    _durationKmDriverToCaller = driverDirectionDetailsInfo!.distance_text.toString();
+    _durationTimeDriverToCaller = driverDirectionDetailsInfo.duration_text.toString();
+    _startAddressDriverToCaller = driverDirectionDetailsInfo.start_address.toString();
+    _endAddressDriverToCaller = driverDirectionDetailsInfo.end_address.toString();
 
     PolylinePoints pPointsDriver = PolylinePoints();
-    List<PointLatLng> driverDecodedPolyLinePointsResultList = pPointsDriver
-        .decodePolyline(driverDirectionDetailsInfo!.e_pointsDrive!);
+    List<PointLatLng> driverDecodedPolyLinePointsResultList = pPointsDriver.decodePolyline(driverDirectionDetailsInfo!.e_pointsDrive!);
 
     //pLineCoOrdinatesList.clear();
 
     if (driverDecodedPolyLinePointsResultList.isNotEmpty) {
       driverDecodedPolyLinePointsResultList.forEach((PointLatLng pointLatLng) {
-        pLineCoOrdinatesList2
-            .add(LatLng(pointLatLng.latitude, pointLatLng.longitude));
+        pLineCoOrdinatesList2.add(LatLng(pointLatLng.latitude, pointLatLng.longitude));
       });
     }
     //pLineCoOrdinatesList.clear();
@@ -194,27 +188,28 @@ class _DriverHomePageState extends State<DriverHomePage>
       _polyLineSet.add(polyline2);
     });
 
-    var directionDetailsInfo =
-        await AssistantMethods.obtainOriginToDestinationDirectionDetails(
-            originLatLng, destinationLatLng);
+    var directionDetailsInfo = await AssistantMethods.obtainOriginToDestinationDirectionDetails(originLatLng, destinationLatLng);
+
+    _durationKmCallerToDestination = directionDetailsInfo!.distance_text.toString();
+    _durationTimeCallerToDestination = directionDetailsInfo.duration_text.toString();
+    _startAddressCallerToDestination = directionDetailsInfo.start_address.toString();
+    _endAddressCallerToDestination = directionDetailsInfo.end_address.toString();
 
     PolylinePoints pPoints = PolylinePoints();
-    List<PointLatLng> decodedPolyLinePointsResultList =
-        pPoints.decodePolyline(directionDetailsInfo!.e_points!);
+    List<PointLatLng> decodedPolyLinePointsResultList = pPoints.decodePolyline(directionDetailsInfo!.e_points!);
 
     //pLineCoOrdinatesList.clear();
 
     if (decodedPolyLinePointsResultList.isNotEmpty) {
       decodedPolyLinePointsResultList.forEach((PointLatLng pointLatLng) {
-        pLineCoOrdinatesList
-            .add(LatLng(pointLatLng.latitude, pointLatLng.longitude));
+        pLineCoOrdinatesList.add(LatLng(pointLatLng.latitude, pointLatLng.longitude));
       });
     }
     //pLineCoOrdinatesList.clear();
 
     //_polyLineSet.clear();
 
-    _durationKm = directionDetailsInfo.distance_text.toString();
+    //_durationKm = directionDetailsInfo.distance_text.toString();
     setState(() {
       Polyline polyline = Polyline(
         color: Colors.blue,
@@ -229,10 +224,8 @@ class _DriverHomePageState extends State<DriverHomePage>
       _polyLineSet.add(polyline);
     });
     LatLngBounds boundsLatLng;
-    if (originLatLng.latitude > destinationLatLng.latitude &&
-        originLatLng.longitude > destinationLatLng.longitude) {
-      boundsLatLng =
-          LatLngBounds(southwest: destinationLatLng, northeast: originLatLng);
+    if (originLatLng.latitude > destinationLatLng.latitude && originLatLng.longitude > destinationLatLng.longitude) {
+      boundsLatLng = LatLngBounds(southwest: destinationLatLng, northeast: originLatLng);
     } else if (originLatLng.longitude > destinationLatLng.longitude) {
       boundsLatLng = LatLngBounds(
         southwest: LatLng(originLatLng.latitude, destinationLatLng.longitude),
@@ -244,27 +237,21 @@ class _DriverHomePageState extends State<DriverHomePage>
         northeast: LatLng(originLatLng.latitude, destinationLatLng.longitude),
       );
     } else {
-      boundsLatLng =
-          LatLngBounds(southwest: originLatLng, northeast: destinationLatLng);
+      boundsLatLng = LatLngBounds(southwest: originLatLng, northeast: destinationLatLng);
     }
 
-    _newGoogleMapController!
-        .animateCamera(CameraUpdate.newLatLngBounds(boundsLatLng, 95));
+    _newGoogleMapController!.animateCamera(CameraUpdate.newLatLngBounds(boundsLatLng, 95));
 
     Marker originMarker = Marker(
       markerId: const MarkerId("originID"),
-      infoWindow: InfoWindow(
-          title: 'originPosition.locationName',
-          snippet: directionDetailsInfo.duration_text),
+      infoWindow: InfoWindow(title: 'originPosition.locationName', snippet: directionDetailsInfo.duration_text),
       position: originLatLng,
       icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueYellow),
     );
 
     Marker destinationMarker = Marker(
       markerId: const MarkerId("destinationID"),
-      infoWindow: InfoWindow(
-          title: 'destinationPosition.locationName',
-          snippet: directionDetailsInfo.distance_text),
+      infoWindow: InfoWindow(title: 'destinationPosition.locationName', snippet: directionDetailsInfo.distance_text),
       position: destinationLatLng,
       icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueOrange),
     );
@@ -272,6 +259,26 @@ class _DriverHomePageState extends State<DriverHomePage>
       _markersSet.add(originMarker);
       _markersSet.add(destinationMarker);
     });
+
+    // ignore: use_build_context_synchronously
+    showDialog(
+      barrierDismissible: false,
+      context: context,
+      builder: (BuildContext context) => DriverDialog(
+        context: context,
+        price: '220₺',
+        star: '4.9',
+        location1TextTitle: "$_durationTimeDriverToCaller ($_durationKmDriverToCaller) away",
+        location1Text: _endAddressDriverToCaller.length > 36 ? "${_endAddressDriverToCaller.substring(0, 36)}..." : _endAddressDriverToCaller,
+        location2TextTitle: "$_durationTimeCallerToDestination ($_durationKmCallerToDestination) trip",
+        location2Text: _endAddressCallerToDestination.length > 36 ? "${_endAddressCallerToDestination.substring(0, 36)}..." : _endAddressCallerToDestination,
+        cancelOnPressed: _driverController.driveCancel,
+        acceptOnPressed: () {
+          _driverController.driverAccept();
+          _showDriverBottomSheet();
+        },
+      ),
+    );
   }
 
   GoogleMap _buildGoogleMap(BuildContext context) {
@@ -295,43 +302,10 @@ class _DriverHomePageState extends State<DriverHomePage>
     );
   }
 
-  void _showDriverDialog() {
-    showDialog(
-      barrierDismissible: false,
-      context: context,
-      builder: (BuildContext context) => DriverDialog(
-        context: context,
-        price: '220₺',
-        star: '4.9',
-        location1TextTitle: 'undefined',
-        location1Text: humanReadableAddress.length > 36 ? "${humanReadableAddress.substring(0, 36)}..." : humanReadableAddress,
-        location2TextTitle: 'undefined',
-        location2Text: 'Kadıköy/İstanbul',
-        cancelOnPressed: _driverController.driveCancel,
-        acceptOnPressed: () {
-          _driverController.driverAccept();
-          _showDriverBottomSheet();
-        },
-      ),
-    );
-  }
-
   void _showDriverBottomSheet() {
-
     showModalBottomSheet(
       context: context,
-      builder: (BuildContext context) => DriveBottomSheet(
-        context: context,
-        customerName: "Zübeyir X",
-        imagePath: "https://randomuser.me/api/portraits/men/93.jpg",
-        location1Text: "undefined",
-        location1TextTitle: humanReadableAddress.length > 36 ? "${humanReadableAddress.substring(0, 36)}..." : humanReadableAddress,
-        location2Text: "undefined",
-        location2TextTitle: "undefined",
-        pickingUpText: "undefined",
-        startText: "4.9",
-        onPressed: () async {},
-      ),
+      builder: (BuildContext context) => SizedBox(),
     );
 
     if (_bottomSheetController.isDismissed) {
@@ -339,6 +313,42 @@ class _DriverHomePageState extends State<DriverHomePage>
     } else if (_bottomSheetController.isCompleted) {
       _bottomSheetController.reverse();
     }
+  }
+
+  Widget _buildDriverBottomSheetContent(BuildContext context) {
+    return SizedBox.expand(
+      // drive bottom sheet
+      child: SlideTransition(
+        position: _tween.animate(_bottomSheetController),
+        child: DraggableScrollableSheet(
+          initialChildSize: 0.51,
+          minChildSize: 0.1,
+          maxChildSize: 0.51,
+          builder: (BuildContext context, ScrollController scrollController) => SingleChildScrollView(
+            physics: ClampingScrollPhysics(),
+            controller: scrollController,
+            child: DriveBottomSheet(
+              context: context,
+              pickingUpText: 'pickingUpText'.tr(),
+              imagePath: 'https://via.placeholder.com/54x59',
+              customerName: 'customerName',
+              startText: 'startText',
+              location1Text: humanReadableAddress.length > 36 ? "${humanReadableAddress.substring(0, 36)}..." : humanReadableAddress,
+              location1TextTitle: 'Current Location',
+              location2Text: "aa",
+              location2TextTitle: " trip",
+              onPressed: () {},
+            ),
+          ),
+        ),
+      ),
+    );
+
+    /*if (_bottomSheetController.isDismissed) {
+      _bottomSheetController.forward();
+    } else if (_bottomSheetController.isCompleted) {
+      _bottomSheetController.reverse();
+    }*/
   }
 
   ElevatedButton _buildNavigationButton() => ElevatedButton.icon(
@@ -357,29 +367,23 @@ class _DriverHomePageState extends State<DriverHomePage>
         ),
       );
 
-  CustomIconButton _buildRightTopButton(BuildContext context) =>
-      _driverController.driverActive
-          ? _buildCustomIconButton(
-              false,
-              Icons.close,
-              _driverController.driverPassive,
-            )
-          : _buildCustomIconButton(false, Icons.notifications_none_outlined,
-              () {
-              NavigationManager.instance
-                  .navigationToPage(NavigationConstant.notification);
-            });
+  CustomIconButton _buildRightTopButton(BuildContext context) => _driverController.driverActive
+      ? _buildCustomIconButton(
+          false,
+          Icons.close,
+          _driverController.driverPassive,
+        )
+      : _buildCustomIconButton(false, Icons.notifications_none_outlined, () {
+          NavigationManager.instance.navigationToPage(NavigationConstant.notification);
+        });
 
-  Widget _buildTopLeftButton(BuildContext context) =>
-      _driverController.driverActive
-          ? _buildCustomIconButton(true, Icons.menu, () {
-              // TODO: test amaçlı yapılmış olup kaldırılacaktır!
-            })
-          : SizedBox();
+  Widget _buildTopLeftButton(BuildContext context) => _driverController.driverActive
+      ? _buildCustomIconButton(true, Icons.menu, () {
+          // TODO: test amaçlı yapılmış olup kaldırılacaktır!
+        })
+      : SizedBox();
 
-  CustomIconButton _buildCustomIconButton(
-          bool isLeft, IconData icon, VoidCallback onPressed) =>
-      CustomIconButton(
+  CustomIconButton _buildCustomIconButton(bool isLeft, IconData icon, VoidCallback onPressed) => CustomIconButton(
         context: context,
         top: context.responsiveHeight(60),
         left: isLeft ? context.responsiveWidth(15) : null,
@@ -396,9 +400,7 @@ class _DriverHomePageState extends State<DriverHomePage>
     return Padding(
       // sayfanın alt kısmı
       padding: EdgeInsets.only(
-        top: context.responsiveHeight(480) -
-            keyboardSize +
-            (keyboardSize != 0 ? context.responsiveHeight(150) : 0),
+        top: context.responsiveHeight(480) - keyboardSize + (keyboardSize != 0 ? context.responsiveHeight(150) : 0),
         right: context.responsiveWidth(15),
         left: context.responsiveWidth(14),
       ),
@@ -438,9 +440,7 @@ class _DriverHomePageState extends State<DriverHomePage>
                     initialChildSize: 0.51,
                     minChildSize: 0.1,
                     maxChildSize: 0.51,
-                    builder: (BuildContext context,
-                            ScrollController scrollController) =>
-                        SingleChildScrollView(
+                    builder: (BuildContext context, ScrollController scrollController) => SingleChildScrollView(
                       physics: ClampingScrollPhysics(),
                       controller: scrollController,
                       child: DriveBottomSheet(
@@ -449,11 +449,24 @@ class _DriverHomePageState extends State<DriverHomePage>
                         imagePath: 'https://via.placeholder.com/54x59',
                         customerName: 'customerName',
                         startText: 'startText',
-                        location1Text: 'location1Text',
-                        location1TextTitle: 'location1TextTitle',
+                        location1Text: humanReadableAddress.length > 36 ? "${humanReadableAddress.substring(0, 36)}..." : humanReadableAddress,
+                        location1TextTitle: 'Current Location',
                         location2Text: 'location2Text',
                         location2TextTitle: 'location2TextTitle',
-                        onPressed: () {},
+                        onPressed: () {
+                          showDialog(
+                            barrierDismissible: false,
+                            context: context,
+                            builder: (BuildContext context) {
+                              return SecurityCodeDialog(
+                                context: context,
+                                onDialogClosed: () {
+                                  _bottomSheetController.reverse();
+                                },
+                              );
+                            },
+                          );
+                        },
                       ),
                     ),
                   ),
