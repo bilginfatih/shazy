@@ -9,6 +9,12 @@ import '../../../pages/menu_side/complain.dart';
 import '../../../pages/menu_side/contact_us_page.dart';
 import '../../../pages/menu_side/delete_account_page.dart';
 import '../../../pages/menu_side/driver_choose_page.dart';
+import '../../../pages/menu_side/driver_make/driver_accept.dart';
+import '../../../pages/menu_side/driver_make/driver_complete.dart';
+import '../../../pages/menu_side/driver_make/driver_complete_second.dart';
+import '../../../pages/menu_side/driver_make/driver_licance.dart';
+import '../../../pages/menu_side/driver_make/driver_unfortunately.dart';
+import '../../../pages/menu_side/driver_make/driver_unfortunately_second.dart';
 import '../../../pages/menu_side/settings_page.dart';
 import '../../../pages/test_2_page.dart';
 import '../../../pages/test_pages.dart';
@@ -117,6 +123,18 @@ class NavigationRouteManager {
         return _navigationToDefault(ChangeLanguagePage(), args);
       case NavigationConstant.profileEdit:
         return _navigationToDefault(ProfileEditPage(), args);
+      case NavigationConstant.driverAccept:
+        return _navigationToDefault(DriverAccept(), args);  
+      case NavigationConstant.driverLicance:
+        return _navigationToDefault(DriverLicance(), args);  
+      case NavigationConstant.driverComplete:
+        return _navigationToDefault(DriverComplete(), args);  
+      case NavigationConstant.driverUnfortunately:
+        return _navigationToDefault(DriverUnfortunately(), args);   
+      case NavigationConstant.driverUnfortunatelySecond:
+        return _navigationToDefault(DriverUnfortunatelySecond(), args); 
+      case NavigationConstant.driverCompleteSecond:
+        return _navigationToDefault(DriverCompleteSecond(), args);    
       case NavigationConstant.testPage:
         return _navigationToDefault(TestPage(), args);
       case NavigationConstant.testPage2:

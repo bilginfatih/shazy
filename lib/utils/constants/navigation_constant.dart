@@ -1,6 +1,6 @@
 // The paths of the pages are set here
 class NavigationConstant {
-  static const splash = '/';
+  static const splash = '/splash';
   static const signIn = '/signIn';
   static const signUp = '/signUp';
   static const setPassword = '/setPassword';
@@ -50,7 +50,15 @@ class NavigationConstant {
   static const deleteAccount = '/deleteAccount';
   static const driverChoose = '/driverChoose';
   static const changeLanguage = '/changeLanguage';
-  
+
+  //Driver make app
+  static const driverAccept = '/driverAccept';
+  static const driverLicance = '/driverLicance';
+  static const driverComplete = '/driverComplete';
+  static const driverUnfortunately = '/driverUnfortunately';
+  static const driverUnfortunatelySecond = '/driverUnfortunatelySecond';
+  static const driverCompleteSecond = '/';
+
   // Profile
   static const profileEdit = '/profileEdit';
 

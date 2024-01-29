@@ -18,6 +18,9 @@ import '../../../utils/constants/navigation_constant.dart';
 import '../../../utils/extensions/context_extension.dart';
 import '../../../widgets/buttons/icon_button.dart';
 
+import '../../../widgets/buttons/primary_button.dart';
+import '../../../widgets/containers/payment_method_container.dart';
+import '../../../widgets/dialogs/congratulation_dialog.dart';
 import '../../../widgets/dialogs/security_code_dialog.dart';
 import '../../../widgets/drawer/custom_drawer.dart';
 import '../../../widgets/modal_bottom_sheet/drive_bottom_sheet.dart';
@@ -86,7 +89,7 @@ class _DriverHomePageState extends State<DriverHomePage> with SingleTickerProvid
         _mapTheme = value;
       },
     );
-    _timer = Timer.periodic(Duration(seconds: 20), (timer) {
+    _timer = Timer.periodic(Duration(seconds: 5), (timer) {
       // Her 5 saniyede bir istek gönder
       sendRequest();
     });
@@ -318,27 +321,24 @@ class _DriverHomePageState extends State<DriverHomePage> with SingleTickerProvid
   Widget _buildDriverBottomSheetContent(BuildContext context) {
     return SizedBox.expand(
       // drive bottom sheet
-      child: SlideTransition(
-        position: _tween.animate(_bottomSheetController),
-        child: DraggableScrollableSheet(
-          initialChildSize: 0.51,
-          minChildSize: 0.1,
-          maxChildSize: 0.51,
-          builder: (BuildContext context, ScrollController scrollController) => SingleChildScrollView(
-            physics: ClampingScrollPhysics(),
-            controller: scrollController,
-            child: DriveBottomSheet(
-              context: context,
-              pickingUpText: 'pickingUpText'.tr(),
-              imagePath: 'https://via.placeholder.com/54x59',
-              customerName: 'customerName',
-              startText: 'startText',
-              location1Text: humanReadableAddress.length > 36 ? "${humanReadableAddress.substring(0, 36)}..." : humanReadableAddress,
-              location1TextTitle: 'Current Location',
-              location2Text: "aa",
-              location2TextTitle: " trip",
-              onPressed: () {},
-            ),
+      child: DraggableScrollableSheet(
+        initialChildSize: 0.51,
+        minChildSize: 0.1,
+        maxChildSize: 0.51,
+        builder: (BuildContext context, ScrollController scrollController) => SingleChildScrollView(
+          physics: ClampingScrollPhysics(),
+          controller: scrollController,
+          child: DriveBottomSheet(
+            context: context,
+            pickingUpText: 'pickingUpText'.tr(),
+            imagePath: 'https://via.placeholder.com/54x59',
+            customerName: 'customerName',
+            startText: 'startText',
+            location1Text: humanReadableAddress.length > 36 ? "${humanReadableAddress.substring(0, 36)}..." : humanReadableAddress,
+            location1TextTitle: 'Current Location',
+            location2Text: "aa",
+            location2TextTitle: " trip",
+            onPressed: () {},
           ),
         ),
       ),
@@ -463,6 +463,28 @@ class _DriverHomePageState extends State<DriverHomePage> with SingleTickerProvid
                                 onDialogClosed: () {
                                   _bottomSheetController.reverse();
                                 },
+                                showDialog: () {
+                                  showModalBottomSheet(
+                                    context: context,
+                                    builder: (BuildContext context) => DriveBottomSheet(
+                                      context: context,
+                                      customerName: "Zübeyir X",
+                                      imagePath: "https://randomuser.me/api/portraits/men/93.jpg",
+                                      location1Text: humanReadableAddress.length > 36 ? "${humanReadableAddress.substring(0, 36)}..." : humanReadableAddress,
+                                      location1TextTitle: 'Current Location',
+                                      location2Text: _endAddressCallerToDestination.length > 36
+                                          ? "${_endAddressCallerToDestination.substring(0, 36)}..."
+                                          : _endAddressCallerToDestination,
+                                      location2TextTitle: "$_durationTimeCallerToDestination ($_durationKmCallerToDestination) trip",
+                                      pickingUpText: "Going to Destination",
+                                      startText: "4.9",
+                                      onPressed: () {
+                                        print('dsa');
+                                      },
+                                    ),
+                                  );
+                                },
+                                
                               );
                             },
                           );

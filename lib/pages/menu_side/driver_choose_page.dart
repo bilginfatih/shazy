@@ -18,7 +18,8 @@ class DriverChoosePage extends StatefulWidget {
 }
 
 class _DriverChoosePageState extends State<DriverChoosePage> {
-  final DriveService _driveService = DriveService(); // DriveService örneği
+  final DriveService _driveService = DriveService();
+  String _choosePick = 'Driver_logo_gray1x';
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -29,7 +30,7 @@ class _DriverChoosePageState extends State<DriverChoosePage> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Image.asset(
-              "assets/png/driver.png",
+              "assets/png/$_choosePick.png",
               width: context.responsiveWidth(280),
               height: context.responsiveHeight(280),
             ),
@@ -52,7 +53,11 @@ class _DriverChoosePageState extends State<DriverChoosePage> {
                   width: context.responsiveWidth(140),
                   style: TextStyle(color: HexColor("#414141")),
                   borderColor: HexColor("#414141"),
-                  onPressed: () {},
+                  onPressed: () {
+                    setState(() {
+                      _choosePick = 'Driver_logo_gray1x';
+                    });
+                  },
                 ),
                 SizedBox(
                   width: context.responsiveWidth(13),
@@ -63,6 +68,9 @@ class _DriverChoosePageState extends State<DriverChoosePage> {
                   height: context.responsiveHeight(54),
                   width: context.responsiveWidth(140),
                   onPressed: () {
+                    setState(() {
+                      _choosePick = 'Driver_logo_purple1x';
+                    });
                     fitToDriveButtonPressed();
                     NavigationManager.instance.navigationToPage(NavigationConstant.homePage, args: true);
                   },
