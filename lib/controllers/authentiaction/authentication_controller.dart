@@ -49,6 +49,12 @@ class AuthController {
         .navigationToPage(NavigationConstant.phoneVerifiyOtpPage);
   }
 
+  Future<void> forgotPassword() async {
+    // TODO: 
+    NavigationManager.instance
+                      .navigationToPageClear(NavigationConstant.signIn);
+  }
+
   void goToVerifyOTP(UserModel model, bool termsCheck) {
     if (!termsCheck) {
       // TODO: hata mesajı

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:otp_text_field/otp_field.dart';
 
+import '../../controllers/authentiaction/authentication_controller.dart';
 import '../../core/init/navigation/navigation_manager.dart';
 import '../../utils/constants/navigation_constant.dart';
 import '../../utils/extensions/context_extension.dart';
@@ -18,6 +19,7 @@ class PhoneVerifiyOtpPage extends StatefulWidget {
 }
 
 class _PhoneVerifiyOtpPageState extends State<PhoneVerifiyOtpPage> {
+  final AuthController _controller = AuthController();
   String _pin = '';
   final OtpFieldController _pinController = OtpFieldController();
 
@@ -69,10 +71,7 @@ class _PhoneVerifiyOtpPageState extends State<PhoneVerifiyOtpPage> {
                 text: 'Verify',
                 context: context,
                 isDisable: _pin.length != 5,
-                onPressed: () {
-                  NavigationManager.instance
-                      .navigationToPage(NavigationConstant.homePage);
-                },
+                onPressed: _controller.forgotPassword,
               ),
             ],
           ),
