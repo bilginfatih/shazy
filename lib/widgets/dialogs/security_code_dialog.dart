@@ -1,6 +1,9 @@
+import 'package:flutter_session_manager/flutter_session_manager.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:otp_text_field/otp_field.dart';
 
+import '../../models/security/security_model.dart';
+import '../../services/security/security_service.dart';
 import '../../utils/extensions/context_extension.dart';
 
 import 'package:flutter/material.dart';
@@ -75,18 +78,18 @@ class _SecurityCodeDialogState extends State<SecurityCodeDialog> {
                   controller: _pinController,
                   width: context.responsiveWidth(300),
                   fieldWidth: 50,
-                  onChanged: (value) {
+                  onChanged: (value) async {
                     _pin = value;
-                    print(_pin);
-                    setState(() {
-                      if (_pin == '34515') {
-                        _checkPin = true;
-                        print('başarılı');
-                      } else {
-                        _checkPin = false;
-                        print('başarısız');
-                      }
-                    });
+                    if (_pin.length == 5) {
+                      var userId = await SessionManager().get('id');
+                      SecurityModel model = SecurityModel(driverId: userId, securityCode: _pin.toString());
+                      await SecurityService.intance.securityCodeMatch(model);
+                      _checkPin = true;
+                      print('başarılı');
+                    } else {
+                      _checkPin = false;
+                      print('başarısız');
+                    }
                   },
                 ),
                 SizedBox(
