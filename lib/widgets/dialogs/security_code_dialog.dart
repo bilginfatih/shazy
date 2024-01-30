@@ -5,17 +5,19 @@ import '../../utils/extensions/context_extension.dart';
 
 import 'package:flutter/material.dart';
 
-import '../../utils/theme/themes.dart';
 import '../buttons/primary_button.dart';
+
 import '../textfields/otp_text_form_field.dart';
 
 class SecurityCodeDialog extends StatefulWidget {
   final BuildContext context;
   final VoidCallback onDialogClosed;
+  final VoidCallback showDialog;
   SecurityCodeDialog({
     Key? key,
     required this.context,
     required this.onDialogClosed,
+    required this.showDialog,
   }) : super(
           key: key,
         );
@@ -28,7 +30,7 @@ class _SecurityCodeDialogState extends State<SecurityCodeDialog> {
   final OtpFieldController _pinController = OtpFieldController();
   String _pin = '';
   bool _checkPin = false;
-  
+
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -99,6 +101,7 @@ class _SecurityCodeDialogState extends State<SecurityCodeDialog> {
                     if (_checkPin) {
                       Navigator.pop(context);
                       widget.onDialogClosed();
+                      widget.showDialog();
                     }
                     print('Yanlış kod');
                   },

@@ -26,17 +26,14 @@ class _SplashPageState extends State<SplashPage> {
     String? email = await CacheManager.instance.getData('user', 'email');
     String? password = await CacheManager.instance.getData('user', 'password');
     if (email == null || password == null) {
-      NavigationManager.instance
-          .navigationToPageClear(NavigationConstant.welcome);
+      NavigationManager.instance.navigationToPageClear(NavigationConstant.welcome);
     }
     UserModel model = UserModel(email: email, password: password);
     String? data = await UserService.instance.login(model);
     if (data != null) {
-      NavigationManager.instance
-          .navigationToPageClear(NavigationConstant.welcome);
+      NavigationManager.instance.navigationToPageClear(NavigationConstant.welcome);
     } else {
-      NavigationManager.instance
-          .navigationToPageClear(NavigationConstant.homePage);
+      NavigationManager.instance.navigationToPageClear(NavigationConstant.homePage);
     }
   }
 
@@ -50,13 +47,16 @@ class _SplashPageState extends State<SplashPage> {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             Container(
-              width: context.responsiveWidth(125),
-              height: context.responsiveHeight(120),
+              width: context.responsiveWidth(140),
+              height: context.responsiveHeight(140),
               decoration: ShapeDecoration(
                 color: Colors.white,
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(34),
                 ),
+              ),
+              child: Image.asset(
+                "assets/png/main_logo.png",
               ),
             ),
             SizedBox(

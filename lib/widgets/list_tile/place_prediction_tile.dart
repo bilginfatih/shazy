@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:hexcolor/hexcolor.dart';
 import 'package:provider/provider.dart';
+import 'package:shazy/utils/extensions/context_extension.dart';
 
 import '../../core/assistants/request_assistant.dart';
 import '../../core/base/app_info.dart';
@@ -56,7 +58,8 @@ class PlacePredictionTileDesign extends StatelessWidget {
         getPlaceDirectionDetails(predictedPlaces!.place_id, context);
       },
       style: ElevatedButton.styleFrom(
-        backgroundColor: Colors.transparent,
+        elevation: 0,
+        backgroundColor: Colors.white,
         // Buton rengini kaldır
       ),
       child: Padding(
@@ -80,10 +83,7 @@ class PlacePredictionTileDesign extends StatelessWidget {
                   Text(
                     predictedPlaces!.main_text!,
                     overflow: TextOverflow.ellipsis,
-                    style: const TextStyle(
-                      fontSize: 16.0,
-                      color: Colors.white54,
-                    ),
+                    style: context.textStyle.subheadLargeMedium.copyWith(color: HexColor("#5A5A5A")),
                   ),
                   const SizedBox(
                     height: 2.0,
@@ -91,9 +91,8 @@ class PlacePredictionTileDesign extends StatelessWidget {
                   Text(
                     predictedPlaces!.secondary_text!,
                     overflow: TextOverflow.ellipsis,
-                    style: const TextStyle(
-                      fontSize: 12.0,
-                      color: Colors.white54,
+                    style: context.textStyle.bodySmallRegular.copyWith(
+                      color: HexColor("#B8B8B8"),
                     ),
                   ),
                   const SizedBox(
