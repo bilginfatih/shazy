@@ -11,124 +11,41 @@ import '../../utils/theme/themes.dart';
 import '../buttons/primary_button.dart';
 import '../buttons/secondary_button.dart';
 
-class DriveBottomSheet extends Container {
-  DriveBottomSheet({
-    Key? key,
-    String? buttonText,
-    double? height,
-    required BuildContext context,
-    required String pickingUpText,
-    required String imagePath,
-    required String customerName,
-    required String startText,
-    required String location1TextTitle,
-    required String location1Text,
-    required String location2TextTitle,
-    required String location2Text,
-    required VoidCallback onPressed,
-  }) : super(
-          key: key,
-          height: context.customeHeight(height ?? 0.51),
-          decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.only(
-              topLeft: Radius.circular(context.responsiveWidth(24)),
-              topRight: Radius.circular(context.responsiveWidth(24)),
-            ),
-          ),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              /*Padding(
-                padding: EdgeInsets.symmetric(
-                  horizontal: context.responsiveWidth(14),
-                  vertical: context.responsiveHeight(11),
-                ),
-                child: Align(
-                  alignment: Alignment.topRight,
-                  child: IconButton(
-                    onPressed: () {},
-                    icon: Icon(Icons.close),
-                  ),
-                ),
-              ),*/
-              Padding(
-                padding: EdgeInsets.only(
-                  top: context.responsiveHeight(34),
-                  left: context.responsiveWidth(14),
-                  bottom: context.responsiveHeight(15),
-                ),
-                child: Text(
-                  pickingUpText,
-                  style: context.textStyle.subheadLargeMedium,
-                ),
-              ),
-              const Divider(
-                thickness: 1,
-              ),
-              _buildCustomerInfo(context, imagePath, customerName, startText),
-              const Divider(
-                thickness: 1,
-              ),
-              _buildCodeColumn(context, buttonText),
-              _buildLocationRow(
-                context,
-                'map5',
-                location1TextTitle,
-                location1Text,
-              ),
-              SizedBox(
-                height: context.responsiveHeight(29),
-              ),
-              _buildLocationRow(
-                context,
-                'map4',
-                location2TextTitle,
-                location2Text,
-              ),
-              _buildBottomButtons(context, buttonText, onPressed),
-            ],
-          ),
-        );
+class DriveBottomSheet extends StatefulWidget {
+  DriveBottomSheet(
+      {super.key,
+      this.height,
+      this.buttonText,
+      required this.context,
+      required this.pickingUpText,
+      required this.imagePath,
+      required this.customerName,
+      required this.startText,
+      required this.location1TextTitle,
+      required this.location1Text,
+      required this.location2TextTitle,
+      required this.location2Text,
+      required this.onPressed});
 
-  static Widget _buildCodeColumn(BuildContext context, String? buttonText) =>
-      buttonText == null
-          ? SizedBox(
-              height: context.responsiveHeight(18),
-            )
-          : Center(
-              child: Column(
-                children: [
-                  SizedBox(
-                    height: context.responsiveHeight(8),
-                  ),
-                  Text(
-                    'enterCode'.tr(),
-                    style: const TextStyle(
-                      fontSize: 11,
-                      fontFamily: 'Poppins',
-                      fontWeight: FontWeight.w500,
-                      height: 0.19,
-                    ),
-                  ),
-                  SizedBox(
-                    height: context.responsiveHeight(8),
-                  ),
-                  OTPTextFormField(
-                      context: context,
-                      width: context.responsiveWidth(200),
-                      fieldWidth: 27,
-                      contentPadding: const EdgeInsets.symmetric(
-                          horizontal: 2, vertical: 10),
-                      textStyle: context.textStyle.bodySmallMedium),
-                  SizedBox(
-                    height: context.responsiveHeight(20),
-                  ),
-                ],
-              ),
-            );
+  String? buttonText;
+  final BuildContext context;
+  final String customerName;
+  double? height;
+  final String imagePath;
+  final String location1Text;
+  final String location1TextTitle;
+  final String location2Text;
+  final String location2TextTitle;
+  final VoidCallback onPressed;
+  final String pickingUpText;
+  final String startText;
 
-  static Padding _buildCustomerInfo(BuildContext context, String imagePath,
+  @override
+  State<DriveBottomSheet> createState() => _DriveBottomSheetState();
+}
+
+class _DriveBottomSheetState extends State<DriveBottomSheet> {
+  Padding _buildCustomerInfo(BuildContext context, String imagePath,
       String customerName, String startText) {
     return Padding(
       padding: EdgeInsets.only(
@@ -185,7 +102,7 @@ class DriveBottomSheet extends Container {
     );
   }
 
-  static Padding _buildBottomButtons(
+  Padding _buildBottomButtons(
       BuildContext context, String? buttonText, VoidCallback onPressed) {
     return Padding(
       padding: EdgeInsets.only(
@@ -222,7 +139,7 @@ class DriveBottomSheet extends Container {
     );
   }
 
-  static Padding _buildLocationRow(
+  Padding _buildLocationRow(
     BuildContext context,
     String assetName,
     String text1,
@@ -267,4 +184,109 @@ class DriveBottomSheet extends Container {
           ],
         ),
       );
+
+  Widget _buildCodeColumn(BuildContext context, String? buttonText) =>
+      buttonText == null
+          ? SizedBox(
+              height: context.responsiveHeight(18),
+            )
+          : Center(
+              child: Column(
+                children: [
+                  SizedBox(
+                    height: context.responsiveHeight(8),
+                  ),
+                  Text(
+                    'enterCode'.tr(),
+                    style: const TextStyle(
+                      fontSize: 11,
+                      fontFamily: 'Poppins',
+                      fontWeight: FontWeight.w500,
+                      height: 0.19,
+                    ),
+                  ),
+                  SizedBox(
+                    height: context.responsiveHeight(8),
+                  ),
+                  OTPTextFormField(
+                      context: context,
+                      width: context.responsiveWidth(200),
+                      fieldWidth: 27,
+                      contentPadding: const EdgeInsets.symmetric(
+                          horizontal: 2, vertical: 10),
+                      textStyle: context.textStyle.bodySmallMedium),
+                  SizedBox(
+                    height: context.responsiveHeight(20),
+                  ),
+                ],
+              ),
+            );
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      height: context.customeHeight(widget.height ?? 0.51),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.only(
+          topLeft: Radius.circular(context.responsiveWidth(24)),
+          topRight: Radius.circular(context.responsiveWidth(24)),
+        ),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          /*Padding(
+                padding: EdgeInsets.symmetric(
+                  horizontal: context.responsiveWidth(14),
+                  vertical: context.responsiveHeight(11),
+                ),
+                child: Align(
+                  alignment: Alignment.topRight,
+                  child: IconButton(
+                    onPressed: () {},
+                    icon: Icon(Icons.close),
+                  ),
+                ),
+              ),*/
+          Padding(
+            padding: EdgeInsets.only(
+              top: context.responsiveHeight(34),
+              left: context.responsiveWidth(14),
+              bottom: context.responsiveHeight(15),
+            ),
+            child: Text(
+              widget.pickingUpText,
+              style: context.textStyle.subheadLargeMedium,
+            ),
+          ),
+          const Divider(
+            thickness: 1,
+          ),
+          _buildCustomerInfo(
+              context, widget.imagePath, widget.customerName, widget.startText),
+          const Divider(
+            thickness: 1,
+          ),
+          _buildCodeColumn(context, widget.buttonText),
+          _buildLocationRow(
+            context,
+            'map5',
+            widget.location1TextTitle,
+            widget.location1Text,
+          ),
+          SizedBox(
+            height: context.responsiveHeight(29),
+          ),
+          _buildLocationRow(
+            context,
+            'map4',
+            widget.location2TextTitle,
+            widget.location2Text,
+          ),
+          _buildBottomButtons(context, widget.buttonText, widget.onPressed),
+        ],
+      ),
+    );
+  }
 }
