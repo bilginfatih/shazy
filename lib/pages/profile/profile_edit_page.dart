@@ -11,6 +11,7 @@ import 'package:shazy/widgets/buttons/secondary_button.dart';
 import 'package:shazy/widgets/textfields/email_text_form_field.dart';
 import 'package:shazy/widgets/textfields/name_text_from_field.dart';
 
+import '../../utils/constants/app_constant.dart';
 import '../../utils/theme/themes.dart';
 import '../../widgets/padding/base_padding.dart';
 
@@ -24,6 +25,8 @@ class ProfileEditPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    _controller.userProfile =
+        ModalRoute.of(context)?.settings.arguments as UserProfileModel;
     return Scaffold(
       appBar: BackAppBar(
         context: context,
@@ -38,20 +41,15 @@ class ProfileEditPage extends StatelessWidget {
               height: context.responsiveHeight(30),
             ),
             GestureDetector(
-              onTap: (){
-                
-              },
+              onTap: () {},
               child: Center(
                 child: Stack(
                   children: [
                     CircleAvatar(
                       radius: 35,
                       backgroundColor: Colors.white,
-                      child: Image.asset(
-                        'assets/png/no_data.png',
-                        width: context.responsiveWidth(120),
-                        height: context.responsiveHeight(127),
-                      ),
+                      child: _buildImage(
+                          '$baseUrl/${_controller.userProfile!.profilePicturePath}'),
                     ),
                     Positioned(
                       left: 50,
@@ -70,7 +68,9 @@ class ProfileEditPage extends StatelessWidget {
                 top: context.responsiveHeight(47),
               ),
               child: NameTextFormField(
-                hintText: 'fullName'.tr(),
+                hintText: _controller.userProfile?.userModel != null
+                    ? '${_controller.userProfile?.userModel!.name} ${_controller.userProfile?.userModel!.surname}'
+                    : 'fullName'.tr(),
                 context: context,
                 controller: _nameTextController,
               ),
@@ -80,7 +80,9 @@ class ProfileEditPage extends StatelessWidget {
                 top: context.responsiveHeight(20),
               ),
               child: EmailTextFormField(
-                text: 'Email',
+                text: _controller.userProfile?.userModel != null
+                    ? '${_controller.userProfile?.userModel!.email}'
+                    : 'Email'.tr(),
                 context: context,
                 controller: _emailTextController,
               ),
@@ -90,7 +92,9 @@ class ProfileEditPage extends StatelessWidget {
                 top: context.responsiveHeight(20),
               ),
               child: NameTextFormField(
-                hintText: 'aboutYou'.tr(),
+                hintText: _controller.userProfile?.description != ''
+                    ? '${_controller.userProfile?.description}'
+                    : 'aboutYou'.tr(),
                 context: context,
                 controller: _aboutYouTextController,
               ),
@@ -121,5 +125,11 @@ class ProfileEditPage extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  Image _buildImage(String path) {
+    return Image.network(path,
+        errorBuilder: (context, exception, stackTrack) =>
+            Image.asset('assets/png/no_data.png'));
   }
 }

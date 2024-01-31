@@ -1,6 +1,8 @@
 import 'package:flutter_session_manager/flutter_session_manager.dart';
 import 'package:shazy/models/user/user_profile_model.dart';
+import 'package:shazy/utils/constants/navigation_constant.dart';
 import '../../core/init/cache/cache_manager.dart';
+import '../../core/init/navigation/navigation_manager.dart';
 import '../../core/init/network/network_manager.dart';
 import '../../models/user/user_model.dart';
 
@@ -30,6 +32,13 @@ class UserService {
       rethrow;
     }
     return null;
+  }
+
+  Future<String?> registerControl(UserModel user) async {
+    // TODO:
+    var response = await NetworkManager.instance
+        .post('/user/email', data: {'email': user.email});
+    print(response);
   }
 
   Future<String?> login(UserModel user) async {
@@ -75,7 +84,10 @@ class UserService {
     }
   }
 
-  void logout() {
+  Future<void> logout() async {
     CacheManager.instance.clearAll('user');
+    await SessionManager().destroy();
+    NavigationManager.instance
+        .navigationToPageClear(NavigationConstant.welcome);
   }
 }

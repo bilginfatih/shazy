@@ -74,10 +74,11 @@ class NetworkManager extends BaseNetworkManager {
         print('token: $token');
         _headers['Authorization'] = 'Bearer $token';
       }
-      var request = jsonEncode(model?.toJson());
+      var request =
+          model != null ? jsonEncode(model.toJson()) : jsonEncode(data);
       print(path);
       print('${dio.options.baseUrl}$path');
-      print(jsonEncode(model?.toJson()));
+      print(request);
       print(_headers.toString());
       Response<dynamic> response = await dio.post(
         path,

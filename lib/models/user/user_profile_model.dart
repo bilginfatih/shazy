@@ -15,6 +15,9 @@ class UserProfileModel extends BaseModel {
   });
 
   UserProfileModel._fromJson(o) {
+    print(o['user-profile'][0]);
+    userModel = UserModel();
+    userModel = userModel!.fromJson(o);
     var userProfile = o['user-profile'][0];
     avaragePoint = double.tryParse(userProfile['avarage_point']);
     description = userProfile['description'] ?? '';
@@ -25,8 +28,6 @@ class UserProfileModel extends BaseModel {
     profileVerification = userProfile['profile_verification'] == 1 &&
         userProfile['profile_verification'] != 'null';
     userId = userProfile['user_id'];
-    userModel = UserModel();
-    userModel = userModel!.fromJson(o);
   }
 
   @override
