@@ -10,24 +10,33 @@ import 'package:shazy/widgets/textfields/otp_text_form_field.dart';
 import '../../utils/theme/themes.dart';
 import '../buttons/primary_button.dart';
 import '../buttons/secondary_button.dart';
+import '../icons/circular_svg_icon.dart';
 
 class DriveBottomSheet extends StatefulWidget {
-  DriveBottomSheet(
-      {super.key,
-      this.height,
-      this.buttonText,
-      required this.context,
-      required this.pickingUpText,
-      required this.imagePath,
-      required this.customerName,
-      required this.startText,
-      required this.location1TextTitle,
-      required this.location1Text,
-      required this.location2TextTitle,
-      required this.location2Text,
-      required this.onPressed});
 
-  String? buttonText;
+  final bool showSecondaryButton;
+  DriveBottomSheet({
+    super.key,
+    this.height,
+    this.buttonTextCancel,
+    this.buttonTextStart,
+    required this.context,
+    required this.pickingUpText,
+    required this.imagePath,
+    required this.customerName,
+    required this.startText,
+    required this.location1TextTitle,
+    required this.location1Text,
+    required this.location2TextTitle,
+    required this.location2Text,
+    this.onPressedCancel,
+    required this.onPressedStart,
+    required this.showSecondaryButton,
+  });
+
+  String? buttonTextCancel;
+  String? buttonTextStart;
+
   final BuildContext context;
   final String customerName;
   double? height;
@@ -36,7 +45,8 @@ class DriveBottomSheet extends StatefulWidget {
   final String location1TextTitle;
   final String location2Text;
   final String location2TextTitle;
-  final VoidCallback onPressed;
+  VoidCallback? onPressedCancel;
+  final VoidCallback onPressedStart;
   final String pickingUpText;
   final String startText;
 
@@ -45,13 +55,10 @@ class DriveBottomSheet extends StatefulWidget {
 }
 
 class _DriveBottomSheetState extends State<DriveBottomSheet> {
-  Padding _buildCustomerInfo(BuildContext context, String imagePath,
-      String customerName, String startText) {
+  Padding _buildCustomerInfo(BuildContext context, String imagePath, String customerName, String startText) {
+
     return Padding(
-      padding: EdgeInsets.only(
-          top: context.responsiveHeight(19),
-          left: context.responsiveWidth(14),
-          bottom: context.responsiveHeight(16)),
+      padding: EdgeInsets.only(top: context.responsiveHeight(19), left: context.responsiveWidth(14), bottom: context.responsiveHeight(16)),
       child: Row(
         children: [
           Container(
@@ -62,8 +69,7 @@ class _DriveBottomSheetState extends State<DriveBottomSheet> {
                 image: NetworkImage(imagePath),
                 fit: BoxFit.fill,
               ),
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(4)),
+              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
             ),
           ),
           SizedBox(
@@ -103,36 +109,39 @@ class _DriveBottomSheetState extends State<DriveBottomSheet> {
   }
 
   Padding _buildBottomButtons(
-      BuildContext context, String? buttonText, VoidCallback onPressed) {
+      BuildContext context, String? buttonTextCancel, String? buttonTextStart, VoidCallback? onPressedCancel, VoidCallback onPressedStart) {
+
     return Padding(
       padding: EdgeInsets.only(
-          top: context.responsiveHeight(26),
-          left: context.responsiveWidth(14),
-          right: context.responsiveWidth(14),
-          bottom: context.responsiveHeight(23)),
+          top: context.responsiveHeight(26), left: context.responsiveWidth(14), right: context.responsiveWidth(14), bottom: context.responsiveHeight(23)),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          /*GestureDetector(
+          GestureDetector(
             onTap: () {
-              // TODO: ne olacağını sor
+              print('wp mesajlaşma atacak');
             },
             child: CircularSvgIcon(
               context: context,
               assetName: 'assets/svg/sms.svg',
             ),
-          ),*/
-          SecondaryButton(
-            width: 159,
-            text: buttonText ?? 'Cancel'.tr(),
-            context: context,
-            onPressed: onPressed,
           ),
+          if (widget.showSecondaryButton) // Eğer showSecondaryButton true ve index 0 ise göster
+            SecondaryButton(
+              width: context.responsiveWidth(147),
+              height: context.responsiveHeight(48),
+              text: buttonTextCancel ?? 'Cancel'.tr(),
+              context: context,
+              onPressed: onPressedCancel ?? () {},
+              style: context.textStyle.subheadLargeMedium.copyWith(fontSize: 15),
+            ),
           PrimaryButton(
-            width: 159,
-            text: buttonText ?? 'Start the Trip'.tr(),
+            width: widget.showSecondaryButton ? context.responsiveWidth(147) : context.responsiveWidth(189),
+            height: context.responsiveHeight(48),
+            text: buttonTextStart ?? 'Start the Trip'.tr(),
             context: context,
-            onPressed: onPressed,
+            onPressed: onPressedStart,
+            style: context.textStyle.subheadLargeMedium.copyWith(fontSize: 14),
           ),
         ],
       ),
@@ -154,10 +163,7 @@ class _DriveBottomSheetState extends State<DriveBottomSheet> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Padding(
-              padding: EdgeInsets.only(
-                  top: context.responsiveHeight(4),
-                  left: context.responsiveWidth(10),
-                  right: context.responsiveWidth(6)),
+              padding: EdgeInsets.only(top: context.responsiveHeight(4), left: context.responsiveWidth(10), right: context.responsiveWidth(6)),
               child: SvgPicture.asset('assets/svg/$assetName.svg'),
             ),
             Column(
@@ -184,43 +190,6 @@ class _DriveBottomSheetState extends State<DriveBottomSheet> {
           ],
         ),
       );
-
-  Widget _buildCodeColumn(BuildContext context, String? buttonText) =>
-      buttonText == null
-          ? SizedBox(
-              height: context.responsiveHeight(18),
-            )
-          : Center(
-              child: Column(
-                children: [
-                  SizedBox(
-                    height: context.responsiveHeight(8),
-                  ),
-                  Text(
-                    'enterCode'.tr(),
-                    style: const TextStyle(
-                      fontSize: 11,
-                      fontFamily: 'Poppins',
-                      fontWeight: FontWeight.w500,
-                      height: 0.19,
-                    ),
-                  ),
-                  SizedBox(
-                    height: context.responsiveHeight(8),
-                  ),
-                  OTPTextFormField(
-                      context: context,
-                      width: context.responsiveWidth(200),
-                      fieldWidth: 27,
-                      contentPadding: const EdgeInsets.symmetric(
-                          horizontal: 2, vertical: 10),
-                      textStyle: context.textStyle.bodySmallMedium),
-                  SizedBox(
-                    height: context.responsiveHeight(20),
-                  ),
-                ],
-              ),
-            );
 
   @override
   Widget build(BuildContext context) {
@@ -263,12 +232,10 @@ class _DriveBottomSheetState extends State<DriveBottomSheet> {
           const Divider(
             thickness: 1,
           ),
-          _buildCustomerInfo(
-              context, widget.imagePath, widget.customerName, widget.startText),
+          _buildCustomerInfo(context, widget.imagePath, widget.customerName, widget.startText),
           const Divider(
             thickness: 1,
           ),
-          _buildCodeColumn(context, widget.buttonText),
           _buildLocationRow(
             context,
             'map5',
@@ -284,7 +251,8 @@ class _DriveBottomSheetState extends State<DriveBottomSheet> {
             widget.location2TextTitle,
             widget.location2Text,
           ),
-          _buildBottomButtons(context, widget.buttonText, widget.onPressed),
+          _buildBottomButtons(context, widget.buttonTextCancel, widget.buttonTextStart, widget.onPressedCancel, widget.onPressedStart),
+
         ],
       ),
     );

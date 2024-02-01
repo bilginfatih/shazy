@@ -12,6 +12,7 @@ class DriveModel extends BaseModel {
     this.callerId,
     this.driverLat,
     this.driverLang,
+    this.status,
   });
 
   DriveModel._fromJson(o);
@@ -26,6 +27,7 @@ class DriveModel extends BaseModel {
   String? callerId;
   double? driverLat;
   double? driverLang;
+  String? status;
 
   @override
   fromJson(json) => DriveModel._fromJson(json);
@@ -42,6 +44,7 @@ class DriveModel extends BaseModel {
     if (callerId != null) map['caller_id'] = callerId;
     if (driverLat != null) map['driver_lat'] = driverLat.toString();
     if (driverLang != null) map['driver_lang'] = driverLang.toString();
+    if (status != null) map['status'] = status;
     return map;
   }
 }

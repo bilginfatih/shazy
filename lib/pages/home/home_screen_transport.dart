@@ -9,11 +9,10 @@ import 'package:flutter_svg/flutter_svg.dart';
 
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:hexcolor/hexcolor.dart';
-import 'package:geolocator/geolocator.dart' as geolocator;
-import 'package:otp_text_field/otp_field.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:permission_handler/permission_handler.dart' as ph;
 import 'package:provider/provider.dart';
+import 'package:url_launcher/url_launcher.dart';
 import '../../core/assistants/asistant_methods.dart';
 import '../../core/base/app_info.dart';
 import '../../core/init/navigation/navigation_manager.dart';
@@ -29,11 +28,7 @@ import '../../widgets/buttons/icon_button.dart';
 import '../../widgets/buttons/primary_button.dart';
 import '../../widgets/containers/payment_method_container.dart';
 import '../../widgets/dialogs/search_driver_dialog.dart';
-import '../../widgets/drawer/custom_drawer.dart';
 import '../../widgets/icons/circular_svg_icon.dart';
-import '../../widgets/profile/profile_widget.dart';
-import '../../widgets/textfields/otp_text_form_field.dart';
-import '../notification/notification_page.dart';
 
 class HomeScreenTransport extends StatefulWidget {
   const HomeScreenTransport({Key? key, this.scaffoldKey}) : super(key: key);
@@ -50,8 +45,10 @@ class _HomeScreenTransportState extends State<HomeScreenTransport> {
       Completer<GoogleMapController>();
   GoogleMapController? newGoogleMapController;
 
-  final OtpFieldController _pinController = OtpFieldController();
+  //final OtpFieldController _pinController = OtpFieldController();
   late String _durationKm;
+
+  final Uri toLaunch = Uri(scheme: 'https', host: 'www.google.com', path: '/maps/@/data=!4m2!7m1!2e1');
 
   String? fiveDigitSecurityCode;
 
@@ -152,7 +149,7 @@ class _HomeScreenTransportState extends State<HomeScreenTransport> {
           //_showDriverDialog();
           _timer.cancel();
           // ignore: use_build_context_synchronously
-          Navigator.pop(context);
+          NavigationManager.instance.navigationToPop();
 
           // ignore: use_build_context_synchronously
           showModalBottomSheet(
@@ -219,7 +216,7 @@ class _HomeScreenTransportState extends State<HomeScreenTransport> {
             TextButton(
               onPressed: () {
                 ph.openAppSettings(); // Ayarlara gitmek için izinleri ayarlar
-                Navigator.of(context).pop();
+                NavigationManager.instance.navigationToPop();
               },
               child: const Text('Ayarlara Git'),
             ),
@@ -486,7 +483,7 @@ class _HomeScreenTransportState extends State<HomeScreenTransport> {
           ),
           GestureDetector(
             onTap: () {
-              Navigator.pop(context);
+              NavigationManager.instance.navigationToPop();
             },
             child: Padding(
               padding: EdgeInsets.only(left: 325.0),
@@ -635,14 +632,30 @@ class _HomeScreenTransportState extends State<HomeScreenTransport> {
                   ),
                 ),
               ),
-              SvgPicture.asset(
-                "assets/svg/location.svg",
+              GestureDetector(
+                child: SvgPicture.asset(
+                  "assets/svg/location.svg",
+                ),
+                onTap: () {
+                  setState(() {
+                    _launchInBrowser(toLaunch);
+                  });
+                },
               )
             ],
           ),
         ],
       ),
     );
+  }
+
+  Future<void> _launchInBrowser(Uri url) async {
+    if (!await launchUrl(
+      url,
+      mode: LaunchMode.externalApplication,
+    )) {
+      throw Exception('Could not launch $url');
+    }
   }
 
   Widget _buildBottomSheet(BuildContext context) {
@@ -665,7 +678,7 @@ class _HomeScreenTransportState extends State<HomeScreenTransport> {
               ),
               GestureDetector(
                 onTap: () {
-                  Navigator.pop(context);
+                  NavigationManager.instance.navigationToPop();
                 },
                 child: Padding(
                   padding: EdgeInsets.only(top: 11.0, right: 15.0),
@@ -832,8 +845,16 @@ class _HomeScreenTransportState extends State<HomeScreenTransport> {
             children: [
               Padding(
                 padding: const EdgeInsets.only(left: 20.0),
-                child: CircularSvgIcon(
-                    context: context, assetName: "assets/svg/message.svg"),
+                child: GestureDetector(
+                  onTap: () {
+                    // TODO: ne olacağını sor
+                  },
+                  child: CircularSvgIcon(
+                    context: context,
+                    assetName: 'assets/svg/sms.svg',
+                  ),
+                ),
+
               ),
               SizedBox(
                 width: context.responsiveWidth(132),
@@ -843,7 +864,25 @@ class _HomeScreenTransportState extends State<HomeScreenTransport> {
                 height: context.responsiveHeight(44),
                 width: context.responsiveWidth(169),
                 context: context,
-                onPressed: () {},
+                onPressed: () {
+                  //NavigationManager.instance.navigationToPop();
+                  showModalBottomSheet(
+                    isDismissible: false,
+                    context: context,
+                    shape: const RoundedRectangleBorder(
+                      borderRadius: BorderRadius.vertical(
+                        top: Radius.circular(24),
+                      ),
+                    ),
+                    clipBehavior: Clip.antiAliasWithSaveLayer,
+                    builder: (BuildContext context) {
+                      return Container(
+                        height: context.responsiveHeight(479),
+                        child: _buildBottomSheet2(context),
+                      );
+                    },
+                  );
+                },
               )
             ],
           )

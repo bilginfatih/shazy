@@ -12,6 +12,7 @@ class SuccessDialog extends Dialog {
     required BuildContext context,
     required String title,
     required String text1,
+    VoidCallback? onTap,
   }) : super(
           key: key,
           insetPadding: EdgeInsets.symmetric(
@@ -32,6 +33,7 @@ class SuccessDialog extends Dialog {
                   ),
                   child: Material(
                     child: GestureDetector(
+                      // ignore: sort_child_properties_last
                       child: Container(
                         color: Colors.white,
                         child: SvgPicture.asset(
@@ -40,7 +42,7 @@ class SuccessDialog extends Dialog {
                           height: context.responsiveHeight(24),
                         ),
                       ),
-                      onTap: () {
+                      onTap: onTap ?? () {
                         NavigationManager.instance.navigationToPop();
                       },
                     ),

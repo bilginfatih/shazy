@@ -8,12 +8,18 @@ import 'package:flutter_polyline_points/flutter_polyline_points.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:hexcolor/hexcolor.dart';
+import 'package:maps_launcher/maps_launcher.dart';
+import 'package:provider/provider.dart';
 import 'package:shazy/pages/home/driver_home/driver_controller/driver_controller.dart';
 import 'package:shazy/widgets/dialogs/drive_dialog.dart';
 
 import '../../../core/assistants/asistant_methods.dart';
+import '../../../core/base/app_info.dart';
 import '../../../core/init/navigation/navigation_manager.dart';
 import '../../../core/init/network/network_manager.dart';
+import '../../../models/comment/comment_model.dart';
+import '../../../models/drive/drive_model.dart';
+import '../../../services/comment/comment_service.dart';
 import '../../../utils/constants/navigation_constant.dart';
 import '../../../utils/extensions/context_extension.dart';
 import '../../../widgets/buttons/icon_button.dart';
@@ -23,17 +29,21 @@ import '../../../widgets/containers/payment_method_container.dart';
 import '../../../widgets/dialogs/congratulation_dialog.dart';
 import '../../../widgets/dialogs/security_code_dialog.dart';
 import '../../../widgets/drawer/custom_drawer.dart';
+import '../../../widgets/modal_bottom_sheet/comment_bottom_sheet.dart';
 import '../../../widgets/modal_bottom_sheet/drive_bottom_sheet.dart';
+import '../../history/controller/history_upcoming_controller.dart';
 
 class DriverHomePage extends StatefulWidget {
   const DriverHomePage({Key? key}) : super(key: key);
+  static String stat = '';
 
   @override
   State<DriverHomePage> createState() => _DriverHomePageState();
 }
 
-class _DriverHomePageState extends State<DriverHomePage>
-    with SingleTickerProviderStateMixin {
+
+class _DriverHomePageState extends State<DriverHomePage> with TickerProviderStateMixin {
+
   late double driverLatitude;
   late double driverLongitude;
   late double fromLatitude;
@@ -44,45 +54,69 @@ class _DriverHomePageState extends State<DriverHomePage>
   late double toLatitude;
   late double toLongitude;
 
+  final _controllerComment = HistoryUpcomingController();
+  final TextEditingController _commentTextController = TextEditingController();
+
+  DriveModel driveDetailsInfo = DriveModel();
+
   static const CameraPosition _kGooglePlex = CameraPosition(
     target: LatLng(37.42796133580664, -122.085749655962),
     zoom: 14.4746,
   );
 
-  late AnimationController _bottomSheetController;
-  final Completer<GoogleMapController> _controller =
-      Completer<GoogleMapController>();
+
+  List<AnimationController> _bottomSheetControllers = [];
+  List<Tween<Offset>> _tweens = [];
+  final Completer<GoogleMapController> _controller = Completer<GoogleMapController>();
+
   final DriverController _driverController = DriverController();
-  final Duration _duration = const Duration(milliseconds: 00);
-  late String _durationKmCallerToDestination;
-  late String _durationKmDriverToCaller;
-  late String _durationTimeCallerToDestination;
-  late String _durationTimeDriverToCaller;
-  late String _endAddressCallerToDestination;
-  late String _endAddressDriverToCaller;
+
+  final Duration _duration = const Duration(milliseconds: 500);
+
+  late String _durationKmCallerToDestination = '';
+  late String _durationKmDriverToCaller = '';
+  late String _durationTimeCallerToDestination = '';
+  late String _durationTimeDriverToCaller = '';
+  late String _endAddressCallerToDestination = '';
+  late String _endAddressDriverToCaller = '';
+
+
   String _mapTheme = '';
   final Set<Marker> _markersSet = {};
   GoogleMapController? _newGoogleMapController;
   final Set<Polyline> _polyLineSet = {};
+
+
   late String _startAddressCallerToDestination;
   late String _startAddressDriverToCaller;
+
   late Timer _timer;
-  final Tween<Offset> _tween =
-      Tween(begin: const Offset(0, 1), end: Offset(0, 0));
+
+  int flag = 0;
+
+
   Position? _userCurrentPosition;
 
   @override
   void dispose() {
     // Timer'ı iptal et
     _timer.cancel();
+    _disposeBottomSheetControllers();
     super.dispose();
+  }
+
+  void _disposeBottomSheetControllers() {
+    for (var controller in _bottomSheetControllers) {
+      controller.dispose();
+    }
   }
 
   @override
   void initState() {
     super.initState();
-    _bottomSheetController =
-        AnimationController(vsync: this, duration: _duration);
+
+    _initializeBottomSheetControllers();
+
 
     DefaultAssetBundle.of(context)
         .loadString('assets/maptheme/night_theme.json')
@@ -96,6 +130,18 @@ class _DriverHomePageState extends State<DriverHomePage>
       sendRequest();
     });
     _driverController.active();
+  }
+
+  void _initializeBottomSheetControllers() {
+    _bottomSheetControllers = [
+      AnimationController(vsync: this, duration: _duration),
+      AnimationController(vsync: this, duration: _duration),
+    ];
+
+    _tweens = [
+      Tween(begin: const Offset(0, 1), end: Offset(0, 0)),
+      Tween(begin: const Offset(0, 1), end: Offset(0, 0)),
+    ];
   }
 
   Future<void> sendRequest() async {
@@ -112,7 +158,7 @@ class _DriverHomePageState extends State<DriverHomePage>
       var requestResponse = await NetworkManager.instance.get(apiUrl);
 
       if (requestResponse != null) {
-        String status = requestResponse["status"];
+        driveDetailsInfo.status = requestResponse["status"];
         //String driverId = requestResponse["driver_id"];
         driverLatitude = double.parse(requestResponse["driver_lat"]);
         driverLongitude = double.parse(requestResponse["driver_lang"]);
@@ -121,7 +167,7 @@ class _DriverHomePageState extends State<DriverHomePage>
         toLatitude = double.parse(requestResponse["to_lat"]);
         toLongitude = double.parse(requestResponse["to_lang"]);
 
-        if (status == 'matched') {
+        if (driveDetailsInfo.status == 'matched') {
           _timer.cancel();
           drawPolyLineFromOriginToDestination();
         }
@@ -296,6 +342,7 @@ class _DriverHomePageState extends State<DriverHomePage>
     });
 
     // ignore: use_build_context_synchronously
+    // ignore: use_build_context_synchronously
     showDialog(
       barrierDismissible: false,
       context: context,
@@ -316,7 +363,7 @@ class _DriverHomePageState extends State<DriverHomePage>
         cancelOnPressed: _driverController.driveCancel,
         acceptOnPressed: () {
           _driverController.driverAccept();
-          _showDriverBottomSheet();
+          _showDriverBottomSheet(0);
         },
       ),
     );
@@ -343,91 +390,160 @@ class _DriverHomePageState extends State<DriverHomePage>
     );
   }
 
-  void _showDriverBottomSheet() {
+
+  void _showDriverBottomSheet(int index) {
     if (mounted) {
-      if (_bottomSheetController.isDismissed) {
-        _bottomSheetController.forward();
-      } else if (_bottomSheetController.isCompleted) {
-        _bottomSheetController.reverse();
+      var controller = _bottomSheetControllers[index];
+      if (controller.isDismissed) {
+        controller.forward();
+      } else if (controller.isCompleted) {
+        controller.reverse();
       }
     }
   }
 
-  Widget _buildDriverBottomSheetContent(BuildContext context) {
+  Future<void> sendComment(String comment, int index) async {
+    var model = CommentModel(comment: comment, point: index.toDouble());
+    model.commentorUserId = "9b1fbff8-e19d-4aab-8acb-b6580f85eab5";
+    //await SessionManager().get('id'); backende değişmesi lazım id
+    var response = await CommentService.instance.comment(model);
+    // NavigationManager.instance.navigationToPop();
+    if (response != null) {
+      // TODO: hata mesajı basacak
+      print('hata sendComment');
+
+    }
+  }
+
+  Widget _buildDriverBottomSheetContent(int index, BuildContext context) {
     return SizedBox.expand(
-      // drive bottom sheet
-      child: DraggableScrollableSheet(
-        initialChildSize: 0.51,
-        minChildSize: 0.1,
-        maxChildSize: 0.51,
-        builder: (BuildContext context, ScrollController scrollController) =>
-            SingleChildScrollView(
-          physics: const ClampingScrollPhysics(),
-          controller: scrollController,
-          child: DriveBottomSheet(
-            context: context,
-            pickingUpText: 'pickingUpText'.tr(),
-            imagePath: 'https://via.placeholder.com/54x59',
-            customerName: 'customerName',
-            startText: 'startText',
-            location1Text: humanReadableAddress.length > 36
-                ? "${humanReadableAddress.substring(0, 36)}..."
-                : humanReadableAddress,
-            location1TextTitle: 'Current Location',
-            location2Text: "aa",
-            location2TextTitle: " trip",
-            onPressed: () {},
+      child: SlideTransition(
+        position: _tweens[index].animate(_bottomSheetControllers[index]),
+        child: DraggableScrollableSheet(
+          initialChildSize: 0.57,
+          minChildSize: 0.1,
+          maxChildSize: 0.57,
+          builder: (BuildContext context, ScrollController scrollController) => SingleChildScrollView(
+            physics: ClampingScrollPhysics(),
+            controller: scrollController,
+            child: DriveBottomSheet(
+              buttonTextStart: index == 0 ? 'Start the Trip' : 'Finish the Trip',
+              context: context,
+              pickingUpText: index == 0 ? 'pickingUpText'.tr() : 'Going to Destination',
+              imagePath: 'https://via.placeholder.com/54x59',
+              customerName: 'customerName',
+              startText: 'startText',
+              location1Text: humanReadableAddress.length > 36 ? "${humanReadableAddress.substring(0, 36)}..." : humanReadableAddress,
+              location1TextTitle: 'Current Location',
+              location2Text:
+                  _endAddressCallerToDestination.length > 36 ? "${_endAddressCallerToDestination.substring(0, 36)}..." : _endAddressCallerToDestination,
+              location2TextTitle: "$_durationTimeCallerToDestination ($_durationKmCallerToDestination) trip",
+              showSecondaryButton: index == 0 ? true : false, // Eğer index 0 ise showSecondaryButton true olacak
+              onPressedStart: () {
+                if (index == 0) {
+                  showDialog(
+                    barrierDismissible: false,
+                    context: context,
+                    builder: (BuildContext context) {
+                      return SecurityCodeDialog(
+                        context: context,
+                        onDialogClosed: () {
+                          _bottomSheetControllers[0].reverse();
+                        },
+                        showDialog: () {
+                          _showDriverBottomSheet(1);
+                        },
+                      );
+                    },
+                  );
+                } else {
+                  showDialog(
+                    context: context,
+                    builder: (BuildContext context) {
+                      return SuccessDialog(
+                        context: context,
+                        text1: 'The funds have been successfully transferred to Toygun X.',
+                        title: 'Payment Success',
+                        onTap: () {
+                          NavigationManager.instance.navigationToPop();
+                          _bottomSheetControllers[1].reverse();
+                          showModalBottomSheet(
+                            isScrollControlled: true,
+                            shape: const RoundedRectangleBorder(
+                              borderRadius: BorderRadius.only(
+                                topLeft: Radius.circular(24),
+                                topRight: Radius.circular(24),
+                              ),
+                            ),
+                            context: context,
+                            builder: (_) => Observer(builder: (context) {
+                              return CommentBottomSheet(
+                                selectedIndex: _controllerComment.starSelectedIndex,
+                                context: context,
+                                textController: _commentTextController,
+                                onPressed: () {
+                                  sendComment(_commentTextController.text, _controllerComment.starSelectedIndex);
+                                  NavigationManager.instance.navigationToPop();
+                                },
+                                onPressedRatingBar: _controllerComment.changeStarSelectedIndex,
+                                text: '${'youRated'.tr()} Fatih${' ${_controllerComment.starSelectedIndex}'} ${'star'.tr()}',
+                              );
+                            }),
+                          );
+                        },
+                        widget: Column(
+                          children: [
+                            Text(
+                              'Amount',
+                              style: context.textStyle.labelSmallMedium.copyWith(
+                                color: HexColor("#5A5A5A"),
+                              ),
+                            ),
+                            Text(
+                              '220₺',
+                              style: context.textStyle.titleXlargeRegular.copyWith(
+                                color: HexColor("#2A2A2A"),
+                              ),
+                            ),
+                          ],
+                        ),
+                      );
+                    },
+                  );
+                }
+              },
+              onPressedCancel: index == 0
+                  ? () {
+                      print('cancel');
+                    }
+                  : null,
+            ),
+
           ),
         ),
       ),
     );
-
-    /*if (_bottomSheetController.isDismissed) {
-      _bottomSheetController.forward();
-    } else if (_bottomSheetController.isCompleted) {
-      _bottomSheetController.reverse();
-    }*/
   }
 
-  ElevatedButton _buildNavigationButton() => ElevatedButton.icon(
-        onPressed: () {},
-        style: ElevatedButton.styleFrom(
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(15),
-          ),
-          backgroundColor: HexColor('#469AD8'),
-          maximumSize: const Size(150, 40),
-        ),
-        icon: const Icon(Icons.navigation),
-        label: Text(
-          'navigate'.tr(),
-          style: context.textStyle.subheadSmallRegular,
-        ),
-      );
 
-  CustomIconButton _buildRightTopButton(BuildContext context) =>
-      _driverController.driverActive
-          ? _buildCustomIconButton(
-              false,
-              Icons.close,
-              _driverController.driverPassive,
-            )
-          : _buildCustomIconButton(false, Icons.notifications_none_outlined,
-              () {
-              NavigationManager.instance
-                  .navigationToPage(NavigationConstant.notification);
-            });
+  CustomIconButton _buildRightTopButton(BuildContext context) => _driverController.driverActive
+      ? _buildCustomIconButton(
+          false,
+          Icons.close,
+          _driverController.driverPassive,
+        )
+      : _buildCustomIconButton(false, Icons.notifications_none_outlined, () {
+          NavigationManager.instance.navigationToPage(NavigationConstant.notification);
+        });
 
-  Widget _buildTopLeftButton(BuildContext context) =>
-      _driverController.driverActive
-          ? _buildCustomIconButton(true, Icons.menu, () {
-              // TODO: test amaçlı yapılmış olup kaldırılacaktır!
-            })
-          : SizedBox();
+  Widget _buildTopLeftButton(BuildContext context) => _driverController.driverActive
+      ? _buildCustomIconButton(true, Icons.menu, () {
+          // TODO: test amaçlı yapılmış olup kaldırılacaktır!
+        })
+      : SizedBox();
 
-  CustomIconButton _buildCustomIconButton(
-          bool isLeft, IconData icon, VoidCallback onPressed) =>
-      CustomIconButton(
+  CustomIconButton _buildCustomIconButton(bool isLeft, IconData icon, VoidCallback onPressed) => CustomIconButton(
+
         context: context,
         top: context.responsiveHeight(60),
         left: isLeft ? context.responsiveWidth(15) : null,
@@ -464,8 +580,46 @@ class _DriverHomePageState extends State<DriverHomePage>
     );
   }
 
+  Padding _buildGoogleMapsButton(BuildContext context) {
+    return Padding(
+      padding: EdgeInsets.only(
+        top: context.responsiveHeight(630),
+        left: context.responsiveWidth(245),
+      ),
+      child: ElevatedButton.icon(
+        onPressed: () {
+          print('status: ' + driveDetailsInfo.status.toString());
+
+          if (DriverHomePage.stat == 'driving') {
+            MapsLauncher.launchCoordinates(toLatitude, toLongitude, 'Yol Tarifi');
+          } else if (driveDetailsInfo.status == 'matched') {
+            MapsLauncher.launchCoordinates(fromLatitude, fromLongitude, 'Yol Tarifi');
+          }
+        },
+        style: ElevatedButton.styleFrom(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(15),
+          ),
+          backgroundColor: HexColor('#469AD8'),
+          maximumSize: const Size(150, 40),
+        ),
+        icon: const Icon(Icons.navigation, color: Colors.white),
+        label: Text(
+          'navigate'.tr(),
+          style: context.textStyle.subheadSmallRegular.copyWith(color: Colors.white),
+        ),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
+    if (Provider.of<AppInfo>(context).userDropOffLocation != null && flag == 0) {
+      drawPolyLineFromOriginToDestination();
+      flag = 1;
+    } else {
+      print('işlem yapılmadı');
+    }
     double keyboardSize = MediaQuery.of(context).viewInsets.bottom;
     return Scaffold(
       body: SizedBox(
@@ -478,80 +632,10 @@ class _DriverHomePageState extends State<DriverHomePage>
               _buildTopLeftButton(context),
               _buildRightTopButton(context),
               _buildBottomOfBody(context, keyboardSize),
-              SizedBox.expand(
-                // drive bottom sheet
-                child: SlideTransition(
-                  position: _tween.animate(_bottomSheetController),
-                  child: DraggableScrollableSheet(
-                    initialChildSize: 0.51,
-                    minChildSize: 0.1,
-                    maxChildSize: 0.51,
-                    builder: (BuildContext context,
-                            ScrollController scrollController) =>
-                        SingleChildScrollView(
-                      physics: ClampingScrollPhysics(),
-                      controller: scrollController,
-                      child: DriveBottomSheet(
-                        context: context,
-                        pickingUpText: 'pickingUpText'.tr(),
-                        imagePath: 'https://via.placeholder.com/54x59',
-                        customerName: 'customerName',
-                        startText: 'startText',
-                        location1Text: humanReadableAddress.length > 36
-                            ? "${humanReadableAddress.substring(0, 36)}..."
-                            : humanReadableAddress,
-                        location1TextTitle: 'Current Location',
-                        location2Text: 'location2Text',
-                        location2TextTitle: 'location2TextTitle',
-                        onPressed: () {
-                          showDialog(
-                            barrierDismissible: false,
-                            context: context,
-                            builder: (BuildContext context) {
-                              return SecurityCodeDialog(
-                                context: context,
-                                onDialogClosed: () {
-                                  _bottomSheetController.reverse();
-                                },
-                                showDialog: () {
-                                  showModalBottomSheet(
-                                    context: context,
-                                    builder: (BuildContext context) =>
-                                        DriveBottomSheet(
-                                      context: context,
-                                      customerName: "Zübeyir X",
-                                      imagePath:
-                                          "https://randomuser.me/api/portraits/men/93.jpg",
-                                      location1Text: humanReadableAddress
-                                                  .length >
-                                              36
-                                          ? "${humanReadableAddress.substring(0, 36)}..."
-                                          : humanReadableAddress,
-                                      location1TextTitle: 'Current Location',
-                                      location2Text: _endAddressCallerToDestination
-                                                  .length >
-                                              36
-                                          ? "${_endAddressCallerToDestination.substring(0, 36)}..."
-                                          : _endAddressCallerToDestination,
-                                      location2TextTitle:
-                                          "$_durationTimeCallerToDestination ($_durationKmCallerToDestination) trip",
-                                      pickingUpText: "Going to Destination",
-                                      startText: "4.9",
-                                      onPressed: () {
-                                        print('dsa');
-                                      },
-                                    ),
-                                  );
-                                },
-                              );
-                            },
-                          );
-                        },
-                      ),
-                    ),
-                  ),
-                ),
-              ),
+              _buildGoogleMapsButton(context),
+              _buildDriverBottomSheetContent(0, context),
+              _buildDriverBottomSheetContent(1, context),
+
             ],
           );
         }),

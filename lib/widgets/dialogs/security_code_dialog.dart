@@ -2,7 +2,11 @@ import 'package:flutter_session_manager/flutter_session_manager.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:otp_text_field/otp_field.dart';
 
+import '../../core/init/navigation/navigation_manager.dart';
+import '../../models/drive/drive_model.dart';
 import '../../models/security/security_model.dart';
+import '../../pages/home/driver_home/driver_home_page.dart';
+import '../../services/drive/drive_service.dart';
 import '../../services/security/security_service.dart';
 import '../../utils/extensions/context_extension.dart';
 
@@ -33,6 +37,7 @@ class _SecurityCodeDialogState extends State<SecurityCodeDialog> {
   final OtpFieldController _pinController = OtpFieldController();
   String _pin = '';
   bool _checkPin = false;
+  DriveModel driveDetailsInfo = DriveModel();
 
   @override
   Widget build(BuildContext context) {
@@ -100,11 +105,13 @@ class _SecurityCodeDialogState extends State<SecurityCodeDialog> {
                   text: 'Start the Trip',
                   height: context.responsiveHeight(48),
                   width: context.responsiveWidth(290),
-                  onPressed: () {
+                  onPressed: () async {
                     if (_checkPin) {
-                      Navigator.pop(context);
+                      DriverHomePage.stat = 'driving';
+                      NavigationManager.instance.navigationToPop();
                       widget.onDialogClosed();
                       widget.showDialog();
+                      // ignore: use_build_context_synchronously
                     }
                     print('Yanlış kod');
                   },
