@@ -42,6 +42,8 @@ abstract class _ProfileControllerBase with Store {
   @observable
   String email = '';
 
+  UserProfileModel? userProfile;
+
   @action
   Future<void> init({String? id}) async {
     try {
@@ -70,36 +72,38 @@ abstract class _ProfileControllerBase with Store {
   }
 
   Future<void> _getUserProfileModel(String id) async {
-    UserProfileModel? userProfile =
-        await UserService.instance.getAnotherUser(id.toString());
+    print(id.toString());
+    userProfile = await UserService.instance.getAnotherUser(id.toString());
     if (userProfile == null) {
       throw Exception();
     }
     if (name == '') {
       name =
-          '${userProfile.userModel?.name} ${userProfile.userModel?.surname.toString()[0]}.';
+          '${userProfile?.userModel?.name} ${userProfile?.userModel?.surname.toString()[0]}.';
     }
-    description = userProfile.description.toString();
-    description = description.substring(0, description.length - 1);
-    star = userProfile.avaragePoint.toString();
+    description = userProfile!.description.toString();
+    if (description != '') {
+      description = description.substring(0, description.length - 1);
+    }
+    star = userProfile!.avaragePoint.toString();
     email = await CacheManager.instance.getData('user', 'email');
-    imagePath = '$baseUrl/${userProfile.profilePicturePath}';
-    lisanceVertification = userProfile.lisanceVerification ?? false;
+    userProfile!.userModel?.email = email;
+    imagePath = '$baseUrl/${userProfile!.profilePicturePath}';
+    lisanceVertification = userProfile!.lisanceVerification ?? false;
     if (description == 'null') {
       description = '';
     }
   }
 
   Future<void> updateUserProfile(UserProfileModel model) async {
-    try {
-      
-    } catch (e) {
-      // TODO: 
+    try {} catch (e) {
+      // TODO:
     }
   }
 
   void goToEditPage() {
-    NavigationManager.instance.navigationToPage(NavigationConstant.profileEdit);
+    NavigationManager.instance
+        .navigationToPage(NavigationConstant.profileEdit, args: userProfile);
   }
 
   void goToBackPage() {

@@ -13,6 +13,7 @@ import '../buttons/secondary_button.dart';
 import '../icons/circular_svg_icon.dart';
 
 class DriveBottomSheet extends StatefulWidget {
+
   final bool showSecondaryButton;
   DriveBottomSheet({
     super.key,
@@ -35,6 +36,7 @@ class DriveBottomSheet extends StatefulWidget {
 
   String? buttonTextCancel;
   String? buttonTextStart;
+
   final BuildContext context;
   final String customerName;
   double? height;
@@ -54,6 +56,7 @@ class DriveBottomSheet extends StatefulWidget {
 
 class _DriveBottomSheetState extends State<DriveBottomSheet> {
   Padding _buildCustomerInfo(BuildContext context, String imagePath, String customerName, String startText) {
+
     return Padding(
       padding: EdgeInsets.only(top: context.responsiveHeight(19), left: context.responsiveWidth(14), bottom: context.responsiveHeight(16)),
       child: Row(
@@ -107,6 +110,7 @@ class _DriveBottomSheetState extends State<DriveBottomSheet> {
 
   Padding _buildBottomButtons(
       BuildContext context, String? buttonTextCancel, String? buttonTextStart, VoidCallback? onPressedCancel, VoidCallback onPressedStart) {
+
     return Padding(
       padding: EdgeInsets.only(
           top: context.responsiveHeight(26), left: context.responsiveWidth(14), right: context.responsiveWidth(14), bottom: context.responsiveHeight(23)),
@@ -248,6 +252,7 @@ class _DriveBottomSheetState extends State<DriveBottomSheet> {
             widget.location2Text,
           ),
           _buildBottomButtons(context, widget.buttonTextCancel, widget.buttonTextStart, widget.onPressedCancel, widget.onPressedStart),
+
         ],
       ),
     );

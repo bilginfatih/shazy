@@ -7,7 +7,7 @@ import '../../widgets/dialogs/congratulation_dialog.dart';
 import '../../widgets/textfields/write_text_field.dart';
 
 class ComplainPage extends StatefulWidget {
-  ComplainPage({Key? key}) : super(key: key);
+  const ComplainPage({Key? key}) : super(key: key);
 
   @override
   State<ComplainPage> createState() => _ComplainPageState();
