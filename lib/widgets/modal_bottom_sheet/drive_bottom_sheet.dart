@@ -10,131 +10,52 @@ import 'package:shazy/widgets/textfields/otp_text_form_field.dart';
 import '../../utils/theme/themes.dart';
 import '../buttons/primary_button.dart';
 import '../buttons/secondary_button.dart';
+import '../icons/circular_svg_icon.dart';
 
-class DriveBottomSheet extends Container {
+class DriveBottomSheet extends StatefulWidget {
+  final bool showSecondaryButton;
   DriveBottomSheet({
-    Key? key,
-    String? buttonText,
-    double? height,
-    required BuildContext context,
-    required String pickingUpText,
-    required String imagePath,
-    required String customerName,
-    required String startText,
-    required String location1TextTitle,
-    required String location1Text,
-    required String location2TextTitle,
-    required String location2Text,
-    required VoidCallback onPressed,
-  }) : super(
-          key: key,
-          height: context.customeHeight(height ?? 0.51),
-          decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.only(
-              topLeft: Radius.circular(context.responsiveWidth(24)),
-              topRight: Radius.circular(context.responsiveWidth(24)),
-            ),
-          ),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              /*Padding(
-                padding: EdgeInsets.symmetric(
-                  horizontal: context.responsiveWidth(14),
-                  vertical: context.responsiveHeight(11),
-                ),
-                child: Align(
-                  alignment: Alignment.topRight,
-                  child: IconButton(
-                    onPressed: () {},
-                    icon: Icon(Icons.close),
-                  ),
-                ),
-              ),*/
-              Padding(
-                padding: EdgeInsets.only(
-                  top: context.responsiveHeight(34),
-                  left: context.responsiveWidth(14),
-                  bottom: context.responsiveHeight(15),
-                ),
-                child: Text(
-                  pickingUpText,
-                  style: context.textStyle.subheadLargeMedium,
-                ),
-              ),
-              const Divider(
-                thickness: 1,
-              ),
-              _buildCustomerInfo(context, imagePath, customerName, startText),
-              const Divider(
-                thickness: 1,
-              ),
-              _buildCodeColumn(context, buttonText),
-              _buildLocationRow(
-                context,
-                'map5',
-                location1TextTitle,
-                location1Text,
-              ),
-              SizedBox(
-                height: context.responsiveHeight(29),
-              ),
-              _buildLocationRow(
-                context,
-                'map4',
-                location2TextTitle,
-                location2Text,
-              ),
-              _buildBottomButtons(context, buttonText, onPressed),
-            ],
-          ),
-        );
+    super.key,
+    this.height,
+    this.buttonTextCancel,
+    this.buttonTextStart,
+    required this.context,
+    required this.pickingUpText,
+    required this.imagePath,
+    required this.customerName,
+    required this.startText,
+    required this.location1TextTitle,
+    required this.location1Text,
+    required this.location2TextTitle,
+    required this.location2Text,
+    this.onPressedCancel,
+    required this.onPressedStart,
+    required this.showSecondaryButton,
+  });
 
-  static Widget _buildCodeColumn(BuildContext context, String? buttonText) =>
-      buttonText == null
-          ? SizedBox(
-              height: context.responsiveHeight(18),
-            )
-          : Center(
-              child: Column(
-                children: [
-                  SizedBox(
-                    height: context.responsiveHeight(8),
-                  ),
-                  Text(
-                    'enterCode'.tr(),
-                    style: const TextStyle(
-                      fontSize: 11,
-                      fontFamily: 'Poppins',
-                      fontWeight: FontWeight.w500,
-                      height: 0.19,
-                    ),
-                  ),
-                  SizedBox(
-                    height: context.responsiveHeight(8),
-                  ),
-                  OTPTextFormField(
-                      context: context,
-                      width: context.responsiveWidth(200),
-                      fieldWidth: 27,
-                      contentPadding: const EdgeInsets.symmetric(
-                          horizontal: 2, vertical: 10),
-                      textStyle: context.textStyle.bodySmallMedium),
-                  SizedBox(
-                    height: context.responsiveHeight(20),
-                  ),
-                ],
-              ),
-            );
+  String? buttonTextCancel;
+  String? buttonTextStart;
+  final BuildContext context;
+  final String customerName;
+  double? height;
+  final String imagePath;
+  final String location1Text;
+  final String location1TextTitle;
+  final String location2Text;
+  final String location2TextTitle;
+  VoidCallback? onPressedCancel;
+  final VoidCallback onPressedStart;
+  final String pickingUpText;
+  final String startText;
 
-  static Padding _buildCustomerInfo(BuildContext context, String imagePath,
-      String customerName, String startText) {
+  @override
+  State<DriveBottomSheet> createState() => _DriveBottomSheetState();
+}
+
+class _DriveBottomSheetState extends State<DriveBottomSheet> {
+  Padding _buildCustomerInfo(BuildContext context, String imagePath, String customerName, String startText) {
     return Padding(
-      padding: EdgeInsets.only(
-          top: context.responsiveHeight(19),
-          left: context.responsiveWidth(14),
-          bottom: context.responsiveHeight(16)),
+      padding: EdgeInsets.only(top: context.responsiveHeight(19), left: context.responsiveWidth(14), bottom: context.responsiveHeight(16)),
       child: Row(
         children: [
           Container(
@@ -145,8 +66,7 @@ class DriveBottomSheet extends Container {
                 image: NetworkImage(imagePath),
                 fit: BoxFit.fill,
               ),
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(4)),
+              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
             ),
           ),
           SizedBox(
@@ -185,44 +105,46 @@ class DriveBottomSheet extends Container {
     );
   }
 
-  static Padding _buildBottomButtons(
-      BuildContext context, String? buttonText, VoidCallback onPressed) {
+  Padding _buildBottomButtons(
+      BuildContext context, String? buttonTextCancel, String? buttonTextStart, VoidCallback? onPressedCancel, VoidCallback onPressedStart) {
     return Padding(
       padding: EdgeInsets.only(
-          top: context.responsiveHeight(26),
-          left: context.responsiveWidth(14),
-          right: context.responsiveWidth(14),
-          bottom: context.responsiveHeight(23)),
+          top: context.responsiveHeight(26), left: context.responsiveWidth(14), right: context.responsiveWidth(14), bottom: context.responsiveHeight(23)),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          /*GestureDetector(
+          GestureDetector(
             onTap: () {
-              // TODO: ne olacağını sor
+              print('wp mesajlaşma atacak');
             },
             child: CircularSvgIcon(
               context: context,
               assetName: 'assets/svg/sms.svg',
             ),
-          ),*/
-          SecondaryButton(
-            width: 159,
-            text: buttonText ?? 'Cancel'.tr(),
-            context: context,
-            onPressed: onPressed,
           ),
+          if (widget.showSecondaryButton) // Eğer showSecondaryButton true ve index 0 ise göster
+            SecondaryButton(
+              width: context.responsiveWidth(147),
+              height: context.responsiveHeight(48),
+              text: buttonTextCancel ?? 'Cancel'.tr(),
+              context: context,
+              onPressed: onPressedCancel ?? () {},
+              style: context.textStyle.subheadLargeMedium.copyWith(fontSize: 15),
+            ),
           PrimaryButton(
-            width: 159,
-            text: buttonText ?? 'Start the Trip'.tr(),
+            width: widget.showSecondaryButton ? context.responsiveWidth(147) : context.responsiveWidth(189),
+            height: context.responsiveHeight(48),
+            text: buttonTextStart ?? 'Start the Trip'.tr(),
             context: context,
-            onPressed: onPressed,
+            onPressed: onPressedStart,
+            style: context.textStyle.subheadLargeMedium.copyWith(fontSize: 14),
           ),
         ],
       ),
     );
   }
 
-  static Padding _buildLocationRow(
+  Padding _buildLocationRow(
     BuildContext context,
     String assetName,
     String text1,
@@ -237,10 +159,7 @@ class DriveBottomSheet extends Container {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Padding(
-              padding: EdgeInsets.only(
-                  top: context.responsiveHeight(4),
-                  left: context.responsiveWidth(10),
-                  right: context.responsiveWidth(6)),
+              padding: EdgeInsets.only(top: context.responsiveHeight(4), left: context.responsiveWidth(10), right: context.responsiveWidth(6)),
               child: SvgPicture.asset('assets/svg/$assetName.svg'),
             ),
             Column(
@@ -267,4 +186,70 @@ class DriveBottomSheet extends Container {
           ],
         ),
       );
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      height: context.customeHeight(widget.height ?? 0.51),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.only(
+          topLeft: Radius.circular(context.responsiveWidth(24)),
+          topRight: Radius.circular(context.responsiveWidth(24)),
+        ),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          /*Padding(
+                padding: EdgeInsets.symmetric(
+                  horizontal: context.responsiveWidth(14),
+                  vertical: context.responsiveHeight(11),
+                ),
+                child: Align(
+                  alignment: Alignment.topRight,
+                  child: IconButton(
+                    onPressed: () {},
+                    icon: Icon(Icons.close),
+                  ),
+                ),
+              ),*/
+          Padding(
+            padding: EdgeInsets.only(
+              top: context.responsiveHeight(34),
+              left: context.responsiveWidth(14),
+              bottom: context.responsiveHeight(15),
+            ),
+            child: Text(
+              widget.pickingUpText,
+              style: context.textStyle.subheadLargeMedium,
+            ),
+          ),
+          const Divider(
+            thickness: 1,
+          ),
+          _buildCustomerInfo(context, widget.imagePath, widget.customerName, widget.startText),
+          const Divider(
+            thickness: 1,
+          ),
+          _buildLocationRow(
+            context,
+            'map5',
+            widget.location1TextTitle,
+            widget.location1Text,
+          ),
+          SizedBox(
+            height: context.responsiveHeight(29),
+          ),
+          _buildLocationRow(
+            context,
+            'map4',
+            widget.location2TextTitle,
+            widget.location2Text,
+          ),
+          _buildBottomButtons(context, widget.buttonTextCancel, widget.buttonTextStart, widget.onPressedCancel, widget.onPressedStart),
+        ],
+      ),
+    );
+  }
 }

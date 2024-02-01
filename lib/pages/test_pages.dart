@@ -6,6 +6,7 @@ import 'package:flutter_session_manager/flutter_session_manager.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:hexcolor/hexcolor.dart';
+import 'package:maps_launcher/maps_launcher.dart';
 import 'package:shazy/widgets/buttons/secondary_button.dart';
 import 'package:shazy/widgets/dialogs/drive_dialog.dart';
 import 'package:shazy/widgets/divider/counter_divider.dart';
@@ -353,7 +354,9 @@ class _TestPageState extends State<TestPage> with SingleTickerProviderStateMixin
                   },
                   child: Text('Driver dialog')),
               ElevatedButton.icon(
-                onPressed: () {},
+                onPressed: () {
+                  MapsLauncher.launchCoordinates(37.4220041, -122.0862462, 'Google Headquarters are here');
+                },
                 style: ElevatedButton.styleFrom(
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(15),
@@ -389,7 +392,8 @@ class _TestPageState extends State<TestPage> with SingleTickerProviderStateMixin
                         location1TextTitle: 'location1TextTitle',
                         location2Text: 'location2Text',
                         location2TextTitle: 'location2TextTitle',
-                        onPressed: () {},
+                        onPressedStart: () {},
+                        showSecondaryButton: true,
                       );
                     },
                   );
@@ -415,7 +419,7 @@ class _TestPageState extends State<TestPage> with SingleTickerProviderStateMixin
                         child: DriveBottomSheet(
                           context: context,
                           height: 0.60,
-                          buttonText: 'startTheTrip'.tr(),
+                          buttonTextStart: 'startTheTrip'.tr(),
                           pickingUpText: 'pickingUpText',
                           imagePath: 'https://via.placeholder.com/54x59',
                           customerName: 'customerName',
@@ -424,7 +428,8 @@ class _TestPageState extends State<TestPage> with SingleTickerProviderStateMixin
                           location1TextTitle: 'location1TextTitle',
                           location2Text: 'location2Text',
                           location2TextTitle: 'location2TextTitle',
-                          onPressed: () {},
+                          onPressedStart: () {},
+                          showSecondaryButton: true,
                         ),
                       );
                     },
@@ -564,7 +569,8 @@ class _TestPageState extends State<TestPage> with SingleTickerProviderStateMixin
                       location1TextTitle: 'location1TextTitle',
                       location2Text: 'location2Text',
                       location2TextTitle: 'location2TextTitle',
-                      onPressed: () {},
+                      onPressedStart: () {},
+                      showSecondaryButton: true,
                     ),
                   ),
                 ),

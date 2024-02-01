@@ -29,7 +29,7 @@ class PlacePredictionTileDesign extends StatelessWidget {
     print("place:" + placeDirectionDetailsUrl);
 
     var responseApi = await RequestAssistant.receiveRequest(placeDirectionDetailsUrl);
-    Navigator.pop(context);
+     NavigationManager.instance.navigationToPop();
 
     if (responseApi == "Error Occurred, Failed. No Response.") {
       return;

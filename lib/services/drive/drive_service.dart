@@ -1,3 +1,5 @@
+import 'package:flutter_session_manager/flutter_session_manager.dart';
+
 import '../../core/init/cache/cache_manager.dart';
 import '../../models/drive/drive_model.dart';
 
@@ -10,6 +12,15 @@ class DriveService {
   static DriveService instance = DriveService._init();
 
   final String _request = '/drive-request';
+
+   Future<void> driveStatus(DriveModel model) async {
+    try {
+      String userId = await SessionManager().get('id');
+      NetworkManager.instance.get('$_request/driver/$userId/${model.status}');
+    } catch (e) {
+      rethrow;
+    }
+  }
 
   /// Sürücüyü aktif eder.
   /// model paremetreleri: driver_id
