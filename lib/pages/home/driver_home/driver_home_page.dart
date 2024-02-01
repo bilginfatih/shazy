@@ -9,13 +9,17 @@ import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:maps_launcher/maps_launcher.dart';
+import 'package:provider/provider.dart';
 import 'package:shazy/pages/home/driver_home/driver_controller/driver_controller.dart';
 import 'package:shazy/widgets/dialogs/drive_dialog.dart';
 
 import '../../../core/assistants/asistant_methods.dart';
+import '../../../core/base/app_info.dart';
 import '../../../core/init/navigation/navigation_manager.dart';
 import '../../../core/init/network/network_manager.dart';
+import '../../../models/comment/comment_model.dart';
 import '../../../models/drive/drive_model.dart';
+import '../../../services/comment/comment_service.dart';
 import '../../../utils/constants/navigation_constant.dart';
 import '../../../utils/extensions/context_extension.dart';
 import '../../../widgets/buttons/icon_button.dart';
@@ -82,6 +86,8 @@ class _DriverHomePageState extends State<DriverHomePage> with TickerProviderStat
   late String _startAddressDriverToCaller;
 
   late Timer _timer;
+
+  int flag = 0;
 
   Position? _userCurrentPosition;
 
@@ -347,6 +353,18 @@ class _DriverHomePageState extends State<DriverHomePage> with TickerProviderStat
     }
   }
 
+  Future<void> sendComment(String comment, int index) async {
+    var model = CommentModel(comment: comment, point: index.toDouble());
+    model.commentorUserId = "9b1fbff8-e19d-4aab-8acb-b6580f85eab5";
+    //await SessionManager().get('id'); backende değişmesi lazım id
+    var response = await CommentService.instance.comment(model);
+    // NavigationManager.instance.navigationToPop();
+    if (response != null) {
+      // TODO: hata mesajı basacak
+      print('hata sendComment');
+    }
+  }
+
   Widget _buildDriverBottomSheetContent(int index, BuildContext context) {
     return SizedBox.expand(
       child: SlideTransition(
@@ -414,7 +432,8 @@ class _DriverHomePageState extends State<DriverHomePage> with TickerProviderStat
                                 context: context,
                                 textController: _commentTextController,
                                 onPressed: () {
-                                  _controllerComment.sendComment(_commentTextController.text, index);
+                                  sendComment(_commentTextController.text, _controllerComment.starSelectedIndex);
+                                  NavigationManager.instance.navigationToPop();
                                 },
                                 onPressedRatingBar: _controllerComment.changeStarSelectedIndex,
                                 text: '${'youRated'.tr()} Fatih${' ${_controllerComment.starSelectedIndex}'} ${'star'.tr()}',
@@ -540,6 +559,12 @@ class _DriverHomePageState extends State<DriverHomePage> with TickerProviderStat
 
   @override
   Widget build(BuildContext context) {
+    if (Provider.of<AppInfo>(context).userDropOffLocation != null && flag == 0) {
+      drawPolyLineFromOriginToDestination();
+      flag = 1;
+    } else {
+      print('işlem yapılmadı');
+    }
     double keyboardSize = MediaQuery.of(context).viewInsets.bottom;
     return Scaffold(
       body: SizedBox(
