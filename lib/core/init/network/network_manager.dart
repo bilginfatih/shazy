@@ -91,7 +91,7 @@ class NetworkManager extends BaseNetworkManager {
           },
         ),
       );
-      print(jsonDecode(response.toString()));
+      print(response);
       return jsonDecode(response.toString());
       // TODO: delete
       /*if (model != null) {

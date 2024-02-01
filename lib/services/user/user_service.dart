@@ -85,9 +85,16 @@ class UserService {
   }
 
   Future<void> logout() async {
+    var token = await SessionManager().get('token');
+    var request = {'token': token};
+    await NetworkManager.instance.post('/logout', data: request);
     CacheManager.instance.clearAll('user');
     await SessionManager().destroy();
     NavigationManager.instance
         .navigationToPageClear(NavigationConstant.welcome);
+  }
+
+  Future<void> resetPassword() async {
+    
   }
 }
