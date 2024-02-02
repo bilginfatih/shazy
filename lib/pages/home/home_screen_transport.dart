@@ -48,7 +48,10 @@ class _HomeScreenTransportState extends State<HomeScreenTransport> {
   //final OtpFieldController _pinController = OtpFieldController();
   late String _durationKm;
 
-  final Uri toLaunch = Uri(scheme: 'https', host: 'www.google.com', path: '/maps/@/data=!4m2!7m1!2e1');
+  final Uri toLaunch = Uri(
+      scheme: 'https',
+      host: 'www.google.com',
+      path: '/maps/@/data=!4m2!7m1!2e1');
 
   String? fiveDigitSecurityCode;
 
@@ -58,7 +61,7 @@ class _HomeScreenTransportState extends State<HomeScreenTransport> {
 
   List<LatLng> pLineCoOrdinatesList = [];
   Set<Polyline> polyLineSet = {};
-  Timer _timer =  Timer(Duration(milliseconds: 1), () {});
+  Timer _timer = Timer(Duration(milliseconds: 1), () {});
   Set<Marker> markersSet = {};
 
   Position? userCurrentPosition;
@@ -854,7 +857,6 @@ class _HomeScreenTransportState extends State<HomeScreenTransport> {
                     assetName: 'assets/svg/sms.svg',
                   ),
                 ),
-
               ),
               SizedBox(
                 width: context.responsiveWidth(132),

@@ -49,5 +49,23 @@
     "comments": "Comments",
     "fullName": "Full Name",
     "aboutYou": "About You",
-    "save": "Save"
+    "save": "Save",
+    "threeDSecure": "3D Secure",
+    "month": "Month",
+    "year": "Year",
+    "addCard": "Add Card",
+    "cardholderName": "Cardholder name",
+    "selectPaymentMethod": "Select payment method",
+    "totalAmount": "Total Amount",
+    "commission": "Commission",
+    "charge": "Charge",
+    "orderSummary": "Order Summary",
+    "currentLocation": "Current location",
+    "requestForDriver": "Request for driver",
+    "errorMessage": "Error Message",
+    "cardHolderNameError": "Kart sahibinin adı boş bırakılamaz.",
+    "cardNumberError": "Kart numarası hatalıdır.",
+    "expirationDateError": "Son kullanma tarihi hatalıdır.",
+    "cvvError": "CVV hatalıdır."
+
 }

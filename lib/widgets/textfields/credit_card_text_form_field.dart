@@ -11,6 +11,7 @@ class CreditCardTextFormField extends TextFormField {
     required TextEditingController controller,
   }) : super(
           key: key,
+          controller: controller,
           keyboardType: TextInputType.number,
           inputFormatters: [
             FilteringTextInputFormatter.digitsOnly,
