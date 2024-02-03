@@ -66,6 +66,7 @@
     "cardHolderNameError": "Kart sahibinin adı boş bırakılamaz.",
     "cardNumberError": "Kart numarası hatalıdır.",
     "expirationDateError": "Son kullanma tarihi hatalıdır.",
-    "cvvError": "CVV hatalıdır."
+    "cvvError": "CVV hatalıdır.",
+    "noPaymentMethod": "No Payment Method"
 
 }

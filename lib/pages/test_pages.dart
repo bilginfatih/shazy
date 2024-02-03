@@ -121,6 +121,7 @@ class _TestPageState extends State<TestPage>
               ElevatedButton(
                 onPressed: () async {
                   CacheManager.instance.clearAll('user');
+                  CacheManager.instance.clearAll('card');
                 },
                 child: Text('cache delete'),
               ),

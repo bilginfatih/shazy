@@ -178,23 +178,25 @@ class _PaymetnMethodPageState extends State<PaymetnMethodPage> {
               SizedBox(
                 height: context.responsiveHeight(26),
               ),
-              /*Center(
-                  child: Text(
-                    'No Payment Method',
-                    style: context.textStyle.titleSmallMedium
-                        .copyWith(color: HexColor('#898989')),
-                  ),
-                ), */
-
-              PaymetMethodContainer(
-                context: context,
-                assetName: 'visa',
-                text1:
-                    '**** **** **** ${_controller.card.cardNumber?.substring(_controller.card.cardNumber!.length - 5)}',
-                text2:
-                    'Expires: ${_controller.card.month}/${_controller.card.year}',
-                opacitiy: 1,
-              ),
+              _controller.card.cardNumber != null &&
+                      _controller.card.month != null &&
+                      _controller.card.year != null
+                  ? PaymetMethodContainer(
+                      context: context,
+                      assetName: 'visa',
+                      text1:
+                          '**** **** **** ${_controller.card.cardNumber?.substring(_controller.card.cardNumber!.length - 5)}',
+                      text2:
+                          'Expires: ${_controller.card.month}/${_controller.card.year}',
+                      opacitiy: 1,
+                    )
+                  : Center(
+                      child: Text(
+                        'noPaymentMethod'.tr(),
+                        style: context.textStyle.titleSmallMedium
+                            .copyWith(color: HexColor('#898989')),
+                      ),
+                    ),
               const Spacer(),
               PrimaryButton(
                 text: 'Confirm',
