@@ -18,8 +18,11 @@ import '../../core/init/navigation/navigation_manager.dart';
 import '../../core/init/network/network_manager.dart';
 import '../../models/drive/drive_model.dart';
 import '../../models/searchDistance/search_distance_model.dart';
+import '../../models/user/user_profile_model.dart';
 import '../../services/drive/drive_service.dart';
 import '../../services/searchDistance/search_distance_service.dart';
+import '../../services/user/user_service.dart';
+import '../../utils/constants/app_constant.dart';
 import '../../utils/constants/navigation_constant.dart';
 import '../../utils/extensions/context_extension.dart';
 import '../../utils/theme/themes.dart';
@@ -57,10 +60,7 @@ class _HomeScreenTransportState extends State<HomeScreenTransport> with TickerPr
   //final OtpFieldController _pinController = OtpFieldController();
   late String _durationKm;
 
-  final Uri toLaunch = Uri(
-      scheme: 'https',
-      host: 'www.google.com',
-      path: '/maps/@/data=!4m2!7m1!2e1');
+  final Uri toLaunch = Uri(scheme: 'https', host: 'www.google.com', path: '/maps/@/data=!4m2!7m1!2e1');
 
   String? fiveDigitSecurityCode;
 
@@ -78,9 +78,13 @@ class _HomeScreenTransportState extends State<HomeScreenTransport> with TickerPr
   List<LatLng> pLineCoOrdinatesList = [];
   Set<Polyline> polyLineSet = {};
   Timer _timer = Timer(Duration(milliseconds: 1), () {});
-  Timer _timerStatus = Timer(Duration(milliseconds: 1), () {});
   Timer _timerSearchDriver = Timer(Duration(milliseconds: 1), () {});
   Set<Marker> markersSet = {};
+
+  late double driverAvaragePoint = 0.0;
+  late String driverName = '';
+  late String driverSurname = '';
+  late String driverPicturePath = '';
 
   Position? userCurrentPosition;
   var geoLocator = Geolocator();
@@ -129,9 +133,6 @@ class _HomeScreenTransportState extends State<HomeScreenTransport> with TickerPr
     if (_timer.isActive) {
       _timer.cancel();
     }
-    if (_timerStatus.isActive) {
-      _timerStatus.cancel();
-    }
     if (_timerSearchDriver.isActive) {
       _timerSearchDriver.cancel();
     }
@@ -154,6 +155,15 @@ class _HomeScreenTransportState extends State<HomeScreenTransport> with TickerPr
 
       var statusId = requestId[0]["id"];
 
+      String driverId = requestId[0]["driver_id"];
+
+      UserProfileModel? userProfile = await UserService.instance.getAnotherUser(driverId);
+      driverAvaragePoint = userProfile!.avaragePoint!;
+      driverName = userProfile.userModel!.name!;
+      driverSurname = userProfile.userModel!.surname!;
+      driverPicturePath = userProfile.profilePicturePath!;
+      
+
       requestId2 = statusId;
       if (requestId2 != '') {
         _timerSearchDriver.cancel();
@@ -172,6 +182,7 @@ class _HomeScreenTransportState extends State<HomeScreenTransport> with TickerPr
 
       if (requestResponse != null) {
         HomeScreenTransport.status = requestResponse["status"];
+
         print('status: ' + HomeScreenTransport.status);
 
         if (HomeScreenTransport.status == 'accept' && HomeScreenTransport.flagAccept == 0) {
@@ -285,9 +296,9 @@ class _HomeScreenTransportState extends State<HomeScreenTransport> with TickerPr
                     },
               context: context,
               pickingUpText: index == 0 ? 'Meeting Time 10:10' : 'Trip to Destionation',
-              customerName: 'Zübeyir X',
-              imagePath: 'https://via.placeholder.com/54x59',
-              startText: 'startText',
+              customerName: '$driverName $driverSurname',
+              imagePath: '$baseUrl/$driverPicturePath',
+              startText: driverAvaragePoint.toString(),
               paymentText: 'Payment method',
               totalPaymentText: '220.00₺',
               verificationCodeText: fiveDigitSecurityCode.toString(),
@@ -401,7 +412,9 @@ class _HomeScreenTransportState extends State<HomeScreenTransport> with TickerPr
                 color: Colors.black,
                 size: 18,
                 onPressed: () {
-                  widget.scaffoldKey?.currentState?.openDrawer();
+                  if (HomeScreenTransport.allowNavigation) {
+                    widget.scaffoldKey?.currentState?.openDrawer();
+                  }
                 },
               ),
               CustomIconButton(

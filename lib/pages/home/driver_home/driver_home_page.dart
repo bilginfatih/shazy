@@ -19,7 +19,10 @@ import '../../../core/init/navigation/navigation_manager.dart';
 import '../../../core/init/network/network_manager.dart';
 import '../../../models/comment/comment_model.dart';
 import '../../../models/drive/drive_model.dart';
+import '../../../models/user/user_profile_model.dart';
 import '../../../services/comment/comment_service.dart';
+import '../../../services/user/user_service.dart';
+import '../../../utils/constants/app_constant.dart';
 import '../../../utils/constants/navigation_constant.dart';
 import '../../../utils/extensions/context_extension.dart';
 import '../../../widgets/buttons/icon_button.dart';
@@ -32,10 +35,12 @@ import '../../../widgets/drawer/custom_drawer.dart';
 import '../../../widgets/modal_bottom_sheet/comment_bottom_sheet.dart';
 import '../../../widgets/modal_bottom_sheet/drive_bottom_sheet.dart';
 import '../../history/controller/history_upcoming_controller.dart';
+import '../home_screen_transport.dart';
 
 class DriverHomePage extends StatefulWidget {
   const DriverHomePage({Key? key}) : super(key: key);
   static String stat = '';
+  static bool allowNavigation = true;
 
   @override
   State<DriverHomePage> createState() => _DriverHomePageState();
@@ -76,6 +81,12 @@ class _DriverHomePageState extends State<DriverHomePage> with TickerProviderStat
   late String _durationTimeDriverToCaller = '';
   late String _endAddressCallerToDestination = '';
   late String _endAddressDriverToCaller = '';
+
+  late double callerAvaragePoint = 0.0;
+  late String callerName = '';
+  late String callerSurname = '';
+  late String callerPicturePath = '';
+  late String callerId = '';
 
   String _mapTheme = '';
   final Set<Marker> _markersSet = {};
@@ -146,6 +157,14 @@ class _DriverHomePageState extends State<DriverHomePage> with TickerProviderStat
 
       var statusId = requestId[0]["id"];
 
+      callerId = requestId[0]["caller_id"];
+
+      UserProfileModel? userProfile = await UserService.instance.getAnotherUser(callerId);
+      callerAvaragePoint = userProfile!.avaragePoint!;
+      callerName = userProfile.userModel!.name!;
+      callerSurname = userProfile.userModel!.surname!;
+      callerPicturePath = userProfile.profilePicturePath!;
+
       final String requestId2 = statusId;
       String apiUrl = "/drive-request/$requestId2";
 
@@ -162,6 +181,7 @@ class _DriverHomePageState extends State<DriverHomePage> with TickerProviderStat
         toLongitude = double.parse(requestResponse["to_lang"]);
 
         if (driveDetailsInfo.status == 'matched') {
+          HomeScreenTransport.allowNavigation = false;
           _timer.cancel();
           drawPolyLineFromOriginToDestination();
         }
@@ -327,7 +347,7 @@ class _DriverHomePageState extends State<DriverHomePage> with TickerProviderStat
         acceptOnPressed: () async {
           var userId = await SessionManager().get('id');
           DriveModel model = DriveModel(driverId: userId);
-         await _driverController.driverAccept(model);
+          await _driverController.driverAccept(model);
           _showDriverBottomSheet(0);
         },
       ),
@@ -368,7 +388,7 @@ class _DriverHomePageState extends State<DriverHomePage> with TickerProviderStat
 
   Future<void> sendComment(String comment, int index) async {
     var model = CommentModel(comment: comment, point: index.toDouble());
-    model.commentorUserId = "9b1fbff8-e19d-4aab-8acb-b6580f85eab5";
+    model.commentorUserId = callerId;
     //await SessionManager().get('id'); backende değişmesi lazım id string girilen değer caller id
     var response = await CommentService.instance.comment(model);
     // NavigationManager.instance.navigationToPop();
@@ -390,9 +410,9 @@ class _DriverHomePageState extends State<DriverHomePage> with TickerProviderStat
               buttonTextStart: index == 0 ? 'Start the Trip' : 'Finish the Trip',
               context: context,
               pickingUpText: index == 0 ? 'pickingUpText'.tr() : 'Going to Destination',
-              imagePath: 'https://via.placeholder.com/54x59',
-              customerName: 'customerName',
-              startText: 'startText',
+              imagePath: '$baseUrl/$callerAvaragePoint',
+              customerName: '$callerName $callerSurname',
+              startText: callerAvaragePoint.toString(),
               location1Text: humanReadableAddress.length > 36 ? "${humanReadableAddress.substring(0, 36)}..." : humanReadableAddress,
               location1TextTitle: 'Current Location',
               location2Text:
@@ -428,6 +448,7 @@ class _DriverHomePageState extends State<DriverHomePage> with TickerProviderStat
                           NavigationManager.instance.navigationToPop();
                           _bottomSheetControllers[1].reverse();
                           showModalBottomSheet(
+                            isDismissible: false,
                             isScrollControlled: true,
                             shape: const RoundedRectangleBorder(
                               borderRadius: BorderRadius.only(
@@ -443,7 +464,11 @@ class _DriverHomePageState extends State<DriverHomePage> with TickerProviderStat
                                 textController: _commentTextController,
                                 onPressed: () {
                                   sendComment(_commentTextController.text, _controllerComment.starSelectedIndex);
-                                  NavigationManager.instance.navigationToPop();
+                                  setState(() {
+                                    HomeScreenTransport.allowNavigation = true;
+                                  });
+
+                                  NavigationManager.instance.navigationToPageClear(NavigationConstant.homePage);
                                 },
                                 onPressedRatingBar: _controllerComment.changeStarSelectedIndex,
                                 text: '${'youRated'.tr()} Fatih${' ${_controllerComment.starSelectedIndex}'} ${'star'.tr()}',
@@ -494,11 +519,13 @@ class _DriverHomePageState extends State<DriverHomePage> with TickerProviderStat
           NavigationManager.instance.navigationToPage(NavigationConstant.notification);
         });
 
-  Widget _buildTopLeftButton(BuildContext context) => _driverController.driverActive
-      ? _buildCustomIconButton(true, Icons.menu, () {
-          // TODO: test amaçlı yapılmış olup kaldırılacaktır!
-        })
-      : SizedBox();
+  Widget _buildTopLeftButton(BuildContext context) {
+    return _driverController.driverActive
+        ? _buildCustomIconButton(true, Icons.menu, () {
+            // TODO: test amaçlı yapılmış olup kaldırılacaktır!
+          })
+        : SizedBox();
+  }
 
   CustomIconButton _buildCustomIconButton(bool isLeft, IconData icon, VoidCallback onPressed) => CustomIconButton(
         context: context,
@@ -582,8 +609,8 @@ class _DriverHomePageState extends State<DriverHomePage> with TickerProviderStat
           return Stack(
             children: [
               _buildGoogleMap(context),
-              _buildTopLeftButton(context),
-              _buildRightTopButton(context),
+              if (HomeScreenTransport.allowNavigation) _buildTopLeftButton(context),
+              if (HomeScreenTransport.allowNavigation) _buildRightTopButton(context),
               _buildBottomOfBody(context, keyboardSize),
               _buildGoogleMapsButton(context),
               _buildDriverBottomSheetContent(0, context),
