@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:provider/provider.dart';
+import '../../models/drive/drive_model.dart';
 import '../../utils/extensions/context_extension.dart';
 import '../../utils/theme/themes.dart';
 import '../../widgets/buttons/primary_button.dart';
@@ -11,6 +12,7 @@ import '../../core/init/navigation/navigation_manager.dart';
 import '../../utils/constants/navigation_constant.dart';
 import '../../widgets/app_bars/back_app_bar.dart';
 import '../../widgets/padding/base_padding.dart';
+import '../home/home_screen_transport.dart';
 
 class PaymetnMethodPage extends StatefulWidget {
   const PaymetnMethodPage({super.key});
@@ -20,6 +22,8 @@ class PaymetnMethodPage extends StatefulWidget {
 }
 
 class _PaymetnMethodPageState extends State<PaymetnMethodPage> {
+  DriveModel driveDetailsInfo = DriveModel();
+
   Row _buildPriceRow(BuildContext context, String text1, String text2) => Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [

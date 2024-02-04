@@ -11,12 +11,14 @@ import 'package:shazy/widgets/buttons/secondary_button.dart';
 import 'package:shazy/widgets/dialogs/drive_dialog.dart';
 import 'package:shazy/widgets/divider/counter_divider.dart';
 import 'package:shazy/widgets/modal_bottom_sheet/drive_bottom_sheet.dart';
+import '../core/init/navigation/navigation_manager.dart';
 import '../models/comment/comment_model.dart';
 import '../models/drive/drive_model.dart';
 import '../models/security/security_model.dart';
 import '../services/comment/comment_service.dart';
 import '../services/drive/drive_service.dart';
 import '../services/security/security_service.dart';
+import '../utils/constants/navigation_constant.dart';
 import '../utils/extensions/context_extension.dart';
 import '../utils/theme/themes.dart';
 import '../widgets/buttons/primary_button.dart';
@@ -39,8 +41,7 @@ class TestPage extends StatefulWidget {
   State<TestPage> createState() => _TestPageState();
 }
 
-class _TestPageState extends State<TestPage>
-    with SingleTickerProviderStateMixin {
+class _TestPageState extends State<TestPage> with SingleTickerProviderStateMixin {
   final _scaffoldKey = GlobalKey<ScaffoldState>();
 
   final _key = GlobalKey();
@@ -67,11 +68,16 @@ class _TestPageState extends State<TestPage>
               ElevatedButton(
                 onPressed: () async {
                   var userId = await SessionManager().get('id');
-                  SecurityModel model =
-                      SecurityModel(driverId: userId, securityCode: '64542');
+                  SecurityModel model = SecurityModel(driverId: userId, securityCode: '64542');
                   await SecurityService.intance.securityCodeMatch(model);
                 },
                 child: Text('securi code eşleşme'),
+              ),
+              ElevatedButton(
+                onPressed: () {
+                  NavigationManager.instance.navigationToPage(NavigationConstant.cancelDrive);
+                },
+                child: Text('cancel drive Test'),
               ),
               ElevatedButton(
                 onPressed: () {
@@ -142,23 +148,20 @@ class _TestPageState extends State<TestPage>
               ),
               ElevatedButton(
                 onPressed: () async {
-                  var response =
-                      await HistoryService.instance.getDriverHistory();
+                  var response = await HistoryService.instance.getDriverHistory();
                 },
                 child: Text('GetDriverHistory'),
               ),
               ElevatedButton(
                 onPressed: () async {
-                  var response =
-                      await HistoryService.instance.getPassengerHistory();
+                  var response = await HistoryService.instance.getPassengerHistory();
                   print(response);
                 },
                 child: Text('GetPassengerHistory'),
               ),
               ElevatedButton(
                 onPressed: () async {
-                  var data =
-                      await CacheManager.instance.getData('user', 'email');
+                  var data = await CacheManager.instance.getData('user', 'email');
                   print(data);
                 },
                 child: Text('HiveTest'),
@@ -172,8 +175,7 @@ class _TestPageState extends State<TestPage>
               ),
               ElevatedButton(
                 onPressed: () async {
-                  await UserService.instance
-                      .getAnotherUser('9a9659af-6549-41d0-be1a-f75ba16e2c60');
+                  await UserService.instance.getAnotherUser('9a9659af-6549-41d0-be1a-f75ba16e2c60');
                 },
                 child: Text('Another User'),
               ),
@@ -222,8 +224,7 @@ class _TestPageState extends State<TestPage>
               ElevatedButton(
                 onPressed: () async {
                   var userId = await SessionManager().get('id');
-                  DriveModel model = DriveModel(
-                      driverId: userId, driverLat: 40.0, driverLang: 28.0);
+                  DriveModel model = DriveModel(driverId: userId, driverLat: 40.0, driverLang: 28.0);
                   await DriveService.instance.driverActive(model);
                 },
                 child: Text('Driver Active'),
@@ -248,8 +249,7 @@ class _TestPageState extends State<TestPage>
                 onPressed: () async {
                   var userId = await SessionManager().get('id');
                   var now = DateTime.now();
-                  var timeTo =
-                      DateTime(now.year, now.month, now.day, 23, 23, 23);
+                  var timeTo = DateTime(now.year, now.month, now.day, 23, 23, 23);
                   DriveModel model = DriveModel(
                     driverId: userId,
                     timeFrom: now.toString(),
@@ -298,22 +298,14 @@ class _TestPageState extends State<TestPage>
                               right: context.responsiveWidth(14),
                             ),
                             child: Container(
-                              decoration: ShapeDecoration(
-                                  shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(8)),
-                                  color: Colors.white),
+                              decoration: ShapeDecoration(shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)), color: Colors.white),
                               child: Padding(
-                                padding: EdgeInsets.symmetric(
-                                    vertical: context.responsiveHeight(15),
-                                    horizontal: context.responsiveWidth(15)),
+                                padding: EdgeInsets.symmetric(vertical: context.responsiveHeight(15), horizontal: context.responsiveWidth(15)),
                                 child: Column(
                                   children: [
-                                    Text('220₺',
-                                        style: context
-                                            .textStyle.titleXlargeRegular),
+                                    Text('220₺', style: context.textStyle.titleXlargeRegular),
                                     Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
+                                      mainAxisAlignment: MainAxisAlignment.center,
                                       children: [
                                         Icon(
                                           Icons.star,
@@ -321,8 +313,7 @@ class _TestPageState extends State<TestPage>
                                         ),
                                         Text(
                                           '4.9',
-                                          style: context
-                                              .textStyle.bodySmallRegular,
+                                          style: context.textStyle.bodySmallRegular,
                                         ),
                                       ],
                                     ),
@@ -353,8 +344,7 @@ class _TestPageState extends State<TestPage>
                                     ),
                                     Spacer(),
                                     Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceBetween,
+                                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                       children: [
                                         SecondaryButton(
                                           width: context.responsiveWidth(160),
@@ -496,8 +486,7 @@ class _TestPageState extends State<TestPage>
                                 horizontal: context.responsiveWidth(20),
                               ),
                               child: Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                 children: [
                                   Text(
                                     'pickingUpText',
@@ -575,8 +564,7 @@ class _TestPageState extends State<TestPage>
                     },
                   ); */
                 },
-                child:
-                    Text('Drive bottom sheet bar (Elifin dediği gibi çalışan)'),
+                child: Text('Drive bottom sheet bar (Elifin dediği gibi çalışan)'),
               ),
               SizedBox(
                 height: context.height,
@@ -586,9 +574,7 @@ class _TestPageState extends State<TestPage>
                     minChildSize: 0.1,
                     maxChildSize: 0.7,
                     initialChildSize: 0.1,
-                    builder: (BuildContext context,
-                            ScrollController scrollController) =>
-                        DriveBottomSheet(
+                    builder: (BuildContext context, ScrollController scrollController) => DriveBottomSheet(
                       context: context,
                       pickingUpText: 'pickingUpText',
                       imagePath: 'https://via.placeholder.com/54x59',
@@ -644,10 +630,7 @@ class _TestPageState extends State<TestPage>
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Padding(
-              padding: EdgeInsets.only(
-                  top: context.responsiveHeight(4),
-                  left: context.responsiveWidth(10),
-                  right: context.responsiveWidth(6)),
+              padding: EdgeInsets.only(top: context.responsiveHeight(4), left: context.responsiveWidth(10), right: context.responsiveWidth(6)),
               child: SvgPicture.asset('assets/svg/$assetName.svg'),
             ),
             Column(

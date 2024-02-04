@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_session_manager/flutter_session_manager.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:hexcolor/hexcolor.dart';
+import 'package:hive_flutter/hive_flutter.dart';
 import 'package:shazy/utils/extensions/context_extension.dart';
 import '../../core/init/navigation/navigation_manager.dart';
 import '../../models/drive/drive_model.dart';
@@ -71,8 +72,16 @@ class _DriverChoosePageState extends State<DriverChoosePage> {
                     setState(() {
                       _choosePick = 'Driver_logo_purple1x';
                     });
-                    fitToDriveButtonPressed();
-                    NavigationManager.instance.navigationToPage(NavigationConstant.homePage, args: true);
+                    int countdownValue = Hive.box<int>('countdownBox').get('countdownValue', defaultValue: 0) ?? 0;
+
+                    if (countdownValue > 0) {
+                      // Geri sayım devam ediyorsa, kullanıcıyı CancelDrive sayfasına yönlendir
+                      NavigationManager.instance.navigationToPage(NavigationConstant.cancelDrive);
+                    } else {
+                      // Geri sayım bitmişse, fitToDriveButtonPressed fonksiyonunu çağır ve kullanıcıyı homePage'e yönlendir
+                      fitToDriveButtonPressed();
+                      NavigationManager.instance.navigationToPage(NavigationConstant.homePage, args: true);
+                    }
                   },
                 ),
               ],
@@ -102,8 +111,7 @@ class _DriverChoosePageState extends State<DriverChoosePage> {
 
         // Sonucu kontrol et
         if (result != null) {
-          // Hata durumunda kullanıcıya bildirim veya işlem yapabilirsiniz
-          // Örneğin:
+          
           ScaffoldMessenger.of(context).showSnackBar(SnackBar(
             content: Text(result),
           ));
@@ -112,11 +120,8 @@ class _DriverChoosePageState extends State<DriverChoosePage> {
           // Yapılacak işlemler...
         }
       } catch (e) {
-        // Hata durumunda kullanıcıya bildirim veya işlem yapabilirsiniz
-        // Örneğin:
-        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-          content: Text("An error occurred: $e"),
-        ));
+        
+       
       }
     } else {
       // Hata durumu, kullanıcı oturum açmamışsa veya ID alınamamışsa yapılacak işlemler

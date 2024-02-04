@@ -59,6 +59,8 @@ class NavigationConstant {
   static const driverUnfortunatelySecond = '/driverUnfortunatelySecond';
   static const driverCompleteSecond = '/driverCompleteSecond';
 
+  static const cancelDrive = '/cancelDrive';
+
   // Profile
   static const profileEdit = '/profileEdit';
 

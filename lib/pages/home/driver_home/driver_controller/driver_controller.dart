@@ -4,6 +4,7 @@ import 'package:shazy/core/init/navigation/navigation_manager.dart';
 import 'package:shazy/models/drive/drive_model.dart';
 import 'package:shazy/services/drive/drive_service.dart';
 
+import '../../../../core/init/network/network_manager.dart';
 import '../../../../utils/constants/navigation_constant.dart';
 part 'driver_controller.g.dart';
 
@@ -31,8 +32,7 @@ abstract class _DriverControllerBase with Store {
       var model = DriveModel(driverId: userId);
       var response = await DriveService.instance.driverPassive(model);
       // TODO: responsa bağlı olarak home page e gidicek
-      NavigationManager.instance
-          .navigationToPageClear(NavigationConstant.homePage);
+      NavigationManager.instance.navigationToPageClear(NavigationConstant.homePage);
     } catch (e) {
       // TODO: hata sayfasına yönlendir.
     }
@@ -43,16 +43,18 @@ abstract class _DriverControllerBase with Store {
       var userId = await SessionManager().get('id');
       var model = DriveModel(driverId: userId);
       var response = await DriveService.instance.driveCancel(model);
-      if (response != '') {
-        NavigationManager.instance
-            .navigationToPageClear(NavigationConstant.homePage);
-      }
     } catch (e) {
       // TODO: hata mesajı gözükecek
     }
   }
+  
 
-  Future<void> driverAccept() async {
+  Future<void> driverAccept(DriveModel model) async {
+
+    try {
+      var response = await NetworkManager.instance.post('/drive-request/Accept', model: model);
+    } catch (e) {}
+
     NavigationManager.instance.navigationToPop();
   }
 

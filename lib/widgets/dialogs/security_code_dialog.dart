@@ -20,6 +20,7 @@ class SecurityCodeDialog extends StatefulWidget {
   final BuildContext context;
   final VoidCallback onDialogClosed;
   final VoidCallback showDialog;
+  static bool isTrueSecurity = false;
   SecurityCodeDialog({
     Key? key,
     required this.context,
@@ -89,8 +90,10 @@ class _SecurityCodeDialogState extends State<SecurityCodeDialog> {
                       var userId = await SessionManager().get('id');
                       SecurityModel model = SecurityModel(driverId: userId, securityCode: _pin.toString());
                       await SecurityService.intance.securityCodeMatch(model);
-                      _checkPin = true;
-                      print('başarılı');
+                      if (SecurityCodeDialog.isTrueSecurity) {
+                        _checkPin = true;
+                      }
+                      
                     } else {
                       _checkPin = false;
                       print('başarısız');

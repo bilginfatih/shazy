@@ -12,7 +12,7 @@ import 'core/init/language/language_manager.dart';
 import 'core/init/navigation/navigation_manager.dart';
 import 'core/init/navigation/navigation_route_manager.dart';
 import 'utils/theme/themes.dart';
-
+    
 void main() async {
   await _init();
   // Konum izni kontrolü
@@ -36,6 +36,7 @@ _init() async {
   await Firebase.initializeApp();
   await FirebaseNotificationManager.instance.init();
   await Hive.initFlutter();
+  await Hive.openBox<int>('countdownBox'); // canceldrive geri sayım
   await EasyLocalization.ensureInitialized();
 }
 
