@@ -15,7 +15,6 @@ class UserProfileModel extends BaseModel {
   });
 
   UserProfileModel._fromJson(o) {
-    print(o['user-profile'][0]);
     userModel = UserModel();
     userModel = userModel!.fromJson(o);
     var userProfile = o['user-profile'][0];

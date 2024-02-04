@@ -1,5 +1,7 @@
 import 'package:easy_localization/easy_localization.dart';
+import 'package:flutter_session_manager/flutter_session_manager.dart';
 import 'package:hive/hive.dart';
+import 'package:shazy/core/init/network/network_manager.dart';
 
 import '../../models/payment/payment_model.dart';
 
@@ -33,9 +35,21 @@ class PaymentService {
     try {
       var box = await Hive.openBox('card');
       var response = await box.get('card');
+      print(response);
       return model.fromJson(response);
     } catch (e) {
       return model;
+    }
+  }
+
+  Future<String> pay(PaymentModel model) async {
+    try {
+      model.uid = await SessionManager().get('id');
+      var response =
+          await NetworkManager.instance.post('/payment', model: model);
+      return '';
+    } catch (e) {
+      return 'paymentError'.tr();
     }
   }
 }

@@ -67,6 +67,9 @@
     "cardNumberError": "Kart numarası hatalıdır.",
     "expirationDateError": "Son kullanma tarihi hatalıdır.",
     "cvvError": "CVV hatalıdır.",
-    "noPaymentMethod": "No Payment Method"
-
+    "noPaymentMethod": "No Payment Method",
+    "amount": "Amount",
+    "paymentSuccess": "Payment Success",
+    "yourMoneyHasBeenSuccessfullySentTo": "Your money has been successfully sent to ",
+    "paymentError": "Payment Error"
 }

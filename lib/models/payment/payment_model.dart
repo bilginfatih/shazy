@@ -7,33 +7,42 @@ class PaymentModel extends BaseModel {
     this.cvv,
     this.month,
     this.year,
+    this.uid,
+    this.amount,
   });
 
   PaymentModel._fromJson(o) {
-    cardHolderName = o['cardHolderName'];
-    cardNumber = o['cardNumber'];
-    cvv = o['cvv'];
-    month = o['month'];
-    year = o['year'];
+    cardHolderName = o['card_holder_full_name'];
+    cardNumber = o['card_number'];
+    cvv = o['cvv_number'];
+    month = o['exp_month'];
+    year = o['exp_year'];
+    amount = double.tryParse(o['amount'].toString());
+    uid = o['user_id'];
   }
 
   @override
   fromJson(json) => PaymentModel._fromJson(json);
 
+  double? amount;
   String? cardHolderName;
   String? cardNumber;
   String? cvv;
   String? month;
+  String? uid;
   String? year;
 
   @override
   Map<String, dynamic> toJson() {
     Map<String, dynamic> map = {};
-    if (cardHolderName != null) map['cardHolderName'] = cardHolderName;
-    if (cardNumber != null) map['cardNumber'] = cardNumber;
-    if (cvv != null) map['cvv'] = cvv;
-    if (month != null) map['month'] = month;
-    if (year != null) map['year'] = year;
+    if (cardHolderName != null) map['card_holder_full_name'] = cardHolderName;
+    if (cardNumber != null) map['card_number'] = cardNumber;
+    if (cvv != null) map['cvv_number'] = cvv;
+    if (month != null) map['exp_month'] = month;
+    if (year != null) map['exp_year'] = year;
+    if (amount != null) map['amount'] = amount;
+    if (uid != null) map['user_id'] = uid;
+
     return map;
   }
 }
