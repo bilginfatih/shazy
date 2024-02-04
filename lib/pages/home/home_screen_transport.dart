@@ -57,7 +57,10 @@ class _HomeScreenTransportState extends State<HomeScreenTransport> with TickerPr
   //final OtpFieldController _pinController = OtpFieldController();
   late String _durationKm;
 
-  final Uri toLaunch = Uri(scheme: 'https', host: 'www.google.com', path: '/maps/@/data=!4m2!7m1!2e1');
+  final Uri toLaunch = Uri(
+      scheme: 'https',
+      host: 'www.google.com',
+      path: '/maps/@/data=!4m2!7m1!2e1');
 
   String? fiveDigitSecurityCode;
 

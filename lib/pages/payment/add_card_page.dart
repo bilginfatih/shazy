@@ -1,6 +1,9 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:shazy/models/payment/payment_model.dart';
+import 'package:shazy/pages/payment/controller/payment_controller.dart';
 import '../../utils/extensions/context_extension.dart';
 import '../../widgets/app_bars/back_app_bar.dart';
 import '../../widgets/buttons/primary_button.dart';
@@ -17,10 +20,13 @@ class AddCard extends StatelessWidget {
   final TextEditingController _cardholderNameController =
       TextEditingController();
 
+  final PaymentController _controller = PaymentController();
   final TextEditingController _cvvController = TextEditingController();
   final TextEditingController _monthController = TextEditingController();
   final TextEditingController _yearController = TextEditingController();
 
+  /*
+ // 3 payment text
   Container _buildContainer(BuildContext context) => Container(
         height: context.responsiveHeight(36),
         width: double.infinity,
@@ -41,22 +47,22 @@ class AddCard extends StatelessWidget {
                 width: context.responsiveWidth(10),
               ),
               Text(
-                '3D Secure',
+                'threeDSecure'.tr(),
                 style: context.textStyle.subheadSmallRegular,
               )
             ],
           ),
         ),
-      );
+      ); */
 
   Row _buildRow(BuildContext context) {
     return Row(
       children: [
-        _buildTwoDigitTextFormField(context, _monthController, 'Month'),
+        _buildTwoDigitTextFormField(context, _monthController, 'month'.tr()),
         SizedBox(
           width: context.responsiveWidth(6),
         ),
-        _buildTwoDigitTextFormField(context, _yearController, 'Month'),
+        _buildTwoDigitTextFormField(context, _yearController, 'year'.tr()),
         SizedBox(
           width: context.responsiveWidth(6),
         ),
@@ -128,12 +134,28 @@ class AddCard extends StatelessWidget {
         ),
       );
 
+  PrimaryButton _buildButton(BuildContext context) {
+    return PrimaryButton(
+        text: 'addCard'.tr(),
+        context: context,
+        onPressed: () {
+          PaymentModel model = PaymentModel(
+            cardHolderName: _cardholderNameController.text,
+            cardNumber: _cardNumberController.text,
+            cvv: _cvvController.text,
+            month: _monthController.text,
+            year: _yearController.text,
+          );
+          _controller.addCard(model);
+        });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: BackAppBar(
         context: context,
-        mainTitle: 'Add Card',
+        mainTitle: 'addCard'.tr(),
       ),
       body: BasePadding(
           context: context,
@@ -141,7 +163,7 @@ class AddCard extends StatelessWidget {
             children: [
               NameTextFormField(
                 context: context,
-                hintText: 'Cardholder name',
+                hintText: 'cardholderName'.tr(),
                 controller: _cardholderNameController,
               ),
               SizedBox(
@@ -155,13 +177,8 @@ class AddCard extends StatelessWidget {
                 height: context.responsiveHeight(20),
               ),
               _buildRow(context),
-              Padding(
-                padding: EdgeInsets.only(top: context.responsiveHeight(20)),
-                child: _buildContainer(context),
-              ),
               const Spacer(),
-              PrimaryButton(
-                  text: 'Add Card', context: context, onPressed: () {}),
+              _buildButton(context),
               SizedBox(
                 height: context.responsiveHeight(16),
               )

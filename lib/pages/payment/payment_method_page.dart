@@ -1,8 +1,11 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:provider/provider.dart';
 import '../../models/drive/drive_model.dart';
+import 'package:shazy/pages/payment/controller/payment_controller.dart';
 import '../../utils/extensions/context_extension.dart';
 import '../../utils/theme/themes.dart';
 import '../../widgets/buttons/primary_button.dart';
@@ -24,25 +27,39 @@ class PaymetnMethodPage extends StatefulWidget {
 class _PaymetnMethodPageState extends State<PaymetnMethodPage> {
   DriveModel driveDetailsInfo = DriveModel();
 
+  final PaymentController _controller = PaymentController();
+  @override
+  void initState() {
+    _controller.init();
+    super.initState();
+  }
+
   Row _buildPriceRow(BuildContext context, String text1, String text2) => Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           Text(
             text1,
-            style: context.textStyle.subheadSmallRegular.copyWith(color: HexColor('#5A5A5A')),
+            style: context.textStyle.subheadSmallRegular
+                .copyWith(color: HexColor('#5A5A5A')),
           ),
           Text(
             text2,
-            style: context.textStyle.subheadSmallRegular.copyWith(color: HexColor('#5A5A5A')),
+            style: context.textStyle.subheadSmallRegular
+                .copyWith(color: HexColor('#5A5A5A')),
           ),
         ],
       );
 
-  Row _buildLocationRow(BuildContext context, String assetName, String text1, String text2, {String text3 = ''}) => Row(
+  Row _buildLocationRow(
+          BuildContext context, String assetName, String text1, String text2,
+          {String text3 = ''}) =>
+      Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Padding(
-            padding: EdgeInsets.only(top: context.responsiveHeight(4), right: context.responsiveWidth(6)),
+            padding: EdgeInsets.only(
+                top: context.responsiveHeight(4),
+                right: context.responsiveWidth(6)),
             child: SvgPicture.asset('assets/svg/$assetName.svg'),
           ),
           Column(
@@ -56,7 +73,8 @@ class _PaymetnMethodPageState extends State<PaymetnMethodPage> {
               ),
               Text(
                 text2,
-                style: context.textStyle.bodySmallRegular.copyWith(color: HexColor('#5A5A5A')),
+                style: context.textStyle.bodySmallRegular
+                    .copyWith(color: HexColor('#5A5A5A')),
               ),
             ],
           ),
@@ -67,6 +85,18 @@ class _PaymetnMethodPageState extends State<PaymetnMethodPage> {
           ),
         ],
       );
+
+  GestureDetector _buildAddCardButton(BuildContext context) {
+    return GestureDetector(
+      onTap: _controller.goToAddCardPage,
+      child: Text(
+        'addCard'.tr(),
+        style: context.textStyle.subheadLargeSemibold.copyWith(
+          color: AppThemes.secondary700.withOpacity(0.6),
+        ),
+      ),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -89,115 +119,104 @@ class _PaymetnMethodPageState extends State<PaymetnMethodPage> {
     return Scaffold(
       appBar: BackAppBar(
         context: context,
-        mainTitle: 'Request for driver',
+        mainTitle: 'Request for driver'.tr(),
       ),
       body: BasePadding(
         context: context,
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            _buildLocationRow(
-              context,
-              'map2',
-              'Current location',
-              Provider.of<AppInfo>(context).userPickUpLocation != null
-                  ? "${Provider.of<AppInfo>(context).userPickUpLocation!.locationName.toString().substring(0, 24)}..."
-                  : 'undefined',
-            ),
-            SizedBox(
-              height: context.responsiveHeight(29),
-            ),
-            _buildLocationRow(
-              context,
-              'map3',
-              dropOffLocationName,
-              currentLocationName,
-              text3: '2.7km',
-            ),
-            SizedBox(
-              height: context.responsiveHeight(20),
-            ),
-            Text(
-              'Order Summary',
-              style: context.textStyle.subheadLargeMedium,
-            ),
-            SizedBox(
-              height: context.responsiveHeight(10),
-            ),
-            _buildPriceRow(context, 'Charge', '200₺'),
-            SizedBox(
-              height: context.responsiveHeight(9),
-            ),
-            _buildPriceRow(context, 'Commission', '20₺'),
-            SizedBox(
-              height: context.responsiveHeight(9),
-            ),
-            _buildPriceRow(context, 'Total Amount', '220₺'),
-            SizedBox(
-              height: context.responsiveHeight(20),
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(
-                  'Select payment method',
-                  style: context.textStyle.headlineSmallMedium.copyWith(
-                    color: HexColor('#5A5A5A'),
-                  ),
-                ),
-                GestureDetector(
-                  onTap: () {},
-                  child: Text(
-                    'Add Card',
-                    style: context.textStyle.subheadLargeSemibold.copyWith(
-                      color: AppThemes.secondary700.withOpacity(0.6),
+        child: Observer(builder: (context) {
+          return Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              _buildLocationRow(
+                context,
+                'map2',
+                'currentLocation'.tr(),
+                Provider.of<AppInfo>(context).userPickUpLocation != null
+                    ? "${Provider.of<AppInfo>(context).userPickUpLocation!.locationName.toString().substring(0, 24)}..."
+                    : 'undefined',
+              ),
+              SizedBox(
+                height: context.responsiveHeight(29),
+              ),
+              _buildLocationRow(
+                context,
+                'map3',
+                dropOffLocationName.toString(),
+                currentLocationName.toString(),
+                text3: '2.7km',
+              ),
+              SizedBox(
+                height: context.responsiveHeight(20),
+              ),
+              Text(
+                'orderSummary'.tr(),
+                style: context.textStyle.subheadLargeMedium,
+              ),
+              SizedBox(
+                height: context.responsiveHeight(10),
+              ),
+              _buildPriceRow(context, 'charge'.tr(), '200₺'),
+              SizedBox(
+                height: context.responsiveHeight(9),
+              ),
+              _buildPriceRow(context, 'commission'.tr(), '20₺'),
+              SizedBox(
+                height: context.responsiveHeight(9),
+              ),
+              _buildPriceRow(context, 'totalAmount'.tr(), '220₺'),
+              SizedBox(
+                height: context.responsiveHeight(20),
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    'selectPaymentMethod'.tr(),
+                    style: context.textStyle.headlineSmallMedium.copyWith(
+                      color: HexColor('#5A5A5A'),
                     ),
                   ),
-                ),
-              ],
-            ),
-            SizedBox(
-              height: context.responsiveHeight(26),
-            ),
-            /*Center(
-              child: Text(
-                'No Payment Method',
-                style: context.textStyle.titleSmallMedium
-                    .copyWith(color: HexColor('#898989')),
+                  _buildAddCardButton(context),
+                ],
               ),
-            ), */
-
-            PaymetMethodContainer(
-              context: context,
-              assetName: 'visa',
-              text1: '**** **** **** 8970',
-              text2: 'Expires: 12/26',
-              opacitiy: 1,
-            ),
-            SizedBox(
-              height: context.responsiveHeight(8),
-            ),
-            PaymetMethodContainer(
-              context: context,
-              assetName: 'mastercard',
-              text1: '**** **** **** 8970',
-              text2: 'Expires: 12/26',
-            ),
-            const Spacer(),
-            PrimaryButton(
-              text: 'Confirm',
-              context: context,
-              onPressed: () {
-                NavigationManager.instance.navigationToPage(
-                  NavigationConstant.homePage,
-                );
-              },
-            ),
-            SizedBox(
-              height: context.responsiveHeight(16),
-            )
-          ],
-        ),
+              SizedBox(
+                height: context.responsiveHeight(26),
+              ),
+              _controller.card.cardNumber != null &&
+                      _controller.card.month != null &&
+                      _controller.card.year != null
+                  ? PaymetMethodContainer(
+                      context: context,
+                      assetName: 'visa',
+                      text1:
+                          '**** **** **** ${_controller.card.cardNumber?.substring(_controller.card.cardNumber!.length - 5)}',
+                      text2:
+                          'Expires: ${_controller.card.month}/${_controller.card.year}',
+                      opacitiy: 1,
+                    )
+                  : Center(
+                      child: Text(
+                        'noPaymentMethod'.tr(),
+                        style: context.textStyle.titleSmallMedium
+                            .copyWith(color: HexColor('#898989')),
+                      ),
+                    ),
+              const Spacer(),
+              PrimaryButton(
+                text: 'Confirm',
+                context: context,
+                onPressed: () {
+                  NavigationManager.instance.navigationToPage(
+                    NavigationConstant.homePage,
+                  );
+                },
+              ),
+              SizedBox(
+                height: context.responsiveHeight(16),
+              )
+            ],
+          );
+        }),
       ),
     );
   }
