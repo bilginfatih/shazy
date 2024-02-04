@@ -29,7 +29,6 @@ class _HomePageState extends State<HomePage> {
   void initState() {
     _pages = [
       HomeScreenTransport(scaffoldKey: _scaffoldKey),
-      //DriverHomePage(),
       HistoryUpcomingPage(scaffoldKey: _scaffoldKey),
       WalletPage(scaffoldKey: _scaffoldKey),
       OfferPage(scaffoldKey: _scaffoldKey),
@@ -38,8 +37,7 @@ class _HomePageState extends State<HomePage> {
     super.initState();
   }
 
-  BottomNavigationBarItem _buildBottomNavigationBarItem(
-      String asset, String label, int index) {
+  BottomNavigationBarItem _buildBottomNavigationBarItem(String asset, String label, int index) {
     return BottomNavigationBarItem(
       icon: SvgPicture.asset(
         height: context.responsiveHeight(24),
@@ -79,15 +77,15 @@ class _HomePageState extends State<HomePage> {
           backgroundColor: Colors.transparent,
           type: BottomNavigationBarType.fixed,
           selectedItemColor: AppThemes.lightPrimary500,
-          unselectedItemColor: context.isLight
-              ? AppThemes.contentSecondary
-              : HexColor('#D0D0D0'),
+          unselectedItemColor: context.isLight ? AppThemes.contentSecondary : HexColor('#D0D0D0'),
           showUnselectedLabels: true,
           currentIndex: _currentIndex,
           onTap: (index) {
-            setState(() {
-              _currentIndex = index;
-            });
+            if (HomeScreenTransport.allowNavigation) {
+              setState(() {
+                _currentIndex = index;
+              });
+            }
           },
           items: <BottomNavigationBarItem>[
             _buildBottomNavigationBarItem('house', 'Home', 0),

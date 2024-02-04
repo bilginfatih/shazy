@@ -13,7 +13,7 @@ class DriveService {
 
   final String _request = '/drive-request';
 
-   Future<void> driveStatus(DriveModel model) async {
+  Future<void> driveStatus(DriveModel model) async {
     try {
       String userId = await SessionManager().get('id');
       NetworkManager.instance.get('$_request/driver/$userId/${model.status}');

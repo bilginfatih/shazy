@@ -41,9 +41,7 @@ class DriverHomePage extends StatefulWidget {
   State<DriverHomePage> createState() => _DriverHomePageState();
 }
 
-
 class _DriverHomePageState extends State<DriverHomePage> with TickerProviderStateMixin {
-
   late double driverLatitude;
   late double driverLongitude;
   late double fromLatitude;
@@ -64,7 +62,6 @@ class _DriverHomePageState extends State<DriverHomePage> with TickerProviderStat
     zoom: 14.4746,
   );
 
-
   List<AnimationController> _bottomSheetControllers = [];
   List<Tween<Offset>> _tweens = [];
   final Completer<GoogleMapController> _controller = Completer<GoogleMapController>();
@@ -80,12 +77,10 @@ class _DriverHomePageState extends State<DriverHomePage> with TickerProviderStat
   late String _endAddressCallerToDestination = '';
   late String _endAddressDriverToCaller = '';
 
-
   String _mapTheme = '';
   final Set<Marker> _markersSet = {};
   GoogleMapController? _newGoogleMapController;
   final Set<Polyline> _polyLineSet = {};
-
 
   late String _startAddressCallerToDestination;
   late String _startAddressDriverToCaller;
@@ -94,13 +89,15 @@ class _DriverHomePageState extends State<DriverHomePage> with TickerProviderStat
 
   int flag = 0;
 
-
   Position? _userCurrentPosition;
 
   @override
   void dispose() {
     // Timer'ı iptal et
-    _timer.cancel();
+    if (_timer.isActive) {
+      _timer.cancel();
+    }
+
     _disposeBottomSheetControllers();
     super.dispose();
   }
@@ -117,15 +114,12 @@ class _DriverHomePageState extends State<DriverHomePage> with TickerProviderStat
 
     _initializeBottomSheetControllers();
 
-
-    DefaultAssetBundle.of(context)
-        .loadString('assets/maptheme/night_theme.json')
-        .then(
+    DefaultAssetBundle.of(context).loadString('assets/maptheme/night_theme.json').then(
       (value) {
         _mapTheme = value;
       },
     );
-    _timer = Timer.periodic(Duration(seconds: 5), (timer) {
+    _timer = Timer.periodic(Duration(seconds: 10), (timer) {
       // Her 5 saniyede bir istek gönder
       sendRequest();
     });
@@ -182,60 +176,44 @@ class _DriverHomePageState extends State<DriverHomePage> with TickerProviderStat
   }
 
   locateUserPosition() async {
-    Position cPosition = await Geolocator.getCurrentPosition(
-        desiredAccuracy: LocationAccuracy.high);
+    Position cPosition = await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
     _userCurrentPosition = cPosition;
 
-    LatLng latLngPosition =
-        LatLng(_userCurrentPosition!.latitude, _userCurrentPosition!.longitude);
+    LatLng latLngPosition = LatLng(_userCurrentPosition!.latitude, _userCurrentPosition!.longitude);
 
-    CameraPosition cameraPosition =
-        CameraPosition(target: latLngPosition, zoom: 14);
+    CameraPosition cameraPosition = CameraPosition(target: latLngPosition, zoom: 14);
 
-    _newGoogleMapController!
-        .animateCamera(CameraUpdate.newCameraPosition(cameraPosition));
+    _newGoogleMapController!.animateCamera(CameraUpdate.newCameraPosition(cameraPosition));
 
     if (mounted) {
-      humanReadableAddress =
-          await AssistantMethods.searchAddressForGeographicCoOrdinates(
-              _userCurrentPosition!, context);
+      humanReadableAddress = await AssistantMethods.searchAddressForGeographicCoOrdinates(_userCurrentPosition!, context);
     }
   }
 
   Future<void> drawPolyLineFromOriginToDestination() async {
     //kullanıcı konum alma lazım olursa diye****
-    Position cPosition = await Geolocator.getCurrentPosition(
-        desiredAccuracy: LocationAccuracy.high);
+    Position cPosition = await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
     _userCurrentPosition = cPosition;
 
-    var driverOriginLatLng =
-        LatLng(_userCurrentPosition!.latitude, _userCurrentPosition!.longitude);
+    var driverOriginLatLng = LatLng(_userCurrentPosition!.latitude, _userCurrentPosition!.longitude);
     var originLatLng = LatLng(fromLatitude, fromLongitude);
     var destinationLatLng = LatLng(toLatitude, toLongitude);
 
-    var driverDirectionDetailsInfo =
-        await AssistantMethods.obtainOriginToDestinationDirectionDetails(
-            driverOriginLatLng, originLatLng);
+    var driverDirectionDetailsInfo = await AssistantMethods.obtainOriginToDestinationDirectionDetails(driverOriginLatLng, originLatLng);
 
-    _durationKmDriverToCaller =
-        driverDirectionDetailsInfo!.distance_text.toString();
-    _durationTimeDriverToCaller =
-        driverDirectionDetailsInfo.duration_text.toString();
-    _startAddressDriverToCaller =
-        driverDirectionDetailsInfo.start_address.toString();
-    _endAddressDriverToCaller =
-        driverDirectionDetailsInfo.end_address.toString();
+    _durationKmDriverToCaller = driverDirectionDetailsInfo!.distance_text.toString();
+    _durationTimeDriverToCaller = driverDirectionDetailsInfo.duration_text.toString();
+    _startAddressDriverToCaller = driverDirectionDetailsInfo.start_address.toString();
+    _endAddressDriverToCaller = driverDirectionDetailsInfo.end_address.toString();
 
     PolylinePoints pPointsDriver = PolylinePoints();
-    List<PointLatLng> driverDecodedPolyLinePointsResultList = pPointsDriver
-        .decodePolyline(driverDirectionDetailsInfo!.e_pointsDrive!);
+    List<PointLatLng> driverDecodedPolyLinePointsResultList = pPointsDriver.decodePolyline(driverDirectionDetailsInfo!.e_pointsDrive!);
 
     //pLineCoOrdinatesList.clear();
 
     if (driverDecodedPolyLinePointsResultList.isNotEmpty) {
       driverDecodedPolyLinePointsResultList.forEach((PointLatLng pointLatLng) {
-        pLineCoOrdinatesList2
-            .add(LatLng(pointLatLng.latitude, pointLatLng.longitude));
+        pLineCoOrdinatesList2.add(LatLng(pointLatLng.latitude, pointLatLng.longitude));
       });
     }
     //pLineCoOrdinatesList.clear();
@@ -253,29 +231,21 @@ class _DriverHomePageState extends State<DriverHomePage> with TickerProviderStat
       _polyLineSet.add(polyline2);
     });
 
-    var directionDetailsInfo =
-        await AssistantMethods.obtainOriginToDestinationDirectionDetails(
-            originLatLng, destinationLatLng);
+    var directionDetailsInfo = await AssistantMethods.obtainOriginToDestinationDirectionDetails(originLatLng, destinationLatLng);
 
-    _durationKmCallerToDestination =
-        directionDetailsInfo!.distance_text.toString();
-    _durationTimeCallerToDestination =
-        directionDetailsInfo.duration_text.toString();
-    _startAddressCallerToDestination =
-        directionDetailsInfo.start_address.toString();
-    _endAddressCallerToDestination =
-        directionDetailsInfo.end_address.toString();
+    _durationKmCallerToDestination = directionDetailsInfo!.distance_text.toString();
+    _durationTimeCallerToDestination = directionDetailsInfo.duration_text.toString();
+    _startAddressCallerToDestination = directionDetailsInfo.start_address.toString();
+    _endAddressCallerToDestination = directionDetailsInfo.end_address.toString();
 
     PolylinePoints pPoints = PolylinePoints();
-    List<PointLatLng> decodedPolyLinePointsResultList =
-        pPoints.decodePolyline(directionDetailsInfo!.e_points!);
+    List<PointLatLng> decodedPolyLinePointsResultList = pPoints.decodePolyline(directionDetailsInfo!.e_points!);
 
     //pLineCoOrdinatesList.clear();
 
     if (decodedPolyLinePointsResultList.isNotEmpty) {
       decodedPolyLinePointsResultList.forEach((PointLatLng pointLatLng) {
-        pLineCoOrdinatesList
-            .add(LatLng(pointLatLng.latitude, pointLatLng.longitude));
+        pLineCoOrdinatesList.add(LatLng(pointLatLng.latitude, pointLatLng.longitude));
       });
     }
     //pLineCoOrdinatesList.clear();
@@ -297,10 +267,8 @@ class _DriverHomePageState extends State<DriverHomePage> with TickerProviderStat
       _polyLineSet.add(polyline);
     });
     LatLngBounds boundsLatLng;
-    if (originLatLng.latitude > destinationLatLng.latitude &&
-        originLatLng.longitude > destinationLatLng.longitude) {
-      boundsLatLng =
-          LatLngBounds(southwest: destinationLatLng, northeast: originLatLng);
+    if (originLatLng.latitude > destinationLatLng.latitude && originLatLng.longitude > destinationLatLng.longitude) {
+      boundsLatLng = LatLngBounds(southwest: destinationLatLng, northeast: originLatLng);
     } else if (originLatLng.longitude > destinationLatLng.longitude) {
       boundsLatLng = LatLngBounds(
         southwest: LatLng(originLatLng.latitude, destinationLatLng.longitude),
@@ -312,27 +280,21 @@ class _DriverHomePageState extends State<DriverHomePage> with TickerProviderStat
         northeast: LatLng(originLatLng.latitude, destinationLatLng.longitude),
       );
     } else {
-      boundsLatLng =
-          LatLngBounds(southwest: originLatLng, northeast: destinationLatLng);
+      boundsLatLng = LatLngBounds(southwest: originLatLng, northeast: destinationLatLng);
     }
 
-    _newGoogleMapController!
-        .animateCamera(CameraUpdate.newLatLngBounds(boundsLatLng, 95));
+    _newGoogleMapController!.animateCamera(CameraUpdate.newLatLngBounds(boundsLatLng, 95));
 
     Marker originMarker = Marker(
       markerId: const MarkerId("originID"),
-      infoWindow: InfoWindow(
-          title: 'originPosition.locationName',
-          snippet: directionDetailsInfo.duration_text),
+      infoWindow: InfoWindow(title: 'originPosition.locationName', snippet: directionDetailsInfo.duration_text),
       position: originLatLng,
       icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueYellow),
     );
 
     Marker destinationMarker = Marker(
       markerId: const MarkerId("destinationID"),
-      infoWindow: InfoWindow(
-          title: 'destinationPosition.locationName',
-          snippet: directionDetailsInfo.distance_text),
+      infoWindow: InfoWindow(title: 'destinationPosition.locationName', snippet: directionDetailsInfo.distance_text),
       position: destinationLatLng,
       icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueOrange),
     );
@@ -350,19 +312,22 @@ class _DriverHomePageState extends State<DriverHomePage> with TickerProviderStat
         context: context,
         price: '220₺',
         star: '4.9',
-        location1TextTitle:
-            "$_durationTimeDriverToCaller ($_durationKmDriverToCaller) away",
-        location1Text: _endAddressDriverToCaller.length > 36
-            ? "${_endAddressDriverToCaller.substring(0, 36)}..."
-            : _endAddressDriverToCaller,
-        location2TextTitle:
-            "$_durationTimeCallerToDestination ($_durationKmCallerToDestination) trip",
-        location2Text: _endAddressCallerToDestination.length > 36
-            ? "${_endAddressCallerToDestination.substring(0, 36)}..."
-            : _endAddressCallerToDestination,
-        cancelOnPressed: _driverController.driveCancel,
-        acceptOnPressed: () {
-          _driverController.driverAccept();
+        location1TextTitle: "$_durationTimeDriverToCaller ($_durationKmDriverToCaller) away",
+        location1Text: _endAddressDriverToCaller.length > 36 ? "${_endAddressDriverToCaller.substring(0, 36)}..." : _endAddressDriverToCaller,
+        location2TextTitle: "$_durationTimeCallerToDestination ($_durationKmCallerToDestination) trip",
+        location2Text: _endAddressCallerToDestination.length > 36 ? "${_endAddressCallerToDestination.substring(0, 36)}..." : _endAddressCallerToDestination,
+        cancelOnPressed: () async {
+          await _driverController.driveCancel();
+          setState(() {
+            _markersSet.clear();
+            _polyLineSet.clear();
+          });
+          NavigationManager.instance.navigationToPageClear(NavigationConstant.cancelDrive);
+        },
+        acceptOnPressed: () async {
+          var userId = await SessionManager().get('id');
+          DriveModel model = DriveModel(driverId: userId);
+         await _driverController.driverAccept(model);
           _showDriverBottomSheet(0);
         },
       ),
@@ -390,7 +355,6 @@ class _DriverHomePageState extends State<DriverHomePage> with TickerProviderStat
     );
   }
 
-
   void _showDriverBottomSheet(int index) {
     if (mounted) {
       var controller = _bottomSheetControllers[index];
@@ -405,14 +369,10 @@ class _DriverHomePageState extends State<DriverHomePage> with TickerProviderStat
   Future<void> sendComment(String comment, int index) async {
     var model = CommentModel(comment: comment, point: index.toDouble());
     model.commentorUserId = "9b1fbff8-e19d-4aab-8acb-b6580f85eab5";
-    //await SessionManager().get('id'); backende değişmesi lazım id
+    //await SessionManager().get('id'); backende değişmesi lazım id string girilen değer caller id
     var response = await CommentService.instance.comment(model);
     // NavigationManager.instance.navigationToPop();
-    if (response != null) {
-      // TODO: hata mesajı basacak
-      print('hata sendComment');
-
-    }
+    if (response != null) {}
   }
 
   Widget _buildDriverBottomSheetContent(int index, BuildContext context) {
@@ -518,13 +478,11 @@ class _DriverHomePageState extends State<DriverHomePage> with TickerProviderStat
                     }
                   : null,
             ),
-
           ),
         ),
       ),
     );
   }
-
 
   CustomIconButton _buildRightTopButton(BuildContext context) => _driverController.driverActive
       ? _buildCustomIconButton(
@@ -543,7 +501,6 @@ class _DriverHomePageState extends State<DriverHomePage> with TickerProviderStat
       : SizedBox();
 
   CustomIconButton _buildCustomIconButton(bool isLeft, IconData icon, VoidCallback onPressed) => CustomIconButton(
-
         context: context,
         top: context.responsiveHeight(60),
         left: isLeft ? context.responsiveWidth(15) : null,
@@ -560,9 +517,7 @@ class _DriverHomePageState extends State<DriverHomePage> with TickerProviderStat
     return Padding(
       // sayfanın alt kısmı
       padding: EdgeInsets.only(
-        top: context.responsiveHeight(480) -
-            keyboardSize +
-            (keyboardSize != 0 ? context.responsiveHeight(150) : 0),
+        top: context.responsiveHeight(480) - keyboardSize + (keyboardSize != 0 ? context.responsiveHeight(150) : 0),
         right: context.responsiveWidth(15),
         left: context.responsiveWidth(14),
       ),
@@ -588,11 +543,9 @@ class _DriverHomePageState extends State<DriverHomePage> with TickerProviderStat
       ),
       child: ElevatedButton.icon(
         onPressed: () {
-          print('status: ' + driveDetailsInfo.status.toString());
-
           if (DriverHomePage.stat == 'driving') {
             MapsLauncher.launchCoordinates(toLatitude, toLongitude, 'Yol Tarifi');
-          } else if (driveDetailsInfo.status == 'matched') {
+          } else if (driveDetailsInfo.status == 'accept') {
             MapsLauncher.launchCoordinates(fromLatitude, fromLongitude, 'Yol Tarifi');
           }
         },
@@ -635,7 +588,6 @@ class _DriverHomePageState extends State<DriverHomePage> with TickerProviderStat
               _buildGoogleMapsButton(context),
               _buildDriverBottomSheetContent(0, context),
               _buildDriverBottomSheetContent(1, context),
-
             ],
           );
         }),

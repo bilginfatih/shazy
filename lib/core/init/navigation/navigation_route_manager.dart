@@ -44,6 +44,7 @@ import '../../../pages/authentication/sign_up_page.dart';
 import '../../../pages/authentication/verify_otp_page.dart';
 import '../../../pages/authentication/welcome_page.dart';
 import '../../../pages/home/home_screen_transport.dart';
+import '../../../widgets/cancel_drive/cancel_drive.dart';
 
 class NavigationRouteManager {
   NavigationRouteManager._init();
@@ -134,7 +135,9 @@ class NavigationRouteManager {
       case NavigationConstant.driverUnfortunatelySecond:
         return _navigationToDefault(DriverUnfortunatelySecond(), args); 
       case NavigationConstant.driverCompleteSecond:
-        return _navigationToDefault(DriverCompleteSecond(), args);    
+        return _navigationToDefault(DriverCompleteSecond(), args);
+      case NavigationConstant.cancelDrive:
+        return _navigationToDefault(CancelDrive(), args);      
       case NavigationConstant.testPage:
         return _navigationToDefault(TestPage(), args);
       case NavigationConstant.testPage2:
