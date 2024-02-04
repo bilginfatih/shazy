@@ -126,7 +126,7 @@ class _PaymetnMethodPageState extends State<PaymetnMethodPage> {
       text: 'Confirm',
       context: context,
       onPressed: () async {
-        _controller.pay(200, context);
+        // TODO: go to bilmem ne page ya
       },
     );
   }

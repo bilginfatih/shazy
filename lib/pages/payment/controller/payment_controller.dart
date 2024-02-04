@@ -25,8 +25,7 @@ abstract class _PaymentControllerBase with Store {
       {String driverName = ''}) async {
     try {
       // TODO: gelen response göre düzenlenecek
-      //var response = await PaymentService.instance.pay(card);
-      var response = '';
+      var response = await PaymentService.instance.pay(card);
       if (context.mounted) {
         if (response == '') {
           showDialog(

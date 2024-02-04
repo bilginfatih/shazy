@@ -71,5 +71,7 @@
     "amount": "Amount",
     "paymentSuccess": "Payment Success",
     "yourMoneyHasBeenSuccessfullySentTo": "Your money has been successfully sent to ",
-    "paymentError": "Payment Error"
+    "paymentError": "Payment Error",
+    "expires": "Expires",
+    "payment": "Payment"
 }

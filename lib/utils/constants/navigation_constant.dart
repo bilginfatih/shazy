@@ -1,6 +1,6 @@
 // The paths of the pages are set here
 class NavigationConstant {
-  static const splash = '/';
+  static const splash = '/splash';
   static const signIn = '/signIn';
   static const signUp = '/signUp';
   static const setPassword = '/setPassword';
@@ -23,7 +23,7 @@ class NavigationConstant {
   // Payment
   static const paymentMethod = '/paymentMethod';
   static const addCard = '/addCard';
-  static const paymentTip = '/paymentTip';
+  static const paymentTip = '/';
 
   // Contact
   static const message = '/message';
