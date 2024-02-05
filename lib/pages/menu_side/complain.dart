@@ -1,5 +1,9 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:hexcolor/hexcolor.dart';
+import 'package:shazy/core/init/navigation/navigation_manager.dart';
+import 'package:shazy/models/complain/complain_model.dart';
+import 'package:shazy/services/complain/complain_service.dart';
 import 'package:shazy/utils/extensions/context_extension.dart';
 import '../../widgets/app_bars/back_app_bar.dart';
 import '../../widgets/buttons/primary_button.dart';
@@ -14,59 +18,91 @@ class ComplainPage extends StatefulWidget {
 }
 
 class _ComplainPageState extends State<ComplainPage> {
+  final TextEditingController _textController = TextEditingController();
+
+  Padding _buildBody(BuildContext context) {
+    return Padding(
+      padding: EdgeInsets.only(
+          top: context.responsiveHeight(30.0),
+          left: context.responsiveWidth(15.0)),
+      child: Column(
+        children: [
+          _buildTextField(context),
+          SizedBox(
+            height: context.responsiveHeight(32),
+          ),
+          _buildButton(context),
+        ],
+      ),
+    );
+  }
+
+  PrimaryButton _buildButton(BuildContext context) {
+    return PrimaryButton(
+      context: context,
+      text: 'submit'.tr(),
+      onPressed: () {
+        var response = ComplainService.instance.postComplain(
+          ComplainModel(
+            complain: _textController.text,
+          ),
+        );
+        if (response != null) {
+          // TODO: hata mesajı
+        } else {
+          showDialog(
+            context: context,
+            builder: (BuildContext context) {
+              return SuccessDialog(
+                context: context,
+                text1: 'complainSuccessText'.tr(),
+                title: 'sendSuccessful'.tr(),
+                widget: Padding(
+                  padding: EdgeInsets.symmetric(
+                      horizontal: context.responsiveWidth(20)),
+                  child: PrimaryButton(
+                    context: context,
+                    text: 'backHome'.tr(),
+                    onPressed: () {
+                      NavigationManager.instance.navigationToPop();
+                    },
+                    width: context.responsiveWidth(340),
+                    height: context.responsiveHeight(54),
+                  ),
+                ),
+              );
+            },
+          );
+        }
+      },
+    );
+  }
+
+  Container _buildTextField(BuildContext context) {
+    return Container(
+      width: context.responsiveWidth(362),
+      height: context.responsiveHeight(118),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(8),
+      ),
+      child: WriteTextField(
+        controller: _textController,
+        context: context,
+        hintText: 'complainHintText'.tr(),
+        borderColor: HexColor("#B8B8B8"),
+        maxLines: 5,
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: BackAppBar(
         context: context,
-        mainTitle: 'Complain',
+        mainTitle: 'complain'.tr(),
       ),
-      body: Padding(
-        padding: const EdgeInsets.only(top: 30.0, left: 15.0),
-        child: Column(
-          children: [
-            Container(
-              width: context.responsiveWidth(362),
-              height: context.responsiveHeight(118),
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(8),
-              ),
-              child: WriteTextField(
-                context: context,
-                hintText: 'Write your complaint here (minimum 10 characters)',
-                borderColor: HexColor("#B8B8B8"),
-                maxLines: 5,
-              ),
-            ),
-            SizedBox(
-              height: context.responsiveHeight(32),
-            ),
-            PrimaryButton(
-              context: context,
-              text: 'Submit',
-              onPressed: () {
-                showDialog(
-                  context: context,
-                  builder: (BuildContext context) {
-                    return SuccessDialog(
-                      context: context,
-                      text1: 'Your complain has been send successful',
-                      title: 'Send successful',
-                      widget: PrimaryButton(
-                        context: context,
-                        text: 'Back Home',
-                        onPressed: () {},
-                        width: context.responsiveWidth(340),
-                        height: context.responsiveHeight(54),
-                      ),
-                    );
-                  },
-                );
-              },
-            ),
-          ],
-        ),
-      ),
+      body: _buildBody(context),
     );
   }
 }

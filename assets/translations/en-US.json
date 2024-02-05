@@ -76,5 +76,11 @@
     "payment": "Payment",
     "registerError": "Register Error",
     "registerEmailError": "Mail adresi zaten mevcut",
-    "registerPhoneError": "Telefon numarası zaten mevcut"
+    "registerPhoneError": "Telefon numarası zaten mevcut",
+    "complain": "Complain",
+    "complainHintText": "Write your complaint here (minimum 10 characters)",
+    "complainSuccessText": "Your complain has been send successful",
+    "sendSuccessful": "Send successful",
+    "backHome": "Back Home",
+    "complainError": "Complain Error"
 }
