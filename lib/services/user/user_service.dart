@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter_session_manager/flutter_session_manager.dart';
 import 'package:shazy/models/user/user_profile_model.dart';
 import 'package:shazy/utils/constants/navigation_constant.dart';
@@ -35,10 +36,21 @@ class UserService {
   }
 
   Future<String?> registerControl(UserModel user) async {
-    // TODO:
-    var response = await NetworkManager.instance
-        .post('/user/email', data: {'email': user.email});
-    print(response);
+    try {
+      bool control = await NetworkManager.instance
+          .post('/user/email', data: {'email': user.email});
+      if (!control) {
+        return 'registerEmailError'.tr();
+      }
+      control = await NetworkManager.instance
+          .post('/user/phone', data: {'phone': user.phone});
+      if (!control) {
+        return 'registerPhoneError'.tr();
+      }
+    } catch (e) {
+      return 'registerError'.tr();
+    }
+    return null;
   }
 
   Future<String?> login(UserModel user) async {
@@ -94,7 +106,5 @@ class UserService {
         .navigationToPageClear(NavigationConstant.welcome);
   }
 
-  Future<void> resetPassword() async {
-    
-  }
+  Future<void> resetPassword() async {}
 }

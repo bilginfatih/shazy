@@ -122,8 +122,12 @@ class _TestPageState extends State<TestPage>
               ),
               ElevatedButton(
                 onPressed: () async {
-                  UserModel model = UserModel(email: 'fatihdriver@gmail.com');
-                  await UserService.instance.registerControl(model);
+                  UserModel model = UserModel(
+                      email: 'fatihdriver@gmail.com', phone: '999999');
+                  var response =
+                      await UserService.instance.registerControl(model);
+                  print('-------');
+                  print(response);
                 },
                 child: Text('RegisterControl'),
               ),

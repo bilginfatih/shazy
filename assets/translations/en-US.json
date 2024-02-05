@@ -73,5 +73,8 @@
     "yourMoneyHasBeenSuccessfullySentTo": "Your money has been successfully sent to ",
     "paymentError": "Payment Error",
     "expires": "Expires",
-    "payment": "Payment"
+    "payment": "Payment",
+    "registerError": "Register Error",
+    "registerEmailError": "Mail adresi zaten mevcut",
+    "registerPhoneError": "Telefon numarası zaten mevcut"
 }
