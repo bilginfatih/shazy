@@ -82,5 +82,11 @@
     "complainSuccessText": "Your complain has been send successful",
     "sendSuccessful": "Send successful",
     "backHome": "Back Home",
-    "complainError": "Complain Error"
+    "complainError": "Complain Error",
+    "settings": "Settings",
+    "changePassword": "Change Password",
+    "changeLanguage": "Change Language",
+    "contactUs": "Contact Us",
+    "deleteAccount": "Delete Accoun"
+
 }

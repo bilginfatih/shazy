@@ -5,8 +5,8 @@ class LanguageManager {
 
   static LanguageManager instance = LanguageManager._init();
 
-  final enLocale = const Locale('en', 'US');
-  final trLocale = const Locale('tr', 'TR');
+  final enLocale = const Locale('en');
+  final trLocale = const Locale('tr');
 
   List<Locale> get supportedLocales => [enLocale, trLocale];
 }
