@@ -16,7 +16,6 @@ class UserService {
     try {
       var response =
           await NetworkManager.instance.post('/register', model: user);
-      print(response);
       if (response.containsKey('message')) {
         return response['message'];
       } else {
@@ -42,10 +41,12 @@ class UserService {
       if (!control) {
         return 'registerEmailError'.tr();
       }
-      control = await NetworkManager.instance
-          .post('/user/phone', data: {'phone': user.phone});
-      if (!control) {
-        return 'registerPhoneError'.tr();
+      if (user.phone != null) {
+        control = await NetworkManager.instance
+            .post('/user/phone', data: {'phone': user.phone});
+        if (!control) {
+          return 'registerPhoneError'.tr();
+        }
       }
     } catch (e) {
       return 'registerError'.tr();

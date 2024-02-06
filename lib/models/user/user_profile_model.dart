@@ -43,6 +43,10 @@ class UserProfileModel extends BaseModel {
 
   @override
   Map<String, dynamic> toJson() {
-    return {};
+    Map<String, dynamic> map = {};
+    if (description != null) {
+      map['description'] = description;
+    }
+    return map;
   }
 }
