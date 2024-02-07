@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:shazy/utils/extensions/context_extension.dart';
@@ -11,7 +12,7 @@ class AboutUsPage extends StatelessWidget {
     return Scaffold(
       appBar: BackAppBar(
         context: context,
-        mainTitle: 'About Us',
+        mainTitle: 'aboutUs'.tr(),
       ),
       body: Padding(
         padding: const EdgeInsets.fromLTRB(20, 30, 14, 20),

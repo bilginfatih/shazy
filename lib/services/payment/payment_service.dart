@@ -35,7 +35,6 @@ class PaymentService {
     try {
       var box = await Hive.openBox('card');
       var response = await box.get('card');
-      print(response);
       return model.fromJson(response);
     } catch (e) {
       return model;

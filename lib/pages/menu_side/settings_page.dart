@@ -24,18 +24,20 @@ class _SettingsPageState extends State<SettingsPage> {
       ),
       body: ListView(
         children: [
-          _buildListItem("changePassword".tr(),
-              path: ''),
-          _buildListItem("changeLanguage".tr(), path: NavigationConstant.changeLanguage),
-          _buildListItem("privacyPolicy".tr(), path: ''),
-          _buildListItem("contactUs".tr(), path: ''),
-          _buildListItem("deleteAccount".tr(), onTap: () {}),
+          _buildListItem(
+              "changePassword".tr(), NavigationConstant.changePassword),
+          _buildListItem(
+              "changeLanguage".tr(), NavigationConstant.changeLanguage),
+          _buildListItem(
+              "privacyPolicy".tr(), NavigationConstant.privacyPolicy),
+          _buildListItem("contactUs".tr(), NavigationConstant.contactUs),
+          _buildListItem("deleteAccount".tr(), NavigationConstant.deleteAccount),
         ],
       ),
     );
   }
 
-  Widget _buildListItem(String title, {String? path, VoidCallback? onTap}) {
+  Widget _buildListItem(String title, path) {
     return BasePadding(
       context: context,
       child: SizedBox(
@@ -43,11 +45,7 @@ class _SettingsPageState extends State<SettingsPage> {
         width: context.responsiveWidth(351),
         child: InkWell(
           onTap: () {
-            if (path != null) {
-              NavigationManager.instance.navigationToPage(path);
-            } else if (onTap != null) {
-              onTap();
-            }
+            NavigationManager.instance.navigationToPage(path);
           },
           child: Container(
             decoration: BoxDecoration(

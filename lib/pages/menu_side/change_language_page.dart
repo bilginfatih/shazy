@@ -2,7 +2,6 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_session_manager/flutter_session_manager.dart';
 import 'package:hexcolor/hexcolor.dart';
-import 'package:shazy/core/init/language/language_manager.dart';
 import 'package:shazy/core/init/navigation/navigation_manager.dart';
 import 'package:shazy/utils/extensions/context_extension.dart';
 

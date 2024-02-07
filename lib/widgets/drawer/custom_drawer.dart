@@ -144,13 +144,6 @@ class CustomDrawer extends SizedBox {
                   const Divider(
                     thickness: 0.2,
                   ),
-                  _buildTextRow(context, 'assets/svg/car.svg', 'Driver', () {
-                    NavigationManager.instance
-                        .navigationToPage(NavigationConstant.driverChoose);
-                  }),
-                  const Divider(
-                    thickness: 0.2,
-                  ),
                   _buildTextRow(context, 'assets/svg/about-us.svg', 'About Us',
                       () {
                     NavigationManager.instance

@@ -107,5 +107,21 @@ class UserService {
         .navigationToPageClear(NavigationConstant.welcome);
   }
 
-  Future<void> resetPassword() async {}
+  Future<String?> changePassword(String oldPassword, String newPassword) async {
+    try {
+      var userId = await SessionManager().get('id');
+      var data = {
+        'user_id': userId,
+        'old_password': oldPassword,
+        'new_password': newPassword,
+      };
+      var response = await NetworkManager.instance
+          .post('/user/password-reset', data: data);
+    } catch (e) {
+      return 'changePasswordError'.tr();
+    }
+    return null;
+  }
+
+
 }
