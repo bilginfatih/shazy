@@ -76,17 +76,20 @@ class _DriverHomePageState extends State<DriverHomePage> with TickerProviderStat
   final Duration _duration = const Duration(milliseconds: 500);
 
   late String _durationKmCallerToDestination = '';
+  late int _duraitonKmCallertoDestinationValue = 0;
   late String _durationKmDriverToCaller = '';
   late String _durationTimeCallerToDestination = '';
   late String _durationTimeDriverToCaller = '';
   late String _endAddressCallerToDestination = '';
   late String _endAddressDriverToCaller = '';
+  late int totalPaymant = 0;
 
   late double callerAvaragePoint = 0.0;
   late String callerName = '';
   late String callerSurname = '';
   late String callerPicturePath = '';
   late String callerId = '';
+  late String driverId = '';
 
   String _mapTheme = '';
   final Set<Marker> _markersSet = {};
@@ -158,6 +161,7 @@ class _DriverHomePageState extends State<DriverHomePage> with TickerProviderStat
       var statusId = requestId[0]["id"];
 
       callerId = requestId[0]["caller_id"];
+      driverId = requestId[0]["driver_id"];
 
       UserProfileModel? userProfile = await UserService.instance.getAnotherUser(callerId);
       callerAvaragePoint = userProfile!.avaragePoint!;
@@ -257,6 +261,9 @@ class _DriverHomePageState extends State<DriverHomePage> with TickerProviderStat
     _durationTimeCallerToDestination = directionDetailsInfo.duration_text.toString();
     _startAddressCallerToDestination = directionDetailsInfo.start_address.toString();
     _endAddressCallerToDestination = directionDetailsInfo.end_address.toString();
+    _duraitonKmCallertoDestinationValue = directionDetailsInfo.distance_value!;
+
+    totalPaymant = ((_duraitonKmCallertoDestinationValue / 1000) * 35).toInt();
 
     PolylinePoints pPoints = PolylinePoints();
     List<PointLatLng> decodedPolyLinePointsResultList = pPoints.decodePolyline(directionDetailsInfo!.e_points!);
@@ -314,7 +321,7 @@ class _DriverHomePageState extends State<DriverHomePage> with TickerProviderStat
 
     Marker destinationMarker = Marker(
       markerId: const MarkerId("destinationID"),
-      infoWindow: InfoWindow(title: 'destinationPosition.locationName', snippet: directionDetailsInfo.distance_text),
+      infoWindow: InfoWindow(title: 'destinationPosition.locationName', snippet: directionDetailsInfo.distance_text.toString()),
       position: destinationLatLng,
       icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueOrange),
     );
@@ -330,8 +337,8 @@ class _DriverHomePageState extends State<DriverHomePage> with TickerProviderStat
       context: context,
       builder: (BuildContext context) => DriverDialog(
         context: context,
-        price: '220₺',
-        star: '4.9',
+        price: '$totalPaymant₺',
+        star: callerAvaragePoint.toString(),
         location1TextTitle: "$_durationTimeDriverToCaller ($_durationKmDriverToCaller) away",
         location1Text: _endAddressDriverToCaller.length > 36 ? "${_endAddressDriverToCaller.substring(0, 36)}..." : _endAddressDriverToCaller,
         location2TextTitle: "$_durationTimeCallerToDestination ($_durationKmCallerToDestination) trip",
@@ -388,7 +395,7 @@ class _DriverHomePageState extends State<DriverHomePage> with TickerProviderStat
 
   Future<void> sendComment(String comment, int index) async {
     var model = CommentModel(comment: comment, point: index.toDouble());
-    model.commentorUserId = callerId;
+    model.commentorUserId = driverId;
     //await SessionManager().get('id'); backende değişmesi lazım id string girilen değer caller id
     var response = await CommentService.instance.comment(model);
     // NavigationManager.instance.navigationToPop();
@@ -485,7 +492,7 @@ class _DriverHomePageState extends State<DriverHomePage> with TickerProviderStat
                               ),
                             ),
                             Text(
-                              '220₺',
+                              totalPaymant.toString(),
                               style: context.textStyle.titleXlargeRegular.copyWith(
                                 color: HexColor("#2A2A2A"),
                               ),
@@ -497,11 +504,7 @@ class _DriverHomePageState extends State<DriverHomePage> with TickerProviderStat
                   );
                 }
               },
-              onPressedCancel: index == 0
-                  ? () {
-                      print('cancel');
-                    }
-                  : null,
+              onPressedCancel: index == 0 ? () async {} : null,
             ),
           ),
         ),

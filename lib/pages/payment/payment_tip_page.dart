@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:hexcolor/hexcolor.dart';
+import 'package:provider/provider.dart';
 
+import '../../core/base/app_info.dart';
 import '../../core/init/navigation/navigation_manager.dart';
 import '../../utils/constants/navigation_constant.dart';
 import '../../utils/extensions/context_extension.dart';
@@ -14,8 +16,7 @@ import '../../widgets/padding/base_padding.dart';
 class PaymentTipPage extends StatelessWidget {
   const PaymentTipPage({super.key});
 
-  Container _buildTipContainer(BuildContext context, String text,
-      {bool isSelected = false}) {
+  Container _buildTipContainer(BuildContext context, String text, {bool isSelected = false}) {
     return Container(
       decoration: BoxDecoration(
           border: Border.all(
@@ -84,7 +85,9 @@ class PaymentTipPage extends StatelessWidget {
               style: context.textStyle.labelSmallMedium,
             ),
             Text(
-              '\$220',
+              Provider.of<AppInfo>(context, listen: false).userDropOffLocation != null
+                  ? "${Provider.of<AppInfo>(context, listen: false).userDropOffLocation!.totalPayment.toString()}₺"
+                  : 'null',
               style: context.textStyle.titleXlargeRegular,
             ),
           ],
@@ -114,7 +117,12 @@ class PaymentTipPage extends StatelessWidget {
             SizedBox(
               height: context.responsiveHeight(10),
             ),
-            _buildRowText('Charge', '200₺'),
+            _buildRowText(
+              'Charge',
+              Provider.of<AppInfo>(context, listen: false).userDropOffLocation != null
+                  ? "${Provider.of<AppInfo>(context, listen: false).userDropOffLocation!.totalPayment.toString()}₺"
+                  : 'null',
+            ),
             SizedBox(
               height: context.responsiveHeight(9),
             ),
@@ -135,13 +143,11 @@ class PaymentTipPage extends StatelessWidget {
                 ),
                 GestureDetector(
                   onTap: () {
-                    NavigationManager.instance
-                        .navigationToPage(NavigationConstant.addCard);
+                    NavigationManager.instance.navigationToPage(NavigationConstant.addCard);
                   },
                   child: Text(
                     'Add Card',
-                    style: context.textStyle.subheadLargeSemibold
-                        .copyWith(color: AppThemes.secondary700),
+                    style: context.textStyle.subheadLargeSemibold.copyWith(color: AppThemes.secondary700),
                   ),
                 ),
               ],
@@ -184,8 +190,7 @@ class PaymentTipPage extends StatelessWidget {
             Center(
               child: Text(
                 'Enter other amount',
-                style: context.textStyle.bodySmallMedium
-                    .copyWith(color: AppThemes.secondary700),
+                style: context.textStyle.bodySmallMedium.copyWith(color: AppThemes.secondary700),
               ),
             ),
             const Spacer(),

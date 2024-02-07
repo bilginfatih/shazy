@@ -9,6 +9,7 @@ class SearchDriverDialog extends Dialog {
   SearchDriverDialog({
     Key? key,
     required BuildContext context,
+    required VoidCallback onPressed,
   }) : super(
           key: key,
           child: Container(
@@ -54,9 +55,7 @@ class SearchDriverDialog extends Dialog {
                     text: 'Cancel Call',
                     style: TextStyle(fontSize: 14, fontWeight: FontWeight.w500, color: HexColor('#2A2A2A')),
                     context: context,
-                    onPressed: () {
-                      Navigator.pop(context);
-                    }),
+                    onPressed: onPressed,),
               ],
             ),
           ),
