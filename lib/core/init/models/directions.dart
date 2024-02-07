@@ -1,4 +1,6 @@
-class Directions {
+import '../../base/base_model.dart';
+
+class Directions extends BaseModel{
   String? humanReadableAddress;
   String? locationName;
   String? locationId;
@@ -32,4 +34,32 @@ class Directions {
     this.start_address,
     this.totalPayment,
   });
+  
+  @override
+  fromJson(json) {
+    // TODO: implement fromJson
+    throw UnimplementedError();
+  }
+  
+  @override
+  Map<String, dynamic> toJson() {
+    
+    /* Map<String, dynamic> map = {};
+    if (name != null) map['name'] = name;
+    if (surname != null) map['surname'] = surname;
+    if (email != null) map['email'] = email;
+    if (password != null) map['password'] = password;
+    if (passwordConfirmation != null) {
+      map['password_confirmation'] = passwordConfirmation;
+    }
+    if (identificationNumber != null) {
+      map['identification_number'] = identificationNumber;
+    }
+    if (gender != null) map['gender'] = gender;
+    if (phone != null) map['phone'] = phone;
+    if (id != null) map['id'] = id;
+    return map;
+*/
+    throw UnimplementedError();
+  }
 }

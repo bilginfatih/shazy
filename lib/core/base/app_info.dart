@@ -1,5 +1,7 @@
 import 'package:flutter/cupertino.dart';
+import 'package:hive/hive.dart';
 
+import '../init/cache/cache_manager.dart';
 import '../init/models/directions.dart';
 
 class AppInfo extends ChangeNotifier {
@@ -10,8 +12,10 @@ class AppInfo extends ChangeNotifier {
     notifyListeners();
   }
 
-  void updateDropOffLocationAddress(Directions dropOffAddress) {
+  void updateDropOffLocationAddress(Directions dropOffAddress) async {
     userDropOffLocation = dropOffAddress;
+    var box = await Hive.openBox('directions');
+        await box.put('directions', dropOffAddress.toJson());
     notifyListeners();
   }
 }
