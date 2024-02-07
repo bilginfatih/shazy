@@ -17,7 +17,7 @@ class SuccessDialog extends Dialog {
           key: key,
           insetPadding: EdgeInsets.symmetric(
             horizontal: context.responsiveWidth(17),
-            vertical: context.responsiveHeight(152),
+            vertical: context.responsiveHeight(190),
           ),
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(8.0),
@@ -42,14 +42,15 @@ class SuccessDialog extends Dialog {
                           height: context.responsiveHeight(24),
                         ),
                       ),
-                      onTap: onTap ?? () {
-                        NavigationManager.instance.navigationToPop();
-                      },
+                      onTap: onTap ??
+                          () {
+                            NavigationManager.instance.navigationToPop();
+                          },
                     ),
                   ),
                 ),
               ),
-              SizedBox(height: context.responsiveHeight(45)),
+              SizedBox(height: context.responsiveHeight(10)),
               Stack(
                 alignment: AlignmentDirectional.center,
                 children: [
@@ -73,10 +74,12 @@ class SuccessDialog extends Dialog {
               ),
               SizedBox(height: context.responsiveHeight(7)),
               Padding(
-                padding: EdgeInsets.symmetric(horizontal: context.responsiveWidth(50)),
+                padding: EdgeInsets.symmetric(
+                    horizontal: context.responsiveWidth(50)),
                 child: Text(
                   text1,
-                  style: context.textStyle.bodySmallMedium.copyWith(color: HexColor('#898989')),
+                  style: context.textStyle.bodySmallMedium
+                      .copyWith(color: HexColor('#898989')),
                   textAlign: TextAlign.center,
                 ),
               ),

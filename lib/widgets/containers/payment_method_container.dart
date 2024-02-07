@@ -10,8 +10,8 @@ class PaymetMethodContainer extends Opacity {
   PaymetMethodContainer(
       {Key? key,
       double opacitiy = 0.45,
+      String? assetName,
       required BuildContext context,
-      required String assetName,
       required String text1,
       required String text2})
       : super(
@@ -28,7 +28,7 @@ class PaymetMethodContainer extends Opacity {
             color: AppThemes.lightPrimary50,
             child: Row(
               children: [
-                SvgPicture.asset('assets/svg/payment/$assetName.svg'),
+                //SvgPicture.asset('assets/svg/payment/$assetName.svg'),
                 SizedBox(
                   width: context.responsiveWidth(13),
                 ),

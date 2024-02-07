@@ -50,12 +50,11 @@ class AuthController {
   }
 
   Future<void> forgotPassword() async {
-    // TODO: 
-    NavigationManager.instance
-                      .navigationToPageClear(NavigationConstant.signIn);
+    // TODO:
+    NavigationManager.instance.navigationToPageClear(NavigationConstant.signIn);
   }
 
-  void goToVerifyOTP(UserModel model, bool termsCheck) {
+  Future<void> goToVerifyOTP(UserModel model, bool termsCheck) async {
     if (!termsCheck) {
       // TODO: hata mesajı
     } else if (model.email == '' && !model.email!.isValidEmail) {
@@ -66,8 +65,13 @@ class AuthController {
         model.gender == '') {
       // TODO: hata mesaji
     } else {
-      NavigationManager.instance
-          .navigationToPage(NavigationConstant.verifyOtp, args: model);
+      var response = await UserService.instance.registerControl(model);
+      if (response != null) {
+        // TODO: hata mesajı
+      } else {
+        NavigationManager.instance
+            .navigationToPage(NavigationConstant.verifyOtp, args: model);
+      }
     }
   }
 

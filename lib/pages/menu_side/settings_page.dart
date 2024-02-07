@@ -1,11 +1,14 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:hexcolor/hexcolor.dart';
+import 'package:shazy/utils/constants/navigation_constant.dart';
 import 'package:shazy/utils/extensions/context_extension.dart';
+import '../../core/init/navigation/navigation_manager.dart';
 import '../../widgets/app_bars/back_app_bar.dart';
 import '../../widgets/padding/base_padding.dart';
 
 class SettingsPage extends StatefulWidget {
-  SettingsPage({Key? key}) : super(key: key);
+  const SettingsPage({Key? key}) : super(key: key);
 
   @override
   State<SettingsPage> createState() => _SettingsPageState();
@@ -17,28 +20,35 @@ class _SettingsPageState extends State<SettingsPage> {
     return Scaffold(
       appBar: BackAppBar(
         context: context,
-        mainTitle: 'Settings',
+        mainTitle: 'settings'.tr(),
       ),
       body: ListView(
         children: [
-          _buildListItem("Change Password", () {}),
-          _buildListItem("Change Language", () {}),
-          _buildListItem("Privacy Policy", () {}),
-          _buildListItem("Contact Us", () {}),
-          _buildListItem("Delete Account", () {}),
+          _buildListItem("changePassword".tr(),
+              path: ''),
+          _buildListItem("changeLanguage".tr(), path: NavigationConstant.changeLanguage),
+          _buildListItem("privacyPolicy".tr(), path: ''),
+          _buildListItem("contactUs".tr(), path: ''),
+          _buildListItem("deleteAccount".tr(), onTap: () {}),
         ],
       ),
     );
   }
 
-  Widget _buildListItem(String title, VoidCallback onTap) {
+  Widget _buildListItem(String title, {String? path, VoidCallback? onTap}) {
     return BasePadding(
       context: context,
       child: SizedBox(
         height: context.responsiveHeight(51),
         width: context.responsiveWidth(351),
         child: InkWell(
-          onTap: onTap,
+          onTap: () {
+            if (path != null) {
+              NavigationManager.instance.navigationToPage(path);
+            } else if (onTap != null) {
+              onTap();
+            }
+          },
           child: Container(
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(8),
@@ -51,7 +61,7 @@ class _SettingsPageState extends State<SettingsPage> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(title),
-                Icon(Icons.arrow_forward_ios),
+                const Icon(Icons.arrow_forward_ios),
               ],
             ),
           ),

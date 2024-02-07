@@ -1,7 +1,6 @@
 import 'package:shazy/models/user/user_profile_model.dart';
 
 import '../../core/base/base_model.dart';
-import '../user/user_model.dart';
 
 class HistoryModel extends BaseModel {
   HistoryModel({

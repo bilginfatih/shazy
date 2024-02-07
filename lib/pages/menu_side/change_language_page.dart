@@ -1,7 +1,12 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_session_manager/flutter_session_manager.dart';
 import 'package:hexcolor/hexcolor.dart';
+import 'package:shazy/core/init/language/language_manager.dart';
+import 'package:shazy/core/init/navigation/navigation_manager.dart';
 import 'package:shazy/utils/extensions/context_extension.dart';
 
+import '../../core/init/cache/cache_manager.dart';
 import '../../utils/theme/themes.dart';
 import '../../widgets/app_bars/back_app_bar.dart';
 import '../../widgets/buttons/primary_button.dart';
@@ -10,63 +15,87 @@ import '../../widgets/padding/base_padding.dart';
 class Language {
   final String flag;
   final String name;
+  final String code;
 
-  Language({required this.flag, required this.name});
+  Language({required this.flag, required this.name, required this.code});
 }
 
 class ChangeLanguagePage extends StatefulWidget {
+  const ChangeLanguagePage({super.key});
+
   @override
-  _ChangeLanguagePageState createState() => _ChangeLanguagePageState();
+  State<ChangeLanguagePage> createState() => _ChangeLanguagePageState();
 }
 
 class _ChangeLanguagePageState extends State<ChangeLanguagePage> {
-  List<Language> languages = [
-    Language(flag: '🇬🇧', name: 'United Kingdom'),
-    Language(flag: '🇮🇳', name: 'India'),
-    Language(flag: '🇸🇦', name: 'Saudi Arabia'),
-    Language(flag: '🇫🇷', name: 'France'),
-    Language(flag: '🇩🇪', name: 'Germany'),
-    Language(flag: '🇵🇹', name: 'Portugal'),
-    Language(flag: '🇹🇷', name: 'Turkey'),
-    Language(flag: '🇳🇱', name: 'Netherlands'),
-    Language(flag: '🇳🇱', name: 'Netherlands'),
+  final List<Language> _languages = [
+    Language(flag: '🇬🇧', name: 'United Kingdom', code: 'en'),
+    Language(flag: '🇮🇳', name: 'India', code: 'hi'),
+    Language(flag: '🇸🇦', name: 'Saudi Arabia', code: 'ar'),
+    Language(flag: '🇫🇷', name: 'France', code: 'fr'),
+    Language(flag: '🇩🇪', name: 'Germany', code: 'de'),
+    Language(flag: '🇵🇹', name: 'Portugal', code: 'pt'),
+    Language(flag: '🇹🇷', name: 'Turkey', code: 'tr'),
+    Language(flag: '🇳🇱', name: 'Netherlands', code: 'nl'),
   ];
 
-  int selectedLanguageIndex = 0;
+  int _selectedLanguageIndex = 0;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: BackAppBar(
         context: context,
-        mainTitle: 'Change Language',
+        mainTitle: 'changeLanguage'.tr(),
       ),
-      body: BasePadding(
-        context: context,
-        child: Column(
-          children: [
-            Expanded(
-              child: ListView.builder(
-                itemCount: languages.length,
-                itemBuilder: (context, index) {
-                  return _buildLanguageItem(index);
-                },
-              ),
-            ),
-            PrimaryButton(
-              text: 'Save',
-              context: context,
-              onPressed: () {},
-            ),
-          ],
-        ),
+      body: _buildBody(context),
+    );
+  }
+
+  BasePadding _buildBody(BuildContext context) {
+    return BasePadding(
+      context: context,
+      child: Column(
+        children: [
+          _buildListView(),
+          _buildButton(context),
+        ],
       ),
     );
   }
 
+  Expanded _buildListView() {
+    return Expanded(
+      child: ListView.builder(
+        itemCount: _languages.length,
+        itemBuilder: (context, index) {
+          return _buildLanguageItem(index);
+        },
+      ),
+    );
+  }
+
+  PrimaryButton _buildButton(BuildContext context) {
+    return PrimaryButton(
+      text: 'save'.tr(),
+      context: context,
+      onPressed: _setLang,
+    );
+  }
+
+  Future<void> _setLang() async {
+    String lang = _languages[_selectedLanguageIndex].code;
+    await CacheManager.instance.putData('user', 'lang', lang);
+    if (mounted) {
+      await context.setLocale(Locale(lang));
+    }
+    await SessionManager().set('lang', lang);
+    NavigationManager.instance.navigationToPop();
+  }
+
   Widget _buildLanguageItem(int index) {
-    final language = languages[index];
-    final isSelected = index == selectedLanguageIndex;
+    final language = _languages[index];
+    final isSelected = index == _selectedLanguageIndex;
 
     return Container(
       height: context.responsiveHeight(64),
@@ -81,7 +110,7 @@ class _ChangeLanguagePageState extends State<ChangeLanguagePage> {
       child: ListTile(
         onTap: () {
           setState(() {
-            selectedLanguageIndex = index;
+            _selectedLanguageIndex = index;
           });
         },
         leading: Text(
