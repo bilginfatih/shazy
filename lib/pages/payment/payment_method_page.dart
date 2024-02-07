@@ -28,6 +28,7 @@ class _PaymetnMethodPageState extends State<PaymetnMethodPage> {
   DriveModel driveDetailsInfo = DriveModel();
 
   final PaymentController _controller = PaymentController();
+
   @override
   void initState() {
     _controller.init();
@@ -87,6 +88,38 @@ class _PaymetnMethodPageState extends State<PaymetnMethodPage> {
           color: AppThemes.secondary700.withOpacity(0.6),
         ),
       ),
+    );
+  }
+
+  SingleChildRenderObjectWidget _buildPaymentMethod(BuildContext context) {
+    return _controller.card.cardNumber != null &&
+            _controller.card.month != null &&
+            _controller.card.year != null
+        ? PaymetMethodContainer(
+            context: context,
+            //assetName: 'visa',
+            text1:
+                '**** **** **** ${_controller.card.cardNumber?.substring(_controller.card.cardNumber!.length - 5)}',
+            text2:
+                'Expires: ${_controller.card.month}/${_controller.card.year}',
+            opacitiy: 1,
+          )
+        : Center(
+            child: Text(
+              'noPaymentMethod'.tr(),
+              style: context.textStyle.titleSmallMedium
+                  .copyWith(color: HexColor('#898989')),
+            ),
+          );
+  }
+
+  PrimaryButton _buildConfirmButton(BuildContext context) {
+    return PrimaryButton(
+      text: 'Confirm',
+      context: context,
+      onPressed: () async {
+        // TODO: go to bilmem ne page ya
+      },
     );
   }
 
@@ -154,9 +187,10 @@ class _PaymetnMethodPageState extends State<PaymetnMethodPage> {
                     ? "${Provider.of<AppInfo>(context, listen: false).userDropOffLocation!.totalPayment.toString()}₺"
                     : 'null',
               ),
+
               SizedBox(
                 height: context.responsiveHeight(20),
-              ),
+              ), 
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
@@ -172,30 +206,10 @@ class _PaymetnMethodPageState extends State<PaymetnMethodPage> {
               SizedBox(
                 height: context.responsiveHeight(26),
               ),
-              _controller.card.cardNumber != null && _controller.card.month != null && _controller.card.year != null
-                  ? PaymetMethodContainer(
-                      context: context,
-                      assetName: 'visa',
-                      text1: '**** **** **** ${_controller.card.cardNumber?.substring(_controller.card.cardNumber!.length - 5)}',
-                      text2: 'Expires: ${_controller.card.month}/${_controller.card.year}',
-                      opacitiy: 1,
-                    )
-                  : Center(
-                      child: Text(
-                        'noPaymentMethod'.tr(),
-                        style: context.textStyle.titleSmallMedium.copyWith(color: HexColor('#898989')),
-                      ),
-                    ),
+
+              _buildPaymentMethod(context),
               const Spacer(),
-              PrimaryButton(
-                text: 'Confirm',
-                context: context,
-                onPressed: () {
-                  NavigationManager.instance.navigationToPageClear(
-                    NavigationConstant.homePage,
-                  );
-                },
-              ),
+              _buildConfirmButton(context),
               SizedBox(
                 height: context.responsiveHeight(16),
               )

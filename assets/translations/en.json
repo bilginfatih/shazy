@@ -67,6 +67,26 @@
     "cardNumberError": "Kart numarası hatalıdır.",
     "expirationDateError": "Son kullanma tarihi hatalıdır.",
     "cvvError": "CVV hatalıdır.",
-    "noPaymentMethod": "No Payment Method"
+    "noPaymentMethod": "No Payment Method",
+    "amount": "Amount",
+    "paymentSuccess": "Payment Success",
+    "yourMoneyHasBeenSuccessfullySentTo": "Your money has been successfully sent to ",
+    "paymentError": "Payment Error",
+    "expires": "Expires",
+    "payment": "Payment",
+    "registerError": "Register Error",
+    "registerEmailError": "Mail adresi zaten mevcut",
+    "registerPhoneError": "Telefon numarası zaten mevcut",
+    "complain": "Complain",
+    "complainHintText": "Write your complaint here (minimum 10 characters)",
+    "complainSuccessText": "Your complain has been send successful",
+    "sendSuccessful": "Send successful",
+    "backHome": "Back Home",
+    "complainError": "Complain Error",
+    "settings": "Settings",
+    "changePassword": "Change Password",
+    "changeLanguage": "Change Language",
+    "contactUs": "Contact Us",
+    "deleteAccount": "Delete Accoun"
 
 }

@@ -1,6 +1,9 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:provider/provider.dart';
+
+import 'package:shazy/pages/payment/controller/payment_controller.dart';
 
 import '../../core/base/app_info.dart';
 import '../../core/init/navigation/navigation_manager.dart';
@@ -13,10 +16,23 @@ import '../../widgets/containers/payment_method_container.dart';
 import '../../widgets/dialogs/congratulation_dialog.dart';
 import '../../widgets/padding/base_padding.dart';
 
-class PaymentTipPage extends StatelessWidget {
+class PaymentTipPage extends StatefulWidget {
   const PaymentTipPage({super.key});
 
-  Container _buildTipContainer(BuildContext context, String text, {bool isSelected = false}) {
+
+
+class _PaymentTipPageState extends State<PaymentTipPage> {
+  final PaymentController _controller = PaymentController();
+
+  @override
+  void initState() {
+    _controller.init();
+    super.initState();
+  }
+
+  /*Container _buildTipContainer(BuildContext context, String text,
+      {bool isSelected = false}) {
+
     return Container(
       decoration: BoxDecoration(
           border: Border.all(
@@ -31,8 +47,7 @@ class PaymentTipPage extends StatelessWidget {
         ),
       ),
     );
-  }
-
+  }*/
   Row _buildRowText(String text1, String text2) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -55,7 +70,7 @@ class PaymentTipPage extends StatelessWidget {
     );
   }
 
-  Row _buildTipRow(BuildContext context) {
+  /*Row _buildTipRow(BuildContext context) {
     return Row(
       children: [
         _buildTipContainer(context, '10₺'),
@@ -69,7 +84,8 @@ class PaymentTipPage extends StatelessWidget {
         _buildTipContainer(context, '30₺'),
       ],
     );
-  }
+
+  }*/
 
   void _onPressed(BuildContext context) {
     showDialog(
@@ -96,12 +112,13 @@ class PaymentTipPage extends StatelessWidget {
     );
   }
 
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: BackAppBar(
         context: context,
-        mainTitle: 'Payment',
+        mainTitle: 'payment'.tr(),
       ),
       body: BasePadding(
         context: context,
@@ -109,7 +126,7 @@ class PaymentTipPage extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              'Order Summary',
+              'orderSummary'.tr(),
               style: context.textStyle.subheadLargeMedium.copyWith(
                 color: HexColor('#5A5A5A'),
               ),
@@ -117,6 +134,7 @@ class PaymentTipPage extends StatelessWidget {
             SizedBox(
               height: context.responsiveHeight(10),
             ),
+
             _buildRowText(
               'Charge',
               Provider.of<AppInfo>(context, listen: false).userDropOffLocation != null
@@ -124,21 +142,13 @@ class PaymentTipPage extends StatelessWidget {
                   : 'null',
             ),
             SizedBox(
-              height: context.responsiveHeight(9),
-            ),
-            _buildRowText('Commission', '20₺'),
-            SizedBox(
-              height: context.responsiveHeight(9),
-            ),
-            _buildRowText('Total Amount', '220₺'),
-            SizedBox(
               height: context.responsiveHeight(20),
             ),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
-                  'Select payment method',
+                  'selectPaymentMethod'.tr(),
                   style: context.textStyle.headlineSmallMedium,
                 ),
                 GestureDetector(
@@ -146,8 +156,10 @@ class PaymentTipPage extends StatelessWidget {
                     NavigationManager.instance.navigationToPage(NavigationConstant.addCard);
                   },
                   child: Text(
-                    'Add Card',
-                    style: context.textStyle.subheadLargeSemibold.copyWith(color: AppThemes.secondary700),
+
+                    'addCard'.tr(),
+                    style: context.textStyle.subheadLargeSemibold
+                        .copyWith(color: AppThemes.secondary700),
                   ),
                 ),
               ],
@@ -155,50 +167,13 @@ class PaymentTipPage extends StatelessWidget {
             SizedBox(
               height: context.responsiveHeight(26),
             ),
-            PaymetMethodContainer(
-              context: context,
-              assetName: 'visa',
-              text1: '**** **** **** 8970',
-              text2: 'Expires: 12/26',
-              opacitiy: 1,
-            ),
-            SizedBox(
-              height: context.responsiveHeight(8),
-            ),
-            PaymetMethodContainer(
-              context: context,
-              assetName: 'mastercard',
-              text1: '**** **** **** 8970',
-              text2: 'Expires: 12/26',
-            ),
-            SizedBox(
-              height: context.responsiveHeight(31),
-            ),
-            Center(
-              child: Text(
-                'Give some tips to Zübeyir X',
-                style: context.textStyle.subheadLargeMedium,
-              ),
-            ),
-            SizedBox(
-              height: context.responsiveHeight(24),
-            ),
-            _buildTipRow(context),
-            SizedBox(
-              height: context.responsiveHeight(12),
-            ),
-            Center(
-              child: Text(
-                'Enter other amount',
-                style: context.textStyle.bodySmallMedium.copyWith(color: AppThemes.secondary700),
-              ),
-            ),
+            _buildPaymentMethod(context),
             const Spacer(),
             PrimaryButton(
-                text: 'Submit',
+                text: 'submit'.tr(),
                 context: context,
-                onPressed: () {
-                  _onPressed(context);
+                onPressed: () async {
+                  await _controller.pay(200, context);
                 }),
             SizedBox(
               height: context.responsiveHeight(16),
@@ -207,5 +182,27 @@ class PaymentTipPage extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  SingleChildRenderObjectWidget _buildPaymentMethod(BuildContext context) {
+    return _controller.card.cardNumber != null &&
+            _controller.card.month != null &&
+            _controller.card.year != null
+        ? PaymetMethodContainer(
+            context: context,
+            //assetName: 'visa',
+            text1:
+                '**** **** **** ${_controller.card.cardNumber?.substring(_controller.card.cardNumber!.length - 5)}',
+            text2:
+                'Expires: ${_controller.card.month}/${_controller.card.year}',
+            opacitiy: 1,
+          )
+        : Center(
+            child: Text(
+              'noPaymentMethod'.tr(),
+              style: context.textStyle.titleSmallMedium
+                  .copyWith(color: HexColor('#898989')),
+            ),
+          );
   }
 }

@@ -1,5 +1,7 @@
+import 'package:flutter_session_manager/flutter_session_manager.dart';
 import 'package:mobx/mobx.dart';
 import 'package:shazy/core/init/cache/cache_manager.dart';
+import 'package:shazy/core/init/network/network_manager.dart';
 import 'package:shazy/models/user/user_profile_model.dart';
 import 'package:shazy/services/comment/comment_service.dart';
 import 'package:shazy/services/user/user_service.dart';
@@ -96,7 +98,20 @@ abstract class _ProfileControllerBase with Store {
   }
 
   Future<void> updateUserProfile(UserProfileModel model) async {
-    try {} catch (e) {
+    try {
+      var responseRegiserControl = await UserService.instance
+          .registerControl(UserModel(email: model.userModel?.email));
+      if (responseRegiserControl != null) {
+        // TODO: hata mesajı
+      } else {
+        var id = await SessionManager().get('id');
+        /*  var responseUpdateUser = await NetworkManager.instance
+            .put('/user/$id', model: model.userModel);*/
+        var responseUpdateUserProfile = await NetworkManager.instance.put(
+            '/user-profile/$id',
+            model: UserProfileModel(description: model.description ?? ''));
+      }
+    } catch (e) {
       // TODO:
     }
   }

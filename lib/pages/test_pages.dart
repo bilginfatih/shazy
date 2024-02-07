@@ -7,6 +7,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:maps_launcher/maps_launcher.dart';
+import 'package:shazy/services/payment/payment_service.dart';
 import 'package:shazy/widgets/buttons/secondary_button.dart';
 import 'package:shazy/widgets/dialogs/drive_dialog.dart';
 import 'package:shazy/widgets/divider/counter_divider.dart';
@@ -14,6 +15,7 @@ import 'package:shazy/widgets/modal_bottom_sheet/drive_bottom_sheet.dart';
 import '../core/init/navigation/navigation_manager.dart';
 import '../models/comment/comment_model.dart';
 import '../models/drive/drive_model.dart';
+import '../models/payment/payment_model.dart';
 import '../models/security/security_model.dart';
 import '../services/comment/comment_service.dart';
 import '../services/drive/drive_service.dart';
@@ -41,7 +43,8 @@ class TestPage extends StatefulWidget {
   State<TestPage> createState() => _TestPageState();
 }
 
-class _TestPageState extends State<TestPage> with SingleTickerProviderStateMixin {
+class _TestPageState extends State<TestPage>
+    with SingleTickerProviderStateMixin {
   final _scaffoldKey = GlobalKey<ScaffoldState>();
 
   final _key = GlobalKey();
@@ -68,16 +71,32 @@ class _TestPageState extends State<TestPage> with SingleTickerProviderStateMixin
               ElevatedButton(
                 onPressed: () async {
                   var userId = await SessionManager().get('id');
-                  SecurityModel model = SecurityModel(driverId: userId, securityCode: '64542');
+                  SecurityModel model =
+                      SecurityModel(driverId: userId, securityCode: '64542');
                   await SecurityService.intance.securityCodeMatch(model);
                 },
                 child: Text('securi code eşleşme'),
               ),
               ElevatedButton(
                 onPressed: () {
-                  NavigationManager.instance.navigationToPage(NavigationConstant.cancelDrive);
+                  NavigationManager.instance
+                      .navigationToPage(NavigationConstant.cancelDrive);
                 },
                 child: Text('cancel drive Test'),
+              ),
+              ElevatedButton(
+                onPressed: () async {
+                  PaymentModel model = PaymentModel(
+                      cardHolderName: 'Muhammed Akkaynak',
+                      cardNumber: '5127541122223332',
+                      month: '12',
+                      year: '2025',
+                      cvv: '000',
+                      uid: '9b39e1cf-d39c-4aaf-866e-1d0a05848735',
+                      amount: 10);
+                  await PaymentService.instance.pay(model);
+                },
+                child: const Text('Pay'),
               ),
               ElevatedButton(
                 onPressed: () {
@@ -103,8 +122,12 @@ class _TestPageState extends State<TestPage> with SingleTickerProviderStateMixin
               ),
               ElevatedButton(
                 onPressed: () async {
-                  UserModel model = UserModel(email: 'fatihdriver@gmail.com');
-                  await UserService.instance.registerControl(model);
+                  UserModel model = UserModel(
+                      email: 'fatihdriver@gmail.com', phone: '999999');
+                  var response =
+                      await UserService.instance.registerControl(model);
+                  print('-------');
+                  print(response);
                 },
                 child: Text('RegisterControl'),
               ),
@@ -140,8 +163,8 @@ class _TestPageState extends State<TestPage> with SingleTickerProviderStateMixin
               ElevatedButton(
                 onPressed: () async {
                   UserModel model = UserModel(
-                    email: 'test234@gmail.com',
-                    password: 'test222',
+                    email: 'haliltest@gmail.com',
+                    password: 'Sivas58',
                   );
                   await UserService.instance.login(model);
                 },
@@ -149,20 +172,23 @@ class _TestPageState extends State<TestPage> with SingleTickerProviderStateMixin
               ),
               ElevatedButton(
                 onPressed: () async {
-                  var response = await HistoryService.instance.getDriverHistory();
+                  var response =
+                      await HistoryService.instance.getDriverHistory();
                 },
                 child: Text('GetDriverHistory'),
               ),
               ElevatedButton(
                 onPressed: () async {
-                  var response = await HistoryService.instance.getPassengerHistory();
+                  var response =
+                      await HistoryService.instance.getPassengerHistory();
                   print(response);
                 },
                 child: Text('GetPassengerHistory'),
               ),
               ElevatedButton(
                 onPressed: () async {
-                  var data = await CacheManager.instance.getData('user', 'email');
+                  var data =
+                      await CacheManager.instance.getData('user', 'email');
                   print(data);
                 },
                 child: Text('HiveTest'),
@@ -176,7 +202,8 @@ class _TestPageState extends State<TestPage> with SingleTickerProviderStateMixin
               ),
               ElevatedButton(
                 onPressed: () async {
-                  await UserService.instance.getAnotherUser('9a9659af-6549-41d0-be1a-f75ba16e2c60');
+                  await UserService.instance
+                      .getAnotherUser('9a9659af-6549-41d0-be1a-f75ba16e2c60');
                 },
                 child: Text('Another User'),
               ),
@@ -225,7 +252,8 @@ class _TestPageState extends State<TestPage> with SingleTickerProviderStateMixin
               ElevatedButton(
                 onPressed: () async {
                   var userId = await SessionManager().get('id');
-                  DriveModel model = DriveModel(driverId: userId, driverLat: 40.0, driverLang: 28.0);
+                  DriveModel model = DriveModel(
+                      driverId: userId, driverLat: 40.0, driverLang: 28.0);
                   await DriveService.instance.driverActive(model);
                 },
                 child: Text('Driver Active'),
@@ -250,7 +278,8 @@ class _TestPageState extends State<TestPage> with SingleTickerProviderStateMixin
                 onPressed: () async {
                   var userId = await SessionManager().get('id');
                   var now = DateTime.now();
-                  var timeTo = DateTime(now.year, now.month, now.day, 23, 23, 23);
+                  var timeTo =
+                      DateTime(now.year, now.month, now.day, 23, 23, 23);
                   DriveModel model = DriveModel(
                     driverId: userId,
                     timeFrom: now.toString(),
@@ -299,14 +328,22 @@ class _TestPageState extends State<TestPage> with SingleTickerProviderStateMixin
                               right: context.responsiveWidth(14),
                             ),
                             child: Container(
-                              decoration: ShapeDecoration(shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)), color: Colors.white),
+                              decoration: ShapeDecoration(
+                                  shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(8)),
+                                  color: Colors.white),
                               child: Padding(
-                                padding: EdgeInsets.symmetric(vertical: context.responsiveHeight(15), horizontal: context.responsiveWidth(15)),
+                                padding: EdgeInsets.symmetric(
+                                    vertical: context.responsiveHeight(15),
+                                    horizontal: context.responsiveWidth(15)),
                                 child: Column(
                                   children: [
-                                    Text('220₺', style: context.textStyle.titleXlargeRegular),
+                                    Text('220₺',
+                                        style: context
+                                            .textStyle.titleXlargeRegular),
                                     Row(
-                                      mainAxisAlignment: MainAxisAlignment.center,
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
                                       children: [
                                         Icon(
                                           Icons.star,
@@ -314,7 +351,8 @@ class _TestPageState extends State<TestPage> with SingleTickerProviderStateMixin
                                         ),
                                         Text(
                                           '4.9',
-                                          style: context.textStyle.bodySmallRegular,
+                                          style: context
+                                              .textStyle.bodySmallRegular,
                                         ),
                                       ],
                                     ),
@@ -345,7 +383,8 @@ class _TestPageState extends State<TestPage> with SingleTickerProviderStateMixin
                                     ),
                                     Spacer(),
                                     Row(
-                                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
                                       children: [
                                         SecondaryButton(
                                           width: context.responsiveWidth(160),
@@ -371,7 +410,8 @@ class _TestPageState extends State<TestPage> with SingleTickerProviderStateMixin
                   child: Text('Driver dialog')),
               ElevatedButton.icon(
                 onPressed: () {
-                  MapsLauncher.launchCoordinates(37.4220041, -122.0862462, 'Google Headquarters are here');
+                  MapsLauncher.launchCoordinates(
+                      37.4220041, -122.0862462, 'Google Headquarters are here');
                 },
                 style: ElevatedButton.styleFrom(
                   shape: RoundedRectangleBorder(
@@ -487,7 +527,8 @@ class _TestPageState extends State<TestPage> with SingleTickerProviderStateMixin
                                 horizontal: context.responsiveWidth(20),
                               ),
                               child: Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
                                 children: [
                                   Text(
                                     'pickingUpText',
@@ -565,7 +606,8 @@ class _TestPageState extends State<TestPage> with SingleTickerProviderStateMixin
                     },
                   ); */
                 },
-                child: Text('Drive bottom sheet bar (Elifin dediği gibi çalışan)'),
+                child:
+                    Text('Drive bottom sheet bar (Elifin dediği gibi çalışan)'),
               ),
               SizedBox(
                 height: context.height,
@@ -575,7 +617,9 @@ class _TestPageState extends State<TestPage> with SingleTickerProviderStateMixin
                     minChildSize: 0.1,
                     maxChildSize: 0.7,
                     initialChildSize: 0.1,
-                    builder: (BuildContext context, ScrollController scrollController) => DriveBottomSheet(
+                    builder: (BuildContext context,
+                            ScrollController scrollController) =>
+                        DriveBottomSheet(
                       context: context,
                       pickingUpText: 'pickingUpText',
                       imagePath: 'https://via.placeholder.com/54x59',
@@ -631,7 +675,10 @@ class _TestPageState extends State<TestPage> with SingleTickerProviderStateMixin
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Padding(
-              padding: EdgeInsets.only(top: context.responsiveHeight(4), left: context.responsiveWidth(10), right: context.responsiveWidth(6)),
+              padding: EdgeInsets.only(
+                  top: context.responsiveHeight(4),
+                  left: context.responsiveWidth(10),
+                  right: context.responsiveWidth(6)),
               child: SvgPicture.asset('assets/svg/$assetName.svg'),
             ),
             Column(

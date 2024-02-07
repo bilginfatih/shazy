@@ -58,11 +58,12 @@ class AddCard extends StatelessWidget {
   Row _buildRow(BuildContext context) {
     return Row(
       children: [
-        _buildTwoDigitTextFormField(context, _monthController, 'month'.tr()),
+        _buildLimitDigitTextFormField(
+            context, _monthController, 'month'.tr(), 2),
         SizedBox(
           width: context.responsiveWidth(6),
         ),
-        _buildTwoDigitTextFormField(context, _yearController, 'year'.tr()),
+        _buildLimitDigitTextFormField(context, _yearController, 'year'.tr(), 4),
         SizedBox(
           width: context.responsiveWidth(6),
         ),
@@ -102,8 +103,8 @@ class AddCard extends StatelessWidget {
     );
   }
 
-  SizedBox _buildTwoDigitTextFormField(BuildContext context,
-          TextEditingController controller, String text) =>
+  SizedBox _buildLimitDigitTextFormField(BuildContext context,
+          TextEditingController controller, String text, int limit) =>
       SizedBox(
         width: context.responsiveWidth(116),
         child: TextFormField(
@@ -112,7 +113,7 @@ class AddCard extends StatelessWidget {
           keyboardType: TextInputType.number,
           inputFormatters: [
             FilteringTextInputFormatter.digitsOnly,
-            LengthLimitingTextInputFormatter(2),
+            LengthLimitingTextInputFormatter(limit),
           ],
           decoration: _buildInputDecoration(context, text),
         ),

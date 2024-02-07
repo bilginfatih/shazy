@@ -15,7 +15,6 @@ class UserProfileModel extends BaseModel {
   });
 
   UserProfileModel._fromJson(o) {
-    print(o['user-profile'][0]);
     userModel = UserModel();
     userModel = userModel!.fromJson(o);
     var userProfile = o['user-profile'][0];
@@ -44,6 +43,10 @@ class UserProfileModel extends BaseModel {
 
   @override
   Map<String, dynamic> toJson() {
-    return {};
+    Map<String, dynamic> map = {};
+    if (description != null) {
+      map['description'] = description;
+    }
+    return map;
   }
 }
