@@ -58,7 +58,6 @@ class AppTextStyles {
   TextStyle get headlineLargeMedium => GoogleFonts.poppins(
         fontSize: 20,
         fontWeight: FontWeight.w500,
-        height: 0.07,
         color: _context.isLight ? HexColor('#2A2A2A') : null,
       );
 
@@ -134,7 +133,7 @@ class AppTextStyles {
         fontSize: _context.mediaQueryData.textScaleFactor * 12,
         fontWeight: FontWeight.w400,
       );
-    
+
   TextStyle get labelSmallMedium => GoogleFonts.poppins(
         fontSize: _context.mediaQueryData.textScaleFactor * 12,
         fontWeight: FontWeight.w500,

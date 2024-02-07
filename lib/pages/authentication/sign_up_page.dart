@@ -119,7 +119,7 @@ class _SignUpPageState extends State<SignUpPage> {
                   ),
                 ),
                 TextSpan(
-                  text: 'privacyPolicy'.tr(),
+                  text: '${'privacyPolicy'.tr()}.',
                   style: context.textStyle.bodySmallMedium.copyWith(
                     color: AppThemes.lightPrimary500,
                   ),

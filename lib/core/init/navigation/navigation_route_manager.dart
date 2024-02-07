@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:shazy/pages/menu_side/privacy_policy_page.dart';
 import 'package:shazy/pages/profile/profile_edit_page.dart';
 import '../../../pages/authentication/splash_page.dart';
 import '../../../pages/home/driver_home/driver_home_page.dart';
@@ -138,6 +139,8 @@ class NavigationRouteManager {
         return _navigationToDefault(DriverCompleteSecond(), args);
       case NavigationConstant.cancelDrive:
         return _navigationToDefault(CancelDrive(), args);      
+      case NavigationConstant.privacyPolicy:
+        return _navigationToDefault(const PrivacyPolicyPage(), args);      
       case NavigationConstant.testPage:
         return _navigationToDefault(TestPage(), args);
       case NavigationConstant.testPage2:

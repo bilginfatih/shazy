@@ -4,7 +4,7 @@
     "signUpTerms1": "By signing up. you agree to the",
     "termsOfService": "Terms of service",
     "and": "and",
-    "privacyPolicy": "Privacy policy.",
+    "privacyPolicy": "Privacy policy",
     "alreadyHaveAnAccount": "Already have an account? ",
     "signIn": "Sign In",
     "phoneVerification": "Phone verification",
@@ -87,6 +87,11 @@
     "changePassword": "Change Password",
     "changeLanguage": "Change Language",
     "contactUs": "Contact Us",
-    "deleteAccount": "Delete Accoun"
+    "deleteAccount": "Delete Account",
+    "aboutUs": "About Us",
+    "privacyPolicyForRideShare": "Privacy Policy for Ride share",
+    "oldPassword": "Old Password",
+    "newPassword": "New Password",
+    "changePasswordError": "changePasswordError"
 
 }
