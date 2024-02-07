@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 
 import '../../core/init/navigation/navigation_manager.dart';
+import '../../pages/home/home_screen_transport.dart';
 import '../../utils/constants/navigation_constant.dart';
 import '../app_bars/back_app_bar.dart';
 import '../buttons/primary_button.dart';
@@ -45,6 +46,7 @@ class _CancelDriveState extends State<CancelDrive> {
       } else {
         timer.cancel();
         _countdownBox.delete('countdownValue'); // Cache'i sil
+        HomeScreenTransport.allowNavigation = true;
         NavigationManager.instance.navigationToPageClear(NavigationConstant.homePage);
       }
     });

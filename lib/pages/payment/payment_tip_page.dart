@@ -1,8 +1,11 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:hexcolor/hexcolor.dart';
+import 'package:provider/provider.dart';
+
 import 'package:shazy/pages/payment/controller/payment_controller.dart';
 
+import '../../core/base/app_info.dart';
 import '../../core/init/navigation/navigation_manager.dart';
 import '../../utils/constants/navigation_constant.dart';
 import '../../utils/extensions/context_extension.dart';
@@ -16,9 +19,7 @@ import '../../widgets/padding/base_padding.dart';
 class PaymentTipPage extends StatefulWidget {
   const PaymentTipPage({super.key});
 
-  @override
-  State<PaymentTipPage> createState() => _PaymentTipPageState();
-}
+
 
 class _PaymentTipPageState extends State<PaymentTipPage> {
   final PaymentController _controller = PaymentController();
@@ -31,6 +32,7 @@ class _PaymentTipPageState extends State<PaymentTipPage> {
 
   /*Container _buildTipContainer(BuildContext context, String text,
       {bool isSelected = false}) {
+
     return Container(
       decoration: BoxDecoration(
           border: Border.all(
@@ -82,7 +84,35 @@ class _PaymentTipPageState extends State<PaymentTipPage> {
         _buildTipContainer(context, '30₺'),
       ],
     );
+
   }*/
+
+  void _onPressed(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (_) => SuccessDialog(
+        context: context,
+        title: 'Payment Success',
+        text1: 'Your money has been successfully sent to mha',
+        widget: Column(
+          children: [
+            Text(
+              'Amount',
+              style: context.textStyle.labelSmallMedium,
+            ),
+            Text(
+              Provider.of<AppInfo>(context, listen: false).userDropOffLocation != null
+                  ? "${Provider.of<AppInfo>(context, listen: false).userDropOffLocation!.totalPayment.toString()}₺"
+                  : 'null',
+              style: context.textStyle.titleXlargeRegular,
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -104,7 +134,13 @@ class _PaymentTipPageState extends State<PaymentTipPage> {
             SizedBox(
               height: context.responsiveHeight(10),
             ),
-            _buildRowText('charge'.tr(), '200₺'),
+
+            _buildRowText(
+              'Charge',
+              Provider.of<AppInfo>(context, listen: false).userDropOffLocation != null
+                  ? "${Provider.of<AppInfo>(context, listen: false).userDropOffLocation!.totalPayment.toString()}₺"
+                  : 'null',
+            ),
             SizedBox(
               height: context.responsiveHeight(20),
             ),
@@ -117,10 +153,10 @@ class _PaymentTipPageState extends State<PaymentTipPage> {
                 ),
                 GestureDetector(
                   onTap: () {
-                    NavigationManager.instance
-                        .navigationToPage(NavigationConstant.addCard);
+                    NavigationManager.instance.navigationToPage(NavigationConstant.addCard);
                   },
                   child: Text(
+
                     'addCard'.tr(),
                     style: context.textStyle.subheadLargeSemibold
                         .copyWith(color: AppThemes.secondary700),

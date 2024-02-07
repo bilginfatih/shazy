@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:provider/provider.dart';
 import 'package:shazy/utils/extensions/context_extension.dart';
@@ -8,6 +9,7 @@ import '../../core/base/app_info.dart';
 import '../../core/init/models/directions.dart';
 import '../../core/init/models/predicted_places.dart';
 import '../../core/init/navigation/navigation_manager.dart';
+import '../../core/init/network/network_manager.dart';
 import '../../utils/constants/navigation_constant.dart';
 import '../dialogs/progress_dialog.dart';
 
@@ -23,32 +25,54 @@ class PlacePredictionTileDesign extends StatelessWidget {
         message: "Please wait...",
       ),
     );
+    Position cPosition = await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
 
-    String placeDirectionDetailsUrl =
-        "https://maps.googleapis.com/maps/api/place/details/json?place_id=$placeId&key=AIzaSyBBUxugp8yhxrqwchNXN7f2eesZwMRg5jg&components=country:TUR";
-    print("place:" + placeDirectionDetailsUrl);
+    String apiUrl = "/google/placedetails/$placeId";
+    var responsePlaceIdApi = await NetworkManager.instance.get(apiUrl);
 
-    var responseApi = await RequestAssistant.receiveRequest(placeDirectionDetailsUrl);
-     NavigationManager.instance.navigationToPop();
+    NavigationManager.instance.navigationToPop();
 
-    if (responseApi == "Error Occurred, Failed. No Response.") {
+    if (responsePlaceIdApi == "Error Occurred, Failed. No Response.") {
       return;
     }
 
-    if (responseApi["status"] == "OK") {
-      Directions directions = Directions();
-      directions.locationName = responseApi["result"]["name"];
-      directions.currentLocationName = responseApi["result"]["formatted_address"];
-      directions.locationId = placeId;
-      directions.locationLatitude = responseApi["result"]["geometry"]["location"]["lat"];
-      directions.locationLongitude = responseApi["result"]["geometry"]["location"]["lng"];
+    Directions directions = Directions();
+    directions.locationName = responsePlaceIdApi["result"]["name"];
+    directions.currentLocationName = responsePlaceIdApi["result"]["formatted_address"];
+    directions.locationId = placeId;
+    directions.locationLatitude = responsePlaceIdApi["result"]["geometry"]["location"]["lat"];
+    directions.locationLongitude = responsePlaceIdApi["result"]["geometry"]["location"]["lng"];
 
-      Provider.of<AppInfo>(context, listen: false).updateDropOffLocationAddress(directions);
+    String urlOriginToDestinationDirectionDetails =
+        "/google/directions/${cPosition.latitude}/${cPosition.longitude}/${directions.locationLatitude}/${directions.locationLongitude}";
 
-      NavigationManager.instance.navigationToPage(
-        NavigationConstant.paymentMethod,
-      );
+    var responseDirectionApi = await NetworkManager.instance.get(urlOriginToDestinationDirectionDetails);
+
+    directions.e_points = responseDirectionApi["routes"][0]["overview_polyline"]["points"];
+    //directions.e_pointsDrive = responseDirectionApi["routes"][0]["overview_polyline"]["points"];
+
+    directions.distance_text = responseDirectionApi["routes"][0]["legs"][0]["distance"]["text"];
+    directions.distance_value = responseDirectionApi["routes"][0]["legs"][0]["distance"]["value"];
+
+    directions.duration_text = responseDirectionApi["routes"][0]["legs"][0]["duration"]["text"];
+    directions.duration_value = responseDirectionApi["routes"][0]["legs"][0]["duration"]["value"];
+
+    directions.end_address = responseDirectionApi["routes"][0]["legs"][0]["end_address"];
+    directions.start_address = responseDirectionApi["routes"][0]["legs"][0]["start_address"];
+
+    int metreDistance = responseDirectionApi["routes"][0]["legs"][0]["distance"]["value"];
+    int totalPaymant = ((metreDistance / 1000) * 35).toInt();
+
+    if (totalPaymant < 180) {
+      totalPaymant = 180;
     }
+    directions.totalPayment = totalPaymant.toString();
+
+    Provider.of<AppInfo>(context, listen: false).updateDropOffLocationAddress(directions);
+
+    NavigationManager.instance.navigationToPage(
+      NavigationConstant.paymentMethod,
+    );
   }
 
   @override

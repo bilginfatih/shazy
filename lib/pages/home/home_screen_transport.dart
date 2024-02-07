@@ -52,7 +52,7 @@ class HomeScreenTransport extends StatefulWidget {
   State<HomeScreenTransport> createState() => _HomeScreenTransportState();
 }
 
-class _HomeScreenTransportState extends State<HomeScreenTransport> with TickerProviderStateMixin {
+class _HomeScreenTransportState extends State<HomeScreenTransport> with TickerProviderStateMixin, WidgetsBindingObserver {
   String mapTheme = '';
   final Completer<GoogleMapController> _controller = Completer<GoogleMapController>();
   GoogleMapController? newGoogleMapController;
@@ -74,6 +74,7 @@ class _HomeScreenTransportState extends State<HomeScreenTransport> with TickerPr
   final DriveService _driveService = DriveService();
 
   DriveModel driveDetailsInfo = DriveModel();
+  bool _isAppInBackground = false;
 
   List<LatLng> pLineCoOrdinatesList = [];
   Set<Polyline> polyLineSet = {};
@@ -120,6 +121,7 @@ class _HomeScreenTransportState extends State<HomeScreenTransport> with TickerPr
     super.initState();
     //_getLocationPermission(); // İzin kontrolü eklendi
     // _subscribeToLocationChanges(); // Geolocation Aboneliği eklendi
+    WidgetsBinding.instance.addObserver(this);
     DefaultAssetBundle.of(context).loadString('assets/maptheme/night_theme.json').then(
       (value) {
         mapTheme = value;
@@ -138,12 +140,32 @@ class _HomeScreenTransportState extends State<HomeScreenTransport> with TickerPr
     }
 
     _disposeBottomSheetControllers();
+    WidgetsBinding.instance.removeObserver(this);
     super.dispose();
   }
 
   void _disposeBottomSheetControllers() {
     for (var controller in _bottomSheetControllers) {
       controller.dispose();
+    }
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (state == AppLifecycleState.paused) {
+      setState(() {
+        _isAppInBackground = true;
+      });
+      // Uygulama kapatıldığında yapılacak işlemler burada gerçekleştirilir
+      print('uygulama kapandı');
+      // Örneğin: Bir kontrol eklemek
+      // Örneğin: Kullanıcıya bir bildirim göndermek
+    } else if (state == AppLifecycleState.resumed) {
+      setState(() {
+        _isAppInBackground = false;
+      });
+      print('uygulama devam etti');
+      // Uygulama tekrar açıldığında yapılacak işlemler burada gerçekleştirilir
     }
   }
 
@@ -162,7 +184,6 @@ class _HomeScreenTransportState extends State<HomeScreenTransport> with TickerPr
       driverName = userProfile.userModel!.name!;
       driverSurname = userProfile.userModel!.surname!;
       driverPicturePath = userProfile.profilePicturePath!;
-      
 
       requestId2 = statusId;
       if (requestId2 != '') {
@@ -297,12 +318,15 @@ class _HomeScreenTransportState extends State<HomeScreenTransport> with TickerPr
               context: context,
               pickingUpText: index == 0 ? 'Meeting Time 10:10' : 'Trip to Destionation',
               customerName: '$driverName $driverSurname',
-              imagePath: '$baseUrl/$driverPicturePath',
+              imagePath: "https://randomuser.me/api/portraits/men/93.jpg",
+              /*'$baseUrl/$driverPicturePath',*/
               startText: driverAvaragePoint.toString(),
               paymentText: 'Payment method',
-              totalPaymentText: '220.00₺',
+              totalPaymentText: Provider.of<AppInfo>(context, listen: false).userDropOffLocation != null
+                  ? "${Provider.of<AppInfo>(context, listen: false).userDropOffLocation!.totalPayment.toString()}₺"
+                  : 'null',
               verificationCodeText: fiveDigitSecurityCode.toString(),
-              onPressedCancel: () {},
+              onPressedCancel: () async {},
             ),
           ),
         ),
@@ -534,10 +558,17 @@ class _HomeScreenTransportState extends State<HomeScreenTransport> with TickerPr
                                                 context: context,
                                                 builder: (BuildContext context) => SearchDriverDialog(
                                                   context: context,
+                                                  onPressed: () {
+                                                    if (_isAppInBackground) {}
+                                                    //didChangeAppLifecycleState(AppLifecycleState.paused);
+                                                    NavigationManager.instance.navigationToPop();
+                                                  },
                                                 ),
                                               );
                                             }
-                                          : () {},
+                                          : () {
+                                              NavigationManager.instance.navigationToPage(NavigationConstant.searchPage);
+                                            },
                                     )
                                   ],
                                 ),
@@ -735,10 +766,8 @@ class _HomeScreenTransportState extends State<HomeScreenTransport> with TickerPr
     var originLatLng = LatLng(originPosition!.locationLatitude!, originPosition.locationLongitude!);
     var destinationLatLng = LatLng(destinationPosition!.locationLatitude!, destinationPosition.locationLongitude!);
 
-    var directionDetailsInfo = await AssistantMethods.obtainOriginToDestinationDirectionDetails(originLatLng, destinationLatLng);
-
     PolylinePoints pPoints = PolylinePoints();
-    List<PointLatLng> decodedPolyLinePointsResultList = pPoints.decodePolyline(directionDetailsInfo!.e_points!);
+    List<PointLatLng> decodedPolyLinePointsResultList = pPoints.decodePolyline(destinationPosition.e_points.toString());
 
     pLineCoOrdinatesList.clear();
 
@@ -748,7 +777,7 @@ class _HomeScreenTransportState extends State<HomeScreenTransport> with TickerPr
       });
     }
     polyLineSet.clear();
-    _durationKm = directionDetailsInfo.distance_text.toString();
+    _durationKm = destinationPosition.distance_text.toString();
     setState(() {
       Polyline polyline = Polyline(
         color: Colors.blue,
@@ -762,7 +791,7 @@ class _HomeScreenTransportState extends State<HomeScreenTransport> with TickerPr
 
       polyLineSet.add(polyline);
     });
-    LatLngBounds boundsLatLng;
+    /*LatLngBounds boundsLatLng;
     if (originLatLng.latitude > destinationLatLng.latitude && originLatLng.longitude > destinationLatLng.longitude) {
       boundsLatLng = LatLngBounds(southwest: destinationLatLng, northeast: originLatLng);
     } else if (originLatLng.longitude > destinationLatLng.longitude) {
@@ -779,18 +808,18 @@ class _HomeScreenTransportState extends State<HomeScreenTransport> with TickerPr
       boundsLatLng = LatLngBounds(southwest: originLatLng, northeast: destinationLatLng);
     }
 
-    newGoogleMapController!.animateCamera(CameraUpdate.newLatLngBounds(boundsLatLng, 95));
+    newGoogleMapController!.animateCamera(CameraUpdate.newLatLngBounds(boundsLatLng, 95)); */
 
     Marker originMarker = Marker(
       markerId: const MarkerId("originID"),
-      infoWindow: InfoWindow(title: originPosition.locationName, snippet: directionDetailsInfo.duration_text),
+      infoWindow: InfoWindow(title: originPosition.locationName, snippet: destinationPosition.distance_text),
       position: originLatLng,
       icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueYellow),
     );
 
     Marker destinationMarker = Marker(
       markerId: const MarkerId("destinationID"),
-      infoWindow: InfoWindow(title: destinationPosition.locationName, snippet: directionDetailsInfo.distance_text),
+      infoWindow: InfoWindow(title: destinationPosition.locationName, snippet: destinationPosition.duration_text),
       position: destinationLatLng,
       icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueOrange),
     );
@@ -799,23 +828,6 @@ class _HomeScreenTransportState extends State<HomeScreenTransport> with TickerPr
       markersSet.add(destinationMarker);
     });
   }
-
-  /*Future<void> fitToDriveButtonPressed() async {
-    var destinationPosition = Provider.of<AppInfo>(context, listen: false).userDropOffLocation;
-
-    // Kullanıcının konumunu al
-    Position cPosition = await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
-
-    // DriveModel oluştur ve servisi çağır
-    DriveModel model = DriveModel(
-      fromLat: cPosition.latitude,
-      fromLang: cPosition.longitude,
-      toLat: destinationPosition!.locationLatitude!,
-      toLang: destinationPosition.locationLongitude!,
-    );
-
-    await _driveService.driverActive(model);
-  } */
 
   Future<void> onButtonPressed() async {
     // Kullanıcının konumunu al

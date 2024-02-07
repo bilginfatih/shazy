@@ -40,27 +40,20 @@ class _PaymetnMethodPageState extends State<PaymetnMethodPage> {
         children: [
           Text(
             text1,
-            style: context.textStyle.subheadSmallRegular
-                .copyWith(color: HexColor('#5A5A5A')),
+            style: context.textStyle.subheadSmallRegular.copyWith(color: HexColor('#5A5A5A')),
           ),
           Text(
             text2,
-            style: context.textStyle.subheadSmallRegular
-                .copyWith(color: HexColor('#5A5A5A')),
+            style: context.textStyle.subheadSmallRegular.copyWith(color: HexColor('#5A5A5A')),
           ),
         ],
       );
 
-  Row _buildLocationRow(
-          BuildContext context, String assetName, String text1, String text2,
-          {String text3 = ''}) =>
-      Row(
+  Row _buildLocationRow(BuildContext context, String assetName, String text1, String text2, {String text3 = ''}) => Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Padding(
-            padding: EdgeInsets.only(
-                top: context.responsiveHeight(4),
-                right: context.responsiveWidth(6)),
+            padding: EdgeInsets.only(top: context.responsiveHeight(4), right: context.responsiveWidth(6)),
             child: SvgPicture.asset('assets/svg/$assetName.svg'),
           ),
           Column(
@@ -74,8 +67,7 @@ class _PaymetnMethodPageState extends State<PaymetnMethodPage> {
               ),
               Text(
                 text2,
-                style: context.textStyle.bodySmallRegular
-                    .copyWith(color: HexColor('#5A5A5A')),
+                style: context.textStyle.bodySmallRegular.copyWith(color: HexColor('#5A5A5A')),
               ),
             ],
           ),
@@ -176,7 +168,7 @@ class _PaymetnMethodPageState extends State<PaymetnMethodPage> {
                 'map3',
                 dropOffLocationName.toString(),
                 currentLocationName.toString(),
-                text3: '2.7km',
+                text3: Provider.of<AppInfo>(context).userDropOffLocation!.distance_text.toString(),
               ),
               SizedBox(
                 height: context.responsiveHeight(20),
@@ -188,15 +180,14 @@ class _PaymetnMethodPageState extends State<PaymetnMethodPage> {
               SizedBox(
                 height: context.responsiveHeight(10),
               ),
-              _buildPriceRow(context, 'charge'.tr(), '200₺'),
-              /*SizedBox(
-                height: context.responsiveHeight(9),
+              _buildPriceRow(
+                context,
+                'charge'.tr(),
+                Provider.of<AppInfo>(context, listen: false).userDropOffLocation != null
+                    ? "${Provider.of<AppInfo>(context, listen: false).userDropOffLocation!.totalPayment.toString()}₺"
+                    : 'null',
               ),
-              _buildPriceRow(context, 'commission'.tr(), '20₺'),
-              SizedBox(
-                height: context.responsiveHeight(9),
-              ),
-              _buildPriceRow(context, 'totalAmount'.tr(), '220₺'),*/
+
               SizedBox(
                 height: context.responsiveHeight(20),
               ), 
@@ -215,6 +206,7 @@ class _PaymetnMethodPageState extends State<PaymetnMethodPage> {
               SizedBox(
                 height: context.responsiveHeight(26),
               ),
+
               _buildPaymentMethod(context),
               const Spacer(),
               _buildConfirmButton(context),
