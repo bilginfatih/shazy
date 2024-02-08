@@ -99,20 +99,29 @@ abstract class _ProfileControllerBase with Store {
 
   Future<void> updateUserProfile(UserProfileModel model) async {
     try {
-      var responseRegiserControl = await UserService.instance
-          .registerControl(UserModel(email: model.userModel?.email));
-      if (responseRegiserControl != null) {
-        // TODO: hata mesajı
-      } else {
-        var id = await SessionManager().get('id');
-        /*  var responseUpdateUser = await NetworkManager.instance
-            .put('/user/$id', model: model.userModel);*/
-        var responseUpdateUserProfile = await NetworkManager.instance.put(
-            '/user-profile/$id',
-            model: UserProfileModel(description: model.description ?? ''));
+      String? email = await CacheManager.instance.getData('user', 'email');
+      var id = await SessionManager().get('id');
+      String? responseRegiserControl;
+      if (email != model.userModel?.email) {
+        responseRegiserControl = await UserService.instance
+            .registerControl(UserModel(email: model.userModel?.email));
+        if (responseRegiserControl != null) {
+          // TODO: hata mesajı
+        }
       }
+      var responseUpdateUser = await NetworkManager.instance
+          .put('/user/$id', model: model.userModel);
+      if (responseUpdateUser != 200) {
+        throw Exception();
+      }
+      CacheManager.instance
+          .putData('user', 'email', model.userModel!.email.toString());
+      /*var responseUpdateUserProfile = await NetworkManager.instance.put(
+          '/user-profile/$id',
+          model: UserProfileModel(description: model.description ?? ''));*/
+      init();
     } catch (e) {
-      // TODO:
+      // TODO: hata
     }
   }
 

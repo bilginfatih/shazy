@@ -57,11 +57,17 @@ class _ProfileEditPageState extends State<ProfileEditPage> {
   }
 
   @override
+  void initState() {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _controller.userProfile =
+          ModalRoute.of(context)?.settings.arguments as UserProfileModel;
+      setState(() {});
+    });
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    _controller.userProfile =
-        ModalRoute.of(context)?.settings.arguments as UserProfileModel;
-    _nameTextController.text = _controller.userProfile?.userModel!.name ?? '';
-    _emailTextController.text = _controller.userProfile?.userModel!.email ?? '';
     return Scaffold(
       appBar: BackAppBar(
         context: context,
@@ -71,24 +77,26 @@ class _ProfileEditPageState extends State<ProfileEditPage> {
     );
   }
 
-  BasePadding _buildBody(BuildContext context) {
-    return BasePadding(
-      context: context,
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          SizedBox(
-            height: context.responsiveHeight(30),
-          ),
-          _buildPhoto(context),
-          _buildFullName(context),
-          _buildEmail(context),
-          _buildAboutYou(context),
-          SizedBox(
-            height: context.responsiveHeight(207),
-          ),
-          _buildButtons(context),
-        ],
+  SingleChildScrollView _buildBody(BuildContext context) {
+    return SingleChildScrollView(
+      child: BasePadding(
+        context: context,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            SizedBox(
+              height: context.responsiveHeight(30),
+            ),
+            _buildPhoto(context),
+            _buildFullName(context),
+            _buildEmail(context),
+            _buildAboutYou(context),
+            SizedBox(
+              height: context.responsiveHeight(207),
+            ),
+            _buildButtons(context),
+          ],
+        ),
       ),
     );
   }
@@ -103,7 +111,7 @@ class _ProfileEditPageState extends State<ProfileEditPage> {
               radius: 35,
               backgroundColor: Colors.white,
               child: _buildImage(
-                  '$baseUrl/${_controller.userProfile!.profilePicturePath}'),
+                  '$baseUrl/${_controller.userProfile?.profilePicturePath}'),
             ),
             Positioned(
               left: 50,
@@ -178,20 +186,30 @@ class _ProfileEditPageState extends State<ProfileEditPage> {
           width: 174,
           text: 'save'.tr(),
           context: context,
-          onPressed: () {
-            print(_emailTextController.text);
-            UserProfileModel model = UserProfileModel(
-              description: _aboutYouTextController.text,
-              userModel: UserModel(
-                name: _nameTextController.text,
-                email: _emailTextController.text,
-              ),
-            );
-            _controller.updateUserProfile(model);
-          },
+          onPressed: _onPressed,
         ),
       ],
     );
+  }
+
+  void _onPressed() {
+    String? name = _nameTextController.text == ''
+        ? _controller.userProfile?.userModel!.name
+        : _nameTextController.text;
+    String? email = _emailTextController.text == ''
+        ? _controller.userProfile?.userModel!.email
+        : _emailTextController.text;
+    String? description = _aboutYouTextController.text == ''
+        ? _controller.description
+        : _aboutYouTextController.text;
+    UserProfileModel model = UserProfileModel(
+      description: description,
+      userModel: UserModel(
+        name: name,
+        email: email,
+      ),
+    );
+    _controller.updateUserProfile(model);
   }
 
   Image _buildImage(String path) {

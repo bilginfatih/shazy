@@ -40,9 +40,6 @@ class UserService {
     try {
       bool control = await NetworkManager.instance
           .post('/user/email', data: {'email': user.email});
-      print('------');
-      print(control);
-      print('------');
       if (control) {
         return 'registerEmailError'.tr();
       }
