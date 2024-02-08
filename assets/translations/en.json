@@ -92,6 +92,9 @@
     "privacyPolicyForRideShare": "Privacy Policy for Ride share",
     "oldPassword": "Old Password",
     "newPassword": "New Password",
-    "changePasswordError": "changePasswordError"
+    "changePasswordError": "changePasswordError",
+    "deleteAccountError": "DeleteAccountError",
+    "deleteAccountDescription": "Are you sure you want to delete your account? Please read how account deletion will affect. Deleting your account removes personal information our database. Tour email becomes permanently reserved and same email cannot be re-use to register a new account.",
+    "delete": "Delete"
 
 }

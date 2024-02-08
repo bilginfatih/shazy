@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter_session_manager/flutter_session_manager.dart';
 import 'package:shazy/models/user/user_profile_model.dart';
@@ -38,13 +40,16 @@ class UserService {
     try {
       bool control = await NetworkManager.instance
           .post('/user/email', data: {'email': user.email});
-      if (!control) {
+      print('------');
+      print(control);
+      print('------');
+      if (control) {
         return 'registerEmailError'.tr();
       }
       if (user.phone != null) {
         control = await NetworkManager.instance
             .post('/user/phone', data: {'phone': user.phone});
-        if (!control) {
+        if (control) {
           return 'registerPhoneError'.tr();
         }
       }
@@ -101,10 +106,7 @@ class UserService {
     var token = await SessionManager().get('token');
     var request = {'token': token};
     await NetworkManager.instance.post('/logout', data: request);
-    CacheManager.instance.clearAll('user');
-    await SessionManager().destroy();
-    NavigationManager.instance
-        .navigationToPageClear(NavigationConstant.welcome);
+    _cleanCache();
   }
 
   Future<String?> changePassword(String oldPassword, String newPassword) async {
@@ -123,5 +125,27 @@ class UserService {
     return null;
   }
 
+  Future<String?> deleteAccount() async {
+    try {
+      var id = await SessionManager().get('id');
+      var data = {'user_id': id};
+      var response = await NetworkManager.instance.delete('/user', data: data);
 
+      if (response['message'] != null) {
+        return response['message'];
+      } else {
+        _cleanCache();
+      }
+    } catch (e) {
+      return 'deleteAccountError'.tr();
+    }
+    return null;
+  }
+
+  Future<void> _cleanCache() async {
+    CacheManager.instance.clearAll('user');
+    await SessionManager().destroy();
+    NavigationManager.instance
+        .navigationToPageClear(NavigationConstant.welcome);
+  }
 }

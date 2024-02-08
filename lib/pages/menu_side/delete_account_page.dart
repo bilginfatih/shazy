@@ -1,31 +1,30 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:hexcolor/hexcolor.dart';
+import 'package:shazy/services/user/user_service.dart';
+import 'package:shazy/utils/constants/navigation_constant.dart';
 import 'package:shazy/utils/extensions/context_extension.dart';
 
+import '../../core/init/navigation/navigation_manager.dart';
 import '../../widgets/app_bars/back_app_bar.dart';
 import '../../widgets/buttons/primary_button.dart';
 
-class DeleteAccountPage extends StatefulWidget {
-  DeleteAccountPage({Key? key}) : super(key: key);
+class DeleteAccountPage extends StatelessWidget {
+  const DeleteAccountPage({super.key});
 
-  @override
-  State<DeleteAccountPage> createState() => _DeleteAccountPageState();
-}
-
-class _DeleteAccountPageState extends State<DeleteAccountPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: BackAppBar(
         context: context,
-        mainTitle: 'Delete Account',
+        mainTitle: 'deleteAccount'.tr(),
       ),
       body: Padding(
         padding: const EdgeInsets.fromLTRB(20, 30, 14, 20),
         child: Column(
           children: [
             Text(
-              'Are you sure you want to delete your account? Please read how account deletion will affect. Deleting your account removes personal information our database. Tour email becomes permanently reserved and same email cannot be re-use to register a new account.',
+              'deleteAccountDescription'.tr(),
               style: context.textStyle.bodyMediumRegular.copyWith(
                 color: HexColor("#5A5A5A"),
               ), // İstediğiniz metin boyutunu ayarlayabilirsiniz.
@@ -33,9 +32,14 @@ class _DeleteAccountPageState extends State<DeleteAccountPage> {
             SizedBox(height: context.responsiveHeight(30)),
             PrimaryButton(
               context: context,
-              text: 'Delete',
+              text: 'delete'.tr(),
               buttonStyle: FilledButton.styleFrom(backgroundColor: Colors.red),
-              onPressed: () {},
+              onPressed: () async {
+                var response = await UserService.instance.deleteAccount();
+                if (response != null) {
+                  // TODO: hata mesajı
+                }
+              },
             )
           ],
         ),

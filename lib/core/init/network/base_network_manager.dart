@@ -13,5 +13,7 @@ abstract class BaseNetworkManager {
 
   Future<dynamic> put<T extends BaseModel>(String path, {T? model});
 
+  Future<dynamic> delete<T extends BaseModel>(String path, {T? model});
+
   Future<bool> checkNetwork();
 }
