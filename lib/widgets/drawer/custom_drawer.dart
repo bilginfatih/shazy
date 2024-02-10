@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:hexcolor/hexcolor.dart';
@@ -129,38 +130,39 @@ class CustomDrawer extends SizedBox {
                   SizedBox(
                     height: context.responsiveHeight(24),
                   ),
-                  _buildTextRow(context, 'assets/svg/car.svg', 'Driver', () {
+                  _buildTextRow(context, 'assets/svg/car.svg', 'driver'.tr(),
+                      () {
                     NavigationManager.instance
                         .navigationToPage(NavigationConstant.driverChoose);
                   }),
                   const Divider(
                     thickness: 0.2,
                   ),
-                  _buildTextRow(context, 'assets/svg/complain.svg', 'Complain',
-                      () {
+                  _buildTextRow(
+                      context, 'assets/svg/complain.svg', 'complain'.tr(), () {
                     NavigationManager.instance
                         .navigationToPage(NavigationConstant.complain);
                   }),
                   const Divider(
                     thickness: 0.2,
                   ),
-                  _buildTextRow(context, 'assets/svg/about-us.svg', 'About Us',
-                      () {
+                  _buildTextRow(
+                      context, 'assets/svg/about-us.svg', 'aboutUs'.tr(), () {
                     NavigationManager.instance
                         .navigationToPage(NavigationConstant.aboutUs);
                   }),
                   const Divider(
                     thickness: 0.2,
                   ),
-                  _buildTextRow(context, 'assets/svg/settings.svg', 'Settings',
-                      () {
+                  _buildTextRow(
+                      context, 'assets/svg/settings.svg', 'settings'.tr(), () {
                     NavigationManager.instance
                         .navigationToPage(NavigationConstant.settings);
                   }),
                   const Divider(
                     thickness: 0.2,
                   ),
-                  _buildTextRow(context, 'assets/svg/logout.svg', 'Logout',
+                  _buildTextRow(context, 'assets/svg/logout.svg', 'logout'.tr(),
                       UserService.instance.logout),
                 ],
               ),
@@ -187,7 +189,7 @@ class CustomDrawer extends SizedBox {
               asset,
               colorFilter: context.isLight
                   ? null
-                  : ColorFilter.mode(Colors.white, BlendMode.srcIn),
+                  : const ColorFilter.mode(Colors.white, BlendMode.srcIn),
             ),
             SizedBox(
               width: context.responsiveHeight(8),

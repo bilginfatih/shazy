@@ -74,7 +74,6 @@ abstract class _ProfileControllerBase with Store {
   }
 
   Future<void> _getUserProfileModel(String id) async {
-    print(id.toString());
     userProfile = await UserService.instance.getAnotherUser(id.toString());
     if (userProfile == null) {
       throw Exception();
@@ -116,6 +115,8 @@ abstract class _ProfileControllerBase with Store {
       }
       CacheManager.instance
           .putData('user', 'email', model.userModel!.email.toString());
+      CacheManager.instance.putData('user', 'name',
+          '${model.userModel?.name} ${model.userModel?.surname.toString()[0]}.');
       /*var responseUpdateUserProfile = await NetworkManager.instance.put(
           '/user-profile/$id',
           model: UserProfileModel(description: model.description ?? ''));*/

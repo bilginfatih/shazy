@@ -334,11 +334,6 @@ class _ProfilePageState extends State<ProfilePage> {
         ),
       ),
       body: _buildBody(context),
-      drawer: CustomDrawer(
-        context: context,
-        name: _controller.name,
-        email: _controller.email,
-      ),
     );
   }
 }

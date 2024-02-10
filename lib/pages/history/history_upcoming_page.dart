@@ -374,11 +374,6 @@ class _HistoryUpcomingPageState extends State<HistoryUpcomingPage> {
           ],
         ),
       ),
-      drawer: CustomDrawer(
-        context: context,
-        name: 'M. Halil',
-        email: 'zubeyirx@email.com',
-      ),
     );
   }
 }

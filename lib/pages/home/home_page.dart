@@ -4,6 +4,7 @@ import 'package:hexcolor/hexcolor.dart';
 import 'package:shazy/pages/home/driver_home/driver_home_page.dart';
 import 'package:shazy/widgets/app_bars/custom_app_bar.dart';
 
+import '../../core/init/cache/cache_manager.dart';
 import '../../utils/extensions/context_extension.dart';
 import '../../utils/theme/themes.dart';
 import '../../widgets/drawer/custom_drawer.dart';
@@ -23,6 +24,8 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   int _currentIndex = 0;
   late List _pages = [];
+  String _name = '';
+  String _email = '';
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
   @override
@@ -34,10 +37,12 @@ class _HomePageState extends State<HomePage> {
       OfferPage(scaffoldKey: _scaffoldKey),
       ProfilePage(scaffoldKey: _scaffoldKey),
     ];
+    _getUserData();
     super.initState();
   }
 
-  BottomNavigationBarItem _buildBottomNavigationBarItem(String asset, String label, int index) {
+  BottomNavigationBarItem _buildBottomNavigationBarItem(
+      String asset, String label, int index) {
     return BottomNavigationBarItem(
       icon: SvgPicture.asset(
         height: context.responsiveHeight(24),
@@ -56,7 +61,7 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     bool? isDriver = ModalRoute.of(context)?.settings.arguments as bool?;
     if (isDriver != null && isDriver) {
-      _pages[0] = DriverHomePage();
+      _pages[0] = const DriverHomePage();
       setState(() {});
     }
     return Scaffold(
@@ -64,8 +69,8 @@ class _HomePageState extends State<HomePage> {
       body: _pages[_currentIndex],
       drawer: CustomDrawer(
         context: context,
-        email: "deneme@gmail.com",
-        name: "Test",
+        email: _email,
+        name: _name,
       ),
       bottomNavigationBar: Theme(
         data: ThemeData(
@@ -77,7 +82,9 @@ class _HomePageState extends State<HomePage> {
           backgroundColor: Colors.transparent,
           type: BottomNavigationBarType.fixed,
           selectedItemColor: AppThemes.lightPrimary500,
-          unselectedItemColor: context.isLight ? AppThemes.contentSecondary : HexColor('#D0D0D0'),
+          unselectedItemColor: context.isLight
+              ? AppThemes.contentSecondary
+              : HexColor('#D0D0D0'),
           showUnselectedLabels: true,
           currentIndex: _currentIndex,
           onTap: (index) {
@@ -97,5 +104,11 @@ class _HomePageState extends State<HomePage> {
         ),
       ),
     );
+  }
+
+  Future<void> _getUserData() async {
+    _name = await CacheManager.instance.getData('user', 'name');
+    _email = await CacheManager.instance.getData('user', 'email');
+    setState(() {});
   }
 }

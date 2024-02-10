@@ -62,12 +62,15 @@ class UserService {
       if (response.containsKey('message')) {
         return response['message'];
       } else {
+        user = user.fromJson(response['user']);
         await CacheManager.instance
             .putData('user', 'email', user.email.toString());
         await CacheManager.instance
             .putData('user', 'phone', user.phone.toString());
         await CacheManager.instance
             .putData('user', 'password', user.password.toString());
+        await CacheManager.instance.putData('user', 'name',
+            '${user.name} ${user.surname.toString()[0]}.');
         await SessionManager().set('token', response['token']);
         await SessionManager().set('id', response['user']['id']);
       }
