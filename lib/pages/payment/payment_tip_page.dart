@@ -1,5 +1,6 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:shazy/pages/payment/controller/payment_controller.dart';
 
@@ -92,57 +93,61 @@ class _PaymentTipPageState extends State<PaymentTipPage> {
       ),
       body: BasePadding(
         context: context,
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              'orderSummary'.tr(),
-              style: context.textStyle.subheadLargeMedium.copyWith(
-                color: HexColor('#5A5A5A'),
-              ),
-            ),
-            SizedBox(
-              height: context.responsiveHeight(10),
-            ),
-            _buildRowText('charge'.tr(), '200₺'),
-            SizedBox(
-              height: context.responsiveHeight(20),
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        child: Observer(
+          builder: (context) {
+            return Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  'selectPaymentMethod'.tr(),
-                  style: context.textStyle.headlineSmallMedium,
-                ),
-                GestureDetector(
-                  onTap: () {
-                    NavigationManager.instance
-                        .navigationToPage(NavigationConstant.addCard);
-                  },
-                  child: Text(
-                    'addCard'.tr(),
-                    style: context.textStyle.subheadLargeSemibold
-                        .copyWith(color: AppThemes.secondary700),
+                  'orderSummary'.tr(),
+                  style: context.textStyle.subheadLargeMedium.copyWith(
+                    color: HexColor('#5A5A5A'),
                   ),
                 ),
+                SizedBox(
+                  height: context.responsiveHeight(10),
+                ),
+                _buildRowText('charge'.tr(), '200₺'),
+                SizedBox(
+                  height: context.responsiveHeight(20),
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      'selectPaymentMethod'.tr(),
+                      style: context.textStyle.headlineSmallMedium,
+                    ),
+                    GestureDetector(
+                      onTap: () {
+                        NavigationManager.instance
+                            .navigationToPage(NavigationConstant.addCard);
+                      },
+                      child: Text(
+                        'addCard'.tr(),
+                        style: context.textStyle.subheadLargeSemibold
+                            .copyWith(color: AppThemes.secondary700),
+                      ),
+                    ),
+                  ],
+                ),
+                SizedBox(
+                  height: context.responsiveHeight(26),
+                ),
+                _buildPaymentMethod(context),
+                const Spacer(),
+                PrimaryButton(
+                    text: 'submit'.tr(),
+                    context: context,
+                    onPressed: () async {
+                      await _controller.pay(200, context);
+                    }),
+                SizedBox(
+                  height: context.responsiveHeight(16),
+                )
               ],
-            ),
-            SizedBox(
-              height: context.responsiveHeight(26),
-            ),
-            _buildPaymentMethod(context),
-            const Spacer(),
-            PrimaryButton(
-                text: 'submit'.tr(),
-                context: context,
-                onPressed: () async {
-                  await _controller.pay(200, context);
-                }),
-            SizedBox(
-              height: context.responsiveHeight(16),
-            )
-          ],
+            );
+          }
         ),
       ),
     );

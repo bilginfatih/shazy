@@ -46,7 +46,10 @@ class PaymentService {
       model.uid = await SessionManager().get('id');
       var response =
           await NetworkManager.instance.post('/payment', model: model);
-      return '';
+      if (response == '') {
+        return '';
+      }
+      return response['message'];
     } catch (e) {
       return 'paymentError'.tr();
     }

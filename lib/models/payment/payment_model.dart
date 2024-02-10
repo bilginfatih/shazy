@@ -14,7 +14,7 @@ class PaymentModel extends BaseModel {
   PaymentModel._fromJson(o) {
     cardHolderName = o['card_holder_full_name'];
     cardNumber = o['card_number'];
-    cvv = o['cvv_number'];
+    cvv = o['cvc_number'];
     month = o['exp_month'];
     year = o['exp_year'];
     amount = double.tryParse(o['amount'].toString());
@@ -37,7 +37,7 @@ class PaymentModel extends BaseModel {
     Map<String, dynamic> map = {};
     if (cardHolderName != null) map['card_holder_full_name'] = cardHolderName;
     if (cardNumber != null) map['card_number'] = cardNumber;
-    if (cvv != null) map['cvv_number'] = cvv;
+    if (cvv != null) map['cvc_number'] = cvv;
     if (month != null) map['exp_month'] = month;
     if (year != null) map['exp_year'] = year;
     if (amount != null) map['amount'] = amount;

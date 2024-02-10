@@ -8,6 +8,7 @@ import 'package:shazy/utils/extensions/context_extension.dart';
 import '../../../core/init/navigation/navigation_manager.dart';
 import '../../../utils/constants/navigation_constant.dart';
 import '../../../widgets/dialogs/congratulation_dialog.dart';
+import '../../../widgets/dialogs/error_dialog.dart';
 part 'payment_controller.g.dart';
 
 class PaymentController = _PaymentControllerBase with _$PaymentController;
@@ -24,7 +25,7 @@ abstract class _PaymentControllerBase with Store {
   Future<void> pay(double amount, BuildContext context,
       {String driverName = ''}) async {
     try {
-      // TODO: gelen response göre düzenlenecek
+      card.amount = amount;
       var response = await PaymentService.instance.pay(card);
       if (context.mounted) {
         if (response == '') {
@@ -53,7 +54,17 @@ abstract class _PaymentControllerBase with Store {
             );
           });
         } else {
-          // TODO: error page
+          showDialog(
+            context: context,
+            builder: (_) => ErrorDialog(
+              context: context,
+              title: response,
+              buttonText: 'cancel'.tr(),
+              onPressed: () {
+                NavigationManager.instance.navigationToPop();
+              },
+            ),
+          );
         }
       }
     } catch (e) {

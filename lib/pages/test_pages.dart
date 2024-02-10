@@ -25,6 +25,8 @@ import '../utils/extensions/context_extension.dart';
 import '../utils/theme/themes.dart';
 import '../widgets/buttons/primary_button.dart';
 import '../widgets/containers/payment_method_container.dart';
+import '../widgets/dialogs/congratulation_dialog.dart';
+import '../widgets/dialogs/error_dialog.dart';
 import '../widgets/icons/circular_svg_icon.dart';
 import '../widgets/modal_bottom_sheet/comment_bottom_sheet.dart';
 import '../widgets/rating_bars/star_rating_bar.dart';
@@ -69,6 +71,20 @@ class _TestPageState extends State<TestPage>
           child: ListView(
             children: [
               ElevatedButton(
+                onPressed: () {
+                  showDialog(
+                    context: context,
+                    builder: (_) => ErrorDialog(
+                      context: context,
+                      title: 'paymentSuccess'.tr(),
+                      buttonText: 'test test',
+                      onPressed: () {},
+                    ),
+                  );
+                },
+                child: Text('error dialog'),
+              ),
+              ElevatedButton(
                 onPressed: () async {
                   var userId = await SessionManager().get('id');
                   SecurityModel model =
@@ -91,10 +107,10 @@ class _TestPageState extends State<TestPage>
                       cardNumber: '5127541122223332',
                       month: '12',
                       year: '2025',
-                      cvv: '000',
+                      cvv: '111',
                       uid: '9b39e1cf-d39c-4aaf-866e-1d0a05848735',
                       amount: 10);
-                  await PaymentService.instance.pay(model);
+                  var response = await PaymentService.instance.pay(model);
                 },
                 child: const Text('Pay'),
               ),

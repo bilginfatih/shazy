@@ -75,7 +75,9 @@ class NetworkManager extends BaseNetworkManager {
           },
         ),
       );
-      print(response);
+      if (response.data == '') {
+        return '';
+      }
       return jsonDecode(response.toString());
       // TODO: delete
       /*if (model != null) {
@@ -93,6 +95,7 @@ class NetworkManager extends BaseNetworkManager {
         }
       }*/
     } catch (e) {
+      print(e);
       rethrow;
     }
   }
