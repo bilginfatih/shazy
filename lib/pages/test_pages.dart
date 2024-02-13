@@ -254,7 +254,7 @@ class _TestPageState extends State<TestPage>
                     comment: 'test',
                     point: 5,
                   );
-                  await CommentService.instance.comment(model);
+                  await CommentService.instance.comment(model, 'caller');
                 },
                 child: Text('Comment'),
               ),

@@ -7,8 +7,7 @@ import '../../../models/history/history_model.dart';
 import '../../../services/history/history_service.dart';
 part 'history_upcoming_controller.g.dart';
 
-class HistoryUpcomingController = _HistoryUpcomingControllerBase
-    with _$HistoryUpcomingController;
+class HistoryUpcomingController = _HistoryUpcomingControllerBase with _$HistoryUpcomingController;
 
 abstract class _HistoryUpcomingControllerBase with Store {
   @observable
@@ -40,10 +39,9 @@ abstract class _HistoryUpcomingControllerBase with Store {
   }
 
   Future<void> sendComment(String comment, int index) async {
-    var model =
-        CommentModel(comment: comment, point: starSelectedIndex.toDouble());
+    var model = CommentModel(comment: comment, point: starSelectedIndex.toDouble());
     model.commentorUserId = await SessionManager().get('id');
-    var response = await CommentService.instance.comment(model);
+    var response = await CommentService.instance.comment(model, 'caller');
     init();
     NavigationManager.instance.navigationToPop();
     if (response != null) {

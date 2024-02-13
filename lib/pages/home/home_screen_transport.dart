@@ -2,9 +2,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_polyline_points/flutter_polyline_points.dart';
 import 'package:flutter_session_manager/flutter_session_manager.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:geolocator/geolocator.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:hexcolor/hexcolor.dart';
@@ -16,13 +14,14 @@ import '../../core/assistants/asistant_methods.dart';
 import '../../core/base/app_info.dart';
 import '../../core/init/navigation/navigation_manager.dart';
 import '../../core/init/network/network_manager.dart';
+import '../../models/cancel_reason/cancel_reason_model.dart';
 import '../../models/drive/drive_model.dart';
 import '../../models/searchDistance/search_distance_model.dart';
 import '../../models/user/user_profile_model.dart';
+import '../../services/cancel_reason/cancel_reason_service.dart';
 import '../../services/drive/drive_service.dart';
 import '../../services/searchDistance/search_distance_service.dart';
 import '../../services/user/user_service.dart';
-import '../../utils/constants/app_constant.dart';
 import '../../utils/constants/navigation_constant.dart';
 import '../../utils/extensions/context_extension.dart';
 import '../../utils/theme/themes.dart';
@@ -58,6 +57,7 @@ class _HomeScreenTransportState extends State<HomeScreenTransport> with TickerPr
   GoogleMapController? newGoogleMapController;
 
   //final OtpFieldController _pinController = OtpFieldController();
+  // ignore: unused_field
   late String _durationKm;
 
   final Uri toLaunch = Uri(scheme: 'https', host: 'www.google.com', path: '/maps/@/data=!4m2!7m1!2e1');
@@ -74,7 +74,7 @@ class _HomeScreenTransportState extends State<HomeScreenTransport> with TickerPr
   final DriveService _driveService = DriveService();
 
   DriveModel driveDetailsInfo = DriveModel();
-  bool _isAppInBackground = false;
+  bool _isAppInSearchDrive = false;
 
   List<LatLng> pLineCoOrdinatesList = [];
   Set<Polyline> polyLineSet = {};
@@ -151,18 +151,25 @@ class _HomeScreenTransportState extends State<HomeScreenTransport> with TickerPr
   }
 
   @override
-  void didChangeAppLifecycleState(AppLifecycleState state) {
+  void didChangeAppLifecycleState(AppLifecycleState state) async {
     if (state == AppLifecycleState.paused) {
-      setState(() {
-        _isAppInBackground = true;
-      });
-      // Uygulama kapatıldığında yapılacak işlemler burada gerçekleştirilir
-      print('uygulama kapandı');
-      // Örneğin: Bir kontrol eklemek
-      // Örneğin: Kullanıcıya bir bildirim göndermek
+      if (_isAppInSearchDrive == true) {
+        if (driveDetailsInfo.status == 'matched') {
+          String userId = await SessionManager().get('id');
+          CancelReasonModel model = CancelReasonModel(
+            callerId: userId,
+            status: 'matched',
+            reason: 'Caller tarafından driver arama yerinde uygulama kapatıldı',
+          );
+          await CancelReasonService.instance.cancelReason(model);
+          NavigationManager.instance.navigationToPop();
+          _timerSearchDriver.cancel();
+          print('uygulama kapandı');
+        }
+      }
     } else if (state == AppLifecycleState.resumed) {
       setState(() {
-        _isAppInBackground = false;
+        _isAppInSearchDrive = false;
       });
       print('uygulama devam etti');
       // Uygulama tekrar açıldığında yapılacak işlemler burada gerçekleştirilir
@@ -326,7 +333,9 @@ class _HomeScreenTransportState extends State<HomeScreenTransport> with TickerPr
                   ? "${Provider.of<AppInfo>(context, listen: false).userDropOffLocation!.totalPayment.toString()}₺"
                   : 'null',
               verificationCodeText: fiveDigitSecurityCode.toString(),
-              onPressedCancel: () async {},
+              onPressedCancel: () async {
+                NavigationManager.instance.navigationToPage(NavigationConstant.cancelRide);
+              },
             ),
           ),
         ),
@@ -545,6 +554,7 @@ class _HomeScreenTransportState extends State<HomeScreenTransport> with TickerPr
                                           : FilledButton.styleFrom(backgroundColor: AppThemes.lightenedColor),
                                       onPressed: Provider.of<AppInfo>(context).userDropOffLocation != null
                                           ? () async {
+                                              _isAppInSearchDrive = true;
                                               //HomeScreenTransport.flagMatched = 0;
                                               HomeScreenTransport.flagCanceled = 0;
                                               HomeScreenTransport.flagAccept = 0;
@@ -555,12 +565,24 @@ class _HomeScreenTransportState extends State<HomeScreenTransport> with TickerPr
                                               startSendingSearchDriver();
                                               // ignore: use_build_context_synchronously
                                               showDialog(
+                                                barrierDismissible: true,
                                                 context: context,
                                                 builder: (BuildContext context) => SearchDriverDialog(
                                                   context: context,
-                                                  onPressed: () {
-                                                    if (_isAppInBackground) {}
-                                                    //didChangeAppLifecycleState(AppLifecycleState.paused);
+                                                  onPressed: () async {
+                                                    if (driveDetailsInfo.status == 'matched') {
+                                                      _timerSearchDriver.cancel();
+                                                      String userId = await SessionManager().get('id');
+                                                      CancelReasonModel model = CancelReasonModel(
+                                                        callerId: userId,
+                                                        status: 'matched',
+                                                        reason: 'Caller tarafından arama yerinde iptal butonuna basıldı',
+                                                      );
+                                                      await CancelReasonService.instance.cancelReason(model);
+
+                                                      NavigationManager.instance.navigationToPop();
+                                                    }
+                                                    _timerSearchDriver.cancel();
                                                     NavigationManager.instance.navigationToPop();
                                                   },
                                                 ),
@@ -582,171 +604,6 @@ class _HomeScreenTransportState extends State<HomeScreenTransport> with TickerPr
             ],
           ),
         ),
-      ),
-    );
-  }
-
-  Widget _buildBottomSheet2(BuildContext context) {
-    return Container(
-      padding: EdgeInsets.only(top: 15.0),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          SvgPicture.asset(
-            "assets/svg/home-indicator.svg",
-            colorFilter: ColorFilter.mode(
-              context.isLight ? HexColor('#5A5A5A') : HexColor('#E8E8E8'),
-              BlendMode.srcIn,
-            ),
-          ),
-          GestureDetector(
-            onTap: () {
-              NavigationManager.instance.navigationToPop();
-            },
-            child: Padding(
-              padding: EdgeInsets.only(left: 325.0),
-              child: SvgPicture.asset(
-                "assets/svg/cross.svg",
-                colorFilter: ColorFilter.mode(
-                  context.isLight ? HexColor('#5A5A5A') : HexColor('#E8E8E8'),
-                  BlendMode.srcIn,
-                ),
-              ),
-            ),
-          ),
-          Row(
-            children: [
-              Padding(
-                padding: const EdgeInsets.only(left: 15.0),
-                child: Container(
-                  height: context.responsiveHeight(23),
-                  width: context.responsiveWidth(167),
-                  child: Text(
-                    "Trip to Destionation",
-                    style: context.textStyle.subheadLargeMedium.copyWith(
-                      color: context.isLight ? HexColor('#5A5A5A') : HexColor('#E8E8E8'),
-                    ),
-                  ),
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.only(left: 135.0),
-                child: Container(
-                  height: context.responsiveHeight(23),
-                  width: context.responsiveWidth(70),
-                  child: Text(
-                    _durationKm,
-                    style: context.textStyle.subheadLargeMedium.copyWith(color: context.isLight ? HexColor('#5A5A5A') : HexColor('#E8E8E8')),
-                  ),
-                ),
-              )
-            ],
-          ),
-          SizedBox(height: context.responsiveWidth(15)),
-          Container(
-            height: context.responsiveHeight(1),
-            width: context.responsiveWidth(392),
-            color: HexColor('#DDDDDD'),
-          ),
-          SizedBox(height: context.responsiveWidth(19)),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: [
-              Padding(
-                padding: const EdgeInsets.only(left: 16.0),
-                child: Container(
-                  height: context.responsiveHeight(59),
-                  width: context.responsiveWidth(54),
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(4.0),
-                    color: Colors.grey, // Profil resminin rengini belirleyebilirsiniz
-                  ),
-                  child: ClipRRect(
-                    borderRadius: BorderRadius.circular(4.0),
-                    child: Image.network(
-                      "https://randomuser.me/api/portraits/men/93.jpg", // Profil resmi dosyasının yolu
-                      fit: BoxFit.cover,
-                    ),
-                  ),
-                ),
-              ),
-              SizedBox(width: context.responsiveWidth(9)),
-              Text(
-                "Zübeyir X",
-                style: context.textStyle.subheadLargeMedium.copyWith(
-                  color: HexColor("#2A2A2A"),
-                ),
-              ),
-              SizedBox(width: context.responsiveWidth(107)),
-              Row(
-                children: [
-                  Icon(
-                    Icons.star,
-                    color: Colors.yellow,
-                    size: 14,
-                  ),
-                  Text(
-                    "4.9 (531 reviews)",
-                    style: TextStyle(
-                      fontSize: 12,
-                      fontWeight: FontWeight.w400,
-                      color: context.isLight ? HexColor('#A0A0A0') : HexColor('#E8E8E8'),
-                    ),
-                  ),
-                ],
-              )
-            ],
-          ),
-          SizedBox(height: context.responsiveWidth(15)),
-          Container(
-            height: context.responsiveHeight(1),
-            width: context.responsiveWidth(392),
-            color: HexColor('#DDDDDD'),
-          ),
-          SizedBox(height: context.responsiveWidth(15)),
-          Row(
-            children: [
-              Padding(
-                padding: const EdgeInsets.only(left: 15.0),
-                child: Container(
-                  height: context.responsiveHeight(23),
-                  width: context.responsiveWidth(194),
-                  child: Text(
-                    "Share My Trip",
-                    style: context.textStyle.subheadLargeMedium.copyWith(
-                      color: context.isLight ? HexColor('#5A5A5A') : HexColor('#E8E8E8'),
-                    ),
-                  ),
-                ),
-              ),
-            ],
-          ),
-          Row(
-            children: [
-              Padding(
-                padding: const EdgeInsets.only(left: 15.0),
-                child: Container(
-                  height: context.responsiveHeight(23),
-                  width: context.responsiveWidth(334),
-                  child: Text(
-                    "Let family and friend see your location and trip status",
-                    style: TextStyle(
-                      fontSize: 12,
-                      fontWeight: FontWeight.w300,
-                      color: context.isLight ? HexColor('#5A5A5A') : HexColor('#E8E8E8'),
-                    ),
-                  ),
-                ),
-              ),
-              GestureDetector(
-                child: SvgPicture.asset(
-                  "assets/svg/location.svg",
-                ),
-                onTap: () {},
-              )
-            ],
-          ),
-        ],
       ),
     );
   }

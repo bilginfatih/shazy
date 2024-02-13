@@ -18,8 +18,7 @@ class CommentBottomSheet extends Padding {
     required TextEditingController textController,
   }) : super(
           key: key,
-          padding:
-              EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
+          padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
           child: SizedBox(
             height: context.customeHeight(0.5),
             child: BasePadding(
@@ -56,25 +55,28 @@ class CommentBottomSheet extends Padding {
                   ),
                   Text(
                     text ?? '',
-                    style: context.textStyle.bodySmallMedium
-                        .copyWith(color: HexColor('#B8B8B8')),
+                    style: context.textStyle.bodySmallMedium.copyWith(color: HexColor('#B8B8B8')),
                   ),
                   SizedBox(
                     height: context.responsiveHeight(24),
                   ),
-                  TextFormField(
-                    controller: textController,
-                    minLines: 4,
-                    maxLines: 50,
-                    decoration: InputDecoration(
-                      hintText: 'writeYourText'.tr(),
-                      hintStyle: context.textStyle.subheadSmallRegular.copyWith(
-                        color: AppThemes.hintTextNeutral,
-                      ),
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(8),
-                        borderSide: BorderSide(
-                          color: AppThemes.borderSideColor,
+                  Container(
+                    height: context.responsiveHeight(118),
+                    width: context.responsiveWidth(318),
+                    child: TextFormField(
+                      controller: textController,
+                      minLines: 4,
+                      maxLines: 50,
+                      decoration: InputDecoration(
+                        hintText: 'writeYourText'.tr(),
+                        hintStyle: context.textStyle.subheadSmallRegular.copyWith(
+                          color: AppThemes.hintTextNeutral,
+                        ),
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(8),
+                          borderSide: BorderSide(
+                            color: AppThemes.borderSideColor,
+                          ),
                         ),
                       ),
                     ),
