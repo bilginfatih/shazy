@@ -12,10 +12,10 @@ class CommentService {
 
   static CommentService instance = CommentService._init();
 
-  Future<String?> comment(CommentModel comment) async {
+  Future<String?> comment(CommentModel comment, String userPath ) async {
     try {
       var response =
-          await NetworkManager.instance.post('/comment', model: comment);
+          await NetworkManager.instance.post('/comment/$userPath', model: comment);
       return null;
     } catch (e) {
       return 'commentError'.tr();

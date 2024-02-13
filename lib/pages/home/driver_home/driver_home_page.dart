@@ -17,9 +17,11 @@ import '../../../core/assistants/asistant_methods.dart';
 import '../../../core/base/app_info.dart';
 import '../../../core/init/navigation/navigation_manager.dart';
 import '../../../core/init/network/network_manager.dart';
+import '../../../models/cancel_reason/cancel_reason_model.dart';
 import '../../../models/comment/comment_model.dart';
 import '../../../models/drive/drive_model.dart';
 import '../../../models/user/user_profile_model.dart';
+import '../../../services/cancel_reason/cancel_reason_service.dart';
 import '../../../services/comment/comment_service.dart';
 import '../../../services/user/user_service.dart';
 import '../../../utils/constants/app_constant.dart';
@@ -40,7 +42,7 @@ import '../home_screen_transport.dart';
 class DriverHomePage extends StatefulWidget {
   const DriverHomePage({Key? key}) : super(key: key);
   static String stat = '';
-  static bool allowNavigation = true;
+  //static bool allowNavigation = true;
 
   @override
   State<DriverHomePage> createState() => _DriverHomePageState();
@@ -56,6 +58,8 @@ class _DriverHomePageState extends State<DriverHomePage> with TickerProviderStat
   List<LatLng> pLineCoOrdinatesList2 = [];
   late double toLatitude;
   late double toLongitude;
+
+  late String requestId2 = '';
 
   final _controllerComment = HistoryUpcomingController();
   final TextEditingController _commentTextController = TextEditingController();
@@ -100,6 +104,7 @@ class _DriverHomePageState extends State<DriverHomePage> with TickerProviderStat
   late String _startAddressDriverToCaller;
 
   late Timer _timer;
+  late Timer _canceledTimer;
 
   int flag = 0;
 
@@ -110,6 +115,9 @@ class _DriverHomePageState extends State<DriverHomePage> with TickerProviderStat
     // Timer'ı iptal et
     if (_timer.isActive) {
       _timer.cancel();
+    }
+    if (_canceledTimer.isActive) {
+      _canceledTimer.cancel();
     }
 
     _disposeBottomSheetControllers();
@@ -137,7 +145,25 @@ class _DriverHomePageState extends State<DriverHomePage> with TickerProviderStat
       // Her 5 saniyede bir istek gönder
       sendRequest();
     });
+
     _driverController.active();
+  }
+
+  Future<void> sendRequestCanceled() async {
+    try {
+      String apiUrl = "/drive-request/$requestId2";
+
+      var requestResponse = await NetworkManager.instance.get(apiUrl);
+
+      driveDetailsInfo.status = requestResponse["status"];
+
+      if (driveDetailsInfo.status == 'canceled') {
+        HomeScreenTransport.allowNavigation = true;
+        _canceledTimer.cancel();
+        //drawPolyLineFromOriginToDestination();
+        NavigationManager.instance.navigationToPageClear(NavigationConstant.homePage);
+      }
+    } catch (e) {}
   }
 
   void _initializeBottomSheetControllers() {
@@ -169,7 +195,7 @@ class _DriverHomePageState extends State<DriverHomePage> with TickerProviderStat
       callerSurname = userProfile.userModel!.surname!;
       callerPicturePath = userProfile.profilePicturePath!;
 
-      final String requestId2 = statusId;
+      requestId2 = statusId;
       String apiUrl = "/drive-request/$requestId2";
 
       var requestResponse = await NetworkManager.instance.get(apiUrl);
@@ -188,6 +214,10 @@ class _DriverHomePageState extends State<DriverHomePage> with TickerProviderStat
           HomeScreenTransport.allowNavigation = false;
           _timer.cancel();
           drawPolyLineFromOriginToDestination();
+          _canceledTimer = Timer.periodic(Duration(seconds: 10), (timer) {
+            // Her 5 saniyede bir istek gönder
+            sendRequestCanceled();
+          });
         }
       } else {
         // Handle the case where the response is null or not as expected
@@ -396,8 +426,7 @@ class _DriverHomePageState extends State<DriverHomePage> with TickerProviderStat
   Future<void> sendComment(String comment, int index) async {
     var model = CommentModel(comment: comment, point: index.toDouble());
     model.commentorUserId = driverId;
-    //await SessionManager().get('id'); backende değişmesi lazım id string girilen değer caller id
-    var response = await CommentService.instance.comment(model);
+    var response = await CommentService.instance.comment(model, 'driver');
     // NavigationManager.instance.navigationToPop();
     if (response != null) {}
   }
@@ -417,7 +446,7 @@ class _DriverHomePageState extends State<DriverHomePage> with TickerProviderStat
               buttonTextStart: index == 0 ? 'Start the Trip' : 'Finish the Trip',
               context: context,
               pickingUpText: index == 0 ? 'pickingUpText'.tr() : 'Going to Destination',
-              imagePath: '$baseUrl/$callerAvaragePoint',
+              imagePath: "https://randomuser.me/api/portraits/men/93.jpg" /*'$baseUrl/$callerAvaragePoint'*/,
               customerName: '$callerName $callerSurname',
               startText: callerAvaragePoint.toString(),
               location1Text: humanReadableAddress.length > 36 ? "${humanReadableAddress.substring(0, 36)}..." : humanReadableAddress,
@@ -504,7 +533,11 @@ class _DriverHomePageState extends State<DriverHomePage> with TickerProviderStat
                   );
                 }
               },
-              onPressedCancel: index == 0 ? () async {} : null,
+              onPressedCancel: index == 0
+                  ? () async {
+                      NavigationManager.instance.navigationToPage(NavigationConstant.cancelRide, args: 'driverId');
+                    }
+                  : null,
             ),
           ),
         ),
