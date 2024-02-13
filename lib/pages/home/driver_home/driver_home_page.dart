@@ -146,7 +146,7 @@ class _DriverHomePageState extends State<DriverHomePage> with TickerProviderStat
       sendRequest();
     });
 
-    _driverController.active();
+    _driverController.active(context);
   }
 
   Future<void> sendRequestCanceled() async {
@@ -374,7 +374,7 @@ class _DriverHomePageState extends State<DriverHomePage> with TickerProviderStat
         location2TextTitle: "$_durationTimeCallerToDestination ($_durationKmCallerToDestination) trip",
         location2Text: _endAddressCallerToDestination.length > 36 ? "${_endAddressCallerToDestination.substring(0, 36)}..." : _endAddressCallerToDestination,
         cancelOnPressed: () async {
-          await _driverController.driveCancel();
+          await _driverController.driveCancel(context);
           setState(() {
             _markersSet.clear();
             _polyLineSet.clear();
@@ -384,7 +384,7 @@ class _DriverHomePageState extends State<DriverHomePage> with TickerProviderStat
         acceptOnPressed: () async {
           var userId = await SessionManager().get('id');
           DriveModel model = DriveModel(driverId: userId);
-          await _driverController.driverAccept(model);
+          await _driverController.driverAccept(context, model);
           _showDriverBottomSheet(0);
         },
       ),

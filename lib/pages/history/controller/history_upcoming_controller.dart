@@ -1,3 +1,5 @@
+import 'package:easy_localization/easy_localization.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_session_manager/flutter_session_manager.dart';
 import 'package:mobx/mobx.dart';
 import '../../../core/init/navigation/navigation_manager.dart';
@@ -5,9 +7,11 @@ import '../../../models/comment/comment_model.dart';
 import '../../../services/comment/comment_service.dart';
 import '../../../models/history/history_model.dart';
 import '../../../services/history/history_service.dart';
+import '../../../utils/helper/helper_functions.dart';
 part 'history_upcoming_controller.g.dart';
 
-class HistoryUpcomingController = _HistoryUpcomingControllerBase with _$HistoryUpcomingController;
+class HistoryUpcomingController = _HistoryUpcomingControllerBase
+    with _$HistoryUpcomingController;
 
 abstract class _HistoryUpcomingControllerBase with Store {
   @observable
@@ -38,14 +42,21 @@ abstract class _HistoryUpcomingControllerBase with Store {
     starSelectedIndex = index;
   }
 
-  Future<void> sendComment(String comment, int index) async {
-    var model = CommentModel(comment: comment, point: starSelectedIndex.toDouble());
+  Future<void> sendComment(
+      BuildContext context, String comment, int index) async {
+    var model =
+        CommentModel(comment: comment, point: starSelectedIndex.toDouble());
     model.commentorUserId = await SessionManager().get('id');
     var response = await CommentService.instance.comment(model, 'caller');
     init();
     NavigationManager.instance.navigationToPop();
     if (response != null) {
-      // TODO: hata mesajı basacak
+      if (context.mounted) {
+        HelperFunctions.instance
+            .showErrorDialog(context, response, 'cancel'.tr(), () {
+          NavigationManager.instance.navigationToPop();
+        });
+      }
     }
   }
 }

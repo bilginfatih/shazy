@@ -79,21 +79,6 @@ class NetworkManager extends BaseNetworkManager {
         return '';
       }
       return jsonDecode(response.toString());
-      // TODO: delete
-      /*if (model != null) {
-        response = await dio.post(path, data: model.toJson());
-      } else {
-        response = await dio.post(path, data: jsonEncode(data));
-      }
-      if (response.statusCode == 200) {
-        Map<String, dynamic> data = response.data;
-        if (data['success'] == 'false') {
-          throw Exception(data['errorMessage']);
-        } else {
-          print(data);
-          return data['data'];
-        }
-      }*/
     } catch (e) {
       print(e);
       rethrow;
@@ -129,21 +114,6 @@ class NetworkManager extends BaseNetworkManager {
       );
       print(response);
       return jsonDecode(response.toString());
-      // TODO: delete
-      /*if (model != null) {
-        response = await dio.post(path, data: model.toJson());
-      } else {
-        response = await dio.post(path, data: jsonEncode(data));
-      }
-      if (response.statusCode == 200) {
-        Map<String, dynamic> data = response.data;
-        if (data['success'] == 'false') {
-          throw Exception(data['errorMessage']);
-        } else {
-          print(data);
-          return data['data'];
-        }
-      }*/
     } catch (e) {
       rethrow;
     }
@@ -178,21 +148,6 @@ class NetworkManager extends BaseNetworkManager {
       );
       print(response);
       return jsonDecode(response.toString());
-      // TODO: delete
-      /*if (model != null) {
-        response = await dio.post(path, data: model.toJson());
-      } else {
-        response = await dio.post(path, data: jsonEncode(data));
-      }
-      if (response.statusCode == 200) {
-        Map<String, dynamic> data = response.data;
-        if (data['success'] == 'false') {
-          throw Exception(data['errorMessage']);
-        } else {
-          print(data);
-          return data['data'];
-        }
-      }*/
     } catch (e) {
       rethrow;
     }

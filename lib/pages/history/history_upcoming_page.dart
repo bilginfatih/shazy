@@ -4,7 +4,6 @@ import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:hexcolor/hexcolor.dart';
-import 'package:shazy/models/comment/comment_model.dart';
 import '../../widgets/modal_bottom_sheet/comment_bottom_sheet.dart';
 import 'controller/history_upcoming_controller.dart';
 import '../../widgets/containers/two_select_container.dart';
@@ -12,7 +11,6 @@ import '../../utils/extensions/context_extension.dart';
 import '../../utils/theme/themes.dart';
 import '../../widgets/app_bars/custom_app_bar.dart';
 import '../../widgets/buttons/secondary_button.dart';
-import '../../widgets/drawer/custom_drawer.dart';
 import '../../widgets/padding/base_padding.dart';
 
 class HistoryUpcomingPage extends StatefulWidget {
@@ -154,7 +152,7 @@ class _HistoryUpcomingPageState extends State<HistoryUpcomingPage> {
                               context: context,
                               textController: _commentTextController,
                               onPressed: () {
-                                _controller.sendComment(
+                                _controller.sendComment(context,
                                     _commentTextController.text, index);
                               },
                               onPressedRatingBar:

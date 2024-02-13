@@ -29,8 +29,8 @@ mixin _$DriverController on _DriverControllerBase, Store {
       AsyncAction('_DriverControllerBase.active', context: context);
 
   @override
-  Future<void> active() {
-    return _$activeAsyncAction.run(() => super.active());
+  Future<void> active(BuildContext context) {
+    return _$activeAsyncAction.run(() => super.active(context));
   }
 
   late final _$driveInformationAsyncAction =

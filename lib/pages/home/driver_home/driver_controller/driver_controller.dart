@@ -1,3 +1,5 @@
+import 'package:easy_localization/easy_localization.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_session_manager/flutter_session_manager.dart';
 import 'package:mobx/mobx.dart';
 import 'package:shazy/core/init/navigation/navigation_manager.dart';
@@ -6,6 +8,7 @@ import 'package:shazy/services/drive/drive_service.dart';
 
 import '../../../../core/init/network/network_manager.dart';
 import '../../../../utils/constants/navigation_constant.dart';
+import '../../../../utils/helper/helper_functions.dart';
 part 'driver_controller.g.dart';
 
 class DriverController = _DriverControllerBase with _$DriverController;
@@ -15,14 +18,20 @@ abstract class _DriverControllerBase with Store {
   bool driverActive = false;
 
   @action
-  Future<void> active() async {
+  Future<void> active(BuildContext context) async {
     try {
       var userId = await SessionManager().get('id');
       var model = DriveModel(driverId: userId);
-      var response = await DriveService.instance.driverActive(model);
+      await DriveService.instance.driverActive(model);
       driverActive = true;
     } catch (e) {
-      // TODO: hata sayfasına yönlendir.
+      if (context.mounted) {
+        HelperFunctions.instance.showErrorDialog(
+            context, 'driveActiveError'.tr(), 'backHome'.tr(), () {
+          NavigationManager.instance
+              .navigationToPageClear(NavigationConstant.homePage);
+        });
+      }
     }
   }
 
@@ -32,30 +41,41 @@ abstract class _DriverControllerBase with Store {
       var model = DriveModel(driverId: userId);
       var response = await DriveService.instance.driverPassive(model);
       // TODO: responsa bağlı olarak home page e gidicek
-      NavigationManager.instance.navigationToPageClear(NavigationConstant.homePage);
+      NavigationManager.instance
+          .navigationToPageClear(NavigationConstant.homePage);
     } catch (e) {
       // TODO: hata sayfasına yönlendir.
     }
   }
 
-  Future<void> driveCancel() async {
+  Future<void> driveCancel(BuildContext context) async {
     try {
       var userId = await SessionManager().get('id');
       var model = DriveModel(driverId: userId);
       var response = await DriveService.instance.driveCancel(model);
     } catch (e) {
-      // TODO: hata mesajı gözükecek
+      if (context.mounted) {
+        HelperFunctions.instance.showErrorDialog(
+            context, 'driveCancelError'.tr(), 'cancel'.tr(), () {
+          NavigationManager.instance.navigationToPop();
+        });
+      }
     }
   }
-  
 
-  Future<void> driverAccept(DriveModel model) async {
-
+  Future<void> driverAccept(BuildContext context, DriveModel model) async {
     try {
-      var response = await NetworkManager.instance.post('/drive-request/Accept', model: model);
-    } catch (e) {}
-
-    NavigationManager.instance.navigationToPop();
+      var response = await NetworkManager.instance
+          .post('/drive-request/Accept', model: model);
+      NavigationManager.instance.navigationToPop();
+    } catch (e) {
+      if (context.mounted) {
+        HelperFunctions.instance.showErrorDialog(
+            context, 'driverAccept'.tr(), 'cancel'.tr(), () {
+          NavigationManager.instance.navigationToPop();
+        });
+      }
+    }
   }
 
   /// Sürüş bilgilerini getirir

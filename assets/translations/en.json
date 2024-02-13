@@ -102,6 +102,9 @@
     "registerEmptyError": "registerEmptyError",
     "passwordNotSame": "passwordNotSame",
     "passwordEmptyError": "passwordEmptyError",
-    "loginError": "loginError"
+    "loginError": "loginError",
+    "driveActiveError": "driveActiveError",
+    "driveCancelError": "driveCancelError",
+    "driverAccept": "driverAccept"
 
 }
