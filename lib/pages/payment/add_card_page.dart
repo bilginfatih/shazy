@@ -147,7 +147,7 @@ class AddCard extends StatelessWidget {
             month: _monthController.text,
             year: _yearController.text,
           );
-          _controller.addCard(model);
+          _controller.addCard(context, model);
         });
   }
 

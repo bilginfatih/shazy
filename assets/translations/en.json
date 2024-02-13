@@ -106,6 +106,9 @@
     "driveActiveError": "driveActiveError",
     "driveCancelError": "driveCancelError",
     "driverAccept": "driverAccept",
-    "oldPasswordSameError": "oldPasswordSameError"
-
+    "oldPasswordSameError": "oldPasswordSameError",
+    "payError": "payError",
+    "addImageError": "addImageError",
+    "profilePageError": "profilePageError",
+    "updateProfileError": "updateProfileError"
 }

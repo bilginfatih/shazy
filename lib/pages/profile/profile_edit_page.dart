@@ -16,7 +16,9 @@ import 'package:shazy/widgets/buttons/secondary_button.dart';
 import 'package:shazy/widgets/textfields/email_text_form_field.dart';
 import 'package:shazy/widgets/textfields/name_text_from_field.dart';
 
+import '../../core/init/navigation/navigation_manager.dart';
 import '../../utils/constants/app_constant.dart';
+import '../../utils/helper/helper_functions.dart';
 import '../../widgets/padding/base_padding.dart';
 
 class ProfileEditPage extends StatefulWidget {
@@ -52,7 +54,12 @@ class _ProfileEditPageState extends State<ProfileEditPage> {
       }
       setState(() {});
     } catch (e) {
-      // TODO: hata mesajı
+      if (context.mounted) {
+        HelperFunctions.instance
+            .showErrorDialog(context, 'addImageError'.tr(), 'cancel'.tr(), () {
+          NavigationManager.instance.navigationToPop();
+        });
+      }
     }
   }
 
@@ -209,7 +216,7 @@ class _ProfileEditPageState extends State<ProfileEditPage> {
         email: email,
       ),
     );
-    _controller.updateUserProfile(model);
+    _controller.updateUserProfile(context, model);
   }
 
   Image _buildImage(String path) {

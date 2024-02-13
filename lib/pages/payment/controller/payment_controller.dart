@@ -7,6 +7,7 @@ import 'package:shazy/utils/extensions/context_extension.dart';
 
 import '../../../core/init/navigation/navigation_manager.dart';
 import '../../../utils/constants/navigation_constant.dart';
+import '../../../utils/helper/helper_functions.dart';
 import '../../../widgets/dialogs/congratulation_dialog.dart';
 import '../../../widgets/dialogs/error_dialog.dart';
 part 'payment_controller.g.dart';
@@ -68,18 +69,26 @@ abstract class _PaymentControllerBase with Store {
         }
       }
     } catch (e) {
-      // TODO:
-    }
+ if (context.mounted) {
+        HelperFunctions.instance
+            .showErrorDialog(context, 'payError'.tr(), 'cancel'.tr(), () {
+          NavigationManager.instance.navigationToPop();
+        });
+      }   }
   }
 
-  Future<void> addCard(PaymentModel model) async {
+  Future<void> addCard(BuildContext context, PaymentModel model) async {
     var response = await PaymentService.instance.addCard(model);
-    print(response);
     if (response == '') {
       NavigationManager.instance
           .navigationToPageClear(NavigationConstant.paymentMethod);
     } else {
-      // TODO: hata pop up
+      if (context.mounted) {
+        HelperFunctions.instance
+            .showErrorDialog(context, response, 'cancel'.tr(), () {
+          NavigationManager.instance.navigationToPop();
+        });
+      }
     }
   }
 

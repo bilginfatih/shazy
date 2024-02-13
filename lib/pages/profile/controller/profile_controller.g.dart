@@ -158,8 +158,8 @@ mixin _$ProfileController on _ProfileControllerBase, Store {
       AsyncAction('_ProfileControllerBase.init', context: context);
 
   @override
-  Future<void> init({String? id}) {
-    return _$initAsyncAction.run(() => super.init(id: id));
+  Future<void> init(BuildContext context, {String? id}) {
+    return _$initAsyncAction.run(() => super.init(context, id: id));
   }
 
   @override

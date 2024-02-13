@@ -1,3 +1,5 @@
+import 'package:easy_localization/easy_localization.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_session_manager/flutter_session_manager.dart';
 import 'package:mobx/mobx.dart';
 import 'package:shazy/core/init/cache/cache_manager.dart';
@@ -7,6 +9,7 @@ import 'package:shazy/services/comment/comment_service.dart';
 import 'package:shazy/services/user/user_service.dart';
 import 'package:shazy/utils/constants/app_constant.dart';
 import 'package:shazy/utils/constants/navigation_constant.dart';
+import 'package:shazy/utils/helper/helper_functions.dart';
 
 import '../../../core/init/navigation/navigation_manager.dart';
 import '../../../models/comment/comment_model.dart';
@@ -47,7 +50,7 @@ abstract class _ProfileControllerBase with Store {
   UserProfileModel? userProfile;
 
   @action
-  Future<void> init({String? id}) async {
+  Future<void> init(BuildContext context, {String? id}) async {
     try {
       id ??= await _getUserModel();
       if (id != '') {
@@ -57,8 +60,13 @@ abstract class _ProfileControllerBase with Store {
         throw Exception();
       }
     } catch (e) {
-      print(e);
-      // TODO: error page
+      if (context.mounted) {
+        HelperFunctions.instance.showErrorDialog(
+            context, 'profilePageError'.tr(), 'backHome'.tr(), () {
+          NavigationManager.instance
+              .navigationToPageClear(NavigationConstant.homePage);
+        });
+      }
     }
   }
 
@@ -96,7 +104,8 @@ abstract class _ProfileControllerBase with Store {
     }
   }
 
-  Future<void> updateUserProfile(UserProfileModel model) async {
+  Future<void> updateUserProfile(
+      BuildContext context, UserProfileModel model) async {
     try {
       String? email = await CacheManager.instance.getData('user', 'email');
       var id = await SessionManager().get('id');
@@ -105,7 +114,13 @@ abstract class _ProfileControllerBase with Store {
         responseRegiserControl = await UserService.instance
             .registerControl(UserModel(email: model.userModel?.email));
         if (responseRegiserControl != null) {
-          // TODO: hata mesajı
+          if (context.mounted) {
+            HelperFunctions.instance.showErrorDialog(
+                context, responseRegiserControl, 'backHome'.tr(), () {
+              NavigationManager.instance
+                  .navigationToPageClear(NavigationConstant.homePage);
+            });
+          }
         }
       }
       var responseUpdateUser = await NetworkManager.instance
@@ -120,9 +135,17 @@ abstract class _ProfileControllerBase with Store {
       /*var responseUpdateUserProfile = await NetworkManager.instance.put(
           '/user-profile/$id',
           model: UserProfileModel(description: model.description ?? ''));*/
-      init();
+      if (context.mounted) {
+        init(context);
+      }
     } catch (e) {
-      // TODO: hata
+      if (context.mounted) {
+        HelperFunctions.instance.showErrorDialog(
+            context, 'updateProfileError'.tr(), 'backHome'.tr(), () {
+          NavigationManager.instance
+              .navigationToPageClear(NavigationConstant.homePage);
+        });
+      }
     }
   }
 
