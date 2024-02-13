@@ -1,4 +1,6 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_session_manager/flutter_session_manager.dart';
 import '../../utils/extensions/context_extension.dart';
 
 import '../../core/init/cache/cache_manager.dart';
@@ -26,14 +28,26 @@ class _SplashPageState extends State<SplashPage> {
     String? email = await CacheManager.instance.getData('user', 'email');
     String? password = await CacheManager.instance.getData('user', 'password');
     if (email == null || password == null) {
-      NavigationManager.instance.navigationToPageClear(NavigationConstant.welcome);
+      NavigationManager.instance
+          .navigationToPageClear(NavigationConstant.welcome);
     }
     UserModel model = UserModel(email: email, password: password);
     String? data = await UserService.instance.login(model);
+    await _setLang();
     if (data != null) {
-      NavigationManager.instance.navigationToPageClear(NavigationConstant.welcome);
+      NavigationManager.instance
+          .navigationToPageClear(NavigationConstant.welcome);
     } else {
-      NavigationManager.instance.navigationToPageClear(NavigationConstant.homePage);
+      NavigationManager.instance
+          .navigationToPageClear(NavigationConstant.homePage);
+    }
+  }
+
+  Future<void> _setLang() async {
+    String? lang = await CacheManager.instance.getData('user', 'lang');
+    if (lang != null && lang != 'en' && context.mounted) {
+      await context.setLocale(Locale(lang));
+      await SessionManager().set('lang', lang);
     }
   }
 

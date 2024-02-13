@@ -18,7 +18,7 @@ class ErrorDialog extends Dialog {
           key: key,
           insetPadding: EdgeInsets.symmetric(
             horizontal: context.responsiveWidth(17),
-            vertical: context.responsiveHeight(200),
+            vertical: context.responsiveHeight(220),
           ),
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(8.0),
@@ -80,8 +80,7 @@ class ErrorDialog extends Dialog {
                 child: PrimaryButton(
                   text: buttonText,
                   context: context,
-                  onPressed: onPressed
-,
+                  onPressed: onPressed,
                 ),
               ),
             ],
