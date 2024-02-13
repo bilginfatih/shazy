@@ -4,7 +4,9 @@ import 'package:hexcolor/hexcolor.dart';
 import 'package:shazy/core/init/navigation/navigation_manager.dart';
 import 'package:shazy/models/complain/complain_model.dart';
 import 'package:shazy/services/complain/complain_service.dart';
+import 'package:shazy/utils/constants/navigation_constant.dart';
 import 'package:shazy/utils/extensions/context_extension.dart';
+import '../../utils/helper/helper_functions.dart';
 import '../../widgets/app_bars/back_app_bar.dart';
 import '../../widgets/buttons/primary_button.dart';
 import '../../widgets/dialogs/congratulation_dialog.dart';
@@ -41,15 +43,21 @@ class _ComplainPageState extends State<ComplainPage> {
     return PrimaryButton(
       context: context,
       text: 'submit'.tr(),
-      onPressed: () {
-        var response = ComplainService.instance.postComplain(
+      onPressed: () async {
+        var response = await ComplainService.instance.postComplain(
           ComplainModel(
             complain: _textController.text,
           ),
         );
         if (response != null) {
-          // TODO: hata mesajı
-        } else {
+          if (context.mounted) {
+            HelperFunctions.instance
+                .showErrorDialog(context, response, 'backHome'.tr(), () {
+              NavigationManager.instance
+                  .navigationToPageClear(NavigationConstant.homePage);
+            });
+          }
+        } else if (context.mounted) {
           showDialog(
             context: context,
             builder: (BuildContext context) {

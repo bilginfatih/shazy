@@ -5,6 +5,7 @@ import 'package:shazy/utils/constants/navigation_constant.dart';
 import 'package:shazy/utils/extensions/context_extension.dart';
 
 import '../../core/init/navigation/navigation_manager.dart';
+import '../../utils/helper/helper_functions.dart';
 import '../../widgets/app_bars/back_app_bar.dart';
 import '../../widgets/buttons/primary_button.dart';
 import '../../widgets/padding/base_padding.dart';
@@ -12,12 +13,37 @@ import '../../widgets/textfields/password_text_form_field.dart';
 
 class ChangePasswordPage extends StatelessWidget {
   ChangePasswordPage({super.key});
-  final TextEditingController _oldPasswordTextController =
-      TextEditingController();
-  final TextEditingController _newPasswordTextController =
-      TextEditingController();
+
   final TextEditingController _confirmPasswordTextController =
       TextEditingController();
+
+  final TextEditingController _newPasswordTextController =
+      TextEditingController();
+
+  final TextEditingController _oldPasswordTextController =
+      TextEditingController();
+
+  Future<void> _onPressed(BuildContext context) async {
+    if (_confirmPasswordTextController.text !=
+        _newPasswordTextController.text) {
+      HelperFunctions.instance
+          .showErrorDialog(context, 'passwordNotSame'.tr(), 'cancel'.tr(), () {
+        NavigationManager.instance.navigationToPop();
+      });
+    } else if (_oldPasswordTextController.text ==
+        _newPasswordTextController.text) {
+      HelperFunctions.instance.showErrorDialog(
+          context, 'oldPasswordSameError'.tr(), 'cancel'.tr(), () {
+        NavigationManager.instance.navigationToPop();
+      });
+    } else {
+      await UserService.instance.changePassword(
+          _oldPasswordTextController.text, _newPasswordTextController.text);
+      NavigationManager.instance
+          .navigationToPageClear(NavigationConstant.homePage);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -57,19 +83,7 @@ class ChangePasswordPage extends StatelessWidget {
               context: context,
               text: 'save'.tr(),
               onPressed: () async {
-                if (_confirmPasswordTextController.text !=
-                    _newPasswordTextController.text) {
-                  // TODO: hata mesajı
-                } else if (_oldPasswordTextController.text ==
-                    _newPasswordTextController.text) {
-                  // TODO: hata mesajı
-                } else {
-                  await UserService.instance.changePassword(
-                      _oldPasswordTextController.text,
-                      _newPasswordTextController.text);
-                  NavigationManager.instance
-                      .navigationToPageClear(NavigationConstant.homePage);
-                }
+                await _onPressed(context);
               },
             ),
           ],

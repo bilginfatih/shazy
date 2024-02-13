@@ -6,6 +6,7 @@ import 'package:shazy/utils/constants/navigation_constant.dart';
 import 'package:shazy/utils/extensions/context_extension.dart';
 
 import '../../core/init/navigation/navigation_manager.dart';
+import '../../utils/helper/helper_functions.dart';
 import '../../widgets/app_bars/back_app_bar.dart';
 import '../../widgets/buttons/primary_button.dart';
 
@@ -37,7 +38,13 @@ class DeleteAccountPage extends StatelessWidget {
               onPressed: () async {
                 var response = await UserService.instance.deleteAccount();
                 if (response != null) {
-                  // TODO: hata mesajı
+                  if (context.mounted) {
+                    HelperFunctions.instance.showErrorDialog(
+                        context, response, 'backHome'.tr(), () {
+                      NavigationManager.instance
+                          .navigationToPageClear(NavigationConstant.homePage);
+                    });
+                  }
                 }
               },
             )
