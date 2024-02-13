@@ -59,7 +59,7 @@ class _SignUpPageState extends State<SignUpPage> {
           phone: _phoneTextEditingController.text,
           gender: _genderTextEditingController.text,
         );
-        _controller.goToVerifyOTP(model, _termsCheck);
+        _controller.goToVerifyOTP(context, model, _termsCheck);
       },
     );
   }
@@ -72,7 +72,11 @@ class _SignUpPageState extends State<SignUpPage> {
           child: CheckBoxRounded(
             size: 16,
             borderColor: Colors.green[600],
-            checkedWidget: const Icon(Icons.check, size: 14,color: Colors.white,),
+            checkedWidget: const Icon(
+              Icons.check,
+              size: 14,
+              color: Colors.white,
+            ),
             onTap: (bool? value) {
               setState(() {
                 _termsCheck = value ?? false;

@@ -16,7 +16,8 @@ class SetPasswordPage extends StatelessWidget {
       TextEditingController();
 
   final AuthController _controller = AuthController();
-  final TextEditingController _passwordTextEditingController = TextEditingController();
+  final TextEditingController _passwordTextEditingController =
+      TextEditingController();
   UserModel _user = UserModel();
 
   SingleChildScrollView _buildBody(BuildContext context) {
@@ -88,7 +89,7 @@ class SetPasswordPage extends StatelessWidget {
       onPressed: () async {
         _user.password = _passwordTextEditingController.text;
         _user.passwordConfirmation = _confirmPasswordTextEditingController.text;
-        await _controller.register(_user);
+        await _controller.register(context, _user);
       },
     );
   }

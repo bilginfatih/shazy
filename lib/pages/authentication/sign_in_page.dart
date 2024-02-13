@@ -104,7 +104,7 @@ class SignInPage extends StatelessWidget {
           email: _emailPhoneTextEditingController.text,
           password: _passwordTextEditingController.text,
         );
-        await _controller.login(user);
+        await _controller.login(context, user);
       },
     );
   }
