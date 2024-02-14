@@ -20,7 +20,7 @@ class PaymetMethodContainer extends Opacity {
           child: OptionContainer(
             context: context,
             select: true,
-            height: 80,
+            height: context.responsiveHeight(context.height < 620 ? 130 :80),
             border: Border.all(
               width: 1,
               color: AppThemes.lightTheme.colorScheme.primary,

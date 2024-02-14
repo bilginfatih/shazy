@@ -43,7 +43,7 @@ class PaymentService {
 
   Future<String> pay(PaymentModel model) async {
     try {
-      model.uid = await SessionManager().get('id');
+      model.uid = '9b1cd17e-d163-4add-b6e3-e1f55efe1c9d';
       var response =
           await NetworkManager.instance.post('/payment', model: model);
       if (response == '') {

@@ -97,7 +97,7 @@ class AppTextStyles {
       );
 
   TextStyle get subheadSmallMedium => GoogleFonts.poppins(
-        fontSize: _context.mediaQueryData.textScaleFactor * 14,
+        fontSize: _context.responsiveFont(14),
         fontWeight: FontWeight.w500,
         color: HexColor('#B8B8B8'),
       );
