@@ -16,8 +16,7 @@ class WalletPage extends StatelessWidget {
 
   final WalletController _controller = WalletController();
 
-  Padding _buildTransectionContainer(
-      BuildContext context, text1, text2, text3, String path) {
+  Padding _buildTransectionContainer(BuildContext context, text1, text2, text3, String path) {
     return Padding(
       padding: const EdgeInsets.only(bottom: 16),
       child: Container(
@@ -45,21 +44,18 @@ class WalletPage extends StatelessWidget {
                 children: [
                   Text(
                     text1,
-                    style: context.textStyle.subheadSmallRegular
-                        .copyWith(color: HexColor('#121212')),
+                    style: context.textStyle.subheadSmallRegular.copyWith(color: HexColor('#121212')),
                   ),
                   Text(
                     text2,
-                    style: context.textStyle.bodySmallRegular
-                        .copyWith(color: HexColor('#5A5A5A')),
+                    style: context.textStyle.bodySmallRegular.copyWith(color: HexColor('#5A5A5A')),
                   ),
                 ],
               ),
               const Spacer(),
               Text(
                 text3,
-                style: context.textStyle.bodyMedium
-                    .copyWith(color: HexColor('#121212')),
+                style: context.textStyle.bodyMedium.copyWith(color: HexColor('#121212')),
               ),
             ],
           ),
@@ -68,18 +64,14 @@ class WalletPage extends StatelessWidget {
     );
   }
 
-  GestureDetector _buildTopContainer(BuildContext context, String text1,
-      String text2, Color color, bool isSelected, bool selectValue) {
+  GestureDetector _buildTopContainer(BuildContext context, String text1, String text2, Color color, bool isSelected, bool selectValue) {
     double width = context.width;
-    print(width);
     return GestureDetector(
       onTap: () {
         _controller.select(selectValue);
       },
       child: Container(
-        padding: EdgeInsets.symmetric(
-            vertical: context.responsiveHeight(36.0),
-            horizontal: context.customWidth(width < 330 ? 0.06 : 0.088)),
+        padding: EdgeInsets.symmetric(vertical: context.responsiveHeight(36.0), horizontal: context.customWidth(width < 330 ? 0.06 : 0.078)),
         decoration: BoxDecoration(
           border: Border.all(
             color: isSelected ? color : HexColor('#D0D0D0'),
@@ -94,8 +86,7 @@ class WalletPage extends StatelessWidget {
             ),
             Text(
               text2,
-              style:
-                  context.textStyle.subheadSmallMedium.copyWith(color: color),
+              style: context.textStyle.subheadSmallMedium.copyWith(color: color),
             ),
           ],
         ),
@@ -118,13 +109,11 @@ class WalletPage extends StatelessWidget {
             Observer(builder: (_) {
               return Row(
                 children: [
-                  _buildTopContainer(context, '\$500', 'Total Income',
-                      AppThemes.success700, _controller.isSelectedIncome, true),
+                  _buildTopContainer(context, '\$500', 'Total Income', AppThemes.success700, _controller.isSelectedIncome, true),
                   SizedBox(
                     width: context.responsiveWidth(30),
                   ),
-                  _buildTopContainer(context, '\$200', 'Total Expend',
-                      AppThemes.error700, !_controller.isSelectedIncome, false),
+                  _buildTopContainer(context, '\$200', 'Total Expend', AppThemes.error700, !_controller.isSelectedIncome, false),
                 ],
               );
             }),
@@ -144,15 +133,13 @@ class WalletPage extends StatelessWidget {
                     ? ListView.builder(
                         itemCount: 10,
                         itemBuilder: (_, int index) {
-                          return _buildTransectionContainer(context, 'Nathsam',
-                              'Today at 09:20 am', '\$570.00', 'down');
+                          return _buildTransectionContainer(context, 'Nathsam', 'Today at 09:20 am', '\$570.00', 'down');
                         },
                       )
                     : ListView.builder(
                         itemCount: 10,
                         itemBuilder: (_, int index) {
-                          return _buildTransectionContainer(context, 'Nathsam',
-                              'Today at 09:20 am', '-\$570.00', 'up');
+                          return _buildTransectionContainer(context, 'Nathsam', 'Today at 09:20 am', '-\$570.00', 'up');
                         },
                       ),
               );

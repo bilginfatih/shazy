@@ -406,7 +406,7 @@ class _DriverHomePageState extends State<DriverHomePage> with TickerProviderStat
       },
       myLocationEnabled: true,
       myLocationButtonEnabled: Platform.isIOS ? true : false,
-      zoomControlsEnabled: true,
+      zoomControlsEnabled: false,
       polylines: _polyLineSet,
       markers: _markersSet,
     );

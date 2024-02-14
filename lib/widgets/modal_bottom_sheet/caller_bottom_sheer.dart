@@ -108,8 +108,7 @@ class _CallerBottomSheetState extends State<CallerBottomSheet> {
 
   Padding _buildBottomButtons(BuildContext context, String? buttonTextCancel, VoidCallback? onPressedCancel) {
     return Padding(
-      padding: EdgeInsets.only(
-          top: context.responsiveHeight(26), left: context.responsiveWidth(14), right: context.responsiveWidth(14), bottom: context.responsiveHeight(23)),
+      padding: EdgeInsets.only(top: 26, left: 14, right: 14, bottom: 23),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
@@ -151,6 +150,7 @@ class _CallerBottomSheetState extends State<CallerBottomSheet> {
             text1,
             style: context.textStyle.subheadLargeMedium.copyWith(
               color: context.isLight ? HexColor('#5A5A5A') : HexColor('#E8E8E8'),
+              fontSize: context.responsiveFont(18),
             ),
           ),
         ),
@@ -161,7 +161,9 @@ class _CallerBottomSheetState extends State<CallerBottomSheet> {
             width: context.responsiveWidth(125),
             child: Text(
               text2,
-              style: context.textStyle.titleLargeMedium,
+              style: context.textStyle.titleLargeMedium.copyWith(
+                fontSize: context.responsiveFont(26),
+              ),
             ),
           ),
         ),
@@ -218,7 +220,7 @@ class _CallerBottomSheetState extends State<CallerBottomSheet> {
           child: SvgPicture.asset(
             "assets/svg/location.svg",
           ),
-          onTap: shareButtonTapped ?? (){},
+          onTap: shareButtonTapped ?? () {},
         )
       ],
     );

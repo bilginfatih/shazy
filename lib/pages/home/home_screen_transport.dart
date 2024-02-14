@@ -429,8 +429,8 @@ class _HomeScreenTransportState extends State<HomeScreenTransport> with TickerPr
                   locateUserPosition();
                 },
                 myLocationEnabled: true,
-                padding: EdgeInsets.only(bottom: 230),
-                myLocationButtonEnabled: true,
+                //padding: EdgeInsets.only(bottom: 230),
+                myLocationButtonEnabled: false,
                 zoomControlsEnabled: false,
                 polylines: polyLineSet,
                 markers: markersSet,
