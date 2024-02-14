@@ -80,7 +80,6 @@ class NetworkManager extends BaseNetworkManager {
       }
       return jsonDecode(response.toString());
     } catch (e) {
-      print(e);
       rethrow;
     }
   }

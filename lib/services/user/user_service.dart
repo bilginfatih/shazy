@@ -59,18 +59,19 @@ class UserService {
   Future<String?> login(UserModel user) async {
     try {
       var response = await NetworkManager.instance.post('/login', model: user);
+      print(response);
       if (response.containsKey('message')) {
         return response['message'];
       } else {
-        user = user.fromJson(response['user']);
+        UserModel newUser = user.fromJson(response['user']);
         await CacheManager.instance
-            .putData('user', 'email', user.email.toString());
+            .putData('user', 'email', newUser.email.toString());
         await CacheManager.instance
-            .putData('user', 'phone', user.phone.toString());
+            .putData('user', 'phone', newUser.phone.toString());
         await CacheManager.instance
             .putData('user', 'password', user.password.toString());
-        await CacheManager.instance.putData('user', 'name',
-            '${user.name} ${user.surname.toString()[0]}.');
+        await CacheManager.instance.putData(
+            'user', 'name', '${newUser.name} ${newUser.surname.toString()[0]}.');
         await SessionManager().set('token', response['token']);
         await SessionManager().set('id', response['user']['id']);
       }
