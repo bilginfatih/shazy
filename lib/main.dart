@@ -19,10 +19,10 @@ void main() async {
   final locationPermissionStatus = await Permission.locationWhenInUse.request();
   if (true) {
     runApp(EasyLocalization(
-      supportedLocales: LanguageManager.instance.supportedLocales,
-      path: 'assets/translations',
+     supportedLocales: LanguageManager.instance.supportedLocales,
+      startLocale: LanguageManager.instance.enLocale,
       fallbackLocale: LanguageManager.instance.enLocale,
-      saveLocale: true,
+      path: 'assets/translations',
       child: const MyApp(),
     ));
   } else {

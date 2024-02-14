@@ -25,11 +25,13 @@ class PrimaryButton extends SizedBox {
                       ? AppThemes.lightenedColor
                       : AppThemes.lightPrimary500,
                 ),
-            child: Text(
-              text,
-              style: style ??
-                  context.textStyle.subheadLargeRegular
-                      .copyWith(color: Colors.white),
+            child: FittedBox(
+              child: Text(
+                text,
+                style: style ??
+                    context.textStyle.subheadLargeRegular
+                        .copyWith(color: Colors.white),
+              ),
             ),
           ),
         );
