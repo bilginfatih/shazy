@@ -31,7 +31,8 @@ class _SettingsPageState extends State<SettingsPage> {
           _buildListItem(
               "privacyPolicy".tr(), NavigationConstant.privacyPolicy),
           _buildListItem("contactUs".tr(), NavigationConstant.contactUs),
-          _buildListItem("deleteAccount".tr(), NavigationConstant.deleteAccount),
+          _buildListItem(
+              "deleteAccount".tr(), NavigationConstant.deleteAccount),
         ],
       ),
     );
@@ -54,12 +55,18 @@ class _SettingsPageState extends State<SettingsPage> {
                 color: HexColor("#9C54D5"),
               ),
             ),
-            padding: const EdgeInsets.all(10),
+            padding: EdgeInsets.symmetric(
+                vertical: context.responsiveHeight(15),
+                horizontal: context.responsiveWidth(10)),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text(title),
-                const Icon(Icons.arrow_forward_ios),
+                Text(
+                  title,
+                  style: context.textStyle.bodyMedium
+                      .copyWith(color: HexColor('#414141')),
+                ),
+                const FittedBox(child: Icon(Icons.arrow_forward_ios)),
               ],
             ),
           ),

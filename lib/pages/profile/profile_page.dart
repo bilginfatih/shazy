@@ -202,8 +202,10 @@ class _ProfilePageState extends State<ProfilePage> {
 
   Image _buildImage(String path) {
     return Image.network(path,
-        errorBuilder: (context, exception, stackTrack) =>
-            Image.asset('assets/png/no_data.png'));
+        errorBuilder: (context, exception, stackTrack) => Image.asset(
+              'assets/png/no_data.png',
+              height: context.responsiveHeight(85),
+            ));
   }
 
   Column _buildProfileColumn(String text1, String text2, bool isLight) {

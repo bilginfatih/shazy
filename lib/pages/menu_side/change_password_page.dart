@@ -51,42 +51,44 @@ class ChangePasswordPage extends StatelessWidget {
         context: context,
         mainTitle: 'changePassword'.tr(),
       ),
-      body: BasePadding(
-        context: context,
-        child: Column(
-          children: [
-            PasswordTextFormField(
-              context: context,
-              hintText: 'oldPassword'.tr(),
-              controller: _oldPasswordTextController,
-            ),
-            SizedBox(
-              height: context.responsiveHeight(16),
-            ),
-            PasswordTextFormField(
-              context: context,
-              hintText: 'newPassword'.tr(),
-              controller: _newPasswordTextController,
-            ),
-            SizedBox(
-              height: context.responsiveHeight(16),
-            ),
-            PasswordTextFormField(
-              context: context,
-              hintText: 'confirmPassword'.tr(),
-              controller: _confirmPasswordTextController,
-            ),
-            SizedBox(
-              height: context.responsiveHeight(32),
-            ),
-            PrimaryButton(
-              context: context,
-              text: 'save'.tr(),
-              onPressed: () async {
-                await _onPressed(context);
-              },
-            ),
-          ],
+      body: SingleChildScrollView(
+        child: BasePadding(
+          context: context,
+          child: Column(
+            children: [
+              PasswordTextFormField(
+                context: context,
+                hintText: 'oldPassword'.tr(),
+                controller: _oldPasswordTextController,
+              ),
+              SizedBox(
+                height: context.responsiveHeight(16),
+              ),
+              PasswordTextFormField(
+                context: context,
+                hintText: 'newPassword'.tr(),
+                controller: _newPasswordTextController,
+              ),
+              SizedBox(
+                height: context.responsiveHeight(16),
+              ),
+              PasswordTextFormField(
+                context: context,
+                hintText: 'confirmPassword'.tr(),
+                controller: _confirmPasswordTextController,
+              ),
+              SizedBox(
+                height: context.responsiveHeight(32),
+              ),
+              PrimaryButton(
+                context: context,
+                text: 'save'.tr(),
+                onPressed: () async {
+                  await _onPressed(context);
+                },
+              ),
+            ],
+          ),
         ),
       ),
     );

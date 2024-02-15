@@ -9,6 +9,7 @@ import 'package:hexcolor/hexcolor.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:permission_handler/permission_handler.dart' as ph;
 import 'package:provider/provider.dart';
+import 'package:shazy/widgets/app_bars/custom_app_bar.dart';
 import 'package:url_launcher/url_launcher.dart';
 import '../../core/assistants/asistant_methods.dart';
 import '../../core/base/app_info.dart';
@@ -327,7 +328,6 @@ class _HomeScreenTransportState extends State<HomeScreenTransport>
     } else {
       size = context.height < 620 ? 0.45 : 0.35;
     }
-    print(context.height);
     return SizedBox.expand(
       child: SlideTransition(
         position: _tweens[index].animate(_bottomSheetControllers[index]),
@@ -474,13 +474,13 @@ class _HomeScreenTransportState extends State<HomeScreenTransport>
               ),
               CustomIconButton(
                 context: context,
-                top: 60,
-                left: 15,
+                top: context.responsiveHeight(60),
+                left: context.responsiveWidth(15),
                 height: context.responsiveHeight(34),
-                width: context.responsiveWidth(34),
+                width: context.responsiveHeight(34),
                 icon: Icons.menu,
                 color: Colors.black,
-                size: 18,
+                size: context.responsiveHeight(18),
                 onPressed: () {
                   if (HomeScreenTransport.allowNavigation) {
                     widget.scaffoldKey?.currentState?.openDrawer();
@@ -489,13 +489,13 @@ class _HomeScreenTransportState extends State<HomeScreenTransport>
               ),
               CustomIconButton(
                 context: context,
-                top: 60,
-                right: 15,
+                top: context.responsiveHeight(60),
+                right: context.responsiveWidth(15),
                 height: context.responsiveHeight(34),
-                width: context.responsiveWidth(34),
+                width: context.responsiveHeight(34),
                 icon: Icons.notifications_none_outlined,
                 color: Colors.black,
-                size: 18,
+                size: context.responsiveHeight(18),
                 onPressed: () {
                   NavigationManager.instance.navigationToPage(
                     NavigationConstant.notification,

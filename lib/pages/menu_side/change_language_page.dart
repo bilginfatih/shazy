@@ -97,41 +97,45 @@ class _ChangeLanguagePageState extends State<ChangeLanguagePage> {
     final isSelected = index == _selectedLanguageIndex;
 
     return Container(
-      height: context.responsiveHeight(64),
-      width: context.responsiveWidth(362),
-      margin: const EdgeInsets.symmetric(vertical: 8),
+      margin: EdgeInsets.symmetric(vertical: context.responsiveHeight(8)),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(8),
         border: Border.all(
           color: isSelected ? HexColor("#9C54D5") : HexColor("#D0D0D0"),
         ),
       ),
-      child: ListTile(
-        onTap: () {
-          setState(() {
-            _selectedLanguageIndex = index;
-          });
-        },
-        leading: Text(
-          language.flag,
-          style: const TextStyle(fontSize: 40),
+      child: Padding(
+        padding: EdgeInsets.symmetric(
+          vertical: context.responsiveHeight(11),
+          horizontal: context.responsiveWidth(9),
         ),
-        title: Text(
-          language.name,
-          style: TextStyle(
-            fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
+        child: ListTile(
+          onTap: () {
+            setState(() {
+              _selectedLanguageIndex = index;
+            });
+          },
+          leading: Text(
+            language.flag,
+            style: TextStyle(fontSize: context.responsiveFont(40)),
           ),
+          title: Text(
+            language.name,
+            style: TextStyle(
+              fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
+            ),
+          ),
+          subtitle: Text(language.name),
+          trailing: isSelected
+              ? Icon(
+                  Icons.check_circle,
+                  color: AppThemes.lightPrimary500,
+                )
+              : const Icon(
+                  Icons.check_circle_outline,
+                  color: Colors.black38,
+                ),
         ),
-        subtitle: Text(language.name),
-        trailing: isSelected
-            ? Icon(
-                Icons.check_circle,
-                color: AppThemes.lightPrimary500,
-              )
-            : const Icon(
-                Icons.check_circle_outline,
-                color: Colors.black38,
-              ),
       ),
     );
   }

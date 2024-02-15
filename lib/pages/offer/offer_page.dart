@@ -32,12 +32,13 @@ class OfferPage extends StatelessWidget {
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(
-                  'Discount 15% off',
-                  style: context.textStyle.headlineSmallBold,
+                FittedBox(
+                  child: Text(
+                    'Discount 15% off',
+                    style: context.textStyle.headlineSmallBold,
+                  ),
                 ),
-                SizedBox(
-                  width: context.customWidth(0.62),
+                FittedBox(
                   child: Text(
                     'Special Promo valid for Black Friday',
                     maxLines: 2,

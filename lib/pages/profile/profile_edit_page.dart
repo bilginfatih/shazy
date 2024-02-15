@@ -99,7 +99,8 @@ class _ProfileEditPageState extends State<ProfileEditPage> {
             _buildEmail(context),
             _buildAboutYou(context),
             SizedBox(
-              height: context.responsiveHeight(207),
+              height:
+                  context.responsiveHeight(context.height < 620 ? 130 : 207),
             ),
             _buildButtons(context),
           ],

@@ -67,22 +67,22 @@ class AppTextStyles {
       );
 
   TextStyle get headlineSmallMedium => GoogleFonts.poppins(
-        fontSize: _context.mediaQueryData.textScaleFactor * 18,
+        fontSize: _context.responsiveFont(18),
         fontWeight: FontWeight.w500,
       );
 
   TextStyle get headlineSmallBold => GoogleFonts.poppins(
-        fontSize: _context.mediaQueryData.textScaleFactor * 18,
+        fontSize: _context.responsiveFont(18),
         fontWeight: FontWeight.w700,
       );
 
   TextStyle get subheadLargeRegular => GoogleFonts.poppins(
-        fontSize: _context.mediaQueryData.textScaleFactor * 16,
+        fontSize: _context.responsiveFont(16),
         fontWeight: FontWeight.w400,
       );
 
   TextStyle get subheadLargeMedium => GoogleFonts.poppins(
-        fontSize: _context.mediaQueryData.textScaleFactor * 16,
+        fontSize: _context.responsiveFont(16),
         fontWeight: FontWeight.w500,
       );
 
@@ -113,7 +113,7 @@ class AppTextStyles {
       );
 
   TextStyle get bodyMedium => GoogleFonts.poppins(
-        fontSize: _context.mediaQueryData.textScaleFactor * 14,
+        fontSize: _context.responsiveFont(14),
         fontWeight: FontWeight.w500,
         color: HexColor('#5A5A5A'),
       );
@@ -125,7 +125,7 @@ class AppTextStyles {
       );
 
   TextStyle get bodySmallMedium => GoogleFonts.poppins(
-        fontSize: _context.mediaQueryData.textScaleFactor * 12,
+        fontSize: _context.responsiveFont(12),
         fontWeight: FontWeight.w500,
       );
 
