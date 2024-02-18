@@ -54,13 +54,10 @@ class CallerBottomSheet extends StatefulWidget {
 }
 
 class _CallerBottomSheetState extends State<CallerBottomSheet> {
-  Padding _buildCustomerInfo(BuildContext context, String imagePath,
-      String customerName, String startText) {
+  Padding _buildCustomerInfo(BuildContext context, String imagePath, String customerName, String startText) {
     return Padding(
       padding: EdgeInsets.only(
-          top: context.responsiveHeight(19),
-          left: context.responsiveWidth(14),
-          bottom: context.responsiveHeight(context.height < 620 ? 2 : 12)),
+          top: context.responsiveHeight(19), left: context.responsiveWidth(14), bottom: context.responsiveHeight(context.height < 620 ? 2 : 12)),
       child: Row(
         children: [
           Container(
@@ -71,8 +68,7 @@ class _CallerBottomSheetState extends State<CallerBottomSheet> {
                 image: NetworkImage(imagePath),
                 fit: BoxFit.fill,
               ),
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(4)),
+              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
             ),
           ),
           SizedBox(
@@ -94,9 +90,9 @@ class _CallerBottomSheetState extends State<CallerBottomSheet> {
                     ),
                     Text(
                       startText,
-                      style: const TextStyle(
+                      style: TextStyle(
                         color: Color(0xFFA0A0A0),
-                        fontSize: 10,
+                        fontSize: context.responsiveFont(10),
                         fontFamily: 'Poppins',
                         fontWeight: FontWeight.w400,
                       ),
@@ -111,8 +107,7 @@ class _CallerBottomSheetState extends State<CallerBottomSheet> {
     );
   }
 
-  Padding _buildBottomButtons(BuildContext context, String? buttonTextCancel,
-      VoidCallback? onPressedCancel) {
+  Padding _buildBottomButtons(BuildContext context, String? buttonTextCancel, VoidCallback? onPressedCancel) {
     return Padding(
       padding: EdgeInsets.only(top: 26, left: 14, right: 14, bottom: 23),
       child: Row(
@@ -133,8 +128,7 @@ class _CallerBottomSheetState extends State<CallerBottomSheet> {
             text: buttonTextCancel ?? 'Cancel'.tr(),
             context: context,
             onPressed: onPressedCancel ?? () {},
-            style: context.textStyle.subheadLargeMedium
-                .copyWith(fontSize: context.responsiveFont(15)),
+            style: context.textStyle.subheadLargeMedium.copyWith(fontSize: context.responsiveFont(15)),
           ),
         ],
       ),
@@ -156,8 +150,7 @@ class _CallerBottomSheetState extends State<CallerBottomSheet> {
           child: Text(
             text1,
             style: context.textStyle.subheadLargeMedium.copyWith(
-              color:
-                  context.isLight ? HexColor('#5A5A5A') : HexColor('#E8E8E8'),
+              color: context.isLight ? HexColor('#5A5A5A') : HexColor('#E8E8E8'),
               fontSize: context.responsiveFont(18),
             ),
           ),
@@ -192,10 +185,8 @@ class _CallerBottomSheetState extends State<CallerBottomSheet> {
             width: context.responsiveWidth(194),
             child: Text(
               text1,
-              style: context.textStyle.subheadLargeMedium.copyWith(
-                color:
-                    context.isLight ? HexColor('#5A5A5A') : HexColor('#E8E8E8'),
-              ),
+              style: context.textStyle.subheadLargeMedium
+                  .copyWith(color: context.isLight ? HexColor('#5A5A5A') : HexColor('#E8E8E8'), fontSize: context.responsiveFont(16)),
             ),
           ),
         ),
@@ -219,10 +210,9 @@ class _CallerBottomSheetState extends State<CallerBottomSheet> {
             child: Text(
               text1,
               style: TextStyle(
-                fontSize: 12,
+                fontSize: context.responsiveFont(12),
                 fontWeight: FontWeight.w300,
-                color:
-                    context.isLight ? HexColor('#5A5A5A') : HexColor('#E8E8E8'),
+                color: context.isLight ? HexColor('#5A5A5A') : HexColor('#E8E8E8'),
               ),
             ),
           ),
@@ -272,14 +262,13 @@ class _CallerBottomSheetState extends State<CallerBottomSheet> {
             ),
             child: Text(
               widget.pickingUpText,
-              style: context.textStyle.subheadLargeMedium,
+              style: context.textStyle.subheadLargeMedium.copyWith(fontSize: context.responsiveFont(16)),
             ),
           ),
           const Divider(
             thickness: 1,
           ),
-          _buildCustomerInfo(
-              context, widget.imagePath, widget.customerName, widget.startText),
+          _buildCustomerInfo(context, widget.imagePath, widget.customerName, widget.startText),
           const Divider(
             thickness: 1,
           ),
@@ -287,9 +276,7 @@ class _CallerBottomSheetState extends State<CallerBottomSheet> {
             SizedBox(
               height: context.responsiveHeight(22),
             ),
-          if (widget.showAnathorBuild)
-            _buildLocationRow(
-                context, widget.paymentText, widget.totalPaymentText),
+          if (widget.showAnathorBuild) _buildLocationRow(context, widget.paymentText, widget.totalPaymentText),
           SizedBox(
             height: context.responsiveHeight(12),
           ),
@@ -305,9 +292,7 @@ class _CallerBottomSheetState extends State<CallerBottomSheet> {
                   ),
                 )
               : _buildShareMyTripText(context, widget.shareMyTripText),
-          if (widget.showAnathorBuild == false)
-            _buildShareTripButton(context, widget.shareMyTripButtonText,
-                widget.shareButtonTapped),
+          if (widget.showAnathorBuild == false) _buildShareTripButton(context, widget.shareMyTripButtonText, widget.shareButtonTapped),
           if (widget.showAnathorBuild)
             SizedBox(
               height: context.responsiveHeight(5),
@@ -317,11 +302,9 @@ class _CallerBottomSheetState extends State<CallerBottomSheet> {
               child: Text(
                 "Verification Code",
                 style: TextStyle(
-                  fontSize: 11,
+                  fontSize: context.responsiveFont(11),
                   fontWeight: FontWeight.w500,
-                  color: context.isLight
-                      ? HexColor('#5A5A5A')
-                      : HexColor('#E8E8E8'),
+                  color: context.isLight ? HexColor('#5A5A5A') : HexColor('#E8E8E8'),
                 ),
               ),
             ),
@@ -331,11 +314,12 @@ class _CallerBottomSheetState extends State<CallerBottomSheet> {
             ),
           if (widget.showAnathorBuild)
             Center(
-              child: Text(widget.verificationCodeText),
+              child: Text(
+                widget.verificationCodeText,
+                style: TextStyle(fontSize: context.responsiveFont(14)),
+              ),
             ),
-          if (widget.showAnathorBuild)
-            _buildBottomButtons(
-                context, widget.buttonTextCancel, widget.onPressedCancel),
+          if (widget.showAnathorBuild) _buildBottomButtons(context, widget.buttonTextCancel, widget.onPressedCancel),
         ],
       ),
     );

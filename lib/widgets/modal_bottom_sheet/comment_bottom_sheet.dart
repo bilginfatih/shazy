@@ -48,14 +48,14 @@ class CommentBottomSheet extends Padding {
                   ),
                   Text(
                     'excellent'.tr(),
-                    style: context.textStyle.headlineLargeMedium,
+                    style: context.textStyle.headlineLargeMedium.copyWith(fontSize: context.responsiveFont(20)),
                   ),
                   SizedBox(
                     height: context.responsiveHeight(8),
                   ),
                   Text(
                     text ?? '',
-                    style: context.textStyle.bodySmallMedium.copyWith(color: HexColor('#B8B8B8')),
+                    style: context.textStyle.bodySmallMedium.copyWith(color: HexColor('#B8B8B8'), fontSize: context.responsiveFont(12)),
                   ),
                   SizedBox(
                     height: context.responsiveHeight(24),
