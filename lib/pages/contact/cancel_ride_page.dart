@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_session_manager/flutter_session_manager.dart';
 import 'package:flutter_svg/svg.dart';
@@ -101,7 +102,7 @@ class _CancelRidePageState extends State<CancelRidePage> {
             height: context.responsiveHeight(27),
           ),
           Text(
-            'We\'re so sad about your cancellation',
+            'sadAboutCancellation'.tr(),
             style: context.textStyle.titleSmallMedium,
             textAlign: TextAlign.center,
           ),
@@ -109,7 +110,7 @@ class _CancelRidePageState extends State<CancelRidePage> {
             height: context.responsiveHeight(10),
           ),
           Text(
-            'We will continue to improve our service & satify you on the next trip.',
+            'continueNextTrip',
             style: context.textStyle.bodySmallMedium.copyWith(
               color: HexColor('#898989'),
             ),
@@ -119,7 +120,7 @@ class _CancelRidePageState extends State<CancelRidePage> {
             height: context.responsiveHeight(41),
           ),
           PrimaryButton(
-              text: 'Back Home',
+              text: 'backHome'.tr(),
               context: context,
               onPressed: () {
                 HomeScreenTransport.allowNavigation = true;
@@ -191,14 +192,14 @@ class _CancelRidePageState extends State<CancelRidePage> {
     return Scaffold(
       appBar: BackAppBar(
         context: context,
-        mainTitle: 'Cancel Driver',
+        mainTitle: 'cancelDriver'.tr(),
       ),
       body: BasePadding(
         context: context,
         child: ListView(
           children: [
             Text(
-              'Please select the reason of cancellation.',
+              'selectReason'.tr(),
               style: context.textStyle.subheadSmallMedium,
               textAlign: TextAlign.center,
             ),
@@ -212,7 +213,7 @@ class _CancelRidePageState extends State<CancelRidePage> {
                 maxLines: 3,
                 keyboardType: TextInputType.multiline,
                 decoration: InputDecoration(
-                  hintText: 'Other',
+                  hintText: 'other'.tr(),
                   hintStyle: context.textStyle.subheadLargeMedium.copyWith(
                     color: AppThemes.hintTextNeutral,
                   ),
@@ -229,7 +230,7 @@ class _CancelRidePageState extends State<CancelRidePage> {
               height: context.responsiveHeight(25),
             ),
             PrimaryButton(
-                text: 'Submit',
+                text: 'submit'.tr(),
                 context: context,
                 onPressed: () async {
                   _submitOnPressed(context);

@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:hexcolor/hexcolor.dart';
 
@@ -62,7 +63,7 @@ class ForgetPasswordPage extends StatelessWidget {
         child: Column(
           children: [
             Text(
-              'Forgot Password',
+              'forgotPassword'.tr(),
               style: context.textStyle.titleMedMedium,
             ),
             SizedBox(
@@ -73,7 +74,7 @@ class ForgetPasswordPage extends StatelessWidget {
                 horizontal: context.responsiveWidth(25),
               ),
               child: Text(
-                'Select which contact details should we use to reset your password',
+                'resetYourPassword'.tr(),
                 textAlign: TextAlign.center,
                 style: context.textStyle.bodyLargeRegular.copyWith(
                   color: HexColor('#D0D0D0'),
@@ -89,7 +90,7 @@ class ForgetPasswordPage extends StatelessWidget {
               height: context.responsiveHeight(20),
             ),
             PrimaryButton(
-              text: 'Continue',
+              text: 'continue'.tr(),
               context: context,
               onPressed: () {
                 NavigationManager.instance

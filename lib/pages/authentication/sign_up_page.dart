@@ -188,7 +188,7 @@ class _SignUpPageState extends State<SignUpPage> {
                 child: EmailTextFormField(
                   context: context,
                   controller: _emailTextEditingController,
-                  text: 'Email',
+                  text: 'email'.tr(),
                 ),
               ),
               SizedBox(

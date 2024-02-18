@@ -8,6 +8,7 @@ import '../../widgets/app_bars/back_app_bar.dart';
 import '../../widgets/padding/base_padding.dart';
 
 // TODO: back-end tamamlandıktan sonra builder yapısı olucak ve tarih eklenecek
+// ignore: must_be_immutable
 class MessagePage extends StatelessWidget {
   MessagePage({super.key});
 

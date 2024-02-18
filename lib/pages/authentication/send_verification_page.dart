@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:shazy/controllers/authentiaction/authentication_controller.dart';
 
@@ -26,7 +27,7 @@ class SendVerificationPage extends StatelessWidget {
               Align(
                 alignment: Alignment.topLeft,
                 child: Text(
-                  'Verifivation email or phone number',
+                  'verifivationEmairOrPhone'.tr(),
                   style: context.textStyle.titleMedMedium,
                 ),
               ),
@@ -41,7 +42,7 @@ class SendVerificationPage extends StatelessWidget {
                 height: context.responsiveHeight(20),
               ),
               PrimaryButton(
-                text: 'Send OTP',
+                text: 'sendOTP'.tr(),
                 context: context,
                 onPressed: () {
                   // TODO:

@@ -1,10 +1,9 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:otp_text_field/otp_field.dart';
 
 import '../../controllers/authentiaction/authentication_controller.dart';
-import '../../core/init/navigation/navigation_manager.dart';
-import '../../utils/constants/navigation_constant.dart';
 import '../../utils/extensions/context_extension.dart';
 import '../../widgets/app_bars/back_app_bar.dart';
 import '../../widgets/buttons/primary_button.dart';
@@ -33,7 +32,7 @@ class _PhoneVerifiyOtpPageState extends State<PhoneVerifiyOtpPage> {
           child: Column(
             children: [
               Text(
-                'Forgot Password',
+                'forgetPassword'.tr(),
                 style: context.textStyle.titleMedMedium,
               ),
               SizedBox(
@@ -68,7 +67,7 @@ class _PhoneVerifiyOtpPageState extends State<PhoneVerifiyOtpPage> {
                 height: context.responsiveHeight(20),
               ),
               PrimaryButton(
-                text: 'Verify',
+                text: 'verify'.tr(),
                 context: context,
                 isDisable: _pin.length != 5,
                 onPressed: _controller.forgotPassword,

@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_polyline_points/flutter_polyline_points.dart';
 import 'package:flutter_session_manager/flutter_session_manager.dart';
@@ -342,9 +343,9 @@ class _HomeScreenTransportState extends State<HomeScreenTransport>
             child: CallerBottomSheet(
               height: size,
               shareMyTripButtonText: index == 1
-                  ? 'Let family and friend see your location and trip status'
+                  ? 'friendSeeLocation'.tr()
                   : '',
-              shareMyTripText: index == 1 ? 'Share My Trip' : '',
+              shareMyTripText: index == 1 ? 'shareMyTrip'.tr() : '',
               showAnathorBuild: index == 0 ? true : false,
               shareButtonTapped: index == 1
                   ? () {
@@ -355,12 +356,12 @@ class _HomeScreenTransportState extends State<HomeScreenTransport>
                   : () {},
               context: context,
               pickingUpText:
-                  index == 0 ? 'Meeting Time 10:10' : 'Trip to Destionation',
+                  index == 0 ? 'Meeting Time 10:10' : 'tripToDestionation',
               customerName: '$driverName $driverSurname',
               imagePath: "https://randomuser.me/api/portraits/men/93.jpg",
               /*'$baseUrl/$driverPicturePath',*/
               startText: driverAvaragePoint.toString(),
-              paymentText: 'Payment method',
+              paymentText: 'paymentMethod'.tr(),
               totalPaymentText: Provider.of<AppInfo>(context, listen: false)
                           .userDropOffLocation !=
                       null
@@ -576,7 +577,7 @@ class _HomeScreenTransportState extends State<HomeScreenTransport>
                                               ? Provider.of<AppInfo>(context)
                                                   .userDropOffLocation!
                                                   .locationName
-                                              : 'Where would you go?',
+                                              : 'whereWouldGo'.tr(),
                                           hintStyle: context
                                               .textStyle.subheadLargeMedium
                                               .copyWith(
@@ -603,7 +604,7 @@ class _HomeScreenTransportState extends State<HomeScreenTransport>
                                     ),
                                     PrimaryButton(
                                       context: context,
-                                      text: 'Call Driver',
+                                      text: 'callDriver'.tr(),
                                       height: context.responsiveHeight(48),
                                       width: context.responsiveWidth(334),
                                       buttonStyle: Provider.of<AppInfo>(context)

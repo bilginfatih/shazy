@@ -23,4 +23,5 @@ extension ContextExtension on BuildContext {
   AppTextStyles get textStyle => AppTextStyles(this);
 
   double responsiveFont(double fontSize) => (fontSize / 852) * height;
+  
 }

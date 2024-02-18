@@ -488,10 +488,10 @@ class _DriverHomePageState extends State<DriverHomePage>
             child: DriveBottomSheet(
               height: size,
               buttonTextStart:
-                  index == 0 ? 'Start the Trip' : 'Finish the Trip',
+                  index == 0 ? 'startTheTrip'.tr() : 'finishTheTrip',
               context: context,
               pickingUpText:
-                  index == 0 ? 'pickingUpText'.tr() : 'Going to Destination',
+                  index == 0 ? 'pickingUpText'.tr() : 'goingToDestination',
               imagePath:
                   "https://randomuser.me/api/portraits/men/93.jpg" /*'$baseUrl/$callerAvaragePoint'*/,
               customerName: '$callerName $callerSurname',
@@ -499,7 +499,7 @@ class _DriverHomePageState extends State<DriverHomePage>
               location1Text: humanReadableAddress.length > 36
                   ? "${humanReadableAddress.substring(0, 36)}..."
                   : humanReadableAddress,
-              location1TextTitle: 'Current Location',
+              location1TextTitle: 'currentLocation'.tr(),
               location2Text: _endAddressCallerToDestination.length > 36
                   ? "${_endAddressCallerToDestination.substring(0, 36)}..."
                   : _endAddressCallerToDestination,
@@ -575,7 +575,7 @@ class _DriverHomePageState extends State<DriverHomePage>
                         widget: Column(
                           children: [
                             Text(
-                              'Amount',
+                              'amount'.tr(),
                               style:
                                   context.textStyle.labelSmallMedium.copyWith(
                                 color: HexColor("#5A5A5A"),

@@ -93,7 +93,7 @@ class _HistoryUpcomingPageState extends State<HistoryUpcomingPage> {
                             width: context.responsiveWidth(158),
                           ),
                           Text(
-                            cancel ? 'Canceled' : '',
+                            cancel ? 'canceled'.tr() : '',
                             style: GoogleFonts.poppins(
                                 fontSize: 11,
                                 fontWeight: FontWeight.w500,
@@ -190,7 +190,7 @@ class _HistoryUpcomingPageState extends State<HistoryUpcomingPage> {
                           ),
                         ),
                         Text(
-                          'Saat',
+                          'time'.tr(),
                           style: GoogleFonts.poppins(
                             fontSize: 8,
                             fontWeight: FontWeight.w400,

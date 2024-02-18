@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:hexcolor/hexcolor.dart';
@@ -68,7 +69,7 @@ class _SearchPageState extends State<SearchPage> {
   Row _buildResultText(BuildContext context) => Row(
         children: [
           Text(
-            'Results for',
+            'resultsFor'.tr(),
             style: context.textStyle.subheadLargeSemibold.copyWith(
               color: HexColor(context.isLight ? '#5A5A5A' : '#D0D0D0'),
             ),
@@ -132,7 +133,7 @@ class _SearchPageState extends State<SearchPage> {
                   suffix: _buildCancelButton(context),
                   fillColor: context.isLight ? null : HexColor('#35383F'),
                   filled: true,
-                  hintText: 'Search',
+                  hintText: 'search'.tr(),
                   hintStyle: context.textStyle.subheadLargeMedium.copyWith(
                     color: AppThemes.hintTextNeutral,
                   ),

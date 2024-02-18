@@ -9,6 +9,7 @@ import '../../widgets/buttons/primary_button.dart';
 import '../../widgets/padding/base_padding.dart';
 import '../../widgets/textfields/password_text_form_field.dart';
 
+// ignore: must_be_immutable
 class SetPasswordPage extends StatelessWidget {
   SetPasswordPage({super.key});
 

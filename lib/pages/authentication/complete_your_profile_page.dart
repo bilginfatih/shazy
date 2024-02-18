@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 
 import '../../utils/extensions/context_extension.dart';
@@ -25,7 +26,7 @@ class _CompleteYourProfilePageState extends State<CompleteYourProfilePage> {
     return Scaffold(
       appBar: BackAppBar(
         context: context,
-        mainTitle: 'Profile',
+        mainTitle: 'profile'.tr(),
       ),
       body: SingleChildScrollView(
         child: BasePadding(
@@ -54,28 +55,28 @@ class _CompleteYourProfilePageState extends State<CompleteYourProfilePage> {
               ),
               EmailTextFormField(
                 context: context,
-                text: 'Email',
+                text: 'email'.tr(),
               ),
               SizedBox(
                 height: context.responsiveHeight(20),
               ),
               EmailTextFormField(
                 context: context,
-                text: 'Street',
+                text: 'street'.tr(),
               ),
               SizedBox(
                 height: context.responsiveHeight(20),
               ),
               GenderTextFormField(
                 context: context,
-                text: 'City',
+                text: 'city'.tr(),
               ),
               SizedBox(
                 height: context.responsiveHeight(20),
               ),
               GenderTextFormField(
                 context: context,
-                text: 'District',
+                text: 'district'.tr(),
               ),
               SizedBox(
                 height: context.responsiveHeight(40),
@@ -85,7 +86,7 @@ class _CompleteYourProfilePageState extends State<CompleteYourProfilePage> {
                   SecondaryButton(
                     context: context,
                     onPressed: () {},
-                    text: 'Cancel',
+                    text: 'cancel'.tr(),
                     height: context.responsiveHeight(54),
                     width: context.responsiveWidth(174),
                   ),
@@ -96,7 +97,7 @@ class _CompleteYourProfilePageState extends State<CompleteYourProfilePage> {
                     child: PrimaryButton(
                       context: context,
                       onPressed: () {},
-                      text: 'Save',
+                      text: 'save'.tr(),
                       height: context.responsiveHeight(54),
                       width: context.responsiveWidth(174),
                     ),

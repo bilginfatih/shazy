@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:hexcolor/hexcolor.dart';
 
@@ -23,7 +24,7 @@ class SetNewPassword extends StatelessWidget {
           child: Column(
             children: [
               Text(
-                'Set New password',
+                'setNewPassword',
                 style: context.textStyle.titleMedMedium,
               ),
               SizedBox(
@@ -34,7 +35,7 @@ class SetNewPassword extends StatelessWidget {
                   horizontal: context.responsiveWidth(25),
                 ),
                 child: Text(
-                  'Set your new password',
+                  'setYourNewPassword'.tr(),
                   textAlign: TextAlign.center,
                   style: context.textStyle.bodyLargeRegular.copyWith(
                     color: HexColor('#D0D0D0'),
@@ -45,7 +46,7 @@ class SetNewPassword extends StatelessWidget {
                 height: context.responsiveHeight(40),
               ),
               PasswordTextFormField(
-                hintText: 'Enter Your New Password',
+                hintText: 'enterYourNewPassword'.tr(),
                 context: context,
                 controller: _passwordController1,
               ),
@@ -53,7 +54,7 @@ class SetNewPassword extends StatelessWidget {
                 height: context.responsiveHeight(20),
               ),
               PasswordTextFormField(
-                hintText: 'Confirm Password',
+                hintText: 'confirmPassword'.tr(),
                 context: context,
                 controller: _passwordController2,
               ),
@@ -63,7 +64,7 @@ class SetNewPassword extends StatelessWidget {
               Align(
                 alignment: Alignment.centerLeft,
                 child: Text(
-                  'Atleast 1 number or a special character',
+                  'specialCharacter'.tr(),
                   textAlign: TextAlign.center,
                   style: context.textStyle.subheadSmallMedium.copyWith(
                     color: HexColor('#A6A6A6'),
@@ -74,7 +75,7 @@ class SetNewPassword extends StatelessWidget {
                 height: context.responsiveHeight(43),
               ),
               PrimaryButton(
-                text: 'Save',
+                text: 'save'.tr(),
                 context: context,
                 onPressed: () {        
                 },
