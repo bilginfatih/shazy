@@ -4,6 +4,7 @@ import 'package:geolocator/geolocator.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:shazy/utils/extensions/context_extension.dart';
+import 'package:shazy/widgets/padding/base_padding.dart';
 import '../../core/init/navigation/navigation_manager.dart';
 import '../../models/drive/drive_model.dart';
 import '../../services/drive/drive_service.dart';
@@ -25,78 +26,88 @@ class _DriverChoosePageState extends State<DriverChoosePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: BackAppBar(context: context, mainTitle: 'Driver'),
-      body: Padding(
-        padding: EdgeInsets.only(left: 46, top: 91),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Image.asset(
-              "assets/png/$_choosePick.png",
-              width: context.responsiveWidth(280),
-              height: context.responsiveHeight(280),
-            ),
-            SizedBox(
-              height: context.responsiveHeight(63),
-            ),
-            Text(
-              'Lorem ipsum dolor sit amet, consectetur \nadipiscing elit. Viverra condimentum eget \npurus in.  ',
-              style: TextStyle(fontSize: 14, fontWeight: FontWeight.w400, color: HexColor("#494949")),
-            ),
-            SizedBox(
-              height: context.responsiveHeight(55),
-            ),
-            Row(
-              children: [
-                SecondaryButton(
-                  context: context,
-                  text: 'Not Fit',
-                  height: context.responsiveHeight(54),
-                  width: context.responsiveWidth(140),
-                  style: TextStyle(color: HexColor("#414141")),
-                  borderColor: HexColor("#414141"),
-                  onPressed: () {
-                    setState(() {
-                      _choosePick = 'Driver_logo_gray1x';
-                    });
-                  },
+      body: BasePadding(
+        context: context,
+        child: Center(
+          child: Column(
+            children: [
+              Image.asset(
+                "assets/png/$_choosePick.png",
+                width: context.responsiveWidth(280),
+                height: context.responsiveHeight(280),
+              ),
+              SizedBox(
+                height: context.responsiveHeight(63),
+              ),
+              Text(
+                'Lorem ipsum dolor sit amet, consectetur \nadipiscing elit. Viverra condimentum eget \npurus in.  ',
+                style: TextStyle(
+                  fontSize: 14,
+                  fontWeight: FontWeight.w400,
+                  color: HexColor(context.isLight ? '#494949' : '#B8B8B8'),
                 ),
-                SizedBox(
-                  width: context.responsiveWidth(13),
-                ),
-                SecondaryButton(
-                  context: context,
-                  text: 'Fit to Drive',
-                  height: context.responsiveHeight(54),
-                  width: context.responsiveWidth(140),
-                  onPressed: () {
-                    setState(() {
-                      _choosePick = 'Driver_logo_purple1x';
-                    });
-                    int countdownValue = Hive.box<int>('countdownBox').get('countdownValue', defaultValue: 0) ?? 0;
+              ),
+              SizedBox(
+                height: context.responsiveHeight(55),
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: [
+                  SecondaryButton(
+                    context: context,
+                    text: 'Not Fit',
+                    height: context.responsiveHeight(54),
+                    width: context.responsiveWidth(140),
+                    style: TextStyle(color: HexColor("#414141")),
+                    borderColor: HexColor("#414141"),
+                    onPressed: () {
+                      setState(() {
+                        _choosePick = 'Driver_logo_gray1x';
+                      });
+                    },
+                  ),
+                  SecondaryButton(
+                    context: context,
+                    text: 'Fit to Drive',
+                    height: context.responsiveHeight(54),
+                    width: context.responsiveWidth(140),
+                    onPressed: () {
+                      setState(() {
+                        _choosePick = 'Driver_logo_purple1x';
+                      });
+                      int countdownValue = Hive.box<int>('countdownBox')
+                              .get('countdownValue', defaultValue: 0) ??
+                          0;
 
-                    if (countdownValue > 0) {
-                      // Geri sayım devam ediyorsa, kullanıcıyı CancelDrive sayfasına yönlendir
-                      NavigationManager.instance.navigationToPage(NavigationConstant.cancelDrive);
-                    } else {
-                      // Geri sayım bitmişse, fitToDriveButtonPressed fonksiyonunu çağır ve kullanıcıyı homePage'e yönlendir
-                      fitToDriveButtonPressed();
-                      NavigationManager.instance.navigationToPage(NavigationConstant.homePage, args: true);
-                    }
-                  },
-                ),
-              ],
-            ),
-          ],
+                      if (countdownValue > 0) {
+                        // Geri sayım devam ediyorsa, kullanıcıyı CancelDrive sayfasına yönlendir
+                        NavigationManager.instance
+                            .navigationToPage(NavigationConstant.cancelDrive);
+                      } else {
+                        // Geri sayım bitmişse, fitToDriveButtonPressed fonksiyonunu çağır ve kullanıcıyı homePage'e yönlendir
+                        fitToDriveButtonPressed();
+                        NavigationManager.instance.navigationToPage(
+                            NavigationConstant.homePage,
+                            args: true);
+                      }
+                    },
+                  ),
+                ],
+              ),
+            ],
+          ),
         ),
       ),
     );
   }
 
   void fitToDriveButtonPressed() async {
-    var userId = await SessionManager().get('id'); // SessionManager'daki uygun metod
+    var userId =
+        await SessionManager().get('id'); // SessionManager'daki uygun metod
     if (userId != null) {
       // Kullanıcının konumunu al
-      Position cPosition = await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
+      Position cPosition = await Geolocator.getCurrentPosition(
+          desiredAccuracy: LocationAccuracy.high);
 
       // DriveModel oluştur ve servisi çağır
       DriveModel model = DriveModel(
@@ -111,7 +122,6 @@ class _DriverChoosePageState extends State<DriverChoosePage> {
 
         // Sonucu kontrol et
         if (result != null) {
-          
           ScaffoldMessenger.of(context).showSnackBar(SnackBar(
             content: Text(result),
           ));
@@ -119,10 +129,7 @@ class _DriverChoosePageState extends State<DriverChoosePage> {
           // Başarılı durumda
           // Yapılacak işlemler...
         }
-      } catch (e) {
-        
-       
-      }
+      } catch (e) {}
     } else {
       // Hata durumu, kullanıcı oturum açmamışsa veya ID alınamamışsa yapılacak işlemler
       print("Kullanıcı oturum açmamış veya ID alınamamış.");

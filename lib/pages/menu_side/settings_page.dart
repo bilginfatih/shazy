@@ -63,8 +63,8 @@ class _SettingsPageState extends State<SettingsPage> {
               children: [
                 Text(
                   title,
-                  style: context.textStyle.bodyMedium
-                      .copyWith(color: HexColor('#414141')),
+                  style: context.textStyle.bodyMedium.copyWith(
+                      color: HexColor(context.isLight ? '#414141' : '#B8B8B8')),
                 ),
                 const FittedBox(child: Icon(Icons.arrow_forward_ios)),
               ],

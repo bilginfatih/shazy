@@ -18,6 +18,10 @@ class WalletPage extends StatelessWidget {
 
   Padding _buildTransectionContainer(
       BuildContext context, text1, text2, text3, String path) {
+    Color textColor1 =
+        context.isLight ? HexColor('#121212') : HexColor('#D0D0D0');
+    Color textColor2 =
+        context.isLight ? HexColor('#5A5A5A') : HexColor('#B8B8B8');
     return Padding(
       padding: const EdgeInsets.only(bottom: 16),
       child: Container(
@@ -46,20 +50,19 @@ class WalletPage extends StatelessWidget {
                   Text(
                     text1,
                     style: context.textStyle.subheadSmallRegular
-                        .copyWith(color: HexColor('#121212')),
+                        .copyWith(color: textColor1),
                   ),
                   Text(
                     text2,
                     style: context.textStyle.bodySmallRegular
-                        .copyWith(color: HexColor('#5A5A5A')),
+                        .copyWith(color: textColor2),
                   ),
                 ],
               ),
               const Spacer(),
               Text(
                 text3,
-                style: context.textStyle.bodyMedium
-                    .copyWith(color: HexColor('#121212')),
+                style: context.textStyle.bodyMedium.copyWith(color: textColor1),
               ),
             ],
           ),

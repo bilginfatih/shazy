@@ -81,6 +81,9 @@ class _HistoryUpcomingPageState extends State<HistoryUpcomingPage> {
                             'assets/svg/star.svg',
                             width: 10,
                           ),
+                          SizedBox(
+                            width: context.responsiveWidth(2),
+                          ),
                           Text(
                             star,
                             style: GoogleFonts.poppins(
@@ -90,12 +93,13 @@ class _HistoryUpcomingPageState extends State<HistoryUpcomingPage> {
                             ),
                           ),
                           SizedBox(
-                            width: context.responsiveWidth(158),
+                            width: context.responsiveWidth(
+                                context.width < 330 ? 120 : 158),
                           ),
                           Text(
                             cancel ? 'canceled'.tr() : '',
                             style: GoogleFonts.poppins(
-                                fontSize: 11,
+                                fontSize: context.responsiveWidth(11),
                                 fontWeight: FontWeight.w500,
                                 color: HexColor('#F44336')),
                           )
@@ -186,7 +190,9 @@ class _HistoryUpcomingPageState extends State<HistoryUpcomingPage> {
                           style: GoogleFonts.poppins(
                             fontSize: 10,
                             fontWeight: FontWeight.w500,
-                            color: HexColor('#5A5A5A'),
+                            color: context.isLight
+                                ? HexColor('#5A5A5A')
+                                : HexColor('#B8B8B8'),
                           ),
                         ),
                         Text(
@@ -252,10 +258,11 @@ class _HistoryUpcomingPageState extends State<HistoryUpcomingPage> {
                 Text(
                   text1,
                   style: GoogleFonts.poppins(
-                    fontSize: 10,
-                    fontWeight: FontWeight.w500,
-                    color: HexColor('#5A5A5A'),
-                  ),
+                      fontSize: 10,
+                      fontWeight: FontWeight.w500,
+                      color: context.isLight
+                          ? HexColor('#5A5A5A')
+                          : HexColor('#B8B8B8')),
                 ),
                 Text(
                   text2,
@@ -271,10 +278,11 @@ class _HistoryUpcomingPageState extends State<HistoryUpcomingPage> {
             Text(
               text3,
               style: GoogleFonts.poppins(
-                fontSize: 11,
-                fontWeight: FontWeight.w500,
-                color: HexColor('#5A5A5A'),
-              ),
+                  fontSize: 11,
+                  fontWeight: FontWeight.w500,
+                  color: context.isLight
+                      ? HexColor('#5A5A5A')
+                      : HexColor('#B8B8B8')),
             ),
           ],
         ),

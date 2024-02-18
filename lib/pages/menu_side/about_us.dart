@@ -19,7 +19,7 @@ class AboutUsPage extends StatelessWidget {
         child: Text(
           'Bu kısım hakkında sayfasının içeriğidir. Metin buraya gelecek. Bu kısım hakkında sayfasının içeriğidir. Metin buraya gelecek. Bu kısım hakkında sayfasının içeriğidir. Metin buraya gelecek. Bu kısım hakkında sayfasının içeriğidir. Metin buraya gelecek. Bu kısım hakkında sayfasının içeriğidir. Metin buraya gelecek. Bu kısım hakkında sayfasının içeriğidir. Metin buraya gelecek. Bu kısım hakkında sayfasının içeriğidir. Metin buraya gelecek. Bu kısım hakkında sayfasının içeriğidir. Metin buraya gelecek. Bu kısım hakkında sayfasının içeriğidir. Metin buraya gelecek. Bu kısım hakkında sayfasının içeriğidir. Metin buraya gelecek. Bu kısım hakkında sayfasının içeriğidir. Metin buraya gelecek. Bu kısım hakkında sayfasının içeriğidir. Metin buraya gelecek. Bu kısım hakkında sayfasının içeriğidir. Metin buraya gelecek. Bu kısım hakkında sayfasının içeriğidir. Metin buraya gelecek. Bu kısım hakkında sayfasının içeriğidir. Metin buraya gelecek. Bu kısım hakkında sayfasının içeriğidir. Metin buraya gelecek.',
           style: context.textStyle.bodyMediumRegular.copyWith(
-            color: HexColor("#5A5A5A"),
+            color: HexColor(context.isLight ? '#5A5A5A' : '#B8B8B8'),
           ), // İstediğiniz metin boyutunu ayarlayabilirsiniz.
         ),
       ),

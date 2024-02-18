@@ -30,12 +30,15 @@ class SecondaryButton extends SizedBox {
                   width: 2,
                   color: borderColor ?? AppThemes.lightPrimary500,
                 )),
-            child: Text(
-              text,
-              style: style ??
-                  context.textStyle.subheadLargeMedium.copyWith(
-                      color:
-                          !context.isLight ? AppThemes.lightPrimary500 : null),
+            child: FittedBox(
+              child: Text(
+                text,
+                style: style ??
+                    context.textStyle.subheadLargeMedium.copyWith(
+                        color: !context.isLight
+                            ? AppThemes.lightPrimary500
+                            : null),
+              ),
             ),
           ),
         );

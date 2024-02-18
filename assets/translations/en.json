@@ -138,5 +138,6 @@
     "paymentMethod": "paymentMethod",
     "tripToDestionation": "tripToDestionation",
     "shareMyTrip": "shareMyTrip",
-    "friendSeeLocation": "Let family and friend see your location and trip status"
+    "friendSeeLocation": "Let family and friend see your location and trip status",
+    "canceled": "Canceled"
 }
