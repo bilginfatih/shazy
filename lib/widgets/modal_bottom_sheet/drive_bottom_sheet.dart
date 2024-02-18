@@ -113,13 +113,17 @@ class _DriveBottomSheetState extends State<DriveBottomSheet> {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          GestureDetector(
-            onTap: () {
-              print('wp mesajlaşma atacak');
-            },
-            child: CircularSvgIcon(
-              context: context,
-              assetName: 'assets/svg/sms.svg',
+          Container(
+            width: context.responsiveWidth(50),
+            height: context.responsiveHeight(50),
+            child: GestureDetector(
+              onTap: () {
+                print('wp mesajlaşma atacak');
+              },
+              child: CircularSvgIcon(
+                context: context,
+                assetName: 'assets/svg/sms.svg',
+              ),
             ),
           ),
           if (widget.showSecondaryButton) // Eğer showSecondaryButton true ve index 0 ise göster
@@ -132,7 +136,7 @@ class _DriveBottomSheetState extends State<DriveBottomSheet> {
               style: context.textStyle.subheadLargeMedium.copyWith(fontSize: context.responsiveFont(15)),
             ),
           PrimaryButton(
-            width: widget.showSecondaryButton ? context.responsiveWidth(157) : context.responsiveWidth(189),
+            width: widget.showSecondaryButton ? context.responsiveWidth(147) : context.responsiveWidth(189),
             height: context.responsiveHeight(48),
             text: buttonTextStart ?? 'Start the Trip'.tr(),
             context: context,

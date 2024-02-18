@@ -53,15 +53,15 @@ class _PaymentTipPageState extends State<PaymentTipPage> {
       children: [
         Text(
           text1,
-          style: const TextStyle(
-            fontSize: 14,
+          style: TextStyle(
+            fontSize: context.responsiveFont(14),
             fontWeight: FontWeight.w400,
           ),
         ),
         Text(
           text2,
-          style: const TextStyle(
-            fontSize: 14,
+          style: TextStyle(
+            fontSize: context.responsiveFont(14),
             fontWeight: FontWeight.w400,
           ),
         ),
@@ -93,84 +93,75 @@ class _PaymentTipPageState extends State<PaymentTipPage> {
       ),
       body: BasePadding(
         context: context,
-        child: Observer(
-          builder: (context) {
-            return Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  'orderSummary'.tr(),
-                  style: context.textStyle.subheadLargeMedium.copyWith(
-                    color: HexColor('#5A5A5A'),
+        child: Observer(builder: (context) {
+          return Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                'orderSummary'.tr(),
+                style: context.textStyle.subheadLargeMedium.copyWith(
+                  color: HexColor('#5A5A5A'),
+                ),
+              ),
+              SizedBox(
+                height: context.responsiveHeight(10),
+              ),
+              _buildRowText('charge'.tr(), '200₺'),
+              SizedBox(
+                height: context.responsiveHeight(20),
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    'selectPaymentMethod'.tr(),
+                    style: context.textStyle.headlineSmallMedium,
                   ),
-                ),
-                SizedBox(
-                  height: context.responsiveHeight(10),
-                ),
-                _buildRowText('charge'.tr(), '200₺'),
-                SizedBox(
-                  height: context.responsiveHeight(20),
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(
-                      'selectPaymentMethod'.tr(),
-                      style: context.textStyle.headlineSmallMedium,
+                  GestureDetector(
+                    onTap: () {
+                      NavigationManager.instance.navigationToPage(NavigationConstant.addCard);
+                    },
+                    child: Text(
+                      'addCard'.tr(),
+                      style: context.textStyle.subheadLargeSemibold.copyWith(color: AppThemes.secondary700),
                     ),
-                    GestureDetector(
-                      onTap: () {
-                        NavigationManager.instance
-                            .navigationToPage(NavigationConstant.addCard);
-                      },
-                      child: Text(
-                        'addCard'.tr(),
-                        style: context.textStyle.subheadLargeSemibold
-                            .copyWith(color: AppThemes.secondary700),
-                      ),
-                    ),
-                  ],
-                ),
-                SizedBox(
-                  height: context.responsiveHeight(26),
-                ),
-                _buildPaymentMethod(context),
-                const Spacer(),
-                PrimaryButton(
-                    text: 'submit'.tr(),
-                    context: context,
-                    onPressed: () async {
-                      await _controller.pay(200, context);
-                    }),
-                SizedBox(
-                  height: context.responsiveHeight(16),
-                )
-              ],
-            );
-          }
-        ),
+                  ),
+                ],
+              ),
+              SizedBox(
+                height: context.responsiveHeight(26),
+              ),
+              _buildPaymentMethod(context),
+              const Spacer(),
+              PrimaryButton(
+                  text: 'submit'.tr(),
+                  context: context,
+                  onPressed: () async {
+                    await _controller.pay(200, context);
+                  }),
+              SizedBox(
+                height: context.responsiveHeight(16),
+              )
+            ],
+          );
+        }),
       ),
     );
   }
 
   SingleChildRenderObjectWidget _buildPaymentMethod(BuildContext context) {
-    return _controller.card.cardNumber != null &&
-            _controller.card.month != null &&
-            _controller.card.year != null
+    return _controller.card.cardNumber != null && _controller.card.month != null && _controller.card.year != null
         ? PaymetMethodContainer(
             context: context,
             //assetName: 'visa',
-            text1:
-                '**** **** **** ${_controller.card.cardNumber?.substring(_controller.card.cardNumber!.length - 5)}',
-            text2:
-                'Expires: ${_controller.card.month}/${_controller.card.year}',
+            text1: '**** **** **** ${_controller.card.cardNumber?.substring(_controller.card.cardNumber!.length - 5)}',
+            text2: 'Expires: ${_controller.card.month}/${_controller.card.year}',
             opacitiy: 1,
           )
         : Center(
             child: Text(
               'noPaymentMethod'.tr(),
-              style: context.textStyle.titleSmallMedium
-                  .copyWith(color: HexColor('#898989')),
+              style: context.textStyle.titleSmallMedium.copyWith(color: HexColor('#898989')),
             ),
           );
   }

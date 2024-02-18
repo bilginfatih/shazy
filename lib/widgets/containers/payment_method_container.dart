@@ -7,20 +7,14 @@ import '../../utils/theme/themes.dart';
 import 'option_container.dart';
 
 class PaymetMethodContainer extends Opacity {
-  PaymetMethodContainer(
-      {Key? key,
-      double opacitiy = 0.45,
-      String? assetName,
-      required BuildContext context,
-      required String text1,
-      required String text2})
+  PaymetMethodContainer({Key? key, double opacitiy = 0.45, String? assetName, required BuildContext context, required String text1, required String text2})
       : super(
           key: key,
           opacity: opacitiy,
           child: OptionContainer(
             context: context,
             select: true,
-            height: context.responsiveHeight(context.height < 620 ? 130 :80),
+            height: context.responsiveHeight(context.height < 620 ? 130 : 100),
             border: Border.all(
               width: 1,
               color: AppThemes.lightTheme.colorScheme.primary,
@@ -38,10 +32,9 @@ class PaymetMethodContainer extends Opacity {
                   children: [
                     Text(
                       text1,
-                      style: context.textStyle.subheadLargeMedium
-                          .copyWith(color: HexColor('#5A5A5A')),
+                      style: context.textStyle.subheadLargeMedium.copyWith(color: HexColor('#5A5A5A'), fontSize: context.responsiveFont(16)),
                     ),
-                    Text(text2, style: context.textStyle.subheadSmallMedium)
+                    Text(text2, style: context.textStyle.subheadSmallMedium.copyWith(fontSize: context.responsiveFont(14)))
                   ],
                 ),
               ],
