@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:shazy/core/init/navigation/navigation_manager.dart';
 import 'package:shazy/utils/constants/navigation_constant.dart';
-import 'package:shazy/widgets/buttons/icon_button.dart';
 import '../../utils/extensions/context_extension.dart';
 
 class CustomAppBar extends AppBar {
@@ -16,44 +15,26 @@ class CustomAppBar extends AppBar {
           key: key,
           backgroundColor: Theme.of(context).scaffoldBackgroundColor,
           automaticallyImplyLeading: false,
-          scrolledUnderElevation: 0,
           elevation: 0,
-          leadingWidth: context.responsiveWidth(100),
           title: title,
-          titleTextStyle: context.textStyle.headlineSmallMedium
-              .copyWith(color: HexColor("#2A2A2A")),
+          titleTextStyle: context.textStyle.headlineSmallMedium.copyWith(color: HexColor("#2A2A2A")),
           centerTitle: true,
-          leading: Row(
-            children: [
-              SizedBox(
-                width: context.responsiveWidth(16),
-              ),
-              CustomIconButton(
-                context: context,
-                height: context.responsiveHeight(34),
-                width: context.responsiveHeight(34),
-                icon: Icons.menu,
-                color: Colors.black,
-                size: context.responsiveHeight(18),
-                onPressed: () {
-                  scaffoldKey?.currentState?.openDrawer();
-                },
-              ),
-            ],
+          leading: IconButton(
+            // IconButton kullanıyoruz
+            onPressed: () {
+              scaffoldKey?.currentState?.openDrawer();
+            },
+            icon: Icon(Icons.menu), // Icon widget'ı burada kullanılıyor
           ),
           actions: [
-            CustomIconButton(
-              context: context,
-              height: context.responsiveHeight(34),
-              width: context.responsiveHeight(34),
-              icon: Icons.notifications_none_outlined,
-              color: Colors.black,
-              size: context.responsiveHeight(18),
+            IconButton(
+              // IconButton kullanıyoruz
               onPressed: () {
                 NavigationManager.instance.navigationToPage(
                   NavigationConstant.notification,
                 );
               },
+              icon: Icon(Icons.notifications_none_outlined), // Icon widget'ı burada kullanılıyor
             ),
             SizedBox(
               width: context.responsiveWidth(16),
