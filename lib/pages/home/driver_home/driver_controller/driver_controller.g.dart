@@ -37,8 +37,9 @@ mixin _$DriverController on _DriverControllerBase, Store {
       AsyncAction('_DriverControllerBase.driveInformation', context: context);
 
   @override
-  Future<void> driveInformation() {
-    return _$driveInformationAsyncAction.run(() => super.driveInformation());
+  Future<void> driveInformation(BuildContext context) {
+    return _$driveInformationAsyncAction
+        .run(() => super.driveInformation(context));
   }
 
   @override

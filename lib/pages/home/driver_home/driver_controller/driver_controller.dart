@@ -35,16 +35,21 @@ abstract class _DriverControllerBase with Store {
     }
   }
 
-  Future<void> driverPassive() async {
+  Future<void> driverPassive(BuildContext context) async {
     try {
       var userId = await SessionManager().get('id');
       var model = DriveModel(driverId: userId);
       var response = await DriveService.instance.driverPassive(model);
-      // TODO: responsa bağlı olarak home page e gidicek
       NavigationManager.instance
           .navigationToPageClear(NavigationConstant.homePage);
     } catch (e) {
-      // TODO: hata sayfasına yönlendir.
+      if (context.mounted) {
+        HelperFunctions.instance.showErrorDialog(
+            context, 'driverPassiveError'.tr(), 'cancel'.tr(), () {
+          NavigationManager.instance
+              .navigationToPageClear(NavigationConstant.homePage);
+        });
+      }
     }
   }
 
@@ -70,8 +75,8 @@ abstract class _DriverControllerBase with Store {
       NavigationManager.instance.navigationToPop();
     } catch (e) {
       if (context.mounted) {
-        HelperFunctions.instance.showErrorDialog(
-            context, 'driverAccept'.tr(), 'cancel'.tr(), () {
+        HelperFunctions.instance
+            .showErrorDialog(context, 'driverAccept'.tr(), 'cancel'.tr(), () {
           NavigationManager.instance.navigationToPop();
         });
       }
@@ -81,9 +86,14 @@ abstract class _DriverControllerBase with Store {
   /// Sürüş bilgilerini getirir
   // TODO: bu end point daha eklenmedi eklendiğinde driverdialog ve driverbottomsheetbar bilgileri buradan gelicek.
   @action
-  Future<void> driveInformation() async {
+  Future<void> driveInformation(BuildContext context) async {
     try {} catch (e) {
-      // TODO: hata mesajı gözükecek
+      if (context.mounted) {
+        HelperFunctions.instance
+            .showErrorDialog(context, 'driverAccept'.tr(), 'cancel'.tr(), () {
+          NavigationManager.instance.navigationToPop();
+        });
+      }
     }
   }
 }
