@@ -71,6 +71,12 @@ class _TestPageState extends State<TestPage>
           child: ListView(
             children: [
               ElevatedButton(
+                onPressed: () async {
+                  await PaymentService.instance.waitPayment('9b1ccfb8-0c72-4af1-8e03-59c6fc5612de');
+                },
+                child: Text('WaitPayment'),
+              ),
+              ElevatedButton(
                 onPressed: () {
                   showDialog(
                     context: context,

@@ -54,4 +54,18 @@ class PaymentService {
       return 'paymentError'.tr();
     }
   }
+
+  Future<String> waitPayment(String driverId) async {
+    try {
+      var request = {'driver_id': driverId};
+      var response = await NetworkManager.instance
+          .post('/drive-request/WaitPayment', data: request);
+      if (response == 0) {
+        return '';
+      }
+      return response['message'];
+    } catch (e) {
+      return 'paymentError'.tr();
+    }
+  }
 }

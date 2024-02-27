@@ -18,7 +18,7 @@ class ErrorDialog extends Dialog {
           key: key,
           insetPadding: EdgeInsets.symmetric(
             horizontal: context.responsiveWidth(17),
-            vertical: context.responsiveHeight(220),
+            vertical: context.responsiveHeight(200),
           ),
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(8.0),
@@ -68,10 +68,17 @@ class ErrorDialog extends Dialog {
                 ],
               ),
               SizedBox(height: context.responsiveHeight(40)),
-              Text(
-                title,
-                style: context.textStyle.titleSmallMedium,
-                textAlign: TextAlign.center,
+              Padding(
+                padding: EdgeInsets.symmetric(
+                    horizontal: context.responsiveWidth(12)),
+                child: FittedBox(
+                  child: Text(
+                    maxLines: 5,
+                    title,
+                    style: context.textStyle.titleSmallMedium,
+                    textAlign: TextAlign.center,
+                  ),
+                ),
               ),
               SizedBox(height: context.responsiveHeight(40)),
               Padding(

@@ -5,6 +5,7 @@ import 'package:mobx/mobx.dart';
 import 'package:shazy/core/init/navigation/navigation_manager.dart';
 import 'package:shazy/models/drive/drive_model.dart';
 import 'package:shazy/services/drive/drive_service.dart';
+import 'package:shazy/services/payment/payment_service.dart';
 
 import '../../../../core/init/network/network_manager.dart';
 import '../../../../utils/constants/navigation_constant.dart';
@@ -95,5 +96,29 @@ abstract class _DriverControllerBase with Store {
         });
       }
     }
+  }
+
+  Future<bool> waitPayment(BuildContext context, String driverId) async {
+    try {
+      var response = await PaymentService.instance.waitPayment(driverId);
+      if (response != '') {
+        if (context.mounted) {
+          HelperFunctions.instance
+              .showErrorDialog(context, response, 'cancel'.tr(), () {
+            NavigationManager.instance.navigationToPop();
+          });
+        }
+      } else {
+        return true;
+      }
+    } catch (e) {
+      if (context.mounted) {
+        HelperFunctions.instance
+            .showErrorDialog(context, 'paymentError'.tr(), 'cancel'.tr(), () {
+          NavigationManager.instance.navigationToPop();
+        });
+      }
+    }
+    return false;
   }
 }

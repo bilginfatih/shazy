@@ -36,7 +36,9 @@ import '../home_screen_transport.dart';
 
 class DriverHomePage extends StatefulWidget {
   const DriverHomePage({Key? key}) : super(key: key);
+
   static String stat = '';
+
   //static bool allowNavigation = true;
 
   @override
@@ -45,22 +47,25 @@ class DriverHomePage extends StatefulWidget {
 
 class _DriverHomePageState extends State<DriverHomePage>
     with TickerProviderStateMixin {
+  late double callerAvaragePoint = 0.0;
+  late String callerId = '';
+  late String callerName = '';
+  late String callerPicturePath = '';
+  late String callerSurname = '';
+  DriveModel driveDetailsInfo = DriveModel();
+  late String driverId = '';
   late double driverLatitude;
   late double driverLongitude;
+  int flag = 0;
   late double fromLatitude;
   late double fromLongitude;
   String humanReadableAddress = '';
   List<LatLng> pLineCoOrdinatesList = [];
   List<LatLng> pLineCoOrdinatesList2 = [];
+  late String requestId2 = '';
   late double toLatitude;
   late double toLongitude;
-
-  late String requestId2 = '';
-
-  final _controllerComment = HistoryUpcomingController();
-  final TextEditingController _commentTextController = TextEditingController();
-
-  DriveModel driveDetailsInfo = DriveModel();
+  late int totalPaymant = 0;
 
   static const CameraPosition _kGooglePlex = CameraPosition(
     target: LatLng(40.802516, 29.439794),
@@ -68,43 +73,29 @@ class _DriverHomePageState extends State<DriverHomePage>
   );
 
   List<AnimationController> _bottomSheetControllers = [];
-  List<Tween<Offset>> _tweens = [];
+  late Timer _canceledTimer;
+  final TextEditingController _commentTextController = TextEditingController();
   final Completer<GoogleMapController> _controller =
       Completer<GoogleMapController>();
 
+  final _controllerComment = HistoryUpcomingController();
   final DriverController _driverController = DriverController();
-
-  final Duration _duration = const Duration(milliseconds: 500);
-
-  late String _durationKmCallerToDestination = '';
   late int _duraitonKmCallertoDestinationValue = 0;
+  final Duration _duration = const Duration(milliseconds: 500);
+  late String _durationKmCallerToDestination = '';
   late String _durationKmDriverToCaller = '';
   late String _durationTimeCallerToDestination = '';
   late String _durationTimeDriverToCaller = '';
   late String _endAddressCallerToDestination = '';
   late String _endAddressDriverToCaller = '';
-  late int totalPaymant = 0;
-
-  late double callerAvaragePoint = 0.0;
-  late String callerName = '';
-  late String callerSurname = '';
-  late String callerPicturePath = '';
-  late String callerId = '';
-  late String driverId = '';
-
   String _mapTheme = '';
   final Set<Marker> _markersSet = {};
   GoogleMapController? _newGoogleMapController;
   final Set<Polyline> _polyLineSet = {};
-
   late String _startAddressCallerToDestination;
   late String _startAddressDriverToCaller;
-
   late Timer _timer;
-  late Timer _canceledTimer;
-
-  int flag = 0;
-
+  List<Tween<Offset>> _tweens = [];
   Position? _userCurrentPosition;
 
   @override
@@ -119,12 +110,6 @@ class _DriverHomePageState extends State<DriverHomePage>
 
     _disposeBottomSheetControllers();
     super.dispose();
-  }
-
-  void _disposeBottomSheetControllers() {
-    for (var controller in _bottomSheetControllers) {
-      controller.dispose();
-    }
   }
 
   @override
@@ -164,18 +149,6 @@ class _DriverHomePageState extends State<DriverHomePage>
             .navigationToPageClear(NavigationConstant.homePage);
       }
     } catch (e) {}
-  }
-
-  void _initializeBottomSheetControllers() {
-    _bottomSheetControllers = [
-      AnimationController(vsync: this, duration: _duration),
-      AnimationController(vsync: this, duration: _duration),
-    ];
-
-    _tweens = [
-      Tween(begin: const Offset(0, 1), end: Offset(0, 0)),
-      Tween(begin: const Offset(0, 1), end: Offset(0, 0)),
-    ];
   }
 
   Future<void> sendRequest() async {
@@ -433,6 +406,32 @@ class _DriverHomePageState extends State<DriverHomePage>
     );
   }
 
+  Future<void> sendComment(String comment, int index) async {
+    var model = CommentModel(comment: comment, point: index.toDouble());
+    model.commentorUserId = driverId;
+    var response = await CommentService.instance.comment(model, 'driver');
+    // NavigationManager.instance.navigationToPop();
+    if (response != null) {}
+  }
+
+  void _disposeBottomSheetControllers() {
+    for (var controller in _bottomSheetControllers) {
+      controller.dispose();
+    }
+  }
+
+  void _initializeBottomSheetControllers() {
+    _bottomSheetControllers = [
+      AnimationController(vsync: this, duration: _duration),
+      AnimationController(vsync: this, duration: _duration),
+    ];
+
+    _tweens = [
+      Tween(begin: const Offset(0, 1), end: Offset(0, 0)),
+      Tween(begin: const Offset(0, 1), end: Offset(0, 0)),
+    ];
+  }
+
   GoogleMap _buildGoogleMap(BuildContext context) {
     return GoogleMap(
       initialCameraPosition: _kGooglePlex,
@@ -463,14 +462,6 @@ class _DriverHomePageState extends State<DriverHomePage>
         controller.reverse();
       }
     }
-  }
-
-  Future<void> sendComment(String comment, int index) async {
-    var model = CommentModel(comment: comment, point: index.toDouble());
-    model.commentorUserId = driverId;
-    var response = await CommentService.instance.comment(model, 'driver');
-    // NavigationManager.instance.navigationToPop();
-    if (response != null) {}
   }
 
   Widget _buildDriverBottomSheetContent(int index, BuildContext context) {
@@ -536,43 +527,48 @@ class _DriverHomePageState extends State<DriverHomePage>
                         text1:
                             'The funds have been successfully transferred to Toygun X.',
                         title: 'Payment Success',
-                        onTap: () {
-                          NavigationManager.instance.navigationToPop();
-                          _bottomSheetControllers[1].reverse();
-                          showModalBottomSheet(
-                            isDismissible: false,
-                            isScrollControlled: true,
-                            shape: const RoundedRectangleBorder(
-                              borderRadius: BorderRadius.only(
-                                topLeft: Radius.circular(24),
-                                topRight: Radius.circular(24),
+                        onTap: () async {
+                          bool waitPaymentControl = await _driverController
+                              .waitPayment(context, driverId);
+                          if (context.mounted && waitPaymentControl) {
+                            NavigationManager.instance.navigationToPop();
+                            _bottomSheetControllers[1].reverse();
+                            showModalBottomSheet(
+                              isDismissible: false,
+                              isScrollControlled: true,
+                              shape: const RoundedRectangleBorder(
+                                borderRadius: BorderRadius.only(
+                                  topLeft: Radius.circular(24),
+                                  topRight: Radius.circular(24),
+                                ),
                               ),
-                            ),
-                            context: context,
-                            builder: (_) => Observer(builder: (context) {
-                              return CommentBottomSheet(
-                                selectedIndex:
-                                    _controllerComment.starSelectedIndex,
-                                context: context,
-                                textController: _commentTextController,
-                                onPressed: () {
-                                  sendComment(_commentTextController.text,
-                                      _controllerComment.starSelectedIndex);
-                                  setState(() {
-                                    HomeScreenTransport.allowNavigation = true;
-                                  });
+                              context: context,
+                              builder: (_) => Observer(builder: (context) {
+                                return CommentBottomSheet(
+                                  selectedIndex:
+                                      _controllerComment.starSelectedIndex,
+                                  context: context,
+                                  textController: _commentTextController,
+                                  onPressed: () {
+                                    sendComment(_commentTextController.text,
+                                        _controllerComment.starSelectedIndex);
+                                    setState(() {
+                                      HomeScreenTransport.allowNavigation =
+                                          true;
+                                    });
 
-                                  NavigationManager.instance
-                                      .navigationToPageClear(
-                                          NavigationConstant.homePage);
-                                },
-                                onPressedRatingBar:
-                                    _controllerComment.changeStarSelectedIndex,
-                                text:
-                                    '${'youRated'.tr()} ${' ${_controllerComment.starSelectedIndex}'} ${'star'.tr()}',
-                              );
-                            }),
-                          );
+                                    NavigationManager.instance
+                                        .navigationToPageClear(
+                                            NavigationConstant.homePage);
+                                  },
+                                  onPressedRatingBar: _controllerComment
+                                      .changeStarSelectedIndex,
+                                  text:
+                                      '${'youRated'.tr()} ${' ${_controllerComment.starSelectedIndex}'} ${'star'.tr()}',
+                                );
+                              }),
+                            );
+                          }
                         },
                         widget: Column(
                           children: [
@@ -601,7 +597,7 @@ class _DriverHomePageState extends State<DriverHomePage>
                   ? () async {
                       NavigationManager.instance.navigationToPage(
                           NavigationConstant.cancelRide,
-                          args: 'driverId');
+                          args: driverId);
                     }
                   : null,
             ),
