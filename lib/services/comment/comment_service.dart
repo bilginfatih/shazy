@@ -12,10 +12,9 @@ class CommentService {
 
   static CommentService instance = CommentService._init();
 
-  Future<String?> comment(CommentModel comment, String userPath ) async {
+  Future<String?> comment(CommentModel comment, String userPath) async {
     try {
-      var response =
-          await NetworkManager.instance.post('/comment/$userPath', model: comment);
+      var response = await NetworkManager.instance.post('/comment/$userPath', model: comment);
       return null;
     } catch (e) {
       return 'commentError'.tr();
@@ -25,8 +24,7 @@ class CommentService {
   Future<List<CommentModel>> getComment(String id) async {
     try {
       List<CommentModel> commentList = [];
-      var response =
-          await NetworkManager.instance.get('/comment/commentor/$id');
+      var response = await NetworkManager.instance.get('/comment/commentor/$id');
       return commentList;
     } catch (e) {
       return [];
@@ -36,15 +34,12 @@ class CommentService {
   Future<List<CommentModel>> getAntoherUserComment(String id) async {
     try {
       List<CommentModel> commentList = [];
-      var response =
-          await NetworkManager.instance.get('/comment/commenting/$id');
+      var response = await NetworkManager.instance.get('/comment/commenting/$id');
       for (var item in response) {
         CommentModel model = CommentModel();
         model = model.fromJson(item);
-        UserProfileModel? userProfile = await UserService.instance
-            .getAnotherUser(model.commentingUserId.toString());
-        model.name =
-            '${userProfile?.userModel?.name} ${userProfile?.userModel?.surname.toString()[0]}.';
+        UserProfileModel? userProfile = await UserService.instance.getAnotherUser(model.commentorUserId.toString());
+        model.name = '${userProfile?.userModel?.name} ${userProfile?.userModel?.surname.toString()[0]}.';
         model.imagePath = '$baseUrl/${userProfile?.profilePicturePath}';
         commentList.add(model);
       }
