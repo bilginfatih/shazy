@@ -4,7 +4,7 @@ import '../../core/base/base_model.dart';
 
 class UserProfileModel extends BaseModel {
   UserProfileModel({
-    this.avaragePoint,
+    this.averagePoint,
     this.description,
     this.id,
     this.lisanceVerification,
@@ -18,7 +18,7 @@ class UserProfileModel extends BaseModel {
     userModel = UserModel();
     userModel = userModel!.fromJson(o);
     var userProfile = o['user-profile'][0];
-    avaragePoint = double.tryParse(userProfile['avarage_point']);
+    averagePoint = double.tryParse(userProfile['avarage_point']);
     description = userProfile['description'] ?? '';
     id = userProfile['id'];
     lisanceVerification = userProfile['lisance_verification'] == 1 &&
@@ -32,7 +32,7 @@ class UserProfileModel extends BaseModel {
   @override
   fromJson(json) => UserProfileModel._fromJson(json);
 
-  double? avaragePoint;
+  double? averagePoint;
   String? description;
   String? id;
   bool? lisanceVerification;

@@ -115,7 +115,7 @@ class _TestPageState extends State<TestPage>
                       year: '2025',
                       cvv: '111',
                       uid: '9b39e1cf-d39c-4aaf-866e-1d0a05848735',
-                      amount: 10);
+                      amount: '10');
                   var response = await PaymentService.instance.pay(model);
                 },
                 child: const Text('Pay'),

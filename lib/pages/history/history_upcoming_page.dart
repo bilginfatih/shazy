@@ -328,7 +328,7 @@ class _HistoryUpcomingPageState extends State<HistoryUpcomingPage> {
                             _controller.driverList[index].userProfile?.userModel
                                     ?.name ??
                                 '',
-                            '${_controller.driverList[index].userProfile?.avaragePoint} (531 reviews)',
+                            '${_controller.driverList[index].userProfile?.averagePoint} (531 reviews)',
                             'Starting Location',
                             '4140 Parker Rd. Allentown, New...',
                             'Shop',
@@ -355,7 +355,7 @@ class _HistoryUpcomingPageState extends State<HistoryUpcomingPage> {
                             _controller.passengerList[index].userProfile
                                     ?.userModel?.name ??
                                 '',
-                            '${_controller.passengerList[index].userProfile?.avaragePoint} (531 reviews)',
+                            '${_controller.passengerList[index].userProfile?.averagePoint} (531 reviews)',
                             'Starting Location',
                             '4140 Parker Rd. Allentown, New...',
                             'Shop',

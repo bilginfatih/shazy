@@ -2,8 +2,10 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:hexcolor/hexcolor.dart';
+import 'package:provider/provider.dart';
 import 'package:shazy/pages/payment/controller/payment_controller.dart';
 
+import '../../core/base/app_info.dart';
 import '../../core/init/navigation/navigation_manager.dart';
 import '../../utils/constants/navigation_constant.dart';
 import '../../utils/extensions/context_extension.dart';
@@ -86,6 +88,9 @@ class _PaymentTipPageState extends State<PaymentTipPage> {
   }*/
   @override
   Widget build(BuildContext context) {
+    final String totalPayment = Provider.of<AppInfo>(context, listen: false).userDropOffLocation != null
+      ? Provider.of<AppInfo>(context, listen: false).userDropOffLocation!.totalPayment.toString()
+      : 'null';
     return Scaffold(
       appBar: BackAppBar(
         context: context,
@@ -106,7 +111,10 @@ class _PaymentTipPageState extends State<PaymentTipPage> {
               SizedBox(
                 height: context.responsiveHeight(10),
               ),
-              _buildRowText('charge'.tr(), '200₺'),
+              _buildRowText(
+                'charge'.tr(),
+                '$totalPayment₺',
+              ),
               SizedBox(
                 height: context.responsiveHeight(20),
               ),
@@ -137,7 +145,7 @@ class _PaymentTipPageState extends State<PaymentTipPage> {
                   text: 'submit'.tr(),
                   context: context,
                   onPressed: () async {
-                    await _controller.pay(200, context);
+                    await _controller.pay(totalPayment, context);
                   }),
               SizedBox(
                 height: context.responsiveHeight(16),

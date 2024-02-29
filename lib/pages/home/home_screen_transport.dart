@@ -45,6 +45,7 @@ class HomeScreenTransport extends StatefulWidget {
   static int flagCanceled = 0;
   static int flagAccept = 0;
   static int flagDriving = 0;
+  static int flagWaitPayment = 0;
   static bool allowNavigation = true;
 
   final GlobalKey<ScaffoldState>? scaffoldKey;
@@ -189,7 +190,7 @@ class _HomeScreenTransportState extends State<HomeScreenTransport> with TickerPr
       String driverId = requestId[0]["driver_id"];
 
       UserProfileModel? userProfile = await UserService.instance.getAnotherUser(driverId);
-      driverAvaragePoint = userProfile!.avaragePoint!;
+      driverAvaragePoint = userProfile!.averagePoint!;
       driverName = userProfile.userModel!.name!;
       driverSurname = userProfile.userModel!.surname!;
       driverPicturePath = userProfile.profilePicturePath!;
@@ -245,6 +246,17 @@ class _HomeScreenTransportState extends State<HomeScreenTransport> with TickerPr
           _bottomSheetControllers[0].reverse();
 
           _showCallerBottomSheet(1);
+          //_timerStatus.cancel();
+
+          // ignore: use_build_context_synchronously
+        } else if (HomeScreenTransport.status == 'waitpayment' && HomeScreenTransport.flagWaitPayment == 0) {
+          HomeScreenTransport.flagWaitPayment = 1;
+          HomeScreenTransport.isAccept = false;
+          // ignore: use_build_context_synchronously
+
+          _bottomSheetControllers[1].reverse();
+          NavigationManager.instance.navigationToPageClear(NavigationConstant.paymentTip);
+
           //_timerStatus.cancel();
 
           // ignore: use_build_context_synchronously

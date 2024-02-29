@@ -17,14 +17,14 @@ class PaymentModel extends BaseModel {
     cvv = o['cvc_number'];
     month = o['exp_month'];
     year = o['exp_year'];
-    amount = double.tryParse(o['amount'].toString());
+    amount = o['amount'];
     uid = o['user_id'];
   }
 
   @override
   fromJson(json) => PaymentModel._fromJson(json);
 
-  double? amount;
+  String? amount;
   String? cardHolderName;
   String? cardNumber;
   String? cvv;

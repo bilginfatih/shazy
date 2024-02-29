@@ -21,6 +21,7 @@ import '../../../models/comment/comment_model.dart';
 import '../../../models/drive/drive_model.dart';
 import '../../../models/user/user_profile_model.dart';
 import '../../../services/comment/comment_service.dart';
+import '../../../services/payment/payment_service.dart';
 import '../../../services/user/user_service.dart';
 import '../../../utils/constants/navigation_constant.dart';
 import '../../../utils/extensions/context_extension.dart';
@@ -45,9 +46,13 @@ class DriverHomePage extends StatefulWidget {
   State<DriverHomePage> createState() => _DriverHomePageState();
 }
 
-class _DriverHomePageState extends State<DriverHomePage>
-    with TickerProviderStateMixin {
-  late double callerAvaragePoint = 0.0;
+class _DriverHomePageState extends State<DriverHomePage> with TickerProviderStateMixin {
+  // status kontrol flagları
+  String currentStatus = '';
+  bool isMatched = true;
+  bool isComment = true;
+
+  late double callerAveragePoint = 0.0;
   late String callerId = '';
   late String callerName = '';
   late String callerPicturePath = '';
@@ -63,9 +68,10 @@ class _DriverHomePageState extends State<DriverHomePage>
   List<LatLng> pLineCoOrdinatesList = [];
   List<LatLng> pLineCoOrdinatesList2 = [];
   late String requestId2 = '';
+  late String apiUrl2 = '';
   late double toLatitude;
   late double toLongitude;
-  late int totalPaymant = 0;
+  late int totalPayment = 0;
 
   static const CameraPosition _kGooglePlex = CameraPosition(
     target: LatLng(40.802516, 29.439794),
@@ -73,11 +79,8 @@ class _DriverHomePageState extends State<DriverHomePage>
   );
 
   List<AnimationController> _bottomSheetControllers = [];
-  late Timer _canceledTimer;
   final TextEditingController _commentTextController = TextEditingController();
-  final Completer<GoogleMapController> _controller =
-      Completer<GoogleMapController>();
-
+  final Completer<GoogleMapController> _controller = Completer<GoogleMapController>();
   final _controllerComment = HistoryUpcomingController();
   final DriverController _driverController = DriverController();
   late int _duraitonKmCallertoDestinationValue = 0;
@@ -94,18 +97,23 @@ class _DriverHomePageState extends State<DriverHomePage>
   final Set<Polyline> _polyLineSet = {};
   late String _startAddressCallerToDestination;
   late String _startAddressDriverToCaller;
-  late Timer _timer;
+  late Timer _timerIsMatched;
+  late Timer _timerSendRequest;
+  late Timer _canceledTimer;
   List<Tween<Offset>> _tweens = [];
   Position? _userCurrentPosition;
 
   @override
   void dispose() {
     // Timer'ı iptal et
-    if (_timer.isActive) {
-      _timer.cancel();
+    if (_timerIsMatched.isActive) {
+      _timerIsMatched.cancel();
     }
     if (_canceledTimer.isActive) {
       _canceledTimer.cancel();
+    }
+    if (_timerSendRequest.isActive) {
+      _timerSendRequest.cancel();
     }
 
     _disposeBottomSheetControllers();
@@ -118,16 +126,14 @@ class _DriverHomePageState extends State<DriverHomePage>
 
     _initializeBottomSheetControllers();
 
-    DefaultAssetBundle.of(context)
-        .loadString('assets/maptheme/night_theme.json')
-        .then(
+    DefaultAssetBundle.of(context).loadString('assets/maptheme/night_theme.json').then(
       (value) {
         _mapTheme = value;
       },
     );
-    _timer = Timer.periodic(const Duration(seconds: 10), (timer) {
+    _timerIsMatched = Timer.periodic(const Duration(seconds: 10), (timer) {
       // Her 5 saniyede bir istek gönder
-      sendRequest();
+      sendRequestMatched();
     });
 
     _driverController.active(context);
@@ -135,47 +141,51 @@ class _DriverHomePageState extends State<DriverHomePage>
 
   Future<void> sendRequestCanceled() async {
     try {
-      String apiUrl = "/drive-request/$requestId2";
+      apiUrl2 = "/drive-request/$requestId2";
 
-      var requestResponse = await NetworkManager.instance.get(apiUrl);
+      var requestResponse = await NetworkManager.instance.get(apiUrl2);
 
-      driveDetailsInfo.status = requestResponse["status"];
+      currentStatus = requestResponse["status"];
 
-      if (driveDetailsInfo.status == 'canceled') {
+      if (currentStatus == 'canceled') {
         HomeScreenTransport.allowNavigation = true;
         _canceledTimer.cancel();
         //drawPolyLineFromOriginToDestination();
-        NavigationManager.instance
-            .navigationToPageClear(NavigationConstant.homePage);
+        NavigationManager.instance.navigationToPageClear(NavigationConstant.homePage);
       }
+    } catch (e) {}
+  }
+
+  Future<void> sendRequestMatched() async {
+    try {
+      driverId = await SessionManager().get('id');
+      String apiUrl = "/drive-request/driver/$driverId/matched";
+      var requestId = await NetworkManager.instance.get(apiUrl);
+
+      requestId2 = requestId[0]["id"];
+      callerId = requestId[0]["caller_id"];
+
+      UserProfileModel? userProfile = await UserService.instance.getAnotherUser(callerId);
+      callerAveragePoint = userProfile!.averagePoint!;
+      callerName = userProfile.userModel!.name!;
+      callerSurname = userProfile.userModel!.surname!;
+      callerPicturePath = userProfile.profilePicturePath!;
+
+      apiUrl2 = "/drive-request/$requestId2";
+      _timerIsMatched.cancel();
+      _timerSendRequest = Timer.periodic(const Duration(seconds: 10), (timer) {
+        // Her 5 saniyede bir istek gönder
+        sendRequest();
+      });
     } catch (e) {}
   }
 
   Future<void> sendRequest() async {
     try {
-      String userId = await SessionManager().get('id');
-      String id = "/drive-request/driver/$userId/matched";
-      var requestId = await NetworkManager.instance.get(id);
-
-      var statusId = requestId[0]["id"];
-
-      callerId = requestId[0]["caller_id"];
-      driverId = requestId[0]["driver_id"];
-
-      UserProfileModel? userProfile =
-          await UserService.instance.getAnotherUser(callerId);
-      callerAvaragePoint = userProfile!.avaragePoint!;
-      callerName = userProfile.userModel!.name!;
-      callerSurname = userProfile.userModel!.surname!;
-      callerPicturePath = userProfile.profilePicturePath!;
-
-      requestId2 = statusId;
-      String apiUrl = "/drive-request/$requestId2";
-
-      var requestResponse = await NetworkManager.instance.get(apiUrl);
+      var requestResponse = await NetworkManager.instance.get(apiUrl2);
 
       if (requestResponse != null) {
-        driveDetailsInfo.status = requestResponse["status"];
+        currentStatus = requestResponse["status"];
         //String driverId = requestResponse["driver_id"];
         driverLatitude = double.parse(requestResponse["driver_lat"]);
         driverLongitude = double.parse(requestResponse["driver_lang"]);
@@ -184,14 +194,78 @@ class _DriverHomePageState extends State<DriverHomePage>
         toLatitude = double.parse(requestResponse["to_lat"]);
         toLongitude = double.parse(requestResponse["to_lang"]);
 
-        if (driveDetailsInfo.status == 'matched') {
+        if (currentStatus == 'matched' && isMatched) {
           HomeScreenTransport.allowNavigation = false;
-          _timer.cancel();
+          isMatched = false;
+          //_timer.cancel();
           drawPolyLineFromOriginToDestination();
           _canceledTimer = Timer.periodic(Duration(seconds: 10), (timer) {
-            // Her 5 saniyede bir istek gönder
+            // Her 10 saniyede bir istek gönder
             sendRequestCanceled();
           });
+        } else if (currentStatus == 'comment' && isComment) {
+          isComment = false;
+          _timerIsMatched.cancel();
+          // ignore: use_build_context_synchronously
+          showDialog(
+            context: context,
+            builder: (BuildContext context) {
+              return SuccessDialog(
+                context: context,
+                text1: 'The funds have been successfully transferred to $callerName $callerSurname.',
+                title: 'Payment Success',
+                onTap: () async {
+                  NavigationManager.instance.navigationToPop();
+                  _bottomSheetControllers[1].reverse();
+                  showModalBottomSheet(
+                    isDismissible: false,
+                    isScrollControlled: true,
+                    shape: const RoundedRectangleBorder(
+                      borderRadius: BorderRadius.only(
+                        topLeft: Radius.circular(24),
+                        topRight: Radius.circular(24),
+                      ),
+                    ),
+                    context: context,
+                    builder: (_) => Observer(builder: (context) {
+                      return CommentBottomSheet(
+                        selectedIndex: _controllerComment.starSelectedIndex,
+                        context: context,
+                        textController: _commentTextController,
+                        onPressed: () {
+                          sendComment(_commentTextController.text, _controllerComment.starSelectedIndex);
+                          setState(() {
+                            HomeScreenTransport.allowNavigation = true;
+                            _canceledTimer.cancel();
+                          });
+
+                          NavigationManager.instance.navigationToPageClear(NavigationConstant.homePage);
+                        },
+                        onPressedRatingBar: _controllerComment.changeStarSelectedIndex,
+                        text: '${'youRated'.tr()} $callerName ${' ${_controllerComment.starSelectedIndex}'} ${'star'.tr()}',
+                      );
+                    }),
+                  );
+                },
+                widget: Column(
+                  children: [
+                    Text(
+                      'amount'.tr(),
+                      style: context.textStyle.labelSmallMedium.copyWith(
+                        color: HexColor("#5A5A5A"),
+                      ),
+                    ),
+                    Text(
+                      '${totalPayment.toString()}₺',
+                      style: context.textStyle.titleXlargeRegular.copyWith(
+                        color: HexColor("#2A2A2A"),
+                      ),
+                    ),
+                  ],
+                ),
+              );
+            },
+          );
         }
       } else {
         // Handle the case where the response is null or not as expected
@@ -204,60 +278,44 @@ class _DriverHomePageState extends State<DriverHomePage>
   }
 
   locateUserPosition() async {
-    Position cPosition = await Geolocator.getCurrentPosition(
-        desiredAccuracy: LocationAccuracy.high);
+    Position cPosition = await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
     _userCurrentPosition = cPosition;
 
-    LatLng latLngPosition =
-        LatLng(_userCurrentPosition!.latitude, _userCurrentPosition!.longitude);
+    LatLng latLngPosition = LatLng(_userCurrentPosition!.latitude, _userCurrentPosition!.longitude);
 
-    CameraPosition cameraPosition =
-        CameraPosition(target: latLngPosition, zoom: 14);
+    CameraPosition cameraPosition = CameraPosition(target: latLngPosition, zoom: 14);
 
-    _newGoogleMapController!
-        .animateCamera(CameraUpdate.newCameraPosition(cameraPosition));
+    _newGoogleMapController!.animateCamera(CameraUpdate.newCameraPosition(cameraPosition));
 
     if (mounted) {
-      humanReadableAddress =
-          await AssistantMethods.searchAddressForGeographicCoOrdinates(
-              _userCurrentPosition!, context);
+      humanReadableAddress = await AssistantMethods.searchAddressForGeographicCoOrdinates(_userCurrentPosition!, context);
     }
   }
 
   Future<void> drawPolyLineFromOriginToDestination() async {
     //kullanıcı konum alma lazım olursa diye****
-    Position cPosition = await Geolocator.getCurrentPosition(
-        desiredAccuracy: LocationAccuracy.high);
+    Position cPosition = await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
     _userCurrentPosition = cPosition;
 
-    var driverOriginLatLng =
-        LatLng(_userCurrentPosition!.latitude, _userCurrentPosition!.longitude);
+    var driverOriginLatLng = LatLng(_userCurrentPosition!.latitude, _userCurrentPosition!.longitude);
     var originLatLng = LatLng(fromLatitude, fromLongitude);
     var destinationLatLng = LatLng(toLatitude, toLongitude);
 
-    var driverDirectionDetailsInfo =
-        await AssistantMethods.obtainOriginToDestinationDirectionDetails(
-            driverOriginLatLng, originLatLng);
+    var driverDirectionDetailsInfo = await AssistantMethods.obtainOriginToDestinationDirectionDetails(driverOriginLatLng, originLatLng);
 
-    _durationKmDriverToCaller =
-        driverDirectionDetailsInfo!.distance_text.toString();
-    _durationTimeDriverToCaller =
-        driverDirectionDetailsInfo.duration_text.toString();
-    _startAddressDriverToCaller =
-        driverDirectionDetailsInfo.start_address.toString();
-    _endAddressDriverToCaller =
-        driverDirectionDetailsInfo.end_address.toString();
+    _durationKmDriverToCaller = driverDirectionDetailsInfo!.distance_text.toString();
+    _durationTimeDriverToCaller = driverDirectionDetailsInfo.duration_text.toString();
+    _startAddressDriverToCaller = driverDirectionDetailsInfo.start_address.toString();
+    _endAddressDriverToCaller = driverDirectionDetailsInfo.end_address.toString();
 
     PolylinePoints pPointsDriver = PolylinePoints();
-    List<PointLatLng> driverDecodedPolyLinePointsResultList = pPointsDriver
-        .decodePolyline(driverDirectionDetailsInfo!.e_pointsDrive!);
+    List<PointLatLng> driverDecodedPolyLinePointsResultList = pPointsDriver.decodePolyline(driverDirectionDetailsInfo!.e_pointsDrive!);
 
     //pLineCoOrdinatesList.clear();
 
     if (driverDecodedPolyLinePointsResultList.isNotEmpty) {
       driverDecodedPolyLinePointsResultList.forEach((PointLatLng pointLatLng) {
-        pLineCoOrdinatesList2
-            .add(LatLng(pointLatLng.latitude, pointLatLng.longitude));
+        pLineCoOrdinatesList2.add(LatLng(pointLatLng.latitude, pointLatLng.longitude));
       });
     }
     //pLineCoOrdinatesList.clear();
@@ -275,32 +333,24 @@ class _DriverHomePageState extends State<DriverHomePage>
       _polyLineSet.add(polyline2);
     });
 
-    var directionDetailsInfo =
-        await AssistantMethods.obtainOriginToDestinationDirectionDetails(
-            originLatLng, destinationLatLng);
+    var directionDetailsInfo = await AssistantMethods.obtainOriginToDestinationDirectionDetails(originLatLng, destinationLatLng);
 
-    _durationKmCallerToDestination =
-        directionDetailsInfo!.distance_text.toString();
-    _durationTimeCallerToDestination =
-        directionDetailsInfo.duration_text.toString();
-    _startAddressCallerToDestination =
-        directionDetailsInfo.start_address.toString();
-    _endAddressCallerToDestination =
-        directionDetailsInfo.end_address.toString();
+    _durationKmCallerToDestination = directionDetailsInfo!.distance_text.toString();
+    _durationTimeCallerToDestination = directionDetailsInfo.duration_text.toString();
+    _startAddressCallerToDestination = directionDetailsInfo.start_address.toString();
+    _endAddressCallerToDestination = directionDetailsInfo.end_address.toString();
     _duraitonKmCallertoDestinationValue = directionDetailsInfo.distance_value!;
 
-    totalPaymant = ((_duraitonKmCallertoDestinationValue / 1000) * 35).toInt();
+    totalPayment = ((_duraitonKmCallertoDestinationValue / 1000) * 35).toInt();
 
     PolylinePoints pPoints = PolylinePoints();
-    List<PointLatLng> decodedPolyLinePointsResultList =
-        pPoints.decodePolyline(directionDetailsInfo!.e_points!);
+    List<PointLatLng> decodedPolyLinePointsResultList = pPoints.decodePolyline(directionDetailsInfo!.e_points!);
 
     //pLineCoOrdinatesList.clear();
 
     if (decodedPolyLinePointsResultList.isNotEmpty) {
       decodedPolyLinePointsResultList.forEach((PointLatLng pointLatLng) {
-        pLineCoOrdinatesList
-            .add(LatLng(pointLatLng.latitude, pointLatLng.longitude));
+        pLineCoOrdinatesList.add(LatLng(pointLatLng.latitude, pointLatLng.longitude));
       });
     }
     //pLineCoOrdinatesList.clear();
@@ -322,10 +372,8 @@ class _DriverHomePageState extends State<DriverHomePage>
       _polyLineSet.add(polyline);
     });
     LatLngBounds boundsLatLng;
-    if (originLatLng.latitude > destinationLatLng.latitude &&
-        originLatLng.longitude > destinationLatLng.longitude) {
-      boundsLatLng =
-          LatLngBounds(southwest: destinationLatLng, northeast: originLatLng);
+    if (originLatLng.latitude > destinationLatLng.latitude && originLatLng.longitude > destinationLatLng.longitude) {
+      boundsLatLng = LatLngBounds(southwest: destinationLatLng, northeast: originLatLng);
     } else if (originLatLng.longitude > destinationLatLng.longitude) {
       boundsLatLng = LatLngBounds(
         southwest: LatLng(originLatLng.latitude, destinationLatLng.longitude),
@@ -337,27 +385,21 @@ class _DriverHomePageState extends State<DriverHomePage>
         northeast: LatLng(originLatLng.latitude, destinationLatLng.longitude),
       );
     } else {
-      boundsLatLng =
-          LatLngBounds(southwest: originLatLng, northeast: destinationLatLng);
+      boundsLatLng = LatLngBounds(southwest: originLatLng, northeast: destinationLatLng);
     }
 
-    _newGoogleMapController!
-        .animateCamera(CameraUpdate.newLatLngBounds(boundsLatLng, 95));
+    _newGoogleMapController!.animateCamera(CameraUpdate.newLatLngBounds(boundsLatLng, 95));
 
     Marker originMarker = Marker(
       markerId: const MarkerId("originID"),
-      infoWindow: InfoWindow(
-          title: 'originPosition.locationName',
-          snippet: directionDetailsInfo.duration_text),
+      infoWindow: InfoWindow(title: 'originPosition.locationName', snippet: directionDetailsInfo.duration_text),
       position: originLatLng,
       icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueYellow),
     );
 
     Marker destinationMarker = Marker(
       markerId: const MarkerId("destinationID"),
-      infoWindow: InfoWindow(
-          title: 'destinationPosition.locationName',
-          snippet: directionDetailsInfo.distance_text.toString()),
+      infoWindow: InfoWindow(title: 'destinationPosition.locationName', snippet: directionDetailsInfo.distance_text.toString()),
       position: destinationLatLng,
       icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueOrange),
     );
@@ -373,26 +415,19 @@ class _DriverHomePageState extends State<DriverHomePage>
       context: context,
       builder: (BuildContext context) => DriverDialog(
         context: context,
-        price: '$totalPaymant₺',
-        star: callerAvaragePoint.toString(),
-        location1TextTitle:
-            "$_durationTimeDriverToCaller ($_durationKmDriverToCaller) away",
-        location1Text: _endAddressDriverToCaller.length > 36
-            ? "${_endAddressDriverToCaller.substring(0, 36)}..."
-            : _endAddressDriverToCaller,
-        location2TextTitle:
-            "$_durationTimeCallerToDestination ($_durationKmCallerToDestination) trip",
-        location2Text: _endAddressCallerToDestination.length > 36
-            ? "${_endAddressCallerToDestination.substring(0, 36)}..."
-            : _endAddressCallerToDestination,
+        price: '$totalPayment₺',
+        star: callerAveragePoint.toString(),
+        location1TextTitle: "$_durationTimeDriverToCaller ($_durationKmDriverToCaller) away",
+        location1Text: _endAddressDriverToCaller.length > 36 ? "${_endAddressDriverToCaller.substring(0, 36)}..." : _endAddressDriverToCaller,
+        location2TextTitle: "$_durationTimeCallerToDestination ($_durationKmCallerToDestination) trip",
+        location2Text: _endAddressCallerToDestination.length > 36 ? "${_endAddressCallerToDestination.substring(0, 36)}..." : _endAddressCallerToDestination,
         cancelOnPressed: () async {
           await _driverController.driveCancel(context);
           setState(() {
             _markersSet.clear();
             _polyLineSet.clear();
           });
-          NavigationManager.instance
-              .navigationToPageClear(NavigationConstant.cancelDrive);
+          NavigationManager.instance.navigationToPageClear(NavigationConstant.cancelDrive);
         },
         acceptOnPressed: () async {
           var userId = await SessionManager().get('id');
@@ -474,34 +509,24 @@ class _DriverHomePageState extends State<DriverHomePage>
           initialChildSize: size,
           minChildSize: 0.1,
           maxChildSize: size,
-          builder: (BuildContext context, ScrollController scrollController) =>
-              SingleChildScrollView(
+          builder: (BuildContext context, ScrollController scrollController) => SingleChildScrollView(
             physics: const ClampingScrollPhysics(),
             controller: scrollController,
             child: DriveBottomSheet(
               height: size,
-              buttonTextStart:
-                  index == 0 ? 'startTheTrip'.tr() : 'finishTheTrip'.tr(),
+              buttonTextStart: index == 0 ? 'startTheTrip'.tr() : 'finishTheTrip'.tr(),
               context: context,
-              pickingUpText:
-                  index == 0 ? 'pickingUpText'.tr() : 'goingToDestination',
-              imagePath:
-                  "https://randomuser.me/api/portraits/men/93.jpg" /*'$baseUrl/$callerAvaragePoint'*/,
+              pickingUpText: index == 0 ? 'pickingUpText'.tr() : 'goingToDestination',
+              imagePath: "https://randomuser.me/api/portraits/men/93.jpg" /*'$baseUrl/$callerAvaragePoint'*/,
               customerName: '$callerName $callerSurname',
-              startText: callerAvaragePoint.toString(),
-              location1Text: humanReadableAddress.length > 36
-                  ? "${humanReadableAddress.substring(0, 36)}..."
-                  : humanReadableAddress,
+              startText: callerAveragePoint.toString(),
+              location1Text: humanReadableAddress.length > 36 ? "${humanReadableAddress.substring(0, 36)}..." : humanReadableAddress,
               location1TextTitle: 'currentLocation'.tr(),
-              location2Text: _endAddressCallerToDestination.length > 36
-                  ? "${_endAddressCallerToDestination.substring(0, 36)}..."
-                  : _endAddressCallerToDestination,
-              location2TextTitle:
-                  "$_durationTimeCallerToDestination ($_durationKmCallerToDestination) trip",
-              showSecondaryButton: index == 0
-                  ? true
-                  : false, // Eğer index 0 ise showSecondaryButton true olacak
-              onPressedStart: () {
+              location2Text:
+                  _endAddressCallerToDestination.length > 36 ? "${_endAddressCallerToDestination.substring(0, 36)}..." : _endAddressCallerToDestination,
+              location2TextTitle: "$_durationTimeCallerToDestination ($_durationKmCallerToDestination) trip",
+              showSecondaryButton: index == 0 ? true : false, // Eğer index 0 ise showSecondaryButton true olacak
+              onPressedStart: () async {
                 if (index == 0) {
                   showDialog(
                     barrierDismissible: false,
@@ -519,85 +544,12 @@ class _DriverHomePageState extends State<DriverHomePage>
                     },
                   );
                 } else {
-                  showDialog(
-                    context: context,
-                    builder: (BuildContext context) {
-                      return SuccessDialog(
-                        context: context,
-                        text1:
-                            'The funds have been successfully transferred to Toygun X.',
-                        title: 'Payment Success',
-                        onTap: () async {
-                          bool waitPaymentControl = await _driverController
-                              .waitPayment(context, driverId);
-                          if (context.mounted && waitPaymentControl) {
-                            NavigationManager.instance.navigationToPop();
-                            _bottomSheetControllers[1].reverse();
-                            showModalBottomSheet(
-                              isDismissible: false,
-                              isScrollControlled: true,
-                              shape: const RoundedRectangleBorder(
-                                borderRadius: BorderRadius.only(
-                                  topLeft: Radius.circular(24),
-                                  topRight: Radius.circular(24),
-                                ),
-                              ),
-                              context: context,
-                              builder: (_) => Observer(builder: (context) {
-                                return CommentBottomSheet(
-                                  selectedIndex:
-                                      _controllerComment.starSelectedIndex,
-                                  context: context,
-                                  textController: _commentTextController,
-                                  onPressed: () {
-                                    sendComment(_commentTextController.text,
-                                        _controllerComment.starSelectedIndex);
-                                    setState(() {
-                                      HomeScreenTransport.allowNavigation =
-                                          true;
-                                    });
-
-                                    NavigationManager.instance
-                                        .navigationToPageClear(
-                                            NavigationConstant.homePage);
-                                  },
-                                  onPressedRatingBar: _controllerComment
-                                      .changeStarSelectedIndex,
-                                  text:
-                                      '${'youRated'.tr()} ${' ${_controllerComment.starSelectedIndex}'} ${'star'.tr()}',
-                                );
-                              }),
-                            );
-                          }
-                        },
-                        widget: Column(
-                          children: [
-                            Text(
-                              'amount'.tr(),
-                              style:
-                                  context.textStyle.labelSmallMedium.copyWith(
-                                color: HexColor("#5A5A5A"),
-                              ),
-                            ),
-                            Text(
-                              totalPaymant.toString(),
-                              style:
-                                  context.textStyle.titleXlargeRegular.copyWith(
-                                color: HexColor("#2A2A2A"),
-                              ),
-                            ),
-                          ],
-                        ),
-                      );
-                    },
-                  );
+                  await PaymentService.instance.waitPayment(driverId);
                 }
               },
               onPressedCancel: index == 0
                   ? () async {
-                      NavigationManager.instance.navigationToPage(
-                          NavigationConstant.cancelRide,
-                          args: driverId);
+                      NavigationManager.instance.navigationToPage(NavigationConstant.cancelRide, args: driverId);
                     }
                   : null,
             ),
@@ -607,16 +559,13 @@ class _DriverHomePageState extends State<DriverHomePage>
     );
   }
 
-  CustomIconButton _buildRightTopButton(BuildContext context) =>
-      _driverController.driverActive
-          ? _buildCustomIconButton(false, Icons.close, () {
-              _driverController.driverPassive(context);
-            })
-          : _buildCustomIconButton(false, Icons.notifications_none_outlined,
-              () {
-              NavigationManager.instance
-                  .navigationToPage(NavigationConstant.notification);
-            });
+  CustomIconButton _buildRightTopButton(BuildContext context) => _driverController.driverActive
+      ? _buildCustomIconButton(false, Icons.close, () {
+          _driverController.driverPassive(context);
+        })
+      : _buildCustomIconButton(false, Icons.notifications_none_outlined, () {
+          NavigationManager.instance.navigationToPage(NavigationConstant.notification);
+        });
 
   Widget _buildTopLeftButton(BuildContext context) {
     return _driverController.driverActive
@@ -626,9 +575,7 @@ class _DriverHomePageState extends State<DriverHomePage>
         : SizedBox();
   }
 
-  CustomIconButton _buildCustomIconButton(
-          bool isLeft, IconData icon, VoidCallback onPressed) =>
-      CustomIconButton(
+  CustomIconButton _buildCustomIconButton(bool isLeft, IconData icon, VoidCallback onPressed) => CustomIconButton(
         context: context,
         top: context.responsiveHeight(60),
         left: isLeft ? context.responsiveWidth(15) : null,
@@ -645,9 +592,7 @@ class _DriverHomePageState extends State<DriverHomePage>
     return Padding(
       // sayfanın alt kısmı
       padding: EdgeInsets.only(
-        top: context.responsiveHeight(480) -
-            keyboardSize +
-            (keyboardSize != 0 ? context.responsiveHeight(150) : 0),
+        top: context.responsiveHeight(480) - keyboardSize + (keyboardSize != 0 ? context.responsiveHeight(150) : 0),
         right: context.responsiveWidth(15),
         left: context.responsiveWidth(14),
       ),
@@ -674,11 +619,9 @@ class _DriverHomePageState extends State<DriverHomePage>
       child: ElevatedButton.icon(
         onPressed: () {
           if (DriverHomePage.stat == 'driving') {
-            MapsLauncher.launchCoordinates(
-                toLatitude, toLongitude, 'Yol Tarifi');
+            MapsLauncher.launchCoordinates(toLatitude, toLongitude, 'Yol Tarifi');
           } else if (driveDetailsInfo.status == 'accept') {
-            MapsLauncher.launchCoordinates(
-                fromLatitude, fromLongitude, 'Yol Tarifi');
+            MapsLauncher.launchCoordinates(fromLatitude, fromLongitude, 'Yol Tarifi');
           }
         },
         style: ElevatedButton.styleFrom(
@@ -691,8 +634,7 @@ class _DriverHomePageState extends State<DriverHomePage>
         icon: const Icon(Icons.navigation, color: Colors.white),
         label: Text(
           'navigate'.tr(),
-          style: context.textStyle.subheadSmallRegular.copyWith(
-              color: Colors.white, fontSize: context.responsiveFont(14)),
+          style: context.textStyle.subheadSmallRegular.copyWith(color: Colors.white, fontSize: context.responsiveFont(14)),
         ),
       ),
     );
@@ -700,8 +642,7 @@ class _DriverHomePageState extends State<DriverHomePage>
 
   @override
   Widget build(BuildContext context) {
-    if (Provider.of<AppInfo>(context).userDropOffLocation != null &&
-        flag == 0) {
+    if (Provider.of<AppInfo>(context).userDropOffLocation != null && flag == 0) {
       drawPolyLineFromOriginToDestination();
       flag = 1;
     } else {
@@ -716,10 +657,8 @@ class _DriverHomePageState extends State<DriverHomePage>
           return Stack(
             children: [
               _buildGoogleMap(context),
-              if (HomeScreenTransport.allowNavigation)
-                _buildTopLeftButton(context),
-              if (HomeScreenTransport.allowNavigation)
-                _buildRightTopButton(context),
+              if (HomeScreenTransport.allowNavigation) _buildTopLeftButton(context),
+              if (HomeScreenTransport.allowNavigation) _buildRightTopButton(context),
               _buildBottomOfBody(context, keyboardSize),
               _buildGoogleMapsButton(context),
               _buildDriverBottomSheetContent(0, context),

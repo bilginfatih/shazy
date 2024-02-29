@@ -21,7 +21,7 @@ class AppTextStyles {
       );
 
   TextStyle get titleLargeMedium => GoogleFonts.poppins(
-        fontSize: _context.mediaQueryData.textScaleFactor * 28,
+        fontSize: _context.responsiveFont(28),
         fontWeight: FontWeight.w500,
       );
 

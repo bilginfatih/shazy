@@ -94,7 +94,7 @@ abstract class _ProfileControllerBase with Store {
     if (description != '') {
       description = description.substring(0, description.length - 1);
     }
-    star = userProfile!.avaragePoint.toString();
+    star = userProfile!.averagePoint.toString();
     email = await CacheManager.instance.getData('user', 'email');
     userProfile!.userModel?.email = email;
     imagePath = '$baseUrl/${userProfile!.profilePicturePath}';
