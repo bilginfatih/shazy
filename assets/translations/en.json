@@ -140,5 +140,11 @@
     "shareMyTrip": "shareMyTrip",
     "friendSeeLocation": "Let family and friend see your location and trip status",
     "canceled": "Canceled",
-    "driverPassiveError": "driverPassiveError"
+    "driverPassiveError": "driverPassiveError",
+    "cancelRide1": "Waiting for long time",
+    "cancelRide2": "Unable to contact driver",
+    "cancelRide3": "Driver denied to go to destination",
+    "cancelRide4": "Driver denied to come to pickup",
+    "cancelRide5": "Wrong address shown",
+    "cancelRide6": "The price is not reasonable"
 }

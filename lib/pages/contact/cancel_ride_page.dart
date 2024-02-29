@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_session_manager/flutter_session_manager.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:hexcolor/hexcolor.dart';
+
+import '../../core/init/navigation/navigation_manager.dart';
 import '../../models/cancel_reason/cancel_reason_model.dart';
 import '../../services/cancel_reason/cancel_reason_service.dart';
 import '../../utils/constants/navigation_constant.dart';
@@ -11,8 +13,6 @@ import '../../utils/theme/themes.dart';
 import '../../widgets/app_bars/back_app_bar.dart';
 import '../../widgets/buttons/primary_button.dart';
 import '../../widgets/padding/base_padding.dart';
-
-import '../../core/init/navigation/navigation_manager.dart';
 import '../home/home_screen_transport.dart';
 
 class CancelRidePage extends StatefulWidget {
@@ -23,36 +23,37 @@ class CancelRidePage extends StatefulWidget {
 }
 
 class _CancelRidePageState extends State<CancelRidePage> {
+  TextEditingController _otherTextController = TextEditingController();
   final Map<String, bool> _values = {};
 
   @override
   void initState() {
-    _values['Waiting for long time'] = false;
-    _values['Unable to contact driver'] = false;
-    _values['Driver denied to go to destination'] = false;
-    _values['Driver denied to come to pickup'] = false;
-    _values['Wrong address shown'] = false;
-    _values['The price is not reasonable'] = false;
+    _values['cancelRide1'.tr()] = false;
+    _values['cancelRide2'.tr()] = false;
+    _values['cancelRide3'.tr()] = false;
+    _values['cancelRide4'.tr()] = false;
+    _values['cancelRide5'.tr()] = false;
+    _values['cancelRide6'.tr()] = false;
     super.initState();
   }
 
   Future<dynamic> _submitOnPressed(BuildContext context) async {
     String? isDriver = ModalRoute.of(context)?.settings.arguments as String?;
-    List<String> selectedReasons = [];
+    String reasonString = '';
     _values.forEach((key, value) {
       if (value) {
-        selectedReasons.add(key);
+        reasonString = key;
       }
     });
-    String reasonsString = selectedReasons.join(', '); // Seçilen nedenleri bir stringe dönüştürme
-    print('Selected reasons: $reasonsString');
+    if (reasonString == '') {
+      reasonString = _otherTextController.text;
+    }
     String userId = await SessionManager().get('id');
-    print('isDriver: ' + isDriver.toString());
     if (isDriver == 'driverId') {
-      CancelReasonModel model = CancelReasonModel(driverId: userId, status: 'accept', reason: reasonsString);
+      CancelReasonModel model = CancelReasonModel(driverId: userId, status: 'accept', reason: reasonString);
       await CancelReasonService.instance.cancelReason(model);
     } else {
-      CancelReasonModel model = CancelReasonModel(callerId: userId, status: 'accept', reason: reasonsString);
+      CancelReasonModel model = CancelReasonModel(callerId: userId, status: 'accept', reason: reasonString);
       await CancelReasonService.instance.cancelReason(model);
     }
 
@@ -125,7 +126,8 @@ class _CancelRidePageState extends State<CancelRidePage> {
               onPressed: () {
                 HomeScreenTransport.allowNavigation = true;
                 if (isDriver == 'driverId') {
-                  NavigationManager.instance.navigationToPageClear(NavigationConstant.homePage);
+                  NavigationManager.instance
+                      .navigationToPageClear(NavigationConstant.homePage);
                 } else {
                   NavigationManager.instance.navigationToPop();
                   NavigationManager.instance.navigationToPop();
@@ -146,12 +148,14 @@ class _CancelRidePageState extends State<CancelRidePage> {
             _values.forEach((key, value) {
               _values[key] = key == text;
             });
+            _otherTextController.clear();
           });
         },
         child: Container(
           decoration: BoxDecoration(
             border: Border.all(
-              color: isSelected ? AppThemes.lightPrimary500 : HexColor('#D0D0D0'),
+              color:
+                  isSelected ? AppThemes.lightPrimary500 : HexColor('#D0D0D0'),
             ),
             borderRadius: BorderRadius.circular(8),
           ),
@@ -177,7 +181,8 @@ class _CancelRidePageState extends State<CancelRidePage> {
                 SizedBox(width: context.responsiveWidth(14)),
                 Text(
                   text,
-                  style: context.textStyle.bodyLargeMedium.copyWith(color: HexColor('#5A5A5A')),
+                  style: context.textStyle.bodyLargeMedium
+                      .copyWith(color: HexColor('#5A5A5A')),
                 ),
               ],
             ),
@@ -206,10 +211,19 @@ class _CancelRidePageState extends State<CancelRidePage> {
             SizedBox(
               height: context.responsiveHeight(16),
             ),
-            for (var item in _values.keys) _buildContainer(context, item, _values[item] ?? false),
+            for (var item in _values.keys)
+              _buildContainer(context, item, _values[item] ?? false),
             Container(
-              constraints: BoxConstraints(maxHeight: context.responsiveHeight(118)),
+              constraints:
+                  BoxConstraints(maxHeight: context.responsiveHeight(118)),
               child: TextFormField(
+                onChanged: (_) {
+                  _values.forEach((key, value) {
+                    _values[key] = false;
+                  });
+                  setState(() {});
+                },
+                controller: _otherTextController,
                 maxLines: 3,
                 keyboardType: TextInputType.multiline,
                 decoration: InputDecoration(
