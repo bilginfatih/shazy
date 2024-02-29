@@ -1,17 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
-import 'package:hexcolor/hexcolor.dart';
-import '../../utils/extensions/context_extension.dart';
+
 import '../../widgets/app_bars/custom_app_bar.dart';
 import '../../widgets/padding/base_padding.dart';
-
-import '../../utils/theme/themes.dart';
 
 class OfferPage extends StatelessWidget {
   const OfferPage({super.key, this.scaffoldKey});
 
   final GlobalKey<ScaffoldState>? scaffoldKey;
 
+/*
   Padding _buildContainer(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.only(bottom: 16),
@@ -53,6 +50,7 @@ class OfferPage extends StatelessWidget {
       ),
     );
   }
+*/
 
   @override
   Widget build(BuildContext context) {
@@ -61,24 +59,14 @@ class OfferPage extends StatelessWidget {
         context: context,
         scaffoldKey: scaffoldKey,
       ),
-      body: BasePadding(
-          context: context,
-          child: ListView(
-            children: [
-              _buildContainer(context),
-              _buildContainer(context),
-              _buildContainer(context),
-              _buildContainer(context),
-              _buildContainer(context),
-              _buildContainer(context),
-              _buildContainer(context),
-              _buildContainer(context),
-              _buildContainer(context),
-              _buildContainer(context),
-              _buildContainer(context),
-              _buildContainer(context),
-            ],
-          )),
+      /*body: BasePadding(
+        context: context,
+        child: ListView(
+          children: [
+            _buildContainer(context),
+          ],
+        ),
+      ), */
     );
   }
 }

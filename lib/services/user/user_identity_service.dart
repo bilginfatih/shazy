@@ -1,5 +1,5 @@
 import '../../core/init/network/network_manager.dart';
-import '../../models/user/user_identity.dart';
+import '../../models/user/user_identity_model.dart';
 
 class UserIdentityService {
   UserIdentityService._init();
@@ -10,9 +10,10 @@ class UserIdentityService {
 
   Future<void> putUserIdentity(UserIdentityModel model) async {
     try {
-      var response = await NetworkManager.instance
-          .put('$_path/${model.userId}', model: model);
-    } catch (e) {}
+      await NetworkManager.instance.put('$_path/${model.userId}', model: model);
+    } catch (e) {
+      rethrow;
+    }
   }
 
   Future<UserIdentityModel> getUserIdentity(String userId) async {

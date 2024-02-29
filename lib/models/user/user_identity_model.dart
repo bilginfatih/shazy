@@ -43,19 +43,19 @@ class UserIdentityModel extends BaseModel {
 
   @override
   Map<String, dynamic> toJson() {
-    Map<String, dynamic> json = {};
+    Map<String, dynamic> map = {};
     if (criminalRecord != null) {
-      json['criminal_record'] = criminalRecord;
+      map['criminal_record'] = criminalRecord;
     }
     if (drivingLicance != null) {
-      json['driving_licance'] = criminalRecord;
+      map['driving_licance'] = drivingLicance;
     }
     if (notificationCode != null) {
-      json['notification_code'] = criminalRecord;
+      map['notification_code'] = notificationCode;
     }
-    if (notificationCode != null) {
-      json['payback_code'] = paybackCode;
+    if (paybackCode != null) {
+      map['payback_code'] = paybackCode;
     }
-    return json;
+    return map;
   }
 }

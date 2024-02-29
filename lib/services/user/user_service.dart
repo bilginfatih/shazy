@@ -2,7 +2,10 @@ import 'dart:math';
 
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter_session_manager/flutter_session_manager.dart';
+import 'package:shazy/core/init/firebase/firebase_notification_manager.dart';
+import 'package:shazy/models/user/user_identity_model.dart';
 import 'package:shazy/models/user/user_profile_model.dart';
+import 'package:shazy/services/user/user_identity_service.dart';
 import 'package:shazy/utils/constants/navigation_constant.dart';
 import '../../core/init/cache/cache_manager.dart';
 import '../../core/init/navigation/navigation_manager.dart';
@@ -29,6 +32,7 @@ class UserService {
             .putData('user', 'password', user.password.toString());
         await SessionManager().set('token', response['token']);
         await SessionManager().set('id', response['user']['id']);
+        await _updateNotificationToken(response['user']['id']);
       }
     } catch (e) {
       rethrow;
@@ -59,7 +63,6 @@ class UserService {
   Future<String?> login(UserModel user) async {
     try {
       var response = await NetworkManager.instance.post('/login', model: user);
-      print(response);
       if (response.containsKey('message')) {
         return response['message'];
       } else {
@@ -70,10 +73,11 @@ class UserService {
             .putData('user', 'phone', newUser.phone.toString());
         await CacheManager.instance
             .putData('user', 'password', user.password.toString());
-        await CacheManager.instance.putData(
-            'user', 'name', '${newUser.name} ${newUser.surname.toString()[0]}.');
+        await CacheManager.instance.putData('user', 'name',
+            '${newUser.name} ${newUser.surname.toString()[0]}.');
         await SessionManager().set('token', response['token']);
         await SessionManager().set('id', response['user']['id']);
+        await _updateNotificationToken(newUser.id);
       }
     } catch (e) {
       rethrow;
@@ -148,5 +152,13 @@ class UserService {
     await SessionManager().destroy();
     NavigationManager.instance
         .navigationToPageClear(NavigationConstant.welcome);
+  }
+
+  _updateNotificationToken(String? userId) async {
+    String notificationToken =
+        await FirebaseNotificationManager.instance.notificationToken;
+    UserIdentityModel userIdentityModel =
+        UserIdentityModel(userId: userId, notificationCode: notificationToken);
+    await UserIdentityService.instance.putUserIdentity(userIdentityModel);
   }
 }
