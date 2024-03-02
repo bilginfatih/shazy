@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:hexcolor/hexcolor.dart';
@@ -15,15 +16,17 @@ class DriverCompleteSecond extends StatelessWidget {
     return Scaffold(
       appBar: BackAppBar(
         context: context,
-        mainTitle: 'Driver',
+        mainTitle: 'driver'.tr(),
       ),
       body: Padding(
-        padding: const EdgeInsets.only(left: 40.0, top: 198.0),
+        padding: EdgeInsets.only(
+            left: context.responsiveWidth(40.0),
+            top: context.responsiveHeight(198.0)),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              'Thank you for your application.',
+              'thankYouApplication'.tr(),
               style: GoogleFonts.poppins(
                 fontSize: 30,
                 fontWeight: FontWeight.w400,
@@ -34,7 +37,7 @@ class DriverCompleteSecond extends StatelessWidget {
               height: context.responsiveHeight(28),
             ),
             Text(
-              'We will return within 48 hours.',
+              'weWillReturn48Hours'.tr(),
               style: GoogleFonts.poppins(
                 fontSize: 14,
                 fontWeight: FontWeight.w400,
@@ -48,7 +51,7 @@ class DriverCompleteSecond extends StatelessWidget {
               children: [
                 SecondaryButton(
                   context: context,
-                  text: 'Try Again',
+                  text: 'tryAgain'.tr(),
                   height: context.responsiveHeight(54),
                   width: context.responsiveWidth(140),
                   style: TextStyle(color: HexColor("#414141")),
@@ -59,7 +62,7 @@ class DriverCompleteSecond extends StatelessWidget {
                 ),
                 PrimaryButton(
                   context: context,
-                  text: 'Home',
+                  text: 'home'.tr(),
                   height: context.responsiveHeight(54),
                   width: context.responsiveWidth(140),
                   onPressed: () {},

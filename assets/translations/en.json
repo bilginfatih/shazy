@@ -152,5 +152,18 @@
     "driverChooseDesc": "Lorem ipsum dolor sit amet, consectetur \nadipiscing elit. Viverra condimentum eget \npurus in.",
     "driverAcceptDesc": "By submitting your application, you are agreeing to the terms outlined in the",
     "driversAgreement": "Driver's Agreement",
-    "makeAnApplication": "Make an Application"
+    "makeAnApplication": "Make an Application",
+    "driverVerification": "Sürücü Doğrulama",
+    "barcodeNoVehicle": "Barkod  No. -  Motorlo Taşıt Sürücü Doğrulama",
+    "barcodeNoVehicleDesc": "Barkod numarası E-Devletten alınır ve Sürücü Belgesi kontrolü için kullanılır.",
+    "barcodeNo": "Barkod Numarası",
+    "barcodeNoCriminalRecord": "Barkod  No. -  Adli Sicil Kaydı Belgesi",
+    "barcodeNoCriminalRecordDesc": "Barkod numarası E-Devletten alınır.",
+    "emptyTextError": "Fill in the required information",
+    "thankYouApplication": "Thank you for your application.",
+    "weWillReturn48Hours": "We will return within 48 hours.",
+    "tryAgain": "Try Again",
+    "home": "Home"
+    
+
 }

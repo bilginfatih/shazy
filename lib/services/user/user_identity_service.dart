@@ -13,7 +13,9 @@ class UserIdentityService {
 
   Future<void> putUserIdentity(UserIdentityModel model) async {
     try {
+      model.userId ??= await SessionManager().get('id');
       await NetworkManager.instance.put('$_path/${model.userId}', model: model);
+      await cacheUserIdentity(userId: model.userId);
     } catch (e) {
       rethrow;
     }
@@ -27,9 +29,9 @@ class UserIdentityService {
     return model;
   }
 
-  Future<void> cacheUserIdentity() async {
-    String userId = await SessionManager().get('id');
-    UserIdentityModel userIdentityModel = await getUserIdentity(userId);
+  Future<void> cacheUserIdentity({String? userId}) async {
+    userId ??= await SessionManager().get('id');
+    UserIdentityModel userIdentityModel = await getUserIdentity(userId!);
     await CacheManager.instance.putData('user_identity', 'criminal_record',
         userIdentityModel.criminalRecord.toString());
     await CacheManager.instance.putData('user_identity', 'driving_licance',

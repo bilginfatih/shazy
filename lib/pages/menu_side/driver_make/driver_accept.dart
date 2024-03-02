@@ -104,8 +104,9 @@ class _DriverAcceptState extends State<DriverAccept> {
                   height: context.responsiveHeight(54),
                   width: context.responsiveWidth(362),
                   onPressed: () {
-                    if(_termsCheck) {
-                      // TODO: fatihe sorulacak
+                    if (_termsCheck) {
+                      NavigationManager.instance
+                          .navigationToPage(NavigationConstant.driverLicance);
                     }
                   },
                 ),
