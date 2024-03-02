@@ -146,5 +146,11 @@
     "cancelRide3": "Driver denied to go to destination",
     "cancelRide4": "Driver denied to come to pickup",
     "cancelRide5": "Wrong address shown",
-    "cancelRide6": "The price is not reasonable"
+    "cancelRide6": "The price is not reasonable",
+    "notFit": "Not Fit",
+    "fitToDrive": "Fit to Drive",
+    "driverChooseDesc": "Lorem ipsum dolor sit amet, consectetur \nadipiscing elit. Viverra condimentum eget \npurus in.",
+    "driverAcceptDesc": "By submitting your application, you are agreeing to the terms outlined in the",
+    "driversAgreement": "Driver's Agreement",
+    "makeAnApplication": "Make an Application"
 }

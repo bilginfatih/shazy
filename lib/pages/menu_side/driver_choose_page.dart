@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_session_manager/flutter_session_manager.dart';
 import 'package:geolocator/geolocator.dart';
@@ -40,7 +41,7 @@ class _DriverChoosePageState extends State<DriverChoosePage> {
                 height: context.responsiveHeight(63),
               ),
               Text(
-                'Lorem ipsum dolor sit amet, consectetur \nadipiscing elit. Viverra condimentum eget \npurus in.  ',
+                'driverChooseDesc'.tr(),
                 style: TextStyle(
                   fontSize: 14,
                   fontWeight: FontWeight.w400,
@@ -55,7 +56,7 @@ class _DriverChoosePageState extends State<DriverChoosePage> {
                 children: [
                   SecondaryButton(
                     context: context,
-                    text: 'Not Fit',
+                    text: 'notFit'.tr(),
                     height: context.responsiveHeight(54),
                     width: context.responsiveWidth(140),
                     style: TextStyle(color: HexColor("#414141")),
@@ -68,7 +69,7 @@ class _DriverChoosePageState extends State<DriverChoosePage> {
                   ),
                   SecondaryButton(
                     context: context,
-                    text: 'Fit to Drive',
+                    text: 'fitToDrive'.tr(),
                     height: context.responsiveHeight(54),
                     width: context.responsiveWidth(140),
                     onPressed: () {

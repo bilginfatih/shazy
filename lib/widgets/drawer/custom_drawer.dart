@@ -2,6 +2,7 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:hexcolor/hexcolor.dart';
+import 'package:shazy/services/user/user_identity_service.dart';
 import 'package:shazy/services/user/user_service.dart';
 import 'package:shazy/utils/constants/navigation_constant.dart';
 import '../../utils/extensions/context_extension.dart';
@@ -72,8 +73,8 @@ class CustomDrawer extends SizedBox {
                         ),
                         child: CircleAvatar(
                           radius: 35,
-                          child: Image.asset('assets/png/no_data.png'),
                           backgroundColor: Colors.white,
+                          child: Image.asset('assets/png/no_data.png'),
                         ),
                       ),
                       /*Stack(
@@ -131,9 +132,16 @@ class CustomDrawer extends SizedBox {
                     height: context.responsiveHeight(24),
                   ),
                   _buildTextRow(context, 'assets/svg/car.svg', 'driver'.tr(),
-                      () {
-                    NavigationManager.instance
-                        .navigationToPage(NavigationConstant.driverChoose);
+                      () async {
+                    bool userIdentityCheck =
+                        await UserIdentityService.instance.userIdentityCheck();
+                    if (!userIdentityCheck) {
+                      NavigationManager.instance
+                          .navigationToPage(NavigationConstant.driverAccept);
+                    } else {
+                      NavigationManager.instance
+                          .navigationToPage(NavigationConstant.driverChoose);
+                    }
                   }),
                   const Divider(
                     thickness: 0.2,

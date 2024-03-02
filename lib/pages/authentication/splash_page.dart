@@ -1,6 +1,7 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_session_manager/flutter_session_manager.dart';
+import 'package:shazy/services/user/user_identity_service.dart';
 import '../../utils/extensions/context_extension.dart';
 
 import '../../core/init/cache/cache_manager.dart';
@@ -38,6 +39,7 @@ class _SplashPageState extends State<SplashPage> {
       NavigationManager.instance
           .navigationToPageClear(NavigationConstant.welcome);
     } else {
+      await UserIdentityService.instance.cacheUserIdentity();
       NavigationManager.instance
           .navigationToPageClear(NavigationConstant.homePage);
     }

@@ -11,7 +11,7 @@ import '../../../widgets/app_bars/back_app_bar.dart';
 import '../../../widgets/buttons/primary_button.dart';
 
 class DriverAccept extends StatefulWidget {
-  DriverAccept({Key? key}) : super(key: key);
+  const DriverAccept({Key? key}) : super(key: key);
 
   @override
   State<DriverAccept> createState() => _DriverAcceptState();
@@ -27,7 +27,9 @@ class _DriverAcceptState extends State<DriverAccept> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Padding(
-            padding: EdgeInsets.only(left: 46, top: 91),
+            padding: EdgeInsets.only(
+                left: context.responsiveWidth(46),
+                top: context.responsiveHeight(91)),
             child: Image.asset(
               "assets/png/Driver_logo_purple1x.png",
               width: context.responsiveWidth(280),
@@ -38,11 +40,12 @@ class _DriverAcceptState extends State<DriverAccept> {
             height: context.responsiveHeight(43),
           ),
           Padding(
-            padding: EdgeInsets.only(left: 16),
+            padding: EdgeInsets.only(left: context.responsiveWidth(16)),
             child: Row(
               children: [
                 Container(
-                  padding: const EdgeInsets.only(bottom: 13),
+                  padding:
+                      EdgeInsets.only(bottom: context.responsiveHeight(13)),
                   child: CheckBoxRounded(
                     size: 16,
                     borderColor: Colors.green[600],
@@ -57,15 +60,6 @@ class _DriverAcceptState extends State<DriverAccept> {
                       });
                     },
                   ),
-
-                  /*   RoundCheckBox(
-                borderColor: Colors.green[600],
-                checkedWidget: const Icon(Icons.check, size: 14),
-                size: 16,
-                onTap: (selected) {
-                  _termsCheck = selected ?? false;
-                },
-                          ), */
                 ),
                 SizedBox(width: context.responsiveWidth(10)),
                 Expanded(
@@ -75,13 +69,13 @@ class _DriverAcceptState extends State<DriverAccept> {
                       style: context.textStyle.bodySmallMedium,
                       children: [
                         TextSpan(
-                          text: 'By submitting your application, you are agreeing to the terms outlined in the ',
+                          text: '${'driverAcceptDesc'.tr()} ',
                           style: context.textStyle.bodySmallMedium.copyWith(
                             color: AppThemes.borderSideColor,
                           ),
                         ),
                         TextSpan(
-                          text: "Driver's Agreement.".tr(),
+                          text: '${'driversAgreement'.tr()}.',
                           style: context.textStyle.bodySmallMedium.copyWith(
                             color: AppThemes.lightPrimary500,
                           ),
@@ -103,14 +97,16 @@ class _DriverAcceptState extends State<DriverAccept> {
           Row(
             children: [
               Padding(
-                padding: EdgeInsets.only(left: 18),
+                padding: EdgeInsets.only(left: context.responsiveWidth(18)),
                 child: PrimaryButton(
                   context: context,
-                  text: 'Make an Application',
+                  text: 'makeAnApplication'.tr(),
                   height: context.responsiveHeight(54),
                   width: context.responsiveWidth(362),
                   onPressed: () {
-                    NavigationManager.instance.navigationToPage(NavigationConstant.homePage, args: true);
+                    if(_termsCheck) {
+                      // TODO: fatihe sorulacak
+                    }
                   },
                 ),
               ),
