@@ -14,7 +14,9 @@ class PaymentService {
         return 'cardHolderNameError'.tr();
       } else if (model.cardNumber == null || model.cardNumber?.length != 19) {
         return 'cardNumberError'.tr();
-      } else if (model.month == '' || model.year == '' || int.tryParse(model.month.toString())! > 12) {
+      } else if (model.month == '' ||
+          model.year == '' ||
+          int.tryParse(model.month.toString())! > 12) {
         return 'expirationDateError'.tr();
       } else if (model.cvv == '') {
         return 'cvvError'.tr();
@@ -41,14 +43,16 @@ class PaymentService {
 
   Future<String> pay(PaymentModel model) async {
     try {
-      var id = await SessionManager().get('id');
+      String id = await SessionManager().get('id');
       model.uid = id;
-      var response = await NetworkManager.instance.post('/payment', model: model);
+      var response =
+          await NetworkManager.instance.post('/payment', model: model);
       if (response == '') {
         return '';
       }
       return response['message'];
     } catch (e) {
+      print(e);
       return 'paymentError'.tr();
     }
   }
@@ -56,7 +60,8 @@ class PaymentService {
   Future<String> waitPayment(String driverId) async {
     try {
       var request = {'driver_id': driverId};
-      var response = await NetworkManager.instance.post('/drive-request/WaitPayment', data: request);
+      var response = await NetworkManager.instance
+          .post('/drive-request/WaitPayment', data: request);
       if (response == 0) {
         return '';
       }

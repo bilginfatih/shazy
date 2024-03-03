@@ -41,6 +41,22 @@ mixin _$ProfileController on _ProfileControllerBase, Store {
     });
   }
 
+  late final _$emailAtom =
+      Atom(name: '_ProfileControllerBase.email', context: context);
+
+  @override
+  String get email {
+    _$emailAtom.reportRead();
+    return super.email;
+  }
+
+  @override
+  set email(String value) {
+    _$emailAtom.reportWrite(value, super.email, () {
+      super.email = value;
+    });
+  }
+
   late final _$imagePathAtom =
       Atom(name: '_ProfileControllerBase.imagePath', context: context);
 
@@ -138,22 +154,6 @@ mixin _$ProfileController on _ProfileControllerBase, Store {
     });
   }
 
-  late final _$emailAtom =
-      Atom(name: '_ProfileControllerBase.email', context: context);
-
-  @override
-  String get email {
-    _$emailAtom.reportRead();
-    return super.email;
-  }
-
-  @override
-  set email(String value) {
-    _$emailAtom.reportWrite(value, super.email, () {
-      super.email = value;
-    });
-  }
-
   late final _$initAsyncAction =
       AsyncAction('_ProfileControllerBase.init', context: context);
 
@@ -167,13 +167,13 @@ mixin _$ProfileController on _ProfileControllerBase, Store {
     return '''
 commentList: ${commentList},
 description: ${description},
+email: ${email},
 imagePath: ${imagePath},
 isAnotherProfile: ${isAnotherProfile},
 lisanceVertification: ${lisanceVertification},
 name: ${name},
 reviews: ${reviews},
-star: ${star},
-email: ${email}
+star: ${star}
     ''';
   }
 }

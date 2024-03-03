@@ -1,7 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:hive/hive.dart';
 
-import '../init/cache/cache_manager.dart';
 import '../init/models/directions.dart';
 
 class AppInfo extends ChangeNotifier {

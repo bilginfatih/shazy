@@ -36,7 +36,7 @@ class AppTextStyles {
       );
 
   TextStyle get titleSmallMedium => GoogleFonts.poppins(
-        fontSize: _context.mediaQueryData.textScaleFactor * 22,
+        fontSize: _context.responsiveFont(22),
         fontWeight: FontWeight.w500,
       );
 
@@ -92,7 +92,7 @@ class AppTextStyles {
       );
 
   TextStyle get subheadSmallRegular => GoogleFonts.poppins(
-        fontSize: _context.mediaQueryData.textScaleFactor * 14,
+        fontSize: _context.responsiveFont(14),
         fontWeight: FontWeight.w500,
       );
 
@@ -108,7 +108,7 @@ class AppTextStyles {
       );
 
   TextStyle get bodyLargeMedium => GoogleFonts.poppins(
-        fontSize: _context.mediaQueryData.textScaleFactor * 16,
+        fontSize: _context.responsiveFont(16),
         fontWeight: FontWeight.w500,
       );
 
