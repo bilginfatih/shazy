@@ -4,7 +4,6 @@ import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:hexcolor/hexcolor.dart';
-import 'package:shazy/widgets/drawer/custom_drawer.dart';
 import 'controller/profile_controller.dart';
 import '../../utils/extensions/context_extension.dart';
 

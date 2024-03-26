@@ -94,24 +94,18 @@ class _DriverAcceptState extends State<DriverAccept> {
           SizedBox(
             height: context.responsiveHeight(99),
           ),
-          Row(
-            children: [
-              Padding(
-                padding: EdgeInsets.only(left: context.responsiveWidth(18)),
-                child: PrimaryButton(
-                  context: context,
-                  text: 'makeAnApplication'.tr(),
-                  height: context.responsiveHeight(54),
-                  width: context.responsiveWidth(362),
-                  onPressed: () {
-                    if (_termsCheck) {
-                      NavigationManager.instance
-                          .navigationToPage(NavigationConstant.driverLicance);
-                    }
-                  },
-                ),
-              ),
-            ],
+          Center(
+            child: PrimaryButton(
+              context: context,
+              text: 'makeAnApplication'.tr(),
+              height: context.responsiveHeight(54),
+              onPressed: () {
+                if (_termsCheck) {
+                  NavigationManager.instance
+                      .navigationToPage(NavigationConstant.driverLicance);
+                }
+              },
+            ),
           ),
         ],
       ),
