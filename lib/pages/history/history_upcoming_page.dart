@@ -343,7 +343,10 @@ class _HistoryUpcomingPageState extends State<HistoryUpcomingPage> {
                                 ? 'reviewPassenger'.tr()
                                 : '',
                             index,
-                            cancel: true,
+                            cancel: _controller
+                                    .driverList[index].driveModel?.status
+                                    .toString() ==
+                                'Canceled',
                           );
                         },
                       )
@@ -370,7 +373,10 @@ class _HistoryUpcomingPageState extends State<HistoryUpcomingPage> {
                                         ''
                                 ? 'reviewTrip'.tr()
                                 : '',
-                            cancel: true,
+                            cancel: _controller
+                                    .driverList[index].driveModel?.status
+                                    .toString() ==
+                                'Canceled',
                             index,
                           );
                         },
