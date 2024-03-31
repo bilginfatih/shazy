@@ -193,7 +193,7 @@ class _WalletPageState extends State<WalletPage> {
                                 '${_controller.incomeDate[0][index]}',
                                 '${_controller.income[0][index]}₺',
                                 'down');
-                          },
+                          },                                                    
                         )
                       : ListView.builder(
                           itemCount: WalletPage.outgoneLength,
