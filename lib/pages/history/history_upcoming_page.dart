@@ -15,6 +15,7 @@ import '../../widgets/padding/base_padding.dart';
 
 class HistoryUpcomingPage extends StatefulWidget {
   const HistoryUpcomingPage({super.key, this.scaffoldKey});
+
   final GlobalKey<ScaffoldState>? scaffoldKey;
 
   @override
@@ -22,8 +23,8 @@ class HistoryUpcomingPage extends StatefulWidget {
 }
 
 class _HistoryUpcomingPageState extends State<HistoryUpcomingPage> {
-  final _controller = HistoryUpcomingController();
   final TextEditingController _commentTextController = TextEditingController();
+  final _controller = HistoryUpcomingController();
 
   @override
   void initState() {

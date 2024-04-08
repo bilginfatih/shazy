@@ -52,7 +52,7 @@ abstract class _ProfileControllerBase with Store {
   @action
   Future<void> init(BuildContext context, {String? id}) async {
     try {
-      id ??= await _getUserModel();
+      id ??= await SessionManager().get('id') as String;
       if (id != '') {
         await _getUserProfileModel(id);
         commentList = await CommentService.instance.getAntoherUserComment(id);
@@ -124,7 +124,7 @@ abstract class _ProfileControllerBase with Store {
     NavigationManager.instance.navigationToPop();
   }
 
-  Future<String> _getUserModel() async {
+  /*Future<String> _getUserModel() async {
     isAnotherProfile = false;
     UserModel? user = await UserService.instance.getUser();
     if (user != null) {
@@ -133,7 +133,7 @@ abstract class _ProfileControllerBase with Store {
     } else {
       throw Exception();
     }
-  }
+  }*/
 
   Future<void> _getUserProfileModel(String id) async {
     userProfile = await UserService.instance.getAnotherUser(id.toString());

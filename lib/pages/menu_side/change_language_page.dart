@@ -47,7 +47,7 @@ class _ChangeLanguagePageState extends State<ChangeLanguagePage> {
   }
 
   void _setSelectedIndex() async {
-    String sessionCode = await SessionManager().get('lang');
+    String sessionCode = await SessionManager().get('lang') ?? 'en';
     for (var i = 0; i < _languages.length; i++) {
       String langCode = _languages[i].code;
       if (sessionCode == langCode) {

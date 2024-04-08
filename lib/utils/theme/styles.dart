@@ -103,7 +103,7 @@ class AppTextStyles {
       );
 
   TextStyle get bodyLargeRegular => GoogleFonts.poppins(
-        fontSize: _context.mediaQueryData.textScaleFactor * 16,
+        fontSize: _context.responsiveFont(16),
         fontWeight: FontWeight.w500,
       );
 
