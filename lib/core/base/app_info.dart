@@ -1,6 +1,5 @@
 import 'package:flutter/cupertino.dart';
 import 'package:hive/hive.dart';
-
 import '../init/models/caller_home_directions.dart';
 import '../init/models/directions.dart';
 

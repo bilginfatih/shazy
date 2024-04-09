@@ -14,7 +14,7 @@ import '../../widgets/app_bars/back_app_bar.dart';
 import '../../widgets/buttons/secondary_button.dart';
 
 class DriverChoosePage extends StatefulWidget {
-  DriverChoosePage({Key? key}) : super(key: key);
+  const DriverChoosePage({Key? key}) : super(key: key);
 
   @override
   State<DriverChoosePage> createState() => _DriverChoosePageState();

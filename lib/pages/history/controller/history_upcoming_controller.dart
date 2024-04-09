@@ -15,7 +15,7 @@ class HistoryUpcomingController = _HistoryUpcomingControllerBase
 
 abstract class _HistoryUpcomingControllerBase with Store {
   @observable
-  List<HistoryModel> driverList = [];
+  ObservableList<HistoryModel> driverList = ObservableList<HistoryModel>.of([]);
 
   @observable
   bool isDriverSelected = true;
@@ -34,7 +34,8 @@ abstract class _HistoryUpcomingControllerBase with Store {
   @action
   Future<void> init() async {
     passengerList.addAll(await HistoryService.instance.getPassengerHistory());
-    driverList = await HistoryService.instance.getDriverHistory();
+    driverList = ObservableList<HistoryModel>.of(
+        await HistoryService.instance.getDriverHistory());
   }
 
   @action

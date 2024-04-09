@@ -29,15 +29,22 @@ class ProfileEditPage extends StatefulWidget {
 }
 
 class _ProfileEditPageState extends State<ProfileEditPage> {
-  final ProfileController _controller = ProfileController();
-
-  final TextEditingController _nameTextController = TextEditingController();
-
-  final TextEditingController _emailTextController = TextEditingController();
-
   final TextEditingController _aboutYouTextController = TextEditingController();
-
+  final ProfileController _controller = ProfileController();
+  final TextEditingController _emailTextController = TextEditingController();
+  final TextEditingController _nameTextController = TextEditingController();
   final _picker = ImagePicker();
+  final TextEditingController _surnameTextController = TextEditingController();
+
+  @override
+  void initState() {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _controller.userProfile =
+          ModalRoute.of(context)?.settings.arguments as UserProfileModel;
+      setState(() {});
+    });
+    super.initState();
+  }
 
   Future _addImage() async {
     try {
@@ -63,27 +70,6 @@ class _ProfileEditPageState extends State<ProfileEditPage> {
     }
   }
 
-  @override
-  void initState() {
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      _controller.userProfile =
-          ModalRoute.of(context)?.settings.arguments as UserProfileModel;
-      setState(() {});
-    });
-    super.initState();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: BackAppBar(
-        context: context,
-        mainTitle: 'profile'.tr(),
-      ),
-      body: _buildBody(context),
-    );
-  }
-
   SingleChildScrollView _buildBody(BuildContext context) {
     return SingleChildScrollView(
       child: BasePadding(
@@ -95,7 +81,8 @@ class _ProfileEditPageState extends State<ProfileEditPage> {
               height: context.responsiveHeight(30),
             ),
             _buildPhoto(context),
-            _buildFullName(context),
+            _buildName(context),
+            _buildSurname(context),
             _buildEmail(context),
             _buildAboutYou(context),
             SizedBox(
@@ -105,6 +92,21 @@ class _ProfileEditPageState extends State<ProfileEditPage> {
             _buildButtons(context),
           ],
         ),
+      ),
+    );
+  }
+
+  Padding _buildSurname(BuildContext context) {
+    return Padding(
+      padding: EdgeInsets.only(
+        top: context.responsiveHeight(20),
+      ),
+      child: NameTextFormField(
+        hintText: _controller.userProfile?.userModel != null
+            ? _controller.userProfile?.userModel!.surname
+            : 'surname'.tr(),
+        context: context,
+        controller: _surnameTextController,
       ),
     );
   }
@@ -135,15 +137,15 @@ class _ProfileEditPageState extends State<ProfileEditPage> {
     );
   }
 
-  Padding _buildFullName(BuildContext context) {
+  Padding _buildName(BuildContext context) {
     return Padding(
       padding: EdgeInsets.only(
         top: context.responsiveHeight(47),
       ),
       child: NameTextFormField(
         hintText: _controller.userProfile?.userModel != null
-            ? '${_controller.userProfile?.userModel!.name} ${_controller.userProfile?.userModel!.surname}'
-            : 'fullName'.tr(),
+            ? _controller.userProfile?.userModel!.name
+            : 'name'.tr(),
         context: context,
         controller: _nameTextController,
       ),
@@ -204,6 +206,9 @@ class _ProfileEditPageState extends State<ProfileEditPage> {
     String? name = _nameTextController.text == ''
         ? _controller.userProfile?.userModel!.name
         : _nameTextController.text;
+    String? surname = _surnameTextController.text == ''
+        ? _controller.userProfile?.userModel!.surname
+        : _surnameTextController.text;
     String? email = _emailTextController.text == ''
         ? _controller.userProfile?.userModel!.email
         : _emailTextController.text;
@@ -214,6 +219,7 @@ class _ProfileEditPageState extends State<ProfileEditPage> {
       description: description,
       userModel: UserModel(
         name: name,
+        surname: surname,
         email: email,
       ),
     );
@@ -224,5 +230,16 @@ class _ProfileEditPageState extends State<ProfileEditPage> {
     return Image.network(path,
         errorBuilder: (context, exception, stackTrack) =>
             Image.asset('assets/png/no_data.png'));
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: BackAppBar(
+        context: context,
+        mainTitle: 'profile'.tr(),
+      ),
+      body: _buildBody(context),
+    );
   }
 }

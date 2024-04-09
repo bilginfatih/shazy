@@ -15,6 +15,7 @@ import '../../widgets/padding/base_padding.dart';
 
 class HistoryUpcomingPage extends StatefulWidget {
   const HistoryUpcomingPage({super.key, this.scaffoldKey});
+
   final GlobalKey<ScaffoldState>? scaffoldKey;
 
   @override
@@ -22,8 +23,8 @@ class HistoryUpcomingPage extends StatefulWidget {
 }
 
 class _HistoryUpcomingPageState extends State<HistoryUpcomingPage> {
-  final _controller = HistoryUpcomingController();
   final TextEditingController _commentTextController = TextEditingController();
+  final _controller = HistoryUpcomingController();
 
   @override
   void initState() {
@@ -343,7 +344,10 @@ class _HistoryUpcomingPageState extends State<HistoryUpcomingPage> {
                                 ? 'reviewPassenger'.tr()
                                 : '',
                             index,
-                            cancel: true,
+                            cancel: _controller
+                                    .driverList[index].driveModel?.status
+                                    .toString() ==
+                                'Canceled',
                           );
                         },
                       )
@@ -370,7 +374,10 @@ class _HistoryUpcomingPageState extends State<HistoryUpcomingPage> {
                                         ''
                                 ? 'reviewTrip'.tr()
                                 : '',
-                            cancel: true,
+                            cancel: _controller
+                                    .driverList[index].driveModel?.status
+                                    .toString() ==
+                                'Canceled',
                             index,
                           );
                         },

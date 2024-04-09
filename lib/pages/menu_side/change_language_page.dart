@@ -12,11 +12,11 @@ import '../../widgets/buttons/primary_button.dart';
 import '../../widgets/padding/base_padding.dart';
 
 class Language {
+  Language({required this.flag, required this.name, required this.code});
+
+  final String code;
   final String flag;
   final String name;
-  final String code;
-
-  Language({required this.flag, required this.name, required this.code});
 }
 
 class ChangeLanguagePage extends StatefulWidget {
@@ -27,28 +27,35 @@ class ChangeLanguagePage extends StatefulWidget {
 }
 
 class _ChangeLanguagePageState extends State<ChangeLanguagePage> {
-  final List<Language> _languages = [
-    Language(flag: '🇬🇧', name: 'United Kingdom', code: 'en'),
-    Language(flag: '🇮🇳', name: 'India', code: 'hi'),
-    Language(flag: '🇸🇦', name: 'Saudi Arabia', code: 'ar'),
-    Language(flag: '🇫🇷', name: 'France', code: 'fr'),
-    Language(flag: '🇩🇪', name: 'Germany', code: 'de'),
-    Language(flag: '🇵🇹', name: 'Portugal', code: 'pt'),
-    Language(flag: '🇹🇷', name: 'Turkey', code: 'tr'),
-    Language(flag: '🇳🇱', name: 'Netherlands', code: 'nl'),
-  ];
-
+  late final List<Language> _languages;
   int _selectedLanguageIndex = 0;
 
   @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: BackAppBar(
-        context: context,
-        mainTitle: 'changeLanguage'.tr(),
-      ),
-      body: _buildBody(context),
-    );
+  void initState() {
+    _languages = [
+      Language(flag: '🇬🇧', name: 'United Kingdom', code: 'en'),
+      Language(flag: '🇮🇳', name: 'India', code: 'hi'),
+      Language(flag: '🇸🇦', name: 'Saudi Arabia', code: 'ar'),
+      Language(flag: '🇫🇷', name: 'France', code: 'fr'),
+      Language(flag: '🇩🇪', name: 'Germany', code: 'de'),
+      Language(flag: '🇵🇹', name: 'Portugal', code: 'pt'),
+      Language(flag: '🇹🇷', name: 'Turkey', code: 'tr'),
+      Language(flag: '🇳🇱', name: 'Netherlands', code: 'nl'),
+    ];
+    _setSelectedIndex();
+    super.initState();
+  }
+
+  void _setSelectedIndex() async {
+    String sessionCode = await SessionManager().get('lang') ?? 'en';
+    for (var i = 0; i < _languages.length; i++) {
+      String langCode = _languages[i].code;
+      if (sessionCode == langCode) {
+        _selectedLanguageIndex = i;
+        setState(() {});
+        break;
+      }
+    }
   }
 
   BasePadding _buildBody(BuildContext context) {
@@ -137,6 +144,17 @@ class _ChangeLanguagePageState extends State<ChangeLanguagePage> {
                 ),
         ),
       ),
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: BackAppBar(
+        context: context,
+        mainTitle: 'changeLanguage'.tr(),
+      ),
+      body: _buildBody(context),
     );
   }
 }

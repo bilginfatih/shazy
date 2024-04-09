@@ -1,5 +1,8 @@
+import 'dart:ui';
+
 import 'package:easy_localization/easy_localization.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:hive_flutter/adapters.dart';
@@ -12,11 +15,11 @@ import 'core/init/language/language_manager.dart';
 import 'core/init/navigation/navigation_manager.dart';
 import 'core/init/navigation/navigation_route_manager.dart';
 import 'utils/theme/themes.dart';
-    
+
 void main() async {
   await _init();
     runApp(EasyLocalization(
-     supportedLocales: LanguageManager.instance.supportedLocales,
+      supportedLocales: LanguageManager.instance.supportedLocales,
       startLocale: LanguageManager.instance.enLocale,
       fallbackLocale: LanguageManager.instance.enLocale,
       path: 'assets/translations',
@@ -27,6 +30,11 @@ void main() async {
 _init() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
+  FlutterError.onError = FirebaseCrashlytics.instance.recordFlutterFatalError;
+  PlatformDispatcher.instance.onError = (error, stack) {
+    FirebaseCrashlytics.instance.recordError(error, stack, fatal: true);
+    return true;
+  };
   await FirebaseNotificationManager.instance.init();
   await Hive.initFlutter();
   await Hive.openBox<int>('countdownBox'); // canceldrive geri sayım

@@ -85,11 +85,11 @@ class UserService {
     return null;
   }
 
-  Future<UserModel?> getUser() async {
+  Future<UserModel?> getUser({String id = ''}) async {
     try {
       UserModel model = UserModel();
-      model =
-          await NetworkManager.instance.get<UserModel>('/user', model: model);
+      model = await NetworkManager.instance
+          .get<UserModel>('/user$id', model: model);
       return model;
     } catch (e) {
       rethrow;

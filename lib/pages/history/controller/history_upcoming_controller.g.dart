@@ -13,13 +13,13 @@ mixin _$HistoryUpcomingController on _HistoryUpcomingControllerBase, Store {
       Atom(name: '_HistoryUpcomingControllerBase.driverList', context: context);
 
   @override
-  List<HistoryModel> get driverList {
+  ObservableList<HistoryModel> get driverList {
     _$driverListAtom.reportRead();
     return super.driverList;
   }
 
   @override
-  set driverList(List<HistoryModel> value) {
+  set driverList(ObservableList<HistoryModel> value) {
     _$driverListAtom.reportWrite(value, super.driverList, () {
       super.driverList = value;
     });

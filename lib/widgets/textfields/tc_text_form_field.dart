@@ -11,6 +11,7 @@ class TcTextFormField extends TextFormField {
   }) : super(
           key: key,
           controller: controller,
+          keyboardType: TextInputType.number,
           decoration: InputDecoration(
             hintText: 'TC',
             hintStyle: context.textStyle.subheadLargeMedium.copyWith(

@@ -63,7 +63,7 @@ class AddCard extends StatelessWidget {
         SizedBox(
           width: context.responsiveWidth(6),
         ),
-        _buildLimitDigitTextFormField(context, _yearController, 'year'.tr(), 4),
+        _buildLimitDigitTextFormField(context, _yearController, 'year'.tr(), 2),
         SizedBox(
           width: context.responsiveWidth(6),
         ),

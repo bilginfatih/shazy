@@ -27,6 +27,9 @@ abstract class _ProfileControllerBase with Store {
   String description = '';
 
   @observable
+  String email = '';
+
+  @observable
   String imagePath = '';
 
   @observable
@@ -44,15 +47,12 @@ abstract class _ProfileControllerBase with Store {
   @observable
   String star = '0.0';
 
-  @observable
-  String email = '';
-
   UserProfileModel? userProfile;
 
   @action
   Future<void> init(BuildContext context, {String? id}) async {
     try {
-      id ??= await _getUserModel();
+      id ??= await SessionManager().get('id') as String;
       if (id != '') {
         await _getUserProfileModel(id);
         commentList = await CommentService.instance.getAntoherUserComment(id);
@@ -70,7 +70,61 @@ abstract class _ProfileControllerBase with Store {
     }
   }
 
-  Future<String> _getUserModel() async {
+  Future<void> updateUserProfile(
+      BuildContext context, UserProfileModel model) async {
+    try {
+      String? email = await CacheManager.instance.getData('user', 'email');
+      var id = await SessionManager().get('id');
+      String? responseRegiserControl;
+      if (email != model.userModel?.email) {
+        responseRegiserControl = await UserService.instance
+            .registerControl(UserModel(email: model.userModel?.email));
+        if (responseRegiserControl != null &&
+            responseRegiserControl != '200' &&
+            context.mounted) {
+          HelperFunctions.instance.showErrorDialog(
+              context, responseRegiserControl, 'backHome'.tr(), () {
+            NavigationManager.instance
+                .navigationToPageClear(NavigationConstant.homePage);
+          });
+        }
+      }
+      var responseUpdateUser = await NetworkManager.instance
+          .put('/user/$id', model: model.userModel);
+
+      CacheManager.instance
+          .putData('user', 'email', model.userModel!.email.toString());
+      CacheManager.instance.putData('user', 'name',
+          '${model.userModel?.name} ${model.userModel?.surname.toString()[0]}.');
+      var responseUpdateUserProfile = await NetworkManager.instance.put(
+          '/user-profile/$id',
+          model: UserProfileModel(description: model.description ?? ''));
+      if (context.mounted) {
+        await init(context);
+      }
+      NavigationManager.instance.navigationToPop();
+    } catch (e) {
+      print(e);
+      if (context.mounted) {
+        HelperFunctions.instance.showErrorDialog(
+            context, 'updateProfileError'.tr(), 'backHome'.tr(), () {
+          NavigationManager.instance
+              .navigationToPageClear(NavigationConstant.homePage);
+        });
+      }
+    }
+  }
+
+  void goToEditPage() {
+    NavigationManager.instance
+        .navigationToPage(NavigationConstant.profileEdit, args: userProfile);
+  }
+
+  void goToBackPage() {
+    NavigationManager.instance.navigationToPop();
+  }
+
+  /*Future<String> _getUserModel() async {
     isAnotherProfile = false;
     UserModel? user = await UserService.instance.getUser();
     if (user != null) {
@@ -79,7 +133,7 @@ abstract class _ProfileControllerBase with Store {
     } else {
       throw Exception();
     }
-  }
+  }*/
 
   Future<void> _getUserProfileModel(String id) async {
     userProfile = await UserService.instance.getAnotherUser(id.toString());
@@ -102,59 +156,5 @@ abstract class _ProfileControllerBase with Store {
     if (description == 'null') {
       description = '';
     }
-  }
-
-  Future<void> updateUserProfile(
-      BuildContext context, UserProfileModel model) async {
-    try {
-      String? email = await CacheManager.instance.getData('user', 'email');
-      var id = await SessionManager().get('id');
-      String? responseRegiserControl;
-      if (email != model.userModel?.email) {
-        responseRegiserControl = await UserService.instance
-            .registerControl(UserModel(email: model.userModel?.email));
-        if (responseRegiserControl != null) {
-          if (context.mounted) {
-            HelperFunctions.instance.showErrorDialog(
-                context, responseRegiserControl, 'backHome'.tr(), () {
-              NavigationManager.instance
-                  .navigationToPageClear(NavigationConstant.homePage);
-            });
-          }
-        }
-      }
-      var responseUpdateUser = await NetworkManager.instance
-          .put('/user/$id', model: model.userModel);
-      if (responseUpdateUser != 200) {
-        throw Exception();
-      }
-      CacheManager.instance
-          .putData('user', 'email', model.userModel!.email.toString());
-      CacheManager.instance.putData('user', 'name',
-          '${model.userModel?.name} ${model.userModel?.surname.toString()[0]}.');
-      /*var responseUpdateUserProfile = await NetworkManager.instance.put(
-          '/user-profile/$id',
-          model: UserProfileModel(description: model.description ?? ''));*/
-      if (context.mounted) {
-        init(context);
-      }
-    } catch (e) {
-      if (context.mounted) {
-        HelperFunctions.instance.showErrorDialog(
-            context, 'updateProfileError'.tr(), 'backHome'.tr(), () {
-          NavigationManager.instance
-              .navigationToPageClear(NavigationConstant.homePage);
-        });
-      }
-    }
-  }
-
-  void goToEditPage() {
-    NavigationManager.instance
-        .navigationToPage(NavigationConstant.profileEdit, args: userProfile);
-  }
-
-  void goToBackPage() {
-    NavigationManager.instance.navigationToPop();
   }
 }

@@ -15,22 +15,35 @@ class DriveModel extends BaseModel {
     this.status,
   });
 
-  DriveModel._fromJson(o);
-
-  String? driverId;
-  double? fromLat;
-  double? fromLang;
-  double? toLat;
-  double? toLang;
-  String? timeFrom;
-  String? timeTo;
-  String? callerId;
-  double? driverLat;
-  double? driverLang;
-  String? status;
+  DriveModel._fromJson(o) {
+    driverId = o['driver_id'];
+    callerId = o['caller_id'];
+    status = o['status'];
+    driverLat = double.tryParse(o['driver_lat']);
+    driverLang = double.tryParse(o['driver_lang']);
+    fromLat = double.tryParse(o['from_lat']);
+    fromLang = double.tryParse(o['from_lang']);
+    toLat = double.tryParse(o['to_lat']);
+    toLang = double.tryParse(o['to_lang']);
+    timeFrom = o['time_from'];
+    timeTo = o['time_to'];
+  }
 
   @override
   fromJson(json) => DriveModel._fromJson(json);
+
+  String? callerId;
+  String? driverId;
+  double? driverLang;
+  double? driverLat;
+  double? fromLang;
+  double? fromLat;
+  String? status;
+  String? timeFrom;
+  String? timeTo;
+  double? toLang;
+  double? toLat;
+
   @override
   Map<String, dynamic> toJson() {
     Map<String, dynamic> map = {};

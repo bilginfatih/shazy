@@ -4,7 +4,6 @@ import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:hexcolor/hexcolor.dart';
-import 'package:shazy/widgets/drawer/custom_drawer.dart';
 import 'controller/profile_controller.dart';
 import '../../utils/extensions/context_extension.dart';
 
@@ -30,7 +29,8 @@ class _ProfilePageState extends State<ProfilePage> {
     super.initState();
   }
 
-  Padding _buildCommentContainer(BuildContext context, String imagePath, String text1, String text2, double rating) {
+  Padding _buildCommentContainer(BuildContext context, String imagePath,
+      String text1, String text2, double rating) {
     return Padding(
       padding: const EdgeInsets.only(bottom: 16),
       child: Container(
@@ -62,7 +62,10 @@ class _ProfilePageState extends State<ProfilePage> {
                 children: [
                   Text(
                     text1,
-                    style: context.textStyle.subheadSmallRegular.copyWith(color: context.isLight ? HexColor('#121212') : Colors.white),
+                    style: context.textStyle.subheadSmallRegular.copyWith(
+                        color: context.isLight
+                            ? HexColor('#121212')
+                            : Colors.white),
                   ),
                   SizedBox(
                     height: context.responsiveHeight(6),
@@ -86,7 +89,11 @@ class _ProfilePageState extends State<ProfilePage> {
                       maxLines: 4,
                       overflow: TextOverflow.ellipsis,
                       text2,
-                      style: context.textStyle.bodySmallRegular.copyWith(fontSize: 9, color: context.isLight ? HexColor('#5A5A5A') : Colors.white),
+                      style: context.textStyle.bodySmallRegular.copyWith(
+                          fontSize: 9,
+                          color: context.isLight
+                              ? HexColor('#5A5A5A')
+                              : Colors.white),
                     ),
                   ),
                 ],
@@ -139,8 +146,13 @@ class _ProfilePageState extends State<ProfilePage> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                _controller.name,
-                style: context.textStyle.titleLargeMedium.copyWith(color: context.isLight ? HexColor("#5A5A5A") : Colors.white),
+                _controller.name == '' ? 'fullName'.tr() : _controller.name,
+                softWrap: false,
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                style: context.textStyle.titleLargeMedium.copyWith(
+                    color:
+                        context.isLight ? HexColor("#5A5A5A") : Colors.white),
               ),
               SizedBox(
                 height: context.responsiveHeight(4),
@@ -166,7 +178,8 @@ class _ProfilePageState extends State<ProfilePage> {
                   SizedBox(
                     width: context.responsiveWidth(6.4),
                   ),
-                  _buildProfileColumn(_controller.star, 'rating'.tr(), context.isLight),
+                  _buildProfileColumn(
+                      _controller.star, 'rating'.tr(), context.isLight),
                   SizedBox(
                     width: context.responsiveWidth(23.87),
                   ),
@@ -178,7 +191,8 @@ class _ProfilePageState extends State<ProfilePage> {
                   SizedBox(
                     width: context.responsiveWidth(25),
                   ),
-                  _buildProfileColumn(_controller.reviews, 'reviews'.tr(), context.isLight),
+                  _buildProfileColumn(
+                      _controller.reviews, 'reviews'.tr(), context.isLight),
                 ],
               ),
             ],
@@ -319,7 +333,8 @@ class _ProfilePageState extends State<ProfilePage> {
         scaffoldKey: widget.scaffoldKey,
         title: Text(
           'profile'.tr(),
-          style: TextStyle(color: context.isLight ? Colors.black : Colors.white),
+          style:
+              TextStyle(color: context.isLight ? Colors.black : Colors.white),
         ),
       ),
       body: _buildBody(context),
