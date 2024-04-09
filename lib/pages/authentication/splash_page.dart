@@ -47,7 +47,7 @@ class _SplashPageState extends State<SplashPage> {
 
   Future<void> _setLang() async {
     String? lang = await CacheManager.instance.getData('user', 'lang');
-    if (lang != null && lang != 'en' && context.mounted) {
+    if (lang != null && lang != 'en' && mounted) {
       await context.setLocale(Locale(lang));
       await SessionManager().set('lang', lang);
     }
