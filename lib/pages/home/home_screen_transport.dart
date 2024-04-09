@@ -1,19 +1,17 @@
 import 'dart:async';
+import 'dart:io';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_polyline_points/flutter_polyline_points.dart';
 import 'package:flutter_session_manager/flutter_session_manager.dart';
 import 'package:geolocator/geolocator.dart';
-
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:hexcolor/hexcolor.dart';
-import 'package:permission_handler/permission_handler.dart';
-import 'package:permission_handler/permission_handler.dart' as ph;
 import 'package:provider/provider.dart';
-import 'package:shazy/widgets/app_bars/custom_app_bar.dart';
 import 'package:url_launcher/url_launcher.dart';
 import '../../core/assistants/asistant_methods.dart';
 import '../../core/base/app_info.dart';
+import '../../core/init/models/caller_home_directions.dart';
 import '../../core/init/navigation/navigation_manager.dart';
 import '../../core/init/network/network_manager.dart';
 import '../../models/cancel_reason/cancel_reason_model.dart';
@@ -55,6 +53,11 @@ class HomeScreenTransport extends StatefulWidget {
 }
 
 class _HomeScreenTransportState extends State<HomeScreenTransport> with TickerProviderStateMixin, WidgetsBindingObserver {
+  Timer _timer = Timer(Duration(milliseconds: 1), () {});
+  Timer _timerSearchDriver = Timer(const Duration(milliseconds: 1), () {});
+
+  CallerHomeDirections callerHomeDirections = CallerHomeDirections();
+
   String mapTheme = '';
   final Completer<GoogleMapController> _controller = Completer<GoogleMapController>();
   GoogleMapController? newGoogleMapController;
@@ -65,11 +68,11 @@ class _HomeScreenTransportState extends State<HomeScreenTransport> with TickerPr
 
   final Uri toLaunch = Uri(scheme: 'https', host: 'www.google.com', path: '/maps/@/data=!4m2!7m1!2e1');
 
-  String? fiveDigitSecurityCode;
+  //String? fiveDigitSecurityCode;
 
   _onVerificationCodeChanged(String? newCode) {
     setState(() {
-      fiveDigitSecurityCode = newCode;
+      callerHomeDirections.five_security_code = newCode;
     });
   }
 
@@ -81,22 +84,14 @@ class _HomeScreenTransportState extends State<HomeScreenTransport> with TickerPr
 
   List<LatLng> pLineCoOrdinatesList = [];
   Set<Polyline> polyLineSet = {};
-  Timer _timer = Timer(Duration(milliseconds: 1), () {});
-  Timer _timerSearchDriver = Timer(Duration(milliseconds: 1), () {});
+
   Set<Marker> markersSet = {};
 
-  late double driverAvaragePoint = 0.0;
-  late String driverName = '';
-  late String driverSurname = '';
-  late String driverPicturePath = '';
-
   Position? userCurrentPosition;
-  var geoLocator = Geolocator();
 
   locateUserPosition() async {
     Position cPosition = await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
     userCurrentPosition = cPosition;
-
     LatLng latLngPosition = LatLng(userCurrentPosition!.latitude, userCurrentPosition!.longitude);
 
     CameraPosition cameraPosition = CameraPosition(target: latLngPosition, zoom: 14);
@@ -180,43 +175,43 @@ class _HomeScreenTransportState extends State<HomeScreenTransport> with TickerPr
   }
 
   Future<void> isMatched() async {
+    var directionsDetails = Provider.of<AppInfo>(context, listen: false).callerDropOffLocation;
     try {
       String userId = await SessionManager().get('id');
-      String id = "/drive-request/caller/$userId/matched";
+      String id = "/drive-request/caller/$userId/${directionsDetails!.caller_status}";
       var requestId = await NetworkManager.instance.get(id);
 
-      var statusId = requestId[0]["id"];
+      callerHomeDirections.drive_id = requestId[0]["id"];
+      callerHomeDirections.driver_id = requestId[0]["driver_id"];
 
-      String driverId = requestId[0]["driver_id"];
+      UserProfileModel? userProfile = await UserService.instance.getAnotherUser(callerHomeDirections.driver_id.toString());
+      callerHomeDirections.driver_avarage_point = userProfile!.averagePoint!;
+      callerHomeDirections.driver_name = userProfile.userModel!.name!;
+      callerHomeDirections.driver_surname = userProfile.userModel!.surname!;
+      callerHomeDirections.driver_picture_path = userProfile.profilePicturePath!;
 
-      UserProfileModel? userProfile = await UserService.instance.getAnotherUser(driverId);
-      driverAvaragePoint = userProfile!.averagePoint!;
-      driverName = userProfile.userModel!.name!;
-      driverSurname = userProfile.userModel!.surname!;
-      driverPicturePath = userProfile.profilePicturePath!;
-
-      requestId2 = statusId;
-      if (requestId2 != '') {
+      if (callerHomeDirections.drive_id != '') {
+        // 2. cache
+        Provider.of<AppInfo>(context, listen: false).callerDropOffLocationCache(callerHomeDirections);
         _timerSearchDriver.cancel();
         startSendingRequests();
       }
-      print('requestId2: ' + requestId2);
     } catch (e) {}
   }
 
   Future<void> sendRequest() async {
+    var directionsDetails = Provider.of<AppInfo>(context, listen: false).callerDropOffLocation;
     try {
-      String apiUrl = "/drive-request/$requestId2";
-      print('url: ' + apiUrl);
+      String apiUrl = "/drive-request/${directionsDetails?.drive_id}";
 
       var requestResponse = await NetworkManager.instance.get(apiUrl);
 
       if (requestResponse != null) {
-        HomeScreenTransport.status = requestResponse["status"];
+        directionsDetails?.caller_status = requestResponse["status"];
 
-        print('status: ' + HomeScreenTransport.status);
+        print('status: ' + directionsDetails!.caller_status.toString());
 
-        if (HomeScreenTransport.status == 'accept' && HomeScreenTransport.flagAccept == 0) {
+        if (directionsDetails.caller_status == 'accept' && HomeScreenTransport.flagAccept == 0) {
           HomeScreenTransport.flagAccept = 1;
 
           String userId = await SessionManager().get('id');
@@ -225,22 +220,24 @@ class _HomeScreenTransportState extends State<HomeScreenTransport> with TickerPr
           var statusSecurityCode = requestSecurityCode["security-code"]["caller"];
 
           List<String> callerParts = statusSecurityCode.split(',');
-          String? secondPart = callerParts.length > 1 ? callerParts[1] : null;
-          fiveDigitSecurityCode = secondPart;
+          callerHomeDirections.five_security_code = callerParts.length > 1 ? callerParts[1] : null;
 
-          _onVerificationCodeChanged(secondPart);
+          _onVerificationCodeChanged(callerHomeDirections.five_security_code);
+          Provider.of<AppInfo>(context, listen: false).callerDropOffLocationCache(callerHomeDirections);
+          NavigationManager.instance.navigationToPop();
           _showCallerBottomSheet(0);
 
           //_timer.cancel();
           HomeScreenTransport.isAccept = true;
           // ignore: use_build_context_synchronously
-          NavigationManager.instance.navigationToPop();
+
           //startSendingRequestsStatus();
 
           // ignore: use_build_context_synchronously
-        } else if (HomeScreenTransport.status == 'driving' && HomeScreenTransport.flagDriving == 0) {
+        } else if (directionsDetails.caller_status == 'driving' && HomeScreenTransport.flagDriving == 0) {
           HomeScreenTransport.flagDriving = 1;
           HomeScreenTransport.isAccept = true;
+          Provider.of<AppInfo>(context, listen: false).callerDropOffLocationCache(callerHomeDirections);
           // ignore: use_build_context_synchronously
 
           _bottomSheetControllers[0].reverse();
@@ -249,9 +246,12 @@ class _HomeScreenTransportState extends State<HomeScreenTransport> with TickerPr
           //_timerStatus.cancel();
 
           // ignore: use_build_context_synchronously
-        } else if (HomeScreenTransport.status == 'waitpayment' && HomeScreenTransport.flagWaitPayment == 0) {
+        } else if (directionsDetails.caller_status == 'waitpayment' && HomeScreenTransport.flagWaitPayment == 0) {
           HomeScreenTransport.flagWaitPayment = 1;
           HomeScreenTransport.isAccept = false;
+          Provider.of<AppInfo>(context, listen: false).callerDropOffLocationCache(callerHomeDirections);
+
+          _timer.cancel();
           // ignore: use_build_context_synchronously
 
           _bottomSheetControllers[1].reverse();
@@ -260,10 +260,11 @@ class _HomeScreenTransportState extends State<HomeScreenTransport> with TickerPr
           //_timerStatus.cancel();
 
           // ignore: use_build_context_synchronously
-        } else if (HomeScreenTransport.status == 'canceled' && HomeScreenTransport.flagCanceled == 0) {
+        } else if (directionsDetails.caller_status == 'canceled' && HomeScreenTransport.flagCanceled == 0) {
           HomeScreenTransport.flagCanceled = 1;
           HomeScreenTransport.isAccept = false;
           HomeScreenTransport.allowNavigation = true;
+          Provider.of<AppInfo>(context, listen: false).callerDropOffLocationCache(callerHomeDirections);
           // ignore: use_build_context_synchronously
 
           _showCallerBottomSheet(0);
@@ -295,12 +296,13 @@ class _HomeScreenTransportState extends State<HomeScreenTransport> with TickerPr
   }
 
   void _showCallerBottomSheet(int index) {
+    var directionsDetails = Provider.of<AppInfo>(context, listen: false).callerDropOffLocation;
     if (mounted) {
       var controller = _bottomSheetControllers[index];
       controller.forward();
       setState(
         () {
-          if (HomeScreenTransport.status == 'accept') {
+          if (directionsDetails!.caller_status == 'accept') {
             //HomeScreenTransport.isMatched = true;
           } else {
             _bottomSheetControllers[0].reverse();
@@ -312,6 +314,8 @@ class _HomeScreenTransportState extends State<HomeScreenTransport> with TickerPr
   }
 
   Widget _buildCallerBottomSheetContent(int index, BuildContext context) {
+    var directionsDetails2 = Provider.of<AppInfo>(context, listen: false).userDropOffLocation;
+    var directionsDetails = Provider.of<AppInfo>(context, listen: false).callerDropOffLocation;
     double size = 0.6;
     if (index == 0) {
       size = context.height < 620 ? 0.73 : 0.65;
@@ -334,7 +338,7 @@ class _HomeScreenTransportState extends State<HomeScreenTransport> with TickerPr
               shareMyTripText: index == 1 ? 'shareMyTrip'.tr() : '',
               showAnathorBuild: index == 0 ? true : false,
               shareButtonTapped: index == 1
-                  ? () {
+                  ? () async {
                       setState(() {
                         _launchInBrowser(toLaunch);
                       });
@@ -342,15 +346,13 @@ class _HomeScreenTransportState extends State<HomeScreenTransport> with TickerPr
                   : () {},
               context: context,
               pickingUpText: index == 0 ? 'Meeting Time 10:10' : 'tripToDestionation',
-              customerName: '$driverName $driverSurname',
+              customerName: '${directionsDetails?.driver_name} ${directionsDetails?.driver_surname}',
               imagePath: "https://randomuser.me/api/portraits/men/93.jpg",
               /*'$baseUrl/$driverPicturePath',*/
-              startText: driverAvaragePoint.toString(),
+              startText: directionsDetails?.driver_avarage_point.toString() ?? '',
               paymentText: 'paymentMethod'.tr(),
-              totalPaymentText: Provider.of<AppInfo>(context, listen: false).userDropOffLocation != null
-                  ? "${Provider.of<AppInfo>(context, listen: false).userDropOffLocation!.totalPayment.toString()}₺"
-                  : 'null',
-              verificationCodeText: fiveDigitSecurityCode.toString(),
+              totalPaymentText: "${directionsDetails2?.totalPayment.toString()}₺",
+              verificationCodeText: directionsDetails?.five_security_code.toString() ?? '',
               onPressedCancel: () async {
                 NavigationManager.instance.navigationToPage(NavigationConstant.cancelRide);
               },
@@ -376,41 +378,6 @@ class _HomeScreenTransportState extends State<HomeScreenTransport> with TickerPr
   }
 
   int flag = 0;
-
-  // İzinleri kontrol eden fonksiyon
-  Future<void> _getLocationPermission() async {
-    ph.PermissionStatus status = await Permission.locationWhenInUse.request();
-    if (status.isGranted) {
-      print('Lokasyon izni verildi.');
-    } else if (status.isDenied) {
-      print('Lokasyon izni verilmedi.');
-    } else if (status.isPermanentlyDenied) {
-      print('Lokasyon izni kalıcı olarak rededildi.');
-      //_showPermissionSettingsDialog(); // Ayarlara gitme işlemi için fonksiyonu çağır
-    }
-  }
-
-  // Ayarlara gitme işlemi için bir diyalog gösteren fonksiyon
-  void _showPermissionSettingsDialog() {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: Text('Lokasyon İzinleri'),
-          content: Text('Uygulamanın konum izni gerektiği için ayarlara gitmek istiyor musunuz?'),
-          actions: [
-            TextButton(
-              onPressed: () {
-                ph.openAppSettings(); // Ayarlara gitmek için izinleri ayarlar
-                NavigationManager.instance.navigationToPop();
-              },
-              child: const Text('Ayarlara Git'),
-            ),
-          ],
-        );
-      },
-    );
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -447,8 +414,8 @@ class _HomeScreenTransportState extends State<HomeScreenTransport> with TickerPr
                   locateUserPosition();
                 },
                 myLocationEnabled: true,
-                //padding: EdgeInsets.only(bottom: 230),
-                myLocationButtonEnabled: false,
+                padding: Platform.isIOS ? EdgeInsets.only(bottom: 230) : EdgeInsets.only(top: 100),
+                myLocationButtonEnabled: true,
                 zoomControlsEnabled: false,
                 polylines: polyLineSet,
                 markers: markersSet,
@@ -540,7 +507,7 @@ class _HomeScreenTransportState extends State<HomeScreenTransport> with TickerPr
                                             decoration: const BoxDecoration(),
                                           ),
                                           hintText: Provider.of<AppInfo>(context).userDropOffLocation != null
-                                              ? Provider.of<AppInfo>(context).userDropOffLocation!.locationName
+                                              ? Provider.of<AppInfo>(context).userDropOffLocation!.endLocationName
                                               : 'whereWouldGo'.tr(),
                                           hintStyle: context.textStyle.subheadLargeMedium.copyWith(
                                             color: AppThemes.hintTextNeutral,
@@ -636,10 +603,9 @@ class _HomeScreenTransportState extends State<HomeScreenTransport> with TickerPr
   }
 
   Future<void> drawPolyLineFromOriginToDestination() async {
-    var originPosition = Provider.of<AppInfo>(context, listen: false).userPickUpLocation;
     var destinationPosition = Provider.of<AppInfo>(context, listen: false).userDropOffLocation;
-    var originLatLng = LatLng(originPosition!.locationLatitude!, originPosition.locationLongitude!);
-    var destinationLatLng = LatLng(destinationPosition!.locationLatitude!, destinationPosition.locationLongitude!);
+    var originLatLng = LatLng(destinationPosition!.currentLocationLatitude!, destinationPosition.currentLocationLongitude!);
+    var destinationLatLng = LatLng(destinationPosition.endLocationLatitude!, destinationPosition.endLocationLongitude!);
 
     PolylinePoints pPoints = PolylinePoints();
     List<PointLatLng> decodedPolyLinePointsResultList = pPoints.decodePolyline(destinationPosition.e_points.toString());
@@ -687,14 +653,14 @@ class _HomeScreenTransportState extends State<HomeScreenTransport> with TickerPr
 
     Marker originMarker = Marker(
       markerId: const MarkerId("originID"),
-      infoWindow: InfoWindow(title: originPosition.locationName, snippet: destinationPosition.distance_text),
+      infoWindow: InfoWindow(title: destinationPosition.currentLocationName, snippet: destinationPosition.distance_text),
       position: originLatLng,
       icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueYellow),
     );
 
     Marker destinationMarker = Marker(
       markerId: const MarkerId("destinationID"),
-      infoWindow: InfoWindow(title: destinationPosition.locationName, snippet: destinationPosition.duration_text),
+      infoWindow: InfoWindow(title: destinationPosition.endLocationName, snippet: destinationPosition.duration_text),
       position: destinationLatLng,
       icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueOrange),
     );
@@ -713,9 +679,13 @@ class _HomeScreenTransportState extends State<HomeScreenTransport> with TickerPr
     SearchDistanceModel model = SearchDistanceModel(
       fromLat: cPosition.latitude,
       fromLang: cPosition.longitude,
-      toLat: destinationPosition!.locationLatitude,
-      toLang: destinationPosition.locationLongitude,
+      toLat: destinationPosition!.endLocationLatitude,
+      toLang: destinationPosition.endLocationLongitude,
     );
+    // caller sürüş bulduğunda statüsü matched olarak cache
+    callerHomeDirections.caller_status = 'matched';
+    // 1. cache
+    Provider.of<AppInfo>(context, listen: false).callerDropOffLocationCache(callerHomeDirections);
 
     await _searchDistanceService.searchDistance(model);
     isMatched();

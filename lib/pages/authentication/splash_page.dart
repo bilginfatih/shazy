@@ -1,6 +1,10 @@
+import 'dart:io';
+
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_session_manager/flutter_session_manager.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:shazy/services/user/user_identity_service.dart';
 import '../../utils/extensions/context_extension.dart';
 
@@ -19,6 +23,7 @@ class SplashPage extends StatefulWidget {
 }
 
 class _SplashPageState extends State<SplashPage> {
+  late PermissionStatus status;
   @override
   void initState() {
     super.initState();
@@ -26,22 +31,20 @@ class _SplashPageState extends State<SplashPage> {
   }
 
   Future<void> _init() async {
+    Platform.isAndroid ? _requestLocationPermission() : null;
     String? email = await CacheManager.instance.getData('user', 'email');
     String? password = await CacheManager.instance.getData('user', 'password');
     if (email == null || password == null) {
-      NavigationManager.instance
-          .navigationToPageClear(NavigationConstant.welcome);
+      NavigationManager.instance.navigationToPageClear(NavigationConstant.welcome);
     }
     UserModel model = UserModel(email: email, password: password);
     String? data = await UserService.instance.login(model);
     await _setLang();
     if (data != null) {
-      NavigationManager.instance
-          .navigationToPageClear(NavigationConstant.welcome);
+      NavigationManager.instance.navigationToPageClear(NavigationConstant.welcome);
     } else {
       await UserIdentityService.instance.cacheUserIdentity();
-      NavigationManager.instance
-          .navigationToPageClear(NavigationConstant.homePage);
+      NavigationManager.instance.navigationToPageClear(NavigationConstant.homePage);
     }
   }
 
@@ -51,6 +54,45 @@ class _SplashPageState extends State<SplashPage> {
       await context.setLocale(Locale(lang));
       await SessionManager().set('lang', lang);
     }
+  }
+
+  Future<void> _requestLocationPermission() async {
+    status = await Permission.location.request();
+    if (status.isGranted) {
+      // İzin verildiğinde yapılacak işlemler
+      print('izin verdisplash');
+    } else if (status.isDenied) {
+      // İzin reddedildiğinde yapılacak işlemler
+      print('reddedildisplash');
+      openAppSettings();
+    } else if (status.isPermanentlyDenied) {
+      // İzin kalıcı olarak reddedildiğinde yapılacak işlemler
+      print('İzin kalıcı olarak reddedildisplash');
+      openAppSettings();
+      //SystemChannels.platform.invokeMethod('SystemNavigator.pop');
+    }
+  }
+
+  void _showPermissionSettingsDialog() {
+    showDialog(
+      barrierDismissible: false,
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Lokasyon İzinleri'),
+          content: Text('Uygulamanın konum izni gerektiği için ayarlara gitmek istiyor musunuz?'),
+          actions: [
+            TextButton(
+              onPressed: () {
+                openAppSettings(); // Ayarlara gitmek için izinleri ayarlar
+                NavigationManager.instance.navigationToPop();
+              },
+              child: const Text('Ayarlara Git'),
+            ),
+          ],
+        );
+      },
+    );
   }
 
   @override

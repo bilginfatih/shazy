@@ -18,9 +18,9 @@ class AssistantMethods {
         String humanReadableAddress = requestResponse["results"][0]["formatted_address"];
 
         Directions userPickUpAddress = Directions();
-        userPickUpAddress.locationLatitude = position.latitude;
-        userPickUpAddress.locationLongitude = position.longitude;
-        userPickUpAddress.locationName = humanReadableAddress;
+        userPickUpAddress.endLocationLatitude = position.latitude;
+        userPickUpAddress.endLocationLongitude = position.longitude;
+        userPickUpAddress.endLocationName = humanReadableAddress;
 
         Provider.of<AppInfo>(context, listen: false).updatePickUpLocationAddress(userPickUpAddress);
 
