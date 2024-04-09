@@ -7,6 +7,7 @@ import 'package:shazy/models/payment/payment_model.dart';
 import 'package:shazy/services/payment/payment_service.dart';
 import 'package:shazy/utils/extensions/context_extension.dart';
 
+import '../../../core/init/cache/cache_manager.dart';
 import '../../../core/init/navigation/navigation_manager.dart';
 import '../../../models/comment/comment_model.dart';
 import '../../../services/comment/comment_service.dart';
@@ -51,7 +52,7 @@ abstract class _PaymentControllerBase with Store {
                     style: context.textStyle.labelSmallMedium,
                   ),
                   Text(
-                    amount.toString(),
+                    '${amount.toString()}₺',
                     style: context.textStyle.titleXlargeRegular,
                   ),
                 ],
@@ -72,8 +73,11 @@ abstract class _PaymentControllerBase with Store {
                   selectedIndex: _controllerComment.starSelectedIndex,
                   context: context,
                   textController: _commentTextController,
-                  onPressed: () {
-                    sendComment(_commentTextController.text, _controllerComment.starSelectedIndex);
+                  onPressed: () async {
+                    await sendComment(_commentTextController.text, _controllerComment.starSelectedIndex);
+                    CacheManager.instance.clearAll('directions');
+                    CacheManager.instance.clearAll('caller_directions');
+                    NavigationManager.instance.navigationToPageClear(NavigationConstant.homePage);
                   },
                   onPressedRatingBar: _controllerComment.changeStarSelectedIndex,
                   text: '${'youRated'.tr()} ${' ${_controllerComment.starSelectedIndex}'} ${'star'.tr()}',

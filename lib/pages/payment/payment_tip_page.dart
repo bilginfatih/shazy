@@ -6,6 +6,7 @@ import 'package:provider/provider.dart';
 import 'package:shazy/pages/payment/controller/payment_controller.dart';
 
 import '../../core/base/app_info.dart';
+import '../../core/init/models/directions.dart';
 import '../../core/init/navigation/navigation_manager.dart';
 import '../../utils/constants/navigation_constant.dart';
 import '../../utils/extensions/context_extension.dart';
@@ -13,8 +14,8 @@ import '../../utils/theme/themes.dart';
 import '../../widgets/app_bars/back_app_bar.dart';
 import '../../widgets/buttons/primary_button.dart';
 import '../../widgets/containers/payment_method_container.dart';
-import '../../widgets/dialogs/congratulation_dialog.dart';
 import '../../widgets/padding/base_padding.dart';
+import '../authentication/splash_page.dart';
 
 class PaymentTipPage extends StatefulWidget {
   const PaymentTipPage({super.key});
@@ -25,6 +26,7 @@ class PaymentTipPage extends StatefulWidget {
 
 class _PaymentTipPageState extends State<PaymentTipPage> {
   final PaymentController _controller = PaymentController();
+  String totalPayment = '';
 
   @override
   void initState() {
@@ -88,9 +90,13 @@ class _PaymentTipPageState extends State<PaymentTipPage> {
   }*/
   @override
   Widget build(BuildContext context) {
-    final String totalPayment = Provider.of<AppInfo>(context, listen: false).userDropOffLocation != null
-      ? Provider.of<AppInfo>(context, listen: false).userDropOffLocation!.totalPayment.toString()
-      : 'null';
+    if (SplashPage.directions.totalPayment == null) {
+      var directionsDetails = Provider.of<AppInfo>(context, listen: false).userDropOffLocation;
+      totalPayment = directionsDetails!.totalPayment.toString();
+    } else {
+      totalPayment = SplashPage.directions.totalPayment.toString();
+    }
+
     return Scaffold(
       appBar: BackAppBar(
         context: context,

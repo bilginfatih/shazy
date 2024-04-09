@@ -239,8 +239,8 @@ class _DriverHomePageState extends State<DriverHomePage>
                         selectedIndex: _controllerComment.starSelectedIndex,
                         context: context,
                         textController: _commentTextController,
-                        onPressed: () {
-                          sendComment(_commentTextController.text,
+                        onPressed: () async {
+                          await sendComment(_commentTextController.text,
                               _controllerComment.starSelectedIndex);
                           setState(() {
                             HomeScreenTransport.allowNavigation = true;

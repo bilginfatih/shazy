@@ -14,6 +14,8 @@ class CallerHomeDirections extends BaseModel {
   String? driver_picture_path;
   String? five_security_code;
 
+  bool? isAccept;
+
   CallerHomeDirections({
     // caller tarafı
     this.caller_status,
@@ -24,6 +26,7 @@ class CallerHomeDirections extends BaseModel {
     this.driver_surname,
     this.driver_picture_path,
     this.five_security_code,
+    this.isAccept,
   });
 
   CallerHomeDirections._fromJson(o) {
@@ -37,6 +40,8 @@ class CallerHomeDirections extends BaseModel {
     driver_picture_path = o['driver_picture_path'];
 
     five_security_code = o['five_security_code'];
+
+    isAccept = o['is_accept'];
   }
 
   @override
@@ -52,6 +57,8 @@ class CallerHomeDirections extends BaseModel {
     if (driver_picture_path != null) map['driver_picture_path'] = driver_picture_path;
 
     if (five_security_code != null) map['five_security_code'] = five_security_code;
+
+    if (isAccept != null) map['is_accept'] = isAccept;
     return map;
   }
 }

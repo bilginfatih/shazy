@@ -12,6 +12,7 @@ import 'package:url_launcher/url_launcher.dart';
 import '../../core/assistants/asistant_methods.dart';
 import '../../core/base/app_info.dart';
 import '../../core/init/models/caller_home_directions.dart';
+import '../../core/init/models/directions.dart';
 import '../../core/init/navigation/navigation_manager.dart';
 import '../../core/init/network/network_manager.dart';
 import '../../models/cancel_reason/cancel_reason_model.dart';
@@ -30,6 +31,7 @@ import '../../widgets/buttons/primary_button.dart';
 import '../../widgets/dialogs/search_driver_dialog.dart';
 import '../../widgets/icons/circular_svg_icon.dart';
 import '../../widgets/modal_bottom_sheet/caller_bottom_sheer.dart';
+import '../authentication/splash_page.dart';
 
 class HomeScreenTransport extends StatefulWidget {
   const HomeScreenTransport({
@@ -39,9 +41,7 @@ class HomeScreenTransport extends StatefulWidget {
 
   static bool isAccept = false;
   static String status = '';
-  //static int flagMatched = 0;
   static int flagCanceled = 0;
-  static int flagAccept = 0;
   static int flagDriving = 0;
   static int flagWaitPayment = 0;
   static bool allowNavigation = true;
@@ -57,18 +57,16 @@ class _HomeScreenTransportState extends State<HomeScreenTransport> with TickerPr
   Timer _timerSearchDriver = Timer(const Duration(milliseconds: 1), () {});
 
   CallerHomeDirections callerHomeDirections = CallerHomeDirections();
+  Directions? directions = Directions();
 
   String mapTheme = '';
+
   final Completer<GoogleMapController> _controller = Completer<GoogleMapController>();
   GoogleMapController? newGoogleMapController;
 
-  //final OtpFieldController _pinController = OtpFieldController();
-  // ignore: unused_field
-  late String _durationKm;
-
   final Uri toLaunch = Uri(scheme: 'https', host: 'www.google.com', path: '/maps/@/data=!4m2!7m1!2e1');
 
-  //String? fiveDigitSecurityCode;
+
 
   _onVerificationCodeChanged(String? newCode) {
     setState(() {
@@ -77,7 +75,6 @@ class _HomeScreenTransportState extends State<HomeScreenTransport> with TickerPr
   }
 
   final SearchDistanceService _searchDistanceService = SearchDistanceService.instance;
-  final DriveService _driveService = DriveService();
 
   DriveModel driveDetailsInfo = DriveModel();
   bool _isAppInSearchDrive = false;
@@ -111,8 +108,6 @@ class _HomeScreenTransportState extends State<HomeScreenTransport> with TickerPr
   List<AnimationController> _bottomSheetControllers = [];
   List<Tween<Offset>> _tweens = [];
   final Duration _duration = const Duration(milliseconds: 500);
-
-  late String requestId2 = '';
 
   @override
   void initState() {
@@ -186,6 +181,7 @@ class _HomeScreenTransportState extends State<HomeScreenTransport> with TickerPr
 
       UserProfileModel? userProfile = await UserService.instance.getAnotherUser(callerHomeDirections.driver_id.toString());
       callerHomeDirections.driver_avarage_point = userProfile!.averagePoint!;
+      SplashPage.callerHomeDirections.driver_avarage_point = userProfile.averagePoint!;
       callerHomeDirections.driver_name = userProfile.userModel!.name!;
       callerHomeDirections.driver_surname = userProfile.userModel!.surname!;
       callerHomeDirections.driver_picture_path = userProfile.profilePicturePath!;
@@ -200,19 +196,19 @@ class _HomeScreenTransportState extends State<HomeScreenTransport> with TickerPr
   }
 
   Future<void> sendRequest() async {
-    var directionsDetails = Provider.of<AppInfo>(context, listen: false).callerDropOffLocation;
+    //var directionsDetails = Provider.of<AppInfo>(context, listen: false).callerDropOffLocation;
     try {
-      String apiUrl = "/drive-request/${directionsDetails?.drive_id}";
+      String apiUrl = "/drive-request/${callerHomeDirections.drive_id}";
 
       var requestResponse = await NetworkManager.instance.get(apiUrl);
 
       if (requestResponse != null) {
-        directionsDetails?.caller_status = requestResponse["status"];
+        callerHomeDirections.caller_status = requestResponse["status"];
 
-        print('status: ' + directionsDetails!.caller_status.toString());
+        print('status: ' + callerHomeDirections.caller_status.toString());
 
-        if (directionsDetails.caller_status == 'accept' && HomeScreenTransport.flagAccept == 0) {
-          HomeScreenTransport.flagAccept = 1;
+        if (callerHomeDirections.caller_status == 'accept' && callerHomeDirections.isAccept != true) {
+          callerHomeDirections.isAccept = true;
 
           String userId = await SessionManager().get('id');
           String securityCodeUrl = "/security-code/callerCode/$userId";
@@ -221,8 +217,10 @@ class _HomeScreenTransportState extends State<HomeScreenTransport> with TickerPr
 
           List<String> callerParts = statusSecurityCode.split(',');
           callerHomeDirections.five_security_code = callerParts.length > 1 ? callerParts[1] : null;
+          //SplashPage.callerHomeDirections.five_security_code = callerParts.length > 1 ? callerParts[1] : null;
 
           _onVerificationCodeChanged(callerHomeDirections.five_security_code);
+          // _onVerificationCodeChanged(SplashPage.callerHomeDirections.five_security_code);
           Provider.of<AppInfo>(context, listen: false).callerDropOffLocationCache(callerHomeDirections);
           NavigationManager.instance.navigationToPop();
           _showCallerBottomSheet(0);
@@ -234,7 +232,7 @@ class _HomeScreenTransportState extends State<HomeScreenTransport> with TickerPr
           //startSendingRequestsStatus();
 
           // ignore: use_build_context_synchronously
-        } else if (directionsDetails.caller_status == 'driving' && HomeScreenTransport.flagDriving == 0) {
+        } else if (callerHomeDirections.caller_status == 'driving' && HomeScreenTransport.flagDriving == 0) {
           HomeScreenTransport.flagDriving = 1;
           HomeScreenTransport.isAccept = true;
           Provider.of<AppInfo>(context, listen: false).callerDropOffLocationCache(callerHomeDirections);
@@ -246,7 +244,7 @@ class _HomeScreenTransportState extends State<HomeScreenTransport> with TickerPr
           //_timerStatus.cancel();
 
           // ignore: use_build_context_synchronously
-        } else if (directionsDetails.caller_status == 'waitpayment' && HomeScreenTransport.flagWaitPayment == 0) {
+        } else if (callerHomeDirections.caller_status == 'waitpayment' && HomeScreenTransport.flagWaitPayment == 0) {
           HomeScreenTransport.flagWaitPayment = 1;
           HomeScreenTransport.isAccept = false;
           Provider.of<AppInfo>(context, listen: false).callerDropOffLocationCache(callerHomeDirections);
@@ -260,7 +258,7 @@ class _HomeScreenTransportState extends State<HomeScreenTransport> with TickerPr
           //_timerStatus.cancel();
 
           // ignore: use_build_context_synchronously
-        } else if (directionsDetails.caller_status == 'canceled' && HomeScreenTransport.flagCanceled == 0) {
+        } else if (callerHomeDirections.caller_status == 'canceled' && HomeScreenTransport.flagCanceled == 0) {
           HomeScreenTransport.flagCanceled = 1;
           HomeScreenTransport.isAccept = false;
           HomeScreenTransport.allowNavigation = true;
@@ -314,8 +312,9 @@ class _HomeScreenTransportState extends State<HomeScreenTransport> with TickerPr
   }
 
   Widget _buildCallerBottomSheetContent(int index, BuildContext context) {
-    var directionsDetails2 = Provider.of<AppInfo>(context, listen: false).userDropOffLocation;
-    var directionsDetails = Provider.of<AppInfo>(context, listen: false).callerDropOffLocation;
+    if (SplashPage.directions.totalPayment == null) {
+      directions = Provider.of<AppInfo>(context, listen: false).userDropOffLocation;
+    }
     double size = 0.6;
     if (index == 0) {
       size = context.height < 620 ? 0.73 : 0.65;
@@ -346,13 +345,13 @@ class _HomeScreenTransportState extends State<HomeScreenTransport> with TickerPr
                   : () {},
               context: context,
               pickingUpText: index == 0 ? 'Meeting Time 10:10' : 'tripToDestionation',
-              customerName: '${directionsDetails?.driver_name} ${directionsDetails?.driver_surname}',
+              customerName: '${callerHomeDirections.driver_name} ${callerHomeDirections.driver_surname}',
               imagePath: "https://randomuser.me/api/portraits/men/93.jpg",
               /*'$baseUrl/$driverPicturePath',*/
-              startText: directionsDetails?.driver_avarage_point.toString() ?? '',
+              startText: callerHomeDirections.driver_avarage_point.toString(),
               paymentText: 'paymentMethod'.tr(),
-              totalPaymentText: "${directionsDetails2?.totalPayment.toString()}₺",
-              verificationCodeText: directionsDetails?.five_security_code.toString() ?? '',
+              totalPaymentText: "${directions?.totalPayment.toString()}₺",
+              verificationCodeText: callerHomeDirections.five_security_code.toString(),
               onPressedCancel: () async {
                 NavigationManager.instance.navigationToPage(NavigationConstant.cancelRide);
               },
@@ -381,8 +380,26 @@ class _HomeScreenTransportState extends State<HomeScreenTransport> with TickerPr
 
   @override
   Widget build(BuildContext context) {
-    if (HomeScreenTransport.status == 'accept') {
+    if (SplashPage.callerHomeDirections.caller_status != null) {
+      callerHomeDirections = SplashPage.callerHomeDirections;
+      directions = SplashPage.directions;
+      print(directions?.totalPayment.toString());
+    }
+    if (SplashPage.callerHomeDirections.caller_status == 'accept') {
+      callerHomeDirections.isAccept = true;
+      startSendingRequests();
       var controller = _bottomSheetControllers[0];
+      drawPolyLineFromOriginToDestinationCache();
+      HomeScreenTransport.isAccept = true;
+      HomeScreenTransport.allowNavigation = false;
+      controller.forward();
+    }
+    if (SplashPage.callerHomeDirections.caller_status == 'driving') {
+      startSendingRequests();
+      var controller = _bottomSheetControllers[1];
+      drawPolyLineFromOriginToDestinationCache();
+      HomeScreenTransport.isAccept = true;
+      HomeScreenTransport.allowNavigation = false;
       controller.forward();
     }
 
@@ -540,12 +557,10 @@ class _HomeScreenTransportState extends State<HomeScreenTransport> with TickerPr
                                       onPressed: Provider.of<AppInfo>(context).userDropOffLocation != null
                                           ? () async {
                                               _isAppInSearchDrive = true;
-                                              //HomeScreenTransport.flagMatched = 0;
                                               HomeScreenTransport.flagCanceled = 0;
-                                              HomeScreenTransport.flagAccept = 0;
+                                              callerHomeDirections.isAccept = null;
                                               HomeScreenTransport.flagDriving = 0;
                                               HomeScreenTransport.status = '';
-                                              requestId2 = '';
                                               HomeScreenTransport.allowNavigation = false;
                                               startSendingSearchDriver();
                                               // ignore: use_build_context_synchronously
@@ -602,6 +617,73 @@ class _HomeScreenTransportState extends State<HomeScreenTransport> with TickerPr
     }
   }
 
+  Future<void> drawPolyLineFromOriginToDestinationCache() async {
+    var originLatLng = LatLng(directions!.currentLocationLatitude!, directions!.currentLocationLongitude!);
+    var destinationLatLng = LatLng(directions!.endLocationLatitude!, directions!.endLocationLongitude!);
+
+    PolylinePoints pPoints = PolylinePoints();
+    List<PointLatLng> decodedPolyLinePointsResultList = pPoints.decodePolyline(directions!.e_points.toString());
+
+    pLineCoOrdinatesList.clear();
+
+    if (decodedPolyLinePointsResultList.isNotEmpty) {
+      decodedPolyLinePointsResultList.forEach((PointLatLng pointLatLng) {
+        pLineCoOrdinatesList.add(LatLng(pointLatLng.latitude, pointLatLng.longitude));
+      });
+    }
+    polyLineSet.clear();
+    //_durationKm = directions!.distance_text.toString();
+    setState(() {
+      Polyline polyline = Polyline(
+        color: Colors.blue,
+        polylineId: const PolylineId("PolylineID"),
+        jointType: JointType.round,
+        points: pLineCoOrdinatesList,
+        startCap: Cap.roundCap,
+        endCap: Cap.roundCap,
+        geodesic: true,
+      );
+
+      polyLineSet.add(polyline);
+    });
+    /*LatLngBounds boundsLatLng;
+    if (originLatLng.latitude > destinationLatLng.latitude && originLatLng.longitude > destinationLatLng.longitude) {
+      boundsLatLng = LatLngBounds(southwest: destinationLatLng, northeast: originLatLng);
+    } else if (originLatLng.longitude > destinationLatLng.longitude) {
+      boundsLatLng = LatLngBounds(
+        southwest: LatLng(originLatLng.latitude, destinationLatLng.longitude),
+        northeast: LatLng(destinationLatLng.latitude, originLatLng.longitude),
+      );
+    } else if (originLatLng.latitude > destinationLatLng.latitude) {
+      boundsLatLng = LatLngBounds(
+        southwest: LatLng(destinationLatLng.latitude, originLatLng.longitude),
+        northeast: LatLng(originLatLng.latitude, destinationLatLng.longitude),
+      );
+    } else {
+      boundsLatLng = LatLngBounds(southwest: originLatLng, northeast: destinationLatLng);
+    }
+
+    newGoogleMapController!.animateCamera(CameraUpdate.newLatLngBounds(boundsLatLng, 95)); */
+
+    Marker originMarker = Marker(
+      markerId: const MarkerId("originID"),
+      infoWindow: InfoWindow(title: directions!.currentLocationName, snippet: directions!.distance_text),
+      position: originLatLng,
+      icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueYellow),
+    );
+
+    Marker destinationMarker = Marker(
+      markerId: const MarkerId("destinationID"),
+      infoWindow: InfoWindow(title: directions!.endLocationName, snippet: directions!.duration_text),
+      position: destinationLatLng,
+      icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueOrange),
+    );
+    setState(() {
+      markersSet.add(originMarker);
+      markersSet.add(destinationMarker);
+    });
+  }
+
   Future<void> drawPolyLineFromOriginToDestination() async {
     var destinationPosition = Provider.of<AppInfo>(context, listen: false).userDropOffLocation;
     var originLatLng = LatLng(destinationPosition!.currentLocationLatitude!, destinationPosition.currentLocationLongitude!);
@@ -618,7 +700,7 @@ class _HomeScreenTransportState extends State<HomeScreenTransport> with TickerPr
       });
     }
     polyLineSet.clear();
-    _durationKm = destinationPosition.distance_text.toString();
+    //_durationKm = directions!.distance_text.toString();
     setState(() {
       Polyline polyline = Polyline(
         color: Colors.blue,

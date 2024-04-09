@@ -4,8 +4,11 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_session_manager/flutter_session_manager.dart';
+import 'package:hive_flutter/adapters.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:shazy/services/user/user_identity_service.dart';
+import '../../core/init/models/caller_home_directions.dart';
+import '../../core/init/models/directions.dart';
 import '../../utils/extensions/context_extension.dart';
 
 import '../../core/init/cache/cache_manager.dart';
@@ -17,6 +20,8 @@ import '../../utils/theme/themes.dart';
 
 class SplashPage extends StatefulWidget {
   const SplashPage({super.key});
+  static CallerHomeDirections callerHomeDirections = CallerHomeDirections();
+  static Directions directions = Directions();
 
   @override
   State<SplashPage> createState() => _SplashPageState();
@@ -24,6 +29,7 @@ class SplashPage extends StatefulWidget {
 
 class _SplashPageState extends State<SplashPage> {
   late PermissionStatus status;
+
   @override
   void initState() {
     super.initState();
@@ -31,6 +37,8 @@ class _SplashPageState extends State<SplashPage> {
   }
 
   Future<void> _init() async {
+    await cacheManagerCallerDirections();
+    await cacheManagerCallerHomeDirections();
     Platform.isAndroid ? _requestLocationPermission() : null;
     String? email = await CacheManager.instance.getData('user', 'email');
     String? password = await CacheManager.instance.getData('user', 'password');
@@ -42,11 +50,36 @@ class _SplashPageState extends State<SplashPage> {
     await _setLang();
     if (data != null) {
       NavigationManager.instance.navigationToPageClear(NavigationConstant.welcome);
-    } else {
+    } else if (SplashPage.callerHomeDirections.caller_status == 'waitpayment') {
+      await UserIdentityService.instance.cacheUserIdentity();
+      NavigationManager.instance.navigationToPageClear(NavigationConstant.paymentTip);
+    } 
+    else {
       await UserIdentityService.instance.cacheUserIdentity();
       NavigationManager.instance.navigationToPageClear(NavigationConstant.homePage);
     }
   }
+
+  Future<void> cacheManagerCallerDirections() async {
+  var box = await Hive.openBox('directions');
+  var response = await box.get('directions');
+  if (response != null) {
+    SplashPage.directions = SplashPage.directions.fromJson(response);
+  } else {
+    SplashPage.directions = Directions();
+  }
+}
+
+Future<void> cacheManagerCallerHomeDirections() async {
+  var box = await Hive.openBox('caller_directions');
+  var response = await box.get('caller_directions');
+  if (response != null) {
+    SplashPage.callerHomeDirections = SplashPage.callerHomeDirections.fromJson(response);
+  } else {
+    
+    SplashPage.callerHomeDirections = CallerHomeDirections(); 
+  }
+}
 
   Future<void> _setLang() async {
     String? lang = await CacheManager.instance.getData('user', 'lang');
