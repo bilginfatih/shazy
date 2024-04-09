@@ -23,7 +23,7 @@ class DriverComplete extends StatelessWidget {
             Text(
               'Thank you for your application.',
               style: GoogleFonts.poppins(
-                fontSize: 30,
+                fontSize: context.responsiveHeight(30),
                 fontWeight: FontWeight.w400,
                 color: HexColor("#494949"),
               ),
@@ -34,7 +34,7 @@ class DriverComplete extends StatelessWidget {
             Text(
               'We will return within 48 hours.',
               style: GoogleFonts.poppins(
-                fontSize: 14,
+                fontSize: context.responsiveFont(14),
                 fontWeight: FontWeight.w400,
                 color: HexColor("#494949"),
               ),

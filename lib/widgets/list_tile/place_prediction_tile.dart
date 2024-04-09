@@ -37,14 +37,16 @@ class PlacePredictionTileDesign extends StatelessWidget {
     }
 
     Directions directions = Directions();
-    directions.locationName = responsePlaceIdApi["result"]["name"];
+    directions.endLocationName = responsePlaceIdApi["result"]["name"];
     directions.currentLocationName = responsePlaceIdApi["result"]["formatted_address"];
     directions.locationId = placeId;
-    directions.locationLatitude = responsePlaceIdApi["result"]["geometry"]["location"]["lat"];
-    directions.locationLongitude = responsePlaceIdApi["result"]["geometry"]["location"]["lng"];
+    directions.endLocationLatitude = responsePlaceIdApi["result"]["geometry"]["location"]["lat"];
+    directions.endLocationLongitude = responsePlaceIdApi["result"]["geometry"]["location"]["lng"];
+    directions.currentLocationLatitude = cPosition.latitude;
+    directions.currentLocationLongitude = cPosition.longitude;
 
     String urlOriginToDestinationDirectionDetails =
-        "/google/directions/${cPosition.latitude}/${cPosition.longitude}/${directions.locationLatitude}/${directions.locationLongitude}";
+        "/google/directions/${cPosition.latitude}/${cPosition.longitude}/${directions.endLocationLatitude}/${directions.endLocationLongitude}";
 
     var responseDirectionApi = await NetworkManager.instance.get(urlOriginToDestinationDirectionDetails);
 
@@ -94,23 +96,23 @@ class PlacePredictionTileDesign extends StatelessWidget {
               Icons.access_time_outlined,
               color: Colors.black,
             ),
-            const SizedBox(
-              width: 14.0,
+            SizedBox(
+              width: context.responsiveWidth(14.0),
             ),
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const SizedBox(
-                    height: 8.0,
+                  SizedBox(
+                    height: context.responsiveHeight(8.0),
                   ),
                   Text(
                     predictedPlaces!.main_text!,
                     overflow: TextOverflow.ellipsis,
                     style: context.textStyle.subheadLargeMedium.copyWith(color: HexColor("#5A5A5A")),
                   ),
-                  const SizedBox(
-                    height: 2.0,
+                  SizedBox(
+                    height: context.responsiveHeight(2.0),
                   ),
                   Text(
                     predictedPlaces!.secondary_text!,
@@ -119,8 +121,8 @@ class PlacePredictionTileDesign extends StatelessWidget {
                       color: HexColor("#B8B8B8"),
                     ),
                   ),
-                  const SizedBox(
-                    height: 8.0,
+                  SizedBox(
+                    height: context.responsiveHeight(8.0),
                   ),
                 ],
               ),

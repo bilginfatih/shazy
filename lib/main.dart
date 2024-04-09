@@ -15,9 +15,6 @@ import 'utils/theme/themes.dart';
     
 void main() async {
   await _init();
-  // Konum izni kontrolü
-  final locationPermissionStatus = await Permission.locationWhenInUse.request();
-  if (true) {
     runApp(EasyLocalization(
      supportedLocales: LanguageManager.instance.supportedLocales,
       startLocale: LanguageManager.instance.enLocale,
@@ -25,10 +22,6 @@ void main() async {
       path: 'assets/translations',
       child: const MyApp(),
     ));
-  } else {
-    SystemChannels.platform.invokeMethod(
-        'SystemNavigator.pop'); // İzin verilmezse uygulamayı kapat
-  }
 }
 
 _init() async {

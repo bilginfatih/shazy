@@ -27,9 +27,7 @@ class _DriverAcceptState extends State<DriverAccept> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Padding(
-            padding: EdgeInsets.only(
-                left: context.responsiveWidth(46),
-                top: context.responsiveHeight(91)),
+            padding: EdgeInsets.only(left: context.responsiveWidth(46), top: context.responsiveHeight(91)),
             child: Image.asset(
               "assets/png/Driver_logo_purple1x.png",
               width: context.responsiveWidth(280),
@@ -44,8 +42,7 @@ class _DriverAcceptState extends State<DriverAccept> {
             child: Row(
               children: [
                 Container(
-                  padding:
-                      EdgeInsets.only(bottom: context.responsiveHeight(13)),
+                  padding: EdgeInsets.only(bottom: context.responsiveHeight(13)),
                   child: CheckBoxRounded(
                     size: 16,
                     borderColor: Colors.green[600],
@@ -102,11 +99,11 @@ class _DriverAcceptState extends State<DriverAccept> {
                   context: context,
                   text: 'makeAnApplication'.tr(),
                   height: context.responsiveHeight(54),
-                  width: context.responsiveWidth(362),
+                  width: context.responsiveWidth(342),
                   onPressed: () {
                     if (_termsCheck) {
-                      NavigationManager.instance
-                          .navigationToPage(NavigationConstant.driverLicance);
+                      // NavigationManager.instance.navigationToPage(NavigationConstant.driverLicance);
+                      NavigationManager.instance.navigationToPage(NavigationConstant.driverChoose);
                     }
                   },
                 ),
