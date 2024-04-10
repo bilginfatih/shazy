@@ -29,4 +29,9 @@ extension StringExtension on String {
         return Icons.person_2_outlined;
     }
   }
+
+  String truncateString(int maxLength) {
+    if (length <= maxLength) return this;
+    return "${substring(0, maxLength)}...";
+  }
 }

@@ -13,6 +13,10 @@ class DriveModel extends BaseModel {
     this.driverLat,
     this.driverLang,
     this.status,
+    this.fromAddress,
+    this.toAddress,
+    this.fromShortAddress,
+    this.toShortAddress,
   });
 
   DriveModel._fromJson(o) {
@@ -36,13 +40,17 @@ class DriveModel extends BaseModel {
   String? driverId;
   double? driverLang;
   double? driverLat;
+  String? fromAddress;
   double? fromLang;
   double? fromLat;
+  String? fromShortAddress;
   String? status;
   String? timeFrom;
   String? timeTo;
+  String? toAddress;
   double? toLang;
   double? toLat;
+  String? toShortAddress;
 
   @override
   Map<String, dynamic> toJson() {

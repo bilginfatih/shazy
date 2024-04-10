@@ -1,4 +1,9 @@
 import 'package:flutter_session_manager/flutter_session_manager.dart';
+import 'package:geolocator/geolocator.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:location/location.dart';
+import 'package:shazy/core/assistants/asistant_methods.dart';
+import 'package:shazy/utils/extensions/string_extension.dart';
 
 import '../../core/init/cache/cache_manager.dart';
 import '../../models/drive/drive_model.dart';
@@ -107,6 +112,17 @@ class DriveService {
       var response = await NetworkManager.instance.get('$_request/$id');
       DriveModel model = DriveModel();
       model = model.fromJson(response);
+      var fromAddressResponse = await AssistantMethods.getAddressFromGoogleMaps(
+          LatLng(model.fromLat ?? 00, model.fromLang ?? 0.0));
+      model.fromAddress =
+          fromAddressResponse['longAddress']?.truncateString(60);
+      model.fromShortAddress = fromAddressResponse['shortAddress'];
+
+      var toAddressResponse = await AssistantMethods.getAddressFromGoogleMaps(
+          LatLng(model.toLat ?? 00, model.toLang ?? 0.0));
+
+      model.toAddress = toAddressResponse['longAddress']?.truncateString(60);
+      model.toShortAddress = toAddressResponse['shortAddress'];
       return model;
     } catch (e) {
       rethrow;

@@ -8,21 +8,25 @@ import '../init/models/directions.dart';
 import '../init/network/network_manager.dart';
 
 class AssistantMethods {
-  static Future<String> searchAddressForGeographicCoOrdinates(Position position, context) async {
+  static Future<String> searchAddressForGeographicCoOrdinates(
+      Position position, context) async {
     try {
-      String apiUrl = "/google/geocode/${position.latitude}/${position.longitude}";
+      String apiUrl =
+          "/google/geocode/${position.latitude}/${position.longitude}";
 
       var requestResponse = await NetworkManager.instance.get(apiUrl);
 
       if (requestResponse != null) {
-        String humanReadableAddress = requestResponse["results"][0]["formatted_address"];
+        String humanReadableAddress =
+            requestResponse["results"][0]["formatted_address"];
 
         Directions userPickUpAddress = Directions();
         userPickUpAddress.endLocationLatitude = position.latitude;
         userPickUpAddress.endLocationLongitude = position.longitude;
         userPickUpAddress.endLocationName = humanReadableAddress;
 
-        Provider.of<AppInfo>(context, listen: false).updatePickUpLocationAddress(userPickUpAddress);
+        Provider.of<AppInfo>(context, listen: false)
+            .updatePickUpLocationAddress(userPickUpAddress);
 
         return humanReadableAddress;
       } else {
@@ -36,37 +40,61 @@ class AssistantMethods {
     }
   }
 
-  static Future<DirectionDetailsInfo?> obtainOriginToDestinationDirectionDetails(LatLng origionPosition, LatLng destinationPosition) async {
-  try {
-    String urlOriginToDestinationDirectionDetails = "/google/directions/${origionPosition.latitude}/${origionPosition.longitude}/${destinationPosition.latitude}/${destinationPosition.longitude}";
+  static Future<DirectionDetailsInfo?>
+      obtainOriginToDestinationDirectionDetails(
+          LatLng origionPosition, LatLng destinationPosition) async {
+    try {
+      String urlOriginToDestinationDirectionDetails =
+          "/google/directions/${origionPosition.latitude}/${origionPosition.longitude}/${destinationPosition.latitude}/${destinationPosition.longitude}";
 
-    var responseDirectionApi = await NetworkManager.instance.get(urlOriginToDestinationDirectionDetails);
+      var responseDirectionApi = await NetworkManager.instance
+          .get(urlOriginToDestinationDirectionDetails);
 
-    if (responseDirectionApi == null) {
-      // Handle the case where the response is null
+      if (responseDirectionApi == null) {
+        // Handle the case where the response is null
+        return null;
+      }
+
+      DirectionDetailsInfo directionDetailsInfo = DirectionDetailsInfo();
+      directionDetailsInfo.e_points =
+          responseDirectionApi["routes"][0]["overview_polyline"]["points"];
+      directionDetailsInfo.e_pointsDrive =
+          responseDirectionApi["routes"][0]["overview_polyline"]["points"];
+
+      directionDetailsInfo.distance_text =
+          responseDirectionApi["routes"][0]["legs"][0]["distance"]["text"];
+      directionDetailsInfo.distance_value =
+          responseDirectionApi["routes"][0]["legs"][0]["distance"]["value"];
+
+      directionDetailsInfo.duration_text =
+          responseDirectionApi["routes"][0]["legs"][0]["duration"]["text"];
+      directionDetailsInfo.duration_value =
+          responseDirectionApi["routes"][0]["legs"][0]["duration"]["value"];
+
+      directionDetailsInfo.end_address =
+          responseDirectionApi["routes"][0]["legs"][0]["end_address"];
+      directionDetailsInfo.start_address =
+          responseDirectionApi["routes"][0]["legs"][0]["start_address"];
+
+      return directionDetailsInfo;
+    } catch (e) {
+      // Handle exceptions or errors here
+      print(e);
       return null;
     }
-
-    DirectionDetailsInfo directionDetailsInfo = DirectionDetailsInfo();
-    directionDetailsInfo.e_points = responseDirectionApi["routes"][0]["overview_polyline"]["points"];
-    directionDetailsInfo.e_pointsDrive = responseDirectionApi["routes"][0]["overview_polyline"]["points"];
-
-    directionDetailsInfo.distance_text = responseDirectionApi["routes"][0]["legs"][0]["distance"]["text"];
-    directionDetailsInfo.distance_value = responseDirectionApi["routes"][0]["legs"][0]["distance"]["value"];
-
-    directionDetailsInfo.duration_text = responseDirectionApi["routes"][0]["legs"][0]["duration"]["text"];
-    directionDetailsInfo.duration_value = responseDirectionApi["routes"][0]["legs"][0]["duration"]["value"];
-    
-    directionDetailsInfo.end_address = responseDirectionApi["routes"][0]["legs"][0]["end_address"];
-    directionDetailsInfo.start_address = responseDirectionApi["routes"][0]["legs"][0]["start_address"];
-    
-
-    return directionDetailsInfo;
-  } catch (e) {
-    // Handle exceptions or errors here
-    print(e);
-    return null;
   }
-}
 
+  static Future<Map<String, String>> getAddressFromGoogleMaps(
+      LatLng latLng) async {
+    Map<String, String> map = {'longAddress': '', 'shortAddress': ''};
+    String apiUrl = '/google/geocode';
+    var response = await NetworkManager.instance
+        .get('$apiUrl/${latLng.latitude}/${latLng.longitude}');
+    String longAddress = response["results"][0]["formatted_address"];
+    String shortAddress =
+        response["results"][0]['address_components'][1]['short_name'];
+    map['longAddress'] = longAddress;
+    map['shortAddress'] = shortAddress;
+    return map;
+  }
 }

@@ -259,18 +259,23 @@ class _HistoryUpcomingPageState extends State<HistoryUpcomingPage> {
                 Text(
                   text1,
                   style: GoogleFonts.poppins(
-                      fontSize: 10,
+                      fontSize: context.responsiveFont(10),
                       fontWeight: FontWeight.w500,
                       color: context.isLight
                           ? HexColor('#5A5A5A')
                           : HexColor('#B8B8B8')),
                 ),
-                Text(
-                  text2,
-                  style: GoogleFonts.poppins(
-                    fontSize: 8,
-                    fontWeight: FontWeight.w400,
-                    color: HexColor('#B8B8B8'),
+                FittedBox(
+                  child: Text(
+                    text2,
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
+                    softWrap: true,
+                    style: GoogleFonts.poppins(
+                      fontSize: context.responsiveFont(8),
+                      fontWeight: FontWeight.w400,
+                      color: HexColor('#B8B8B8'),
+                    ),
                   ),
                 ),
               ],
@@ -330,10 +335,10 @@ class _HistoryUpcomingPageState extends State<HistoryUpcomingPage> {
                                     ?.name ??
                                 '',
                             '${_controller.driverList[index].userProfile?.averagePoint} (531 reviews)',
-                            'Starting Location',
-                            '4140 Parker Rd. Allentown, New...',
-                            'Shop',
-                            '2972 Westheimer Rd. Santa Ana, Illinois 85486 ',
+                            '${_controller.driverList[index].driveModel?.fromShortAddress}',
+                            '${_controller.driverList[index].driveModel?.fromAddress}',
+                            '${_controller.driverList[index].driveModel?.toShortAddress}',
+                            '${_controller.driverList[index].driveModel?.toAddress}',
                             '29.08.2023',
                             '16:38 - 16.42',
                             '+220.00₺',
