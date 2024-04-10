@@ -17,6 +17,7 @@ class DriveModel extends BaseModel {
     this.toAddress,
     this.fromShortAddress,
     this.toShortAddress,
+    this.date,
   });
 
   DriveModel._fromJson(o) {
@@ -31,6 +32,9 @@ class DriveModel extends BaseModel {
     toLang = double.tryParse(o['to_lang']);
     timeFrom = o['time_from'];
     timeTo = o['time_to'];
+    DateTime dateTime = DateTime.parse(o['created_at']);
+    date =
+        '${dateTime.day < 10 ? '0${dateTime.day}' : dateTime.day}.${dateTime.month < 10 ? '0${dateTime.month}' : dateTime.month}.${dateTime.year}';
   }
 
   @override
@@ -51,6 +55,7 @@ class DriveModel extends BaseModel {
   double? toLang;
   double? toLat;
   String? toShortAddress;
+  String? date;
 
   @override
   Map<String, dynamic> toJson() {
