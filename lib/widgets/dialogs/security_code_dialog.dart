@@ -110,7 +110,7 @@ class _SecurityCodeDialogState extends State<SecurityCodeDialog> {
                   width: context.responsiveWidth(290),
                   onPressed: () async {
                     if (_checkPin) {
-                      DriverHomePage.stat = 'driving';
+                      //DriverHomePage.stat = 'driving';
                       NavigationManager.instance.navigationToPop();
                       widget.onDialogClosed();
                       widget.showDialog();

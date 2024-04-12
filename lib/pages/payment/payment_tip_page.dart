@@ -15,6 +15,7 @@ import '../../widgets/buttons/primary_button.dart';
 import '../../widgets/containers/payment_method_container.dart';
 import '../../widgets/padding/base_padding.dart';
 import '../authentication/splash_page.dart';
+import '../home/home_screen_transport.dart';
 
 class PaymentTipPage extends StatefulWidget {
   const PaymentTipPage({super.key});
@@ -90,8 +91,7 @@ class _PaymentTipPageState extends State<PaymentTipPage> {
   @override
   Widget build(BuildContext context) {
     if (SplashPage.directions.totalPayment == null) {
-      var directionsDetails =
-          Provider.of<AppInfo>(context, listen: false).userDropOffLocation;
+      var directionsDetails = Provider.of<AppInfo>(context, listen: false).userDropOffLocation;
       totalPayment = directionsDetails!.totalPayment.toString();
     } else {
       totalPayment = SplashPage.directions.totalPayment.toString();
@@ -102,8 +102,7 @@ class _PaymentTipPageState extends State<PaymentTipPage> {
         centerTitle: true,
         title: Text(
           'payment'.tr(),
-          style: context.textStyle.headlineSmallMedium.copyWith(
-              color: context.isLight ? HexColor("#2A2A2A") : Colors.white),
+          style: context.textStyle.headlineSmallMedium.copyWith(color: context.isLight ? HexColor("#2A2A2A") : Colors.white),
         ),
       ),
       body: BasePadding(
@@ -137,13 +136,11 @@ class _PaymentTipPageState extends State<PaymentTipPage> {
                   ),
                   GestureDetector(
                     onTap: () {
-                      NavigationManager.instance
-                          .navigationToPage(NavigationConstant.addCard);
+                      NavigationManager.instance.navigationToPage(NavigationConstant.addCard);
                     },
                     child: Text(
                       'addCard'.tr(),
-                      style: context.textStyle.subheadLargeSemibold
-                          .copyWith(color: AppThemes.secondary700),
+                      style: context.textStyle.subheadLargeSemibold.copyWith(color: AppThemes.secondary700),
                     ),
                   ),
                 ],
@@ -158,6 +155,7 @@ class _PaymentTipPageState extends State<PaymentTipPage> {
                   context: context,
                   onPressed: () async {
                     await _controller.pay(totalPayment, context);
+                    HomeScreenTransport.allowNavigation = true;
                   }),
               SizedBox(
                 height: context.responsiveHeight(16),
@@ -170,23 +168,18 @@ class _PaymentTipPageState extends State<PaymentTipPage> {
   }
 
   SingleChildRenderObjectWidget _buildPaymentMethod(BuildContext context) {
-    return _controller.card.cardNumber != null &&
-            _controller.card.month != null &&
-            _controller.card.year != null
+    return _controller.card.cardNumber != null && _controller.card.month != null && _controller.card.year != null
         ? PaymetMethodContainer(
             context: context,
             //assetName: 'visa',
-            text1:
-                '**** **** **** ${_controller.card.cardNumber?.substring(_controller.card.cardNumber!.length - 5)}',
-            text2:
-                'Expires: ${_controller.card.month}/${_controller.card.year}',
+            text1: '**** **** **** ${_controller.card.cardNumber?.substring(_controller.card.cardNumber!.length - 5)}',
+            text2: 'Expires: ${_controller.card.month}/${_controller.card.year}',
             opacitiy: 1,
           )
         : Center(
             child: Text(
               'noPaymentMethod'.tr(),
-              style: context.textStyle.titleSmallMedium
-                  .copyWith(color: HexColor('#898989')),
+              style: context.textStyle.titleSmallMedium.copyWith(color: HexColor('#898989')),
             ),
           );
   }

@@ -66,8 +66,6 @@ class _HomeScreenTransportState extends State<HomeScreenTransport> with TickerPr
 
   final Uri toLaunch = Uri(scheme: 'https', host: 'www.google.com', path: '/maps/@/data=!4m2!7m1!2e1');
 
-
-
   _onVerificationCodeChanged(String? newCode) {
     setState(() {
       callerHomeDirections.five_security_code = newCode;
@@ -253,6 +251,9 @@ class _HomeScreenTransportState extends State<HomeScreenTransport> with TickerPr
           // ignore: use_build_context_synchronously
 
           _bottomSheetControllers[1].reverse();
+          polyLineSet.clear();
+          pLineCoOrdinatesList.clear();
+          markersSet.clear();
           NavigationManager.instance.navigationToPageClear(NavigationConstant.paymentTip);
 
           //_timerStatus.cancel();

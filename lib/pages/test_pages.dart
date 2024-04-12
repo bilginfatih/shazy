@@ -16,6 +16,7 @@ import 'package:shazy/widgets/divider/counter_divider.dart';
 import 'package:shazy/widgets/modal_bottom_sheet/drive_bottom_sheet.dart';
 import '../core/init/models/caller_home_directions.dart';
 import '../core/init/models/directions.dart';
+import '../core/init/models/driver_home_directions.dart';
 import '../core/init/navigation/navigation_manager.dart';
 import '../models/comment/comment_model.dart';
 import '../models/drive/drive_model.dart';
@@ -73,6 +74,15 @@ class _TestPageState extends State<TestPage> with SingleTickerProviderStateMixin
         child: Center(
           child: ListView(
             children: [
+              ElevatedButton(
+                onPressed: () async {
+                  DriverHomeDirections directions = DriverHomeDirections();
+                  var box = await Hive.openBox('driver_directions');
+                  var response = await box.get('driver_directions');
+                  directions = directions.fromJson(response);
+                },
+                child: Text('driver cache directions'),
+              ),
               ElevatedButton(
                 onPressed: () async {
                   Directions directions = Directions();
@@ -189,8 +199,11 @@ class _TestPageState extends State<TestPage> with SingleTickerProviderStateMixin
               ),
               ElevatedButton(
                 onPressed: () async {
-                  CacheManager.instance.clearAll('user');
-                  CacheManager.instance.clearAll('card');
+                  //CacheManager.instance.clearAll('user');
+                  //CacheManager.instance.clearAll('card');
+                  CacheManager.instance.clearAll('directions');
+                  CacheManager.instance.clearAll('caller_directions');
+                  CacheManager.instance.clearAll('driver_directions');
                 },
                 child: Text('cache delete'),
               ),

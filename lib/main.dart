@@ -1,15 +1,12 @@
 import 'dart:ui';
-
 import 'package:easy_localization/easy_localization.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:hive_flutter/adapters.dart';
-import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
 import 'package:shazy/core/init/firebase/firebase_notification_manager.dart';
-
 import 'core/base/app_info.dart';
 import 'core/init/language/language_manager.dart';
 import 'core/init/navigation/navigation_manager.dart';
@@ -18,13 +15,13 @@ import 'utils/theme/themes.dart';
 
 void main() async {
   await _init();
-    runApp(EasyLocalization(
-      supportedLocales: LanguageManager.instance.supportedLocales,
-      startLocale: LanguageManager.instance.enLocale,
-      fallbackLocale: LanguageManager.instance.enLocale,
-      path: 'assets/translations',
-      child: const MyApp(),
-    ));
+  runApp(EasyLocalization(
+    supportedLocales: LanguageManager.instance.supportedLocales,
+    startLocale: LanguageManager.instance.enLocale,
+    fallbackLocale: LanguageManager.instance.enLocale,
+    path: 'assets/translations',
+    child: const MyApp(),
+  ));
 }
 
 _init() async {
@@ -64,8 +61,7 @@ class MyApp extends StatelessWidget {
         localizationsDelegates: context.localizationDelegates,
         locale: context.locale,
         navigatorKey: NavigationManager.instance.navigationKey,
-        onGenerateRoute: (args) =>
-            NavigationRouteManager.instance?.generateRoute(args),
+        onGenerateRoute: (args) => NavigationRouteManager.instance?.generateRoute(args),
         initialRoute: '/',
       ),
     );

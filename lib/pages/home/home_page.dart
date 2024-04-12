@@ -8,6 +8,7 @@ import '../../core/init/cache/cache_manager.dart';
 import '../../utils/extensions/context_extension.dart';
 import '../../utils/theme/themes.dart';
 import '../../widgets/drawer/custom_drawer.dart';
+import '../authentication/splash_page.dart';
 import '../history/history_upcoming_page.dart';
 import '../offer/offer_page.dart';
 import '../profile/profile_page.dart';
@@ -41,8 +42,7 @@ class _HomePageState extends State<HomePage> {
     super.initState();
   }
 
-  BottomNavigationBarItem _buildBottomNavigationBarItem(
-      String asset, String label, int index) {
+  BottomNavigationBarItem _buildBottomNavigationBarItem(String asset, String label, int index) {
     return BottomNavigationBarItem(
       icon: SvgPicture.asset(
         height: context.responsiveHeight(24),
@@ -61,6 +61,9 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     bool? isDriver = ModalRoute.of(context)?.settings.arguments as bool?;
     if (isDriver != null && isDriver) {
+      _pages[0] = const DriverHomePage();
+      setState(() {});
+    } else if (SplashPage.driverHomeDirections.driver_id != null) {
       _pages[0] = const DriverHomePage();
       setState(() {});
     }
@@ -82,9 +85,7 @@ class _HomePageState extends State<HomePage> {
           backgroundColor: Colors.transparent,
           type: BottomNavigationBarType.fixed,
           selectedItemColor: AppThemes.lightPrimary500,
-          unselectedItemColor: context.isLight
-              ? AppThemes.contentSecondary
-              : HexColor('#D0D0D0'),
+          unselectedItemColor: context.isLight ? AppThemes.contentSecondary : HexColor('#D0D0D0'),
           showUnselectedLabels: true,
           currentIndex: _currentIndex,
           onTap: (index) {
