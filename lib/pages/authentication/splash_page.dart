@@ -158,7 +158,7 @@ class _SplashPageState extends State<SplashPage> {
                 ),
               ),
               child: Image.asset(
-                "assets/png/main_logo.png",
+                "assets/png/splash_logo-2.png",
               ),
             ),
             SizedBox(
