@@ -19,7 +19,11 @@ class FirebaseNotificationManager {
 
   Future<String> get notificationToken async {
     if (await NetworkManager.instance.checkNetwork()) {
-      return await FirebaseMessaging.instance.getToken() ?? '';
+      if (Platform.isIOS) {
+        return await FirebaseMessaging.instance.getAPNSToken() ?? '';
+      } else {
+        return await FirebaseMessaging.instance.getToken() ?? '';
+      }
     }
     return '';
   }

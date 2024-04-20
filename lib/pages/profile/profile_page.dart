@@ -146,7 +146,7 @@ class _ProfilePageState extends State<ProfilePage> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                _controller.name == '' ? 'fullName'.tr() : _controller.name,
+                _controller.name,
                 softWrap: false,
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
