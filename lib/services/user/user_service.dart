@@ -149,6 +149,7 @@ class UserService {
 
   Future<void> _cleanCache() async {
     CacheManager.instance.clearAll('user');
+    CacheManager.instance.clearAll('card');
     await SessionManager().destroy();
     NavigationManager.instance
         .navigationToPageClear(NavigationConstant.welcome);

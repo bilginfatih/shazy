@@ -41,6 +41,8 @@ class PaymentService {
     }
   }
 
+
+
   Future<String> pay(PaymentModel model) async {
     try {
       String id = await SessionManager().get('id');
