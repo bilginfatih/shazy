@@ -99,6 +99,11 @@ class AuthController {
           .showErrorDialog(context, 'emailValidError'.tr(), 'cancel'.tr(), () {
         NavigationManager.instance.navigationToPop();
       });
+    } else if (model.identificationNumber?.length != 11) {
+      HelperFunctions.instance.showErrorDialog(
+          context, 'identificationValidError'.tr(), 'cancel'.tr(), () {
+        NavigationManager.instance.navigationToPop();
+      });
     } else if (model.name == '' ||
         model.identificationNumber == '' ||
         model.phone == '' ||

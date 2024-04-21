@@ -30,6 +30,8 @@ class CallerBottomSheet extends StatefulWidget {
     required this.shareMyTripText,
     required this.shareMyTripButtonText,
     required this.shareButtonTapped,
+    required this.cardNumber,
+    required this.expires,
   });
 
   String? buttonTextCancel;
@@ -48,6 +50,8 @@ class CallerBottomSheet extends StatefulWidget {
   final String shareMyTripText;
   final String shareMyTripButtonText;
   final VoidCallback shareButtonTapped;
+  final String cardNumber;
+  final String expires;
 
   @override
   State<CallerBottomSheet> createState() => _CallerBottomSheetState();
@@ -301,8 +305,8 @@ class _CallerBottomSheetState extends State<CallerBottomSheet> {
                   child: PaymetMethodContainer(
                     context: context,
                     assetName: 'visa',
-                    text1: '**** **** **** 8970',
-                    text2: 'Expires: 12/26',
+                    text1: widget.cardNumber,
+                    text2: '${'expires'.tr()}: ${widget.expires}',
                     opacitiy: 1,
                   ),
                 )

@@ -11,7 +11,7 @@ class AppTextStyles {
   late BuildContext _context;
 
   TextStyle get titleXlargeRegular => GoogleFonts.poppins(
-        fontSize: _context.mediaQueryData.textScaleFactor * 34,
+        fontSize:_context.responsiveFont(34),
         fontWeight: FontWeight.w400,
       );
 

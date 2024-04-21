@@ -32,16 +32,23 @@ class DriverDialog extends Padding {
             right: context.responsiveWidth(14),
           ),
           child: Container(
-            decoration: ShapeDecoration(shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)), color: Colors.white),
+            decoration: ShapeDecoration(
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(8)),
+                color: Colors.white),
             child: Padding(
-              padding: EdgeInsets.symmetric(vertical: context.responsiveHeight(15), horizontal: context.responsiveWidth(15)),
+              padding: EdgeInsets.symmetric(
+                  vertical: context.responsiveHeight(15),
+                  horizontal: context.responsiveWidth(15)),
               child: Material(
                 color: Colors.transparent,
                 child: Column(
                   children: [
                     Text(
+                      textAlign: TextAlign.center,
                       price,
-                      style: context.textStyle.titleXlargeRegular,
+                      style: context.textStyle.titleXlargeRegular
+                          .copyWith(color: Colors.black),
                     ),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
@@ -52,7 +59,8 @@ class DriverDialog extends Padding {
                         ),
                         Text(
                           star,
-                          style: context.textStyle.bodySmallRegular,
+                          style: context.textStyle.bodySmallRegular
+                              .copyWith(color: Colors.black),
                         ),
                       ],
                     ),
@@ -118,7 +126,10 @@ class DriverDialog extends Padding {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Padding(
-              padding: EdgeInsets.only(top: context.responsiveHeight(4), left: context.responsiveWidth(10), right: context.responsiveWidth(6)),
+              padding: EdgeInsets.only(
+                  top: context.responsiveHeight(4),
+                  left: context.responsiveWidth(10),
+                  right: context.responsiveWidth(6)),
               child: SvgPicture.asset('assets/svg/$assetName.svg'),
             ),
             Column(

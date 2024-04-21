@@ -164,7 +164,8 @@
     "weWillReturn48Hours": "We will return within 48 hours.",
     "tryAgain": "Try Again",
     "home": "Home",
-    "name": "Name"
+    "name": "Name",
+    "identificationValidError": "identificationValidError"
     
 
 }
