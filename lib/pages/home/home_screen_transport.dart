@@ -408,8 +408,9 @@ class _HomeScreenTransportState extends State<HomeScreenTransport>
                 NavigationManager.instance
                     .navigationToPage(NavigationConstant.cancelRide);
               },
-              cardNumber:
-                  '**** **** **** ${card.cardNumber?.substring(card.cardNumber!.length - 5)}',
+              cardNumber: card.cardNumber != ''
+                  ? '**** **** **** ${card.cardNumber?.substring(card.cardNumber!.length - 5)}'
+                  : '',
               expires: '${card.month}/${card.year}',
             ),
           ),

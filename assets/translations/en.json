@@ -165,7 +165,9 @@
     "tryAgain": "Try Again",
     "home": "Home",
     "name": "Name",
-    "identificationValidError": "identificationValidError"
-    
+    "identificationValidError": "identificationValidError",
+    "searchingForDriver": "Searching for Driver",
+    "thisMayTakeFewSecond": "This may take few second",
+    "cancelCall": "Cancel Call"
 
 }

@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:hexcolor/hexcolor.dart';
 import '../../utils/extensions/context_extension.dart';
@@ -24,7 +25,7 @@ class SearchDriverDialog extends Dialog {
                   height: context.responsiveHeight(20),
                 ),
                 Text(
-                  'Searching for Driver',
+                  'searchingForDriver'.tr(),
                   style: context.textStyle.headlineSmallMedium.copyWith(
                     color: HexColor('#5A5A5A'),
                   ),
@@ -39,23 +40,28 @@ class SearchDriverDialog extends Dialog {
                 SizedBox(
                   height: context.responsiveHeight(6),
                 ),
-                const Text(
-                  'This may take few second',
+                Text(
+                  'thisMayTakeFewSecond'.tr(),
                   style: TextStyle(
                     fontSize: 13,
                     fontWeight: FontWeight.w300,
+                    color: HexColor('#5A5A5A'),
                   ),
                 ),
                 SizedBox(
                   height: context.responsiveHeight(21),
                 ),
                 SecondaryButton(
-                    width: context.responsiveWidth(110),
-                    height: context.responsiveHeight(50),
-                    text: 'Cancel Call',
-                    style: TextStyle(fontSize: 14, fontWeight: FontWeight.w500, color: HexColor('#2A2A2A')),
-                    context: context,
-                    onPressed: onPressed,),
+                  width: context.responsiveWidth(110),
+                  height: context.responsiveHeight(50),
+                  text: 'cancelCall'.tr(),
+                  style: TextStyle(
+                      fontSize: 14,
+                      fontWeight: FontWeight.w500,
+                      color: HexColor('#2A2A2A')),
+                  context: context,
+                  onPressed: onPressed,
+                ),
               ],
             ),
           ),

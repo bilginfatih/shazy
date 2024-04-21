@@ -325,68 +325,76 @@ class _HistoryUpcomingPageState extends State<HistoryUpcomingPage> {
             Observer(builder: (_) {
               return SizedBox(
                 height: context.responsiveHeight(550),
-                child: _controller.isDriverSelected
-                    ? ListView.builder(
-                        itemCount: _controller.driverList.length,
-                        itemBuilder: (BuildContext context, int index) {
-                          return _buildContainer(
-                            context,
-                            _controller.driverList[index].userProfile?.userModel
-                                    ?.name ??
-                                '',
-                            '${_controller.driverList[index].userProfile?.averagePoint} (531 reviews)',
-                            '${_controller.driverList[index].driveModel?.fromShortAddress}',
-                            '${_controller.driverList[index].driveModel?.fromAddress}',
-                            '${_controller.driverList[index].driveModel?.toShortAddress}',
-                            '${_controller.driverList[index].driveModel?.toAddress}',
-                            '${_controller.driverList[index].driveModel?.date}',
-                            '16:38 - 16.42',
-                            '+220.00₺',
-                            '#388E3D',
-                            _controller.driverList[index].commentId == null ||
-                                    _controller.driverList[index].commentId ==
-                                        ''
-                                ? 'reviewPassenger'.tr()
-                                : '',
-                            index,
-                            cancel: _controller
-                                    .driverList[index].driveModel?.status
-                                    .toString() ==
-                                'Canceled',
-                          );
-                        },
+                child: _controller.driverList.isEmpty &&
+                        _controller.passengerList.isEmpty
+                    ? const Center(
+                        child: CircularProgressIndicator(),
                       )
-                    : ListView.builder(
-                        itemCount: _controller.passengerList.length,
-                        itemBuilder: (BuildContext context, int index) {
-                          return _buildContainer(
-                            context,
-                            _controller.passengerList[index].userProfile
-                                    ?.userModel?.name ??
-                                '',
-                            '${_controller.passengerList[index].userProfile?.averagePoint} (531 reviews)',
-                            '${_controller.passengerList[index].driveModel?.fromShortAddress}',
-                            '${_controller.passengerList[index].driveModel?.fromAddress}',
-                            '${_controller.passengerList[index].driveModel?.toShortAddress}',
-                            '${_controller.passengerList[index].driveModel?.toAddress}',
-                            '${_controller.passengerList[index].driveModel?.date}',
-                            '16:38 - 16.42',
-                            '220.00₺',
-                            '#5A5A5A',
-                            _controller.passengerList[index].commentId ==
-                                        'null' ||
-                                    _controller.driverList[index].commentId ==
-                                        ''
-                                ? 'reviewTrip'.tr()
-                                : '',
-                            cancel: _controller
-                                    .driverList[index].driveModel?.status
-                                    .toString() ==
-                                'Canceled',
-                            index,
-                          );
-                        },
-                      ),
+                    : _controller.isDriverSelected
+                        ? ListView.builder(
+                            itemCount: _controller.driverList.length,
+                            itemBuilder: (BuildContext context, int index) {
+                              return _buildContainer(
+                                context,
+                                _controller.driverList[index].userProfile
+                                        ?.userModel?.name ??
+                                    '',
+                                '${_controller.driverList[index].userProfile?.averagePoint} (531 reviews)',
+                                '${_controller.driverList[index].driveModel?.fromShortAddress}',
+                                '${_controller.driverList[index].driveModel?.fromAddress}',
+                                '${_controller.driverList[index].driveModel?.toShortAddress}',
+                                '${_controller.driverList[index].driveModel?.toAddress}',
+                                '${_controller.driverList[index].driveModel?.date}',
+                                '16:38 - 16.42',
+                                '+220.00₺',
+                                '#388E3D',
+                                _controller.driverList[index].commentId ==
+                                            null ||
+                                        _controller
+                                                .driverList[index].commentId ==
+                                            ''
+                                    ? 'reviewPassenger'.tr()
+                                    : '',
+                                index,
+                                cancel: _controller
+                                        .driverList[index].driveModel?.status
+                                        .toString() ==
+                                    'Canceled',
+                              );
+                            },
+                          )
+                        : ListView.builder(
+                            itemCount: _controller.passengerList.length,
+                            itemBuilder: (BuildContext context, int index) {
+                              return _buildContainer(
+                                context,
+                                _controller.passengerList[index].userProfile
+                                        ?.userModel?.name ??
+                                    '',
+                                '${_controller.passengerList[index].userProfile?.averagePoint} (531 reviews)',
+                                '${_controller.passengerList[index].driveModel?.fromShortAddress}',
+                                '${_controller.passengerList[index].driveModel?.fromAddress}',
+                                '${_controller.passengerList[index].driveModel?.toShortAddress}',
+                                '${_controller.passengerList[index].driveModel?.toAddress}',
+                                '${_controller.passengerList[index].driveModel?.date}',
+                                '16:38 - 16.42',
+                                '220.00₺',
+                                '#5A5A5A',
+                                _controller.passengerList[index].commentId ==
+                                            'null' ||
+                                        _controller
+                                                .driverList[index].commentId ==
+                                            ''
+                                    ? 'reviewTrip'.tr()
+                                    : '',
+                                cancel: _controller
+                                        .driverList[index].driveModel?.status
+                                        .toString() ==
+                                    'Canceled',
+                                index,
+                              );
+                            },
+                          ),
               );
             }),
           ],
