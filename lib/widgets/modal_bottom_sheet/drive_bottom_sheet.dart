@@ -5,6 +5,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:shazy/utils/extensions/context_extension.dart';
+import 'package:url_launcher/url_launcher.dart';
 import '../../utils/theme/themes.dart';
 import '../buttons/primary_button.dart';
 import '../buttons/secondary_button.dart';
@@ -53,13 +54,9 @@ class DriveBottomSheet extends StatefulWidget {
 }
 
 class _DriveBottomSheetState extends State<DriveBottomSheet> {
-  Padding _buildCustomerInfo(BuildContext context, String imagePath,
-      String customerName, String startText) {
+  Padding _buildCustomerInfo(BuildContext context, String imagePath, String customerName, String startText) {
     return Padding(
-      padding: EdgeInsets.only(
-          top: context.responsiveHeight(19),
-          left: context.responsiveWidth(14),
-          bottom: context.responsiveHeight(16)),
+      padding: EdgeInsets.only(top: context.responsiveHeight(19), left: context.responsiveWidth(14), bottom: context.responsiveHeight(16)),
       child: Row(
         children: [
           Container(
@@ -70,8 +67,7 @@ class _DriveBottomSheetState extends State<DriveBottomSheet> {
                 image: NetworkImage(imagePath),
                 fit: BoxFit.fill,
               ),
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(4)),
+              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
             ),
           ),
           SizedBox(
@@ -83,8 +79,7 @@ class _DriveBottomSheetState extends State<DriveBottomSheet> {
               children: [
                 Text(
                   customerName,
-                  style: context.textStyle.subheadLargeMedium
-                      .copyWith(fontSize: context.responsiveFont(16)),
+                  style: context.textStyle.subheadLargeMedium.copyWith(fontSize: context.responsiveFont(16)),
                 ),
                 Row(
                   children: [
@@ -112,17 +107,10 @@ class _DriveBottomSheetState extends State<DriveBottomSheet> {
   }
 
   Padding _buildBottomButtons(
-      BuildContext context,
-      String? buttonTextCancel,
-      String? buttonTextStart,
-      VoidCallback? onPressedCancel,
-      VoidCallback onPressedStart) {
+      BuildContext context, String? buttonTextCancel, String? buttonTextStart, VoidCallback? onPressedCancel, VoidCallback onPressedStart) {
     return Padding(
       padding: EdgeInsets.only(
-          top: context.responsiveHeight(26),
-          left: context.responsiveWidth(14),
-          right: context.responsiveWidth(14),
-          bottom: context.responsiveHeight(23)),
+          top: context.responsiveHeight(26), left: context.responsiveWidth(14), right: context.responsiveWidth(14), bottom: context.responsiveHeight(23)),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
@@ -132,7 +120,7 @@ class _DriveBottomSheetState extends State<DriveBottomSheet> {
               height: context.responsiveHeight(50),
               child: GestureDetector(
                 onTap: () {
-                  print('wp mesajlaşma atacak');
+                  launchUrl(Uri.parse('https://wa.me/905532732686'));
                 },
                 child: CircularSvgIcon(
                   context: context,
@@ -144,8 +132,7 @@ class _DriveBottomSheetState extends State<DriveBottomSheet> {
           SizedBox(
             width: context.responsiveWidth(25),
           ),
-          if (widget
-              .showSecondaryButton) // Eğer showSecondaryButton true ve index 0 ise göster
+          if (widget.showSecondaryButton) // Eğer showSecondaryButton true ve index 0 ise göster
             Expanded(
               flex: 3,
               child: Padding(
@@ -155,8 +142,7 @@ class _DriveBottomSheetState extends State<DriveBottomSheet> {
                   text: buttonTextCancel ?? 'Cancel'.tr(),
                   context: context,
                   onPressed: onPressedCancel ?? () {},
-                  style: context.textStyle.subheadLargeMedium
-                      .copyWith(fontSize: context.responsiveFont(15)),
+                  style: context.textStyle.subheadLargeMedium.copyWith(fontSize: context.responsiveFont(15)),
                 ),
               ),
             ),
@@ -170,8 +156,7 @@ class _DriveBottomSheetState extends State<DriveBottomSheet> {
               text: buttonTextStart ?? 'startTheTrip'.tr(),
               context: context,
               onPressed: onPressedStart,
-              style: context.textStyle.subheadLargeMedium
-                  .copyWith(fontSize: context.responsiveFont(15)),
+              style: context.textStyle.subheadLargeMedium.copyWith(fontSize: context.responsiveFont(15)),
             ),
           ),
         ],
@@ -194,10 +179,7 @@ class _DriveBottomSheetState extends State<DriveBottomSheet> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Padding(
-              padding: EdgeInsets.only(
-                  top: context.responsiveHeight(4),
-                  left: context.responsiveWidth(10),
-                  right: context.responsiveWidth(6)),
+              padding: EdgeInsets.only(top: context.responsiveHeight(4), left: context.responsiveWidth(10), right: context.responsiveWidth(6)),
               child: SvgPicture.asset('assets/svg/$assetName.svg'),
             ),
             Column(
@@ -260,15 +242,13 @@ class _DriveBottomSheetState extends State<DriveBottomSheet> {
             ),
             child: Text(
               widget.pickingUpText,
-              style: context.textStyle.subheadLargeMedium
-                  .copyWith(fontSize: context.responsiveFont(16)),
+              style: context.textStyle.subheadLargeMedium.copyWith(fontSize: context.responsiveFont(16)),
             ),
           ),
           const Divider(
             thickness: 1,
           ),
-          _buildCustomerInfo(
-              context, widget.imagePath, widget.customerName, widget.startText),
+          _buildCustomerInfo(context, widget.imagePath, widget.customerName, widget.startText),
           const Divider(
             thickness: 1,
           ),
@@ -287,12 +267,7 @@ class _DriveBottomSheetState extends State<DriveBottomSheet> {
             widget.location2TextTitle,
             widget.location2Text,
           ),
-          _buildBottomButtons(
-              context,
-              widget.buttonTextCancel,
-              widget.buttonTextStart,
-              widget.onPressedCancel,
-              widget.onPressedStart),
+          _buildBottomButtons(context, widget.buttonTextCancel, widget.buttonTextStart, widget.onPressedCancel, widget.onPressedStart),
         ],
       ),
     );

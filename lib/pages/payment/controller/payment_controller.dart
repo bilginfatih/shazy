@@ -60,7 +60,8 @@ abstract class _PaymentControllerBase with Store {
             ),
           ).then((value) {
             showModalBottomSheet(
-              isScrollControlled: true,
+              isDismissible: false,
+              isScrollControlled: false,
               shape: const RoundedRectangleBorder(
                 borderRadius: BorderRadius.only(
                   topLeft: Radius.circular(24),
@@ -80,7 +81,7 @@ abstract class _PaymentControllerBase with Store {
                     NavigationManager.instance.navigationToPageClear(NavigationConstant.homePage);
                   },
                   onPressedRatingBar: _controllerComment.changeStarSelectedIndex,
-                  text: '${'youRated'.tr()} ${' ${_controllerComment.starSelectedIndex}'} ${'star'.tr()}',
+                  text: '${'youRated'.tr()} $driverName ${' ${_controllerComment.starSelectedIndex}'} ${'star'.tr()}',
                 );
               }),
             );

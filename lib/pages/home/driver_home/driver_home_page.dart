@@ -238,7 +238,7 @@ class _DriverHomePageState extends State<DriverHomePage> with TickerProviderStat
           _canceledTimer.cancel();
           //_timerIsMatched.cancel();
           // ignore: use_build_context_synchronously
-          showDialog(
+          showDialog(barrierDismissible: false,
             context: context,
             builder: (BuildContext context) {
               return SuccessDialog(

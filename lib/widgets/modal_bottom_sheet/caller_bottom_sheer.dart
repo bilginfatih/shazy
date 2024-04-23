@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:shazy/utils/extensions/context_extension.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import '../../core/init/network/network_manager.dart';
 import '../../utils/theme/themes.dart';
@@ -124,7 +125,7 @@ class _CallerBottomSheetState extends State<CallerBottomSheet> {
         children: [
           GestureDetector(
             onTap: () {
-              print('wp mesajlaşma atacak');
+              launchUrl(Uri.parse('https://wa.me/905532732686'));
             },
             child: CircularSvgIcon(
               context: context,
