@@ -12,6 +12,7 @@ import 'package:shazy/services/payment/payment_service.dart';
 import 'package:url_launcher/url_launcher.dart';
 import '../../core/assistants/asistant_methods.dart';
 import '../../core/base/app_info.dart';
+import '../../core/init/cache/cache_manager.dart';
 import '../../core/init/models/caller_home_directions.dart';
 import '../../core/init/models/directions.dart';
 import '../../core/init/navigation/navigation_manager.dart';
@@ -42,7 +43,7 @@ class HomeScreenTransport extends StatefulWidget {
   }) : super(key: key);
 
   static bool isAccept = false;
-  static String status = '';
+
   static int flagCanceled = 0;
   static int flagDriving = 0;
   static int flagWaitPayment = 0;
@@ -54,8 +55,7 @@ class HomeScreenTransport extends StatefulWidget {
   State<HomeScreenTransport> createState() => _HomeScreenTransportState();
 }
 
-class _HomeScreenTransportState extends State<HomeScreenTransport>
-    with TickerProviderStateMixin, WidgetsBindingObserver {
+class _HomeScreenTransportState extends State<HomeScreenTransport> with TickerProviderStateMixin, WidgetsBindingObserver {
   Timer _timer = Timer(Duration(milliseconds: 1), () {});
   Timer _timerSearchDriver = Timer(const Duration(milliseconds: 1), () {});
 
@@ -64,14 +64,10 @@ class _HomeScreenTransportState extends State<HomeScreenTransport>
 
   String mapTheme = '';
 
-  final Completer<GoogleMapController> _controller =
-      Completer<GoogleMapController>();
+  final Completer<GoogleMapController> _controller = Completer<GoogleMapController>();
   GoogleMapController? newGoogleMapController;
 
-  final Uri toLaunch = Uri(
-      scheme: 'https',
-      host: 'www.google.com',
-      path: '/maps/@/data=!4m2!7m1!2e1');
+  final Uri toLaunch = Uri(scheme: 'https', host: 'www.google.com', path: '/maps/@/data=!4m2!7m1!2e1');
 
   _onVerificationCodeChanged(String? newCode) {
     setState(() {
@@ -79,10 +75,9 @@ class _HomeScreenTransportState extends State<HomeScreenTransport>
     });
   }
 
-  final SearchDistanceService _searchDistanceService =
-      SearchDistanceService.instance;
+  final SearchDistanceService _searchDistanceService = SearchDistanceService.instance;
 
-  DriveModel driveDetailsInfo = DriveModel();
+  //DriveModel driveDetailsInfo = DriveModel();
   bool _isAppInSearchDrive = false;
 
   List<LatLng> pLineCoOrdinatesList = [];
@@ -94,26 +89,17 @@ class _HomeScreenTransportState extends State<HomeScreenTransport>
   PaymentModel card = PaymentModel(cardNumber: '', month: '', year: '');
 
   locateUserPosition() async {
-    Position cPosition = await Geolocator.getCurrentPosition(
-        desiredAccuracy: LocationAccuracy.high);
+    Position cPosition = await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
     userCurrentPosition = cPosition;
-    LatLng latLngPosition =
-        LatLng(userCurrentPosition!.latitude, userCurrentPosition!.longitude);
+    LatLng latLngPosition = LatLng(userCurrentPosition!.latitude, userCurrentPosition!.longitude);
 
-    CameraPosition cameraPosition =
-        CameraPosition(target: latLngPosition, zoom: 14);
+    CameraPosition cameraPosition = CameraPosition(target: latLngPosition, zoom: 14);
 
-    newGoogleMapController!
-        .animateCamera(CameraUpdate.newCameraPosition(cameraPosition));
+    newGoogleMapController!.animateCamera(CameraUpdate.newCameraPosition(cameraPosition));
 
-    String humanReadableAddress =
-        await AssistantMethods.searchAddressForGeographicCoOrdinates(
-            userCurrentPosition!, context);
+    String humanReadableAddress = await AssistantMethods.searchAddressForGeographicCoOrdinates(userCurrentPosition!, context);
     print("this is your address = " + humanReadableAddress);
-    print('customer_lat: ' +
-        userCurrentPosition!.latitude.toString() +
-        ' customer_long:' +
-        userCurrentPosition!.longitude.toString());
+    print('customer_lat: ' + userCurrentPosition!.latitude.toString() + ' customer_long:' + userCurrentPosition!.longitude.toString());
   }
 
   static const CameraPosition _kGooglePlex = CameraPosition(
@@ -131,9 +117,7 @@ class _HomeScreenTransportState extends State<HomeScreenTransport>
     //_getLocationPermission(); // İzin kontrolü eklendi
     // _subscribeToLocationChanges(); // Geolocation Aboneliği eklendi
     WidgetsBinding.instance.addObserver(this);
-    DefaultAssetBundle.of(context)
-        .loadString('assets/maptheme/night_theme.json')
-        .then(
+    DefaultAssetBundle.of(context).loadString('assets/maptheme/night_theme.json').then(
       (value) {
         mapTheme = value;
       },
@@ -171,7 +155,7 @@ class _HomeScreenTransportState extends State<HomeScreenTransport>
   void didChangeAppLifecycleState(AppLifecycleState state) async {
     if (state == AppLifecycleState.paused) {
       if (_isAppInSearchDrive == true) {
-        if (driveDetailsInfo.status == 'matched') {
+        if (callerHomeDirections.caller_status == 'matched') {
           String userId = await SessionManager().get('id');
           CancelReasonModel model = CancelReasonModel(
             callerId: userId,
@@ -194,31 +178,25 @@ class _HomeScreenTransportState extends State<HomeScreenTransport>
   }
 
   Future<void> isMatched() async {
-    var directionsDetails =
-        Provider.of<AppInfo>(context, listen: false).callerDropOffLocation;
+    var directionsDetails = Provider.of<AppInfo>(context, listen: false).callerDropOffLocation;
     try {
       String userId = await SessionManager().get('id');
-      String id =
-          "/drive-request/caller/$userId/${directionsDetails!.caller_status}";
+      String id = "/drive-request/caller/$userId/${directionsDetails!.caller_status}";
       var requestId = await NetworkManager.instance.get(id);
 
       callerHomeDirections.drive_id = requestId[0]["id"];
       callerHomeDirections.driver_id = requestId[0]["driver_id"];
 
-      UserProfileModel? userProfile = await UserService.instance
-          .getAnotherUser(callerHomeDirections.driver_id.toString());
+      UserProfileModel? userProfile = await UserService.instance.getAnotherUser(callerHomeDirections.driver_id.toString());
       callerHomeDirections.driver_avarage_point = userProfile!.averagePoint!;
-      SplashPage.callerHomeDirections.driver_avarage_point =
-          userProfile.averagePoint!;
+      SplashPage.callerHomeDirections.driver_avarage_point = userProfile.averagePoint!;
       callerHomeDirections.driver_name = userProfile.userModel!.name!;
       callerHomeDirections.driver_surname = userProfile.userModel!.surname!;
-      callerHomeDirections.driver_picture_path =
-          userProfile.profilePicturePath!;
+      callerHomeDirections.driver_picture_path = userProfile.profilePicturePath!;
 
       if (callerHomeDirections.drive_id != '') {
         // 2. cache
-        Provider.of<AppInfo>(context, listen: false)
-            .callerDropOffLocationCache(callerHomeDirections);
+        Provider.of<AppInfo>(context, listen: false).callerDropOffLocationCache(callerHomeDirections);
         _timerSearchDriver.cancel();
         startSendingRequests();
       }
@@ -237,26 +215,21 @@ class _HomeScreenTransportState extends State<HomeScreenTransport>
 
         print('status: ' + callerHomeDirections.caller_status.toString());
 
-        if (callerHomeDirections.caller_status == 'accept' &&
-            callerHomeDirections.isAccept != true) {
+        if (callerHomeDirections.caller_status == 'accept' && callerHomeDirections.isAccept != true) {
           callerHomeDirections.isAccept = true;
 
           String userId = await SessionManager().get('id');
           String securityCodeUrl = "/security-code/callerCode/$userId";
-          var requestSecurityCode =
-              await NetworkManager.instance.get(securityCodeUrl);
-          var statusSecurityCode =
-              requestSecurityCode["security-code"]["caller"];
+          var requestSecurityCode = await NetworkManager.instance.get(securityCodeUrl);
+          var statusSecurityCode = requestSecurityCode["security-code"]["caller"];
 
           List<String> callerParts = statusSecurityCode.split(',');
-          callerHomeDirections.five_security_code =
-              callerParts.length > 1 ? callerParts[1] : null;
+          callerHomeDirections.five_security_code = callerParts.length > 1 ? callerParts[1] : null;
           //SplashPage.callerHomeDirections.five_security_code = callerParts.length > 1 ? callerParts[1] : null;
 
           _onVerificationCodeChanged(callerHomeDirections.five_security_code);
           // _onVerificationCodeChanged(SplashPage.callerHomeDirections.five_security_code);
-          Provider.of<AppInfo>(context, listen: false)
-              .callerDropOffLocationCache(callerHomeDirections);
+          Provider.of<AppInfo>(context, listen: false).callerDropOffLocationCache(callerHomeDirections);
           NavigationManager.instance.navigationToPop();
           _showCallerBottomSheet(0);
 
@@ -267,12 +240,10 @@ class _HomeScreenTransportState extends State<HomeScreenTransport>
           //startSendingRequestsStatus();
 
           // ignore: use_build_context_synchronously
-        } else if (callerHomeDirections.caller_status == 'driving' &&
-            HomeScreenTransport.flagDriving == 0) {
+        } else if (callerHomeDirections.caller_status == 'driving' && HomeScreenTransport.flagDriving == 0) {
           HomeScreenTransport.flagDriving = 1;
           HomeScreenTransport.isAccept = true;
-          Provider.of<AppInfo>(context, listen: false)
-              .callerDropOffLocationCache(callerHomeDirections);
+          Provider.of<AppInfo>(context, listen: false).callerDropOffLocationCache(callerHomeDirections);
           // ignore: use_build_context_synchronously
 
           _bottomSheetControllers[0].reverse();
@@ -281,12 +252,10 @@ class _HomeScreenTransportState extends State<HomeScreenTransport>
           //_timerStatus.cancel();
 
           // ignore: use_build_context_synchronously
-        } else if (callerHomeDirections.caller_status == 'waitpayment' &&
-            HomeScreenTransport.flagWaitPayment == 0) {
+        } else if (callerHomeDirections.caller_status == 'waitpayment' && HomeScreenTransport.flagWaitPayment == 0) {
           HomeScreenTransport.flagWaitPayment = 1;
           HomeScreenTransport.isAccept = false;
-          Provider.of<AppInfo>(context, listen: false)
-              .callerDropOffLocationCache(callerHomeDirections);
+          Provider.of<AppInfo>(context, listen: false).callerDropOffLocationCache(callerHomeDirections);
 
           _timer.cancel();
           // ignore: use_build_context_synchronously
@@ -295,24 +264,25 @@ class _HomeScreenTransportState extends State<HomeScreenTransport>
           polyLineSet.clear();
           pLineCoOrdinatesList.clear();
           markersSet.clear();
-          NavigationManager.instance
-              .navigationToPageClear(NavigationConstant.paymentTip);
+          NavigationManager.instance.navigationToPageClear(NavigationConstant.paymentTip);
 
           //_timerStatus.cancel();
 
           // ignore: use_build_context_synchronously
-        } else if (callerHomeDirections.caller_status == 'canceled' &&
-            HomeScreenTransport.flagCanceled == 0) {
+        } else if (callerHomeDirections.caller_status == 'canceled' && HomeScreenTransport.flagCanceled == 0) {
+          CacheManager.instance.clearAll('directions');
+          CacheManager.instance.clearAll('caller_directions');
           HomeScreenTransport.flagCanceled = 1;
           HomeScreenTransport.isAccept = false;
           HomeScreenTransport.allowNavigation = true;
-          Provider.of<AppInfo>(context, listen: false)
-              .callerDropOffLocationCache(callerHomeDirections);
+          //Provider.of<AppInfo>(context, listen: false).callerDropOffLocationCache(callerHomeDirections);
+
           // ignore: use_build_context_synchronously
 
           _showCallerBottomSheet(0);
           //_timerStatus.cancel();
           _timer.cancel();
+          NavigationManager.instance.navigationToPageClear(NavigationConstant.homePage);
 
           // ignore: use_build_context_synchronously
         }
@@ -339,8 +309,7 @@ class _HomeScreenTransportState extends State<HomeScreenTransport>
   }
 
   void _showCallerBottomSheet(int index) {
-    var directionsDetails =
-        Provider.of<AppInfo>(context, listen: false).callerDropOffLocation;
+    var directionsDetails = Provider.of<AppInfo>(context, listen: false).callerDropOffLocation;
     if (mounted) {
       var controller = _bottomSheetControllers[index];
       controller.forward();
@@ -359,8 +328,7 @@ class _HomeScreenTransportState extends State<HomeScreenTransport>
 
   Widget _buildCallerBottomSheetContent(int index, BuildContext context) {
     if (SplashPage.directions.totalPayment == null) {
-      directions =
-          Provider.of<AppInfo>(context, listen: false).userDropOffLocation;
+      directions = Provider.of<AppInfo>(context, listen: false).userDropOffLocation;
     }
     double size = 0.6;
     if (index == 0) {
@@ -376,8 +344,7 @@ class _HomeScreenTransportState extends State<HomeScreenTransport>
           initialChildSize: size,
           minChildSize: 0.1,
           maxChildSize: size,
-          builder: (BuildContext context, ScrollController scrollController) =>
-              SingleChildScrollView(
+          builder: (BuildContext context, ScrollController scrollController) => SingleChildScrollView(
             physics: const ClampingScrollPhysics(),
             controller: scrollController,
             child: CallerBottomSheet(
@@ -393,24 +360,18 @@ class _HomeScreenTransportState extends State<HomeScreenTransport>
                     }
                   : () {},
               context: context,
-              pickingUpText:
-                  index == 0 ? 'Meeting Time 10:10' : 'tripToDestionation',
-              customerName:
-                  '${callerHomeDirections.driver_name} ${callerHomeDirections.driver_surname}',
+              pickingUpText: index == 0 ? 'Meeting Time 10:10' : 'tripToDestionation',
+              customerName: '${callerHomeDirections.driver_name} ${callerHomeDirections.driver_surname}',
               imagePath: "https://randomuser.me/api/portraits/men/93.jpg",
               /*'$baseUrl/$driverPicturePath',*/
               startText: callerHomeDirections.driver_avarage_point.toString(),
               paymentText: 'paymentMethod'.tr(),
               totalPaymentText: "${directions?.totalPayment.toString()}₺",
-              verificationCodeText:
-                  callerHomeDirections.five_security_code.toString(),
+              verificationCodeText: callerHomeDirections.five_security_code.toString(),
               onPressedCancel: () async {
-                NavigationManager.instance
-                    .navigationToPage(NavigationConstant.cancelRide);
+                NavigationManager.instance.navigationToPage(NavigationConstant.cancelRide);
               },
-              cardNumber: card.cardNumber != ''
-                  ? '**** **** **** ${card.cardNumber?.substring(card.cardNumber!.length - 5)}'
-                  : '',
+              cardNumber: card.cardNumber != '' ? '**** **** **** ${card.cardNumber?.substring(card.cardNumber!.length - 5)}' : '',
               expires: '${card.month}/${card.year}',
             ),
           ),
@@ -460,8 +421,7 @@ class _HomeScreenTransportState extends State<HomeScreenTransport>
       controller.forward();
     }
 
-    if (Provider.of<AppInfo>(context).userDropOffLocation != null &&
-        flag == 0) {
+    if (Provider.of<AppInfo>(context).userDropOffLocation != null && flag == 0) {
       drawPolyLineFromOriginToDestination();
       flag = 1;
     } else {
@@ -489,9 +449,7 @@ class _HomeScreenTransportState extends State<HomeScreenTransport>
                   locateUserPosition();
                 },
                 myLocationEnabled: true,
-                padding: Platform.isIOS
-                    ? EdgeInsets.only(bottom: 230)
-                    : EdgeInsets.only(top: 100),
+                padding: Platform.isIOS ? EdgeInsets.only(bottom: 230) : EdgeInsets.only(top: 100),
                 myLocationButtonEnabled: true,
                 zoomControlsEnabled: false,
                 polylines: polyLineSet,
@@ -530,11 +488,7 @@ class _HomeScreenTransportState extends State<HomeScreenTransport>
               HomeScreenTransport.isAccept != true
                   ? Padding(
                       padding: EdgeInsets.only(
-                        top: context.responsiveHeight(480) -
-                            keyboardSize +
-                            (keyboardSize != 0
-                                ? context.responsiveHeight(150)
-                                : 0),
+                        top: context.responsiveHeight(480) - keyboardSize + (keyboardSize != 0 ? context.responsiveHeight(150) : 0),
                         right: context.responsiveWidth(15),
                         left: context.responsiveWidth(14),
                       ),
@@ -547,13 +501,9 @@ class _HomeScreenTransportState extends State<HomeScreenTransport>
                           Container(
                               decoration: BoxDecoration(
                                 borderRadius: BorderRadius.circular(4),
-                                color: context.isLight
-                                    ? Colors.white
-                                    : HexColor('#1F212A'),
+                                color: context.isLight ? Colors.white : HexColor('#1F212A'),
                                 border: Border.all(
-                                  color: context.isLight
-                                      ? Colors.white
-                                      : AppThemes.lightPrimary500,
+                                  color: context.isLight ? Colors.white : AppThemes.lightPrimary500,
                                   width: 1,
                                 ),
                                 boxShadow: [
@@ -581,43 +531,31 @@ class _HomeScreenTransportState extends State<HomeScreenTransport>
                                       child: TextFormField(
                                         decoration: InputDecoration(
                                           enabledBorder: OutlineInputBorder(
-                                            borderRadius:
-                                                BorderRadius.circular(8),
+                                            borderRadius: BorderRadius.circular(8),
                                             borderSide: BorderSide(
                                               color: AppThemes.lightPrimary500,
                                             ),
                                           ),
                                           prefixIcon: CircularSvgIcon(
                                             context: context,
-                                            assetName: context.isLight
-                                                ? 'assets/svg/search.svg'
-                                                : 'assets/svg/search_dark.svg',
+                                            assetName: context.isLight ? 'assets/svg/search.svg' : 'assets/svg/search_dark.svg',
                                             decoration: const BoxDecoration(),
                                           ),
-                                          hintText: Provider.of<AppInfo>(
-                                                          context)
-                                                      .userDropOffLocation !=
-                                                  null
-                                              ? Provider.of<AppInfo>(context)
-                                                  .userDropOffLocation!
-                                                  .endLocationName
+                                          hintText: Provider.of<AppInfo>(context).userDropOffLocation != null
+                                              ? Provider.of<AppInfo>(context).userDropOffLocation!.endLocationName
                                               : 'whereWouldGo'.tr(),
-                                          hintStyle: context
-                                              .textStyle.subheadLargeMedium
-                                              .copyWith(
+                                          hintStyle: context.textStyle.subheadLargeMedium.copyWith(
                                             color: AppThemes.hintTextNeutral,
                                           ),
                                           border: OutlineInputBorder(
-                                            borderRadius:
-                                                BorderRadius.circular(8),
+                                            borderRadius: BorderRadius.circular(8),
                                             borderSide: BorderSide(
                                               color: AppThemes.lightPrimary500,
                                             ),
                                           ),
                                         ),
                                         onTap: () {
-                                          NavigationManager.instance
-                                              .navigationToPage(
+                                          NavigationManager.instance.navigationToPage(
                                             NavigationConstant.searchPage,
                                           );
                                         },
@@ -631,73 +569,52 @@ class _HomeScreenTransportState extends State<HomeScreenTransport>
                                       text: 'callDriver'.tr(),
                                       height: context.responsiveHeight(48),
                                       width: context.responsiveWidth(334),
-                                      buttonStyle: Provider.of<AppInfo>(context)
-                                                  .userDropOffLocation !=
-                                              null
-                                          ? FilledButton.styleFrom(
-                                              backgroundColor:
-                                                  AppThemes.lightPrimary500)
-                                          : FilledButton.styleFrom(
-                                              backgroundColor:
-                                                  AppThemes.lightenedColor),
-                                      onPressed: Provider.of<AppInfo>(context)
-                                                  .userDropOffLocation !=
-                                              null
+                                      buttonStyle: Provider.of<AppInfo>(context).userDropOffLocation != null
+                                          ? FilledButton.styleFrom(backgroundColor: AppThemes.lightPrimary500)
+                                          : FilledButton.styleFrom(backgroundColor: AppThemes.lightenedColor),
+                                      onPressed: Provider.of<AppInfo>(context).userDropOffLocation != null
                                           ? () async {
                                               _isAppInSearchDrive = true;
-                                              HomeScreenTransport.flagCanceled =
-                                                  0;
-                                              callerHomeDirections.isAccept =
-                                                  null;
-                                              HomeScreenTransport.flagDriving =
-                                                  0;
-                                              HomeScreenTransport.status = '';
-                                              HomeScreenTransport
-                                                  .allowNavigation = false;
+                                              HomeScreenTransport.flagCanceled = 0;
+                                              callerHomeDirections.isAccept = null;
+                                              HomeScreenTransport.flagDriving = 0;
+                                              HomeScreenTransport.allowNavigation = false;
                                               startSendingSearchDriver();
                                               // ignore: use_build_context_synchronously
                                               showDialog(
-                                                barrierDismissible: true,
+                                                barrierDismissible: false,
                                                 context: context,
-                                                builder:
-                                                    (BuildContext context) =>
-                                                        SearchDriverDialog(
+                                                builder: (BuildContext context) => SearchDriverDialog(
                                                   context: context,
                                                   onPressed: () async {
-                                                    if (driveDetailsInfo
-                                                            .status ==
-                                                        'matched') {
-                                                      _timerSearchDriver
-                                                          .cancel();
-                                                      String userId =
-                                                          await SessionManager()
-                                                              .get('id');
-                                                      CancelReasonModel model =
-                                                          CancelReasonModel(
+                                                    setState(() {
+                                                      _timerSearchDriver.cancel();
+                                                      _isAppInSearchDrive = false;
+                                                      HomeScreenTransport.allowNavigation = true;
+                                                      HomeScreenTransport.isAccept = false;
+                                                      CacheManager.instance.clearAll('directions');
+                                                      CacheManager.instance.clearAll('caller_directions');
+                                                    });
+                                                    if (callerHomeDirections.caller_status == 'matched') {
+                                                      String userId = await SessionManager().get('id');
+                                                      CancelReasonModel model = CancelReasonModel(
                                                         callerId: userId,
                                                         status: 'matched',
-                                                        reason:
-                                                            'Caller tarafından arama yerinde iptal butonuna basıldı',
+                                                        reason: 'Caller tarafından arama yerinde iptal butonuna basıldı',
                                                       );
-                                                      await CancelReasonService
-                                                          .instance
-                                                          .cancelReason(model);
+                                                      await CancelReasonService.instance.cancelReason(model);
 
-                                                      NavigationManager.instance
-                                                          .navigationToPop();
+                                                      NavigationManager.instance.navigationToPageClear(NavigationConstant.homePage);
                                                     }
-                                                    _timerSearchDriver.cancel();
-                                                    NavigationManager.instance
-                                                        .navigationToPop();
+                                                    if (callerHomeDirections.caller_status != 'matched') {
+                                                      NavigationManager.instance.navigationToPop();
+                                                    }
                                                   },
                                                 ),
                                               );
                                             }
                                           : () {
-                                              NavigationManager.instance
-                                                  .navigationToPage(
-                                                      NavigationConstant
-                                                          .searchPage);
+                                              NavigationManager.instance.navigationToPage(NavigationConstant.searchPage);
                                             },
                                     )
                                   ],
@@ -726,21 +643,17 @@ class _HomeScreenTransportState extends State<HomeScreenTransport>
   }
 
   Future<void> drawPolyLineFromOriginToDestinationCache() async {
-    var originLatLng = LatLng(directions!.currentLocationLatitude!,
-        directions!.currentLocationLongitude!);
-    var destinationLatLng = LatLng(
-        directions!.endLocationLatitude!, directions!.endLocationLongitude!);
+    var originLatLng = LatLng(directions!.currentLocationLatitude!, directions!.currentLocationLongitude!);
+    var destinationLatLng = LatLng(directions!.endLocationLatitude!, directions!.endLocationLongitude!);
 
     PolylinePoints pPoints = PolylinePoints();
-    List<PointLatLng> decodedPolyLinePointsResultList =
-        pPoints.decodePolyline(directions!.e_points.toString());
+    List<PointLatLng> decodedPolyLinePointsResultList = pPoints.decodePolyline(directions!.e_points.toString());
 
     pLineCoOrdinatesList.clear();
 
     if (decodedPolyLinePointsResultList.isNotEmpty) {
       decodedPolyLinePointsResultList.forEach((PointLatLng pointLatLng) {
-        pLineCoOrdinatesList
-            .add(LatLng(pointLatLng.latitude, pointLatLng.longitude));
+        pLineCoOrdinatesList.add(LatLng(pointLatLng.latitude, pointLatLng.longitude));
       });
     }
     polyLineSet.clear();
@@ -779,18 +692,14 @@ class _HomeScreenTransportState extends State<HomeScreenTransport>
 
     Marker originMarker = Marker(
       markerId: const MarkerId("originID"),
-      infoWindow: InfoWindow(
-          title: directions!.currentLocationName,
-          snippet: directions!.distance_text),
+      infoWindow: InfoWindow(title: directions!.currentLocationName, snippet: directions!.distance_text),
       position: originLatLng,
       icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueYellow),
     );
 
     Marker destinationMarker = Marker(
       markerId: const MarkerId("destinationID"),
-      infoWindow: InfoWindow(
-          title: directions!.endLocationName,
-          snippet: directions!.duration_text),
+      infoWindow: InfoWindow(title: directions!.endLocationName, snippet: directions!.duration_text),
       position: destinationLatLng,
       icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueOrange),
     );
@@ -801,23 +710,18 @@ class _HomeScreenTransportState extends State<HomeScreenTransport>
   }
 
   Future<void> drawPolyLineFromOriginToDestination() async {
-    var destinationPosition =
-        Provider.of<AppInfo>(context, listen: false).userDropOffLocation;
-    var originLatLng = LatLng(destinationPosition!.currentLocationLatitude!,
-        destinationPosition.currentLocationLongitude!);
-    var destinationLatLng = LatLng(destinationPosition.endLocationLatitude!,
-        destinationPosition.endLocationLongitude!);
+    var destinationPosition = Provider.of<AppInfo>(context, listen: false).userDropOffLocation;
+    var originLatLng = LatLng(destinationPosition!.currentLocationLatitude!, destinationPosition.currentLocationLongitude!);
+    var destinationLatLng = LatLng(destinationPosition.endLocationLatitude!, destinationPosition.endLocationLongitude!);
 
     PolylinePoints pPoints = PolylinePoints();
-    List<PointLatLng> decodedPolyLinePointsResultList =
-        pPoints.decodePolyline(destinationPosition.e_points.toString());
+    List<PointLatLng> decodedPolyLinePointsResultList = pPoints.decodePolyline(destinationPosition.e_points.toString());
 
     pLineCoOrdinatesList.clear();
 
     if (decodedPolyLinePointsResultList.isNotEmpty) {
       decodedPolyLinePointsResultList.forEach((PointLatLng pointLatLng) {
-        pLineCoOrdinatesList
-            .add(LatLng(pointLatLng.latitude, pointLatLng.longitude));
+        pLineCoOrdinatesList.add(LatLng(pointLatLng.latitude, pointLatLng.longitude));
       });
     }
     polyLineSet.clear();
@@ -856,18 +760,14 @@ class _HomeScreenTransportState extends State<HomeScreenTransport>
 
     Marker originMarker = Marker(
       markerId: const MarkerId("originID"),
-      infoWindow: InfoWindow(
-          title: destinationPosition.currentLocationName,
-          snippet: destinationPosition.distance_text),
+      infoWindow: InfoWindow(title: destinationPosition.currentLocationName, snippet: destinationPosition.distance_text),
       position: originLatLng,
       icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueYellow),
     );
 
     Marker destinationMarker = Marker(
       markerId: const MarkerId("destinationID"),
-      infoWindow: InfoWindow(
-          title: destinationPosition.endLocationName,
-          snippet: destinationPosition.duration_text),
+      infoWindow: InfoWindow(title: destinationPosition.endLocationName, snippet: destinationPosition.duration_text),
       position: destinationLatLng,
       icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueOrange),
     );
@@ -879,11 +779,9 @@ class _HomeScreenTransportState extends State<HomeScreenTransport>
 
   Future<void> onButtonPressed() async {
     // Kullanıcının konumunu al
-    Position cPosition = await Geolocator.getCurrentPosition(
-        desiredAccuracy: LocationAccuracy.high);
+    Position cPosition = await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
 
-    var destinationPosition =
-        Provider.of<AppInfo>(context, listen: false).userDropOffLocation;
+    var destinationPosition = Provider.of<AppInfo>(context, listen: false).userDropOffLocation;
 
     SearchDistanceModel model = SearchDistanceModel(
       fromLat: cPosition.latitude,
@@ -894,8 +792,7 @@ class _HomeScreenTransportState extends State<HomeScreenTransport>
     // caller sürüş bulduğunda statüsü matched olarak cache
     callerHomeDirections.caller_status = 'matched';
     // 1. cache
-    Provider.of<AppInfo>(context, listen: false)
-        .callerDropOffLocationCache(callerHomeDirections);
+    Provider.of<AppInfo>(context, listen: false).callerDropOffLocationCache(callerHomeDirections);
 
     await _searchDistanceService.searchDistance(model);
     isMatched();

@@ -41,11 +41,6 @@ import '../home_screen_transport.dart';
 
 class DriverHomePage extends StatefulWidget {
   const DriverHomePage({Key? key}) : super(key: key);
-
-  //static String stat = '';
-
-  //static bool allowNavigation = true;
-
   @override
   State<DriverHomePage> createState() => _DriverHomePageState();
 }
@@ -68,31 +63,12 @@ class _DriverHomePageState extends State<DriverHomePage> with TickerProviderStat
 
   String _name = '';
   String _email = '';
-  //late String apiUrl2 = '';
-  //late double callerAveragePoint = 0.0;
-  //late String callerId = '';
-  //late String callerName = '';
-  //late String callerPicturePath = '';
-  //late String callerSurname = '';
-  // status kontrol flagları
-  //String currentStatus = '';
 
-  //DriveModel driveDetailsInfo = DriveModel();
-  //late String driverId = '';
-  //late double driverLatitude;
-  //late double driverLongitude;
   int flag = 0;
-  //late double fromLatitude;
-  //late double fromLongitude;
-  //String humanReadableAddress = '';
   bool isComment = true;
   bool isMatched = true;
   List<LatLng> pLineCoOrdinatesList = [];
   List<LatLng> pLineCoOrdinatesList2 = [];
-  //late String requestId2 = '';
-  //late double toLatitude;
-  //late double toLongitude;
-  //late int totalPayment = 0;
 
   static const CameraPosition _kGooglePlex = CameraPosition(
     target: LatLng(40.802516, 29.439794),
@@ -174,6 +150,7 @@ class _DriverHomePageState extends State<DriverHomePage> with TickerProviderStat
 
       if (driverDirections.driver_status == 'canceled') {
         HomeScreenTransport.allowNavigation = true;
+        CacheManager.instance.clearAll('driver_directions');
         _canceledTimer.cancel();
         //drawPolyLineFromOriginToDestination();
         NavigationManager.instance.navigationToPageClear(NavigationConstant.homePage);
@@ -238,7 +215,8 @@ class _DriverHomePageState extends State<DriverHomePage> with TickerProviderStat
           _canceledTimer.cancel();
           //_timerIsMatched.cancel();
           // ignore: use_build_context_synchronously
-          showDialog(barrierDismissible: false,
+          showDialog(
+            barrierDismissible: false,
             context: context,
             builder: (BuildContext context) {
               return SuccessDialog(
@@ -374,6 +352,9 @@ class _DriverHomePageState extends State<DriverHomePage> with TickerProviderStat
     driverDirections.distanceKmCallertoDestinationValue = directionDetailsInfo.distance_value!;
 
     driverDirections.totalPayment = ((driverDirections.distanceKmCallertoDestinationValue! / 1000) * 35).toInt();
+    if (driverDirections.totalPayment! < 180) {
+      driverDirections.totalPayment = 180;
+    }
     driverDirections.e_points = directionDetailsInfo.e_points;
 
     PolylinePoints pPoints = PolylinePoints();
@@ -468,20 +449,33 @@ class _DriverHomePageState extends State<DriverHomePage> with TickerProviderStat
                   : driverDirections.endAddressCallerToDestination!)
               : ''),
           cancelOnPressed: () async {
+            CacheManager.instance.clearAll('driver_directions');
             await _driverController.driveCancel(context);
             setState(() {
+              CacheManager.instance.clearAll('driver_directions');
               _markersSet.clear();
               _polyLineSet.clear();
+              pLineCoOrdinatesList.clear();
+              pLineCoOrdinatesList2.clear();
             });
             NavigationManager.instance.navigationToPageClear(NavigationConstant.cancelDrive);
           },
           acceptOnPressed: () async {
-            var userId = await SessionManager().get('id');
-            DriveModel model = DriveModel(driverId: userId);
-            if (context.mounted) {
-              await _driverController.driverAccept(context, model);
+            if (driverDirections.driver_status == 'canceled') {
+              CacheManager.instance.clearAll('driver_directions');
+              _markersSet.clear();
+              _polyLineSet.clear();
+              pLineCoOrdinatesList.clear();
+              pLineCoOrdinatesList2.clear();
+              NavigationManager.instance.navigationToPageClear(NavigationConstant.homePage);
+            } else {
+              var userId = await SessionManager().get('id');
+              DriveModel model = DriveModel(driverId: userId);
+              if (context.mounted) {
+                await _driverController.driverAccept(context, model);
+              }
+              _showDriverBottomSheet(0);
             }
-            _showDriverBottomSheet(0);
           },
         ),
       );
@@ -622,6 +616,11 @@ class _DriverHomePageState extends State<DriverHomePage> with TickerProviderStat
               },
               onPressedCancel: index == 0
                   ? () async {
+                      _markersSet.clear();
+                      _polyLineSet.clear();
+                      pLineCoOrdinatesList.clear();
+                      pLineCoOrdinatesList2.clear();
+                      CacheManager.instance.clearAll('driver_directions');
                       NavigationManager.instance.navigationToPage(NavigationConstant.cancelRide, args: driverDirections.driver_id);
                     }
                   : null,

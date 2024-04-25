@@ -43,7 +43,7 @@ class SearchDriverDialog extends Dialog {
                 Text(
                   'thisMayTakeFewSecond'.tr(),
                   style: TextStyle(
-                    fontSize: 13,
+                    fontSize: context.responsiveFont(13),
                     fontWeight: FontWeight.w300,
                     color: HexColor('#5A5A5A'),
                   ),
@@ -55,10 +55,7 @@ class SearchDriverDialog extends Dialog {
                   width: context.responsiveWidth(110),
                   height: context.responsiveHeight(50),
                   text: 'cancelCall'.tr(),
-                  style: TextStyle(
-                      fontSize: 14,
-                      fontWeight: FontWeight.w500,
-                      color: HexColor('#2A2A2A')),
+                  style: TextStyle(fontSize: 14, fontWeight: FontWeight.w500, color: HexColor('#2A2A2A')),
                   context: context,
                   onPressed: onPressed,
                 ),

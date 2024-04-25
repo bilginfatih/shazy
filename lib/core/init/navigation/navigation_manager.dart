@@ -33,7 +33,6 @@ class NavigationManager implements INavigationManager {
   @override
   void navigationToPop() {
     // To go to previous page
-    print("object");
     navigationKey.currentState?.pop();
   }
 

@@ -4,6 +4,7 @@ import 'package:flutter_session_manager/flutter_session_manager.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:hexcolor/hexcolor.dart';
 
+import '../../core/init/cache/cache_manager.dart';
 import '../../core/init/navigation/navigation_manager.dart';
 import '../../models/cancel_reason/cancel_reason_model.dart';
 import '../../services/cancel_reason/cancel_reason_service.dart';
@@ -45,6 +46,9 @@ class _CancelRidePageState extends State<CancelRidePage> {
         reasonString = key;
       }
     });
+    if (isDriver != null) {
+      isDriver = 'driverId';
+    }
     if (reasonString == '') {
       reasonString = _otherTextController.text;
     }
@@ -126,8 +130,7 @@ class _CancelRidePageState extends State<CancelRidePage> {
               onPressed: () {
                 HomeScreenTransport.allowNavigation = true;
                 if (isDriver == 'driverId') {
-                  NavigationManager.instance
-                      .navigationToPageClear(NavigationConstant.homePage);
+                  NavigationManager.instance.navigationToPageClear(NavigationConstant.homePage);
                 } else {
                   NavigationManager.instance.navigationToPop();
                   NavigationManager.instance.navigationToPop();
@@ -154,8 +157,7 @@ class _CancelRidePageState extends State<CancelRidePage> {
         child: Container(
           decoration: BoxDecoration(
             border: Border.all(
-              color:
-                  isSelected ? AppThemes.lightPrimary500 : HexColor('#D0D0D0'),
+              color: isSelected ? AppThemes.lightPrimary500 : HexColor('#D0D0D0'),
             ),
             borderRadius: BorderRadius.circular(8),
           ),
@@ -181,8 +183,7 @@ class _CancelRidePageState extends State<CancelRidePage> {
                 SizedBox(width: context.responsiveWidth(14)),
                 Text(
                   text,
-                  style: context.textStyle.bodyLargeMedium
-                      .copyWith(color: HexColor('#5A5A5A')),
+                  style: context.textStyle.bodyLargeMedium.copyWith(color: HexColor('#5A5A5A')),
                 ),
               ],
             ),
@@ -211,11 +212,9 @@ class _CancelRidePageState extends State<CancelRidePage> {
             SizedBox(
               height: context.responsiveHeight(16),
             ),
-            for (var item in _values.keys)
-              _buildContainer(context, item, _values[item] ?? false),
+            for (var item in _values.keys) _buildContainer(context, item, _values[item] ?? false),
             Container(
-              constraints:
-                  BoxConstraints(maxHeight: context.responsiveHeight(118)),
+              constraints: BoxConstraints(maxHeight: context.responsiveHeight(118)),
               child: TextFormField(
                 onChanged: (_) {
                   _values.forEach((key, value) {
@@ -248,6 +247,12 @@ class _CancelRidePageState extends State<CancelRidePage> {
                 context: context,
                 onPressed: () async {
                   _submitOnPressed(context);
+                  CacheManager.instance.clearAll('directions');
+                  CacheManager.instance.clearAll('caller_directions');
+                  CacheManager.instance.clearAll('driver_directions');
+                  HomeScreenTransport.isAccept = false;
+                  HomeScreenTransport.allowNavigation = true;
+                  NavigationManager.instance.navigationToPageClear(NavigationConstant.homePage);
                 }),
           ],
         ),
