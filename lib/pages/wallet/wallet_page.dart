@@ -179,35 +179,33 @@ class _WalletPageState extends State<WalletPage> {
               height: context.responsiveHeight(16),
             ),
             Observer(builder: (_) {
-              if (_controller.financeList.isEmpty) {
-                return const Center(child: CircularProgressIndicator());
-              } else {
-                return Expanded(
-                  child: _controller.isSelectedIncome
-                      ? ListView.builder(
-                          itemCount: WalletPage.incomeLength,
-                          itemBuilder: (_, int index) {
-                            return _buildTransectionContainer(
-                                context,
-                                'Nathsam',
-                                '${_controller.incomeDate[0][index]}',
-                                '${_controller.income[0][index]}₺',
-                                'down');
-                          },                                                    
-                        )
-                      : ListView.builder(
-                          itemCount: WalletPage.outgoneLength,
-                          itemBuilder: (_, int index) {
-                            return _buildTransectionContainer(
-                                context,
-                                'Nathsam',
-                                '${_controller.outgoneDate[0][index]}',
-                                '-${_controller.outgone[0][index]}₺',
-                                'up');
-                          },
-                        ),
-                );
-              }
+              return Expanded(
+                child: _controller.financeList.isEmpty
+                    ? Center(child: CircularProgressIndicator())
+                    : _controller.isSelectedIncome
+                        ? ListView.builder(
+                            itemCount: WalletPage.incomeLength,
+                            itemBuilder: (_, int index) {
+                              return _buildTransectionContainer(
+                                  context,
+                                  'Nathsam',
+                                  '${_controller.incomeDate[0][index]}',
+                                  '${_controller.income[0][index]}₺',
+                                  'down');
+                            },
+                          )
+                        : ListView.builder(
+                            itemCount: WalletPage.outgoneLength,
+                            itemBuilder: (_, int index) {
+                              return _buildTransectionContainer(
+                                  context,
+                                  'Nathsam',
+                                  '${_controller.outgoneDate[0][index]}',
+                                  '-${_controller.outgone[0][index]}₺',
+                                  'up');
+                            },
+                          ),
+              );
             }),
           ],
         ),

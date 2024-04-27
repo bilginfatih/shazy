@@ -133,11 +133,11 @@ class CustomDrawer extends SizedBox {
                   ),
                   _buildTextRow(context, 'assets/svg/car.svg', 'driver'.tr(),
                       () async {
-                      NavigationManager.instance
-                          .navigationToPage(NavigationConstant.driverChoose);
+                    NavigationManager.instance
+                        .navigationToPage(NavigationConstant.driverChoose);
                     bool userIdentityCheck =
                         await UserIdentityService.instance.userIdentityCheck();
-                    if (!userIdentityCheck ) {
+                    if (!userIdentityCheck) {
                       NavigationManager.instance
                           .navigationToPage(NavigationConstant.driverAccept);
                     } else {

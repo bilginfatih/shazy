@@ -26,19 +26,23 @@ class BackAppBar extends AppBar {
                     NavigationManager.instance.navigationToPop();
                   }
                 },
-                child: context.isLight
-                    ? SvgPicture.asset('assets/svg/angle-left.svg')
-                    : SvgPicture.asset('assets/svg/angle-left_white.svg'),
-              ),
-              SizedBox(
-                width: context.responsiveWidth(5),
-              ),
-              Text(
-                'Back',
-                style: context.textStyle.subheadLargeRegular.copyWith(
-                  color: context.isLight
-                      ? AppThemes.contentSecondary
-                      : Colors.white,
+                child: Row(
+                  children: [
+                    context.isLight
+                        ? SvgPicture.asset('assets/svg/angle-left.svg')
+                        : SvgPicture.asset('assets/svg/angle-left_white.svg'),
+                    SizedBox(
+                      width: context.responsiveWidth(5),
+                    ),
+                    Text(
+                      'Back',
+                      style: context.textStyle.subheadLargeRegular.copyWith(
+                        color: context.isLight
+                            ? AppThemes.contentSecondary
+                            : Colors.white,
+                      ),
+                    ),
+                  ],
                 ),
               ),
               Container(

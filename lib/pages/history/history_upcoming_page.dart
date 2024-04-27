@@ -331,75 +331,69 @@ class _HistoryUpcomingPageState extends State<HistoryUpcomingPage> {
                         child: CircularProgressIndicator(),
                       )
                     : _controller.isDriverSelected
-                        ? ListView.builder(
-                            itemCount: _controller.driverList.length,
-                            itemBuilder: (BuildContext context, int index) {
-                              return _buildContainer(
-                                context,
-                                _controller.driverList[index].userProfile
-                                        ?.userModel?.name ??
-                                    '',
-                                '${_controller.driverList[index].userProfile?.averagePoint} (531 reviews)',
-                                '${_controller.driverList[index].driveModel?.fromShortAddress}',
-                                '${_controller.driverList[index].driveModel?.fromAddress}',
-                                '${_controller.driverList[index].driveModel?.toShortAddress}',
-                                '${_controller.driverList[index].driveModel?.toAddress}',
-                                '${_controller.driverList[index].driveModel?.date}',
-                                '16:38 - 16.42',
-                                '+220.00₺',
-                                '#388E3D',
-                                _controller.driverList[index].commentId ==
-                                            null ||
-                                        _controller
-                                                .driverList[index].commentId ==
-                                            ''
-                                    ? 'reviewPassenger'.tr()
-                                    : '',
-                                index,
-                                cancel: _controller
-                                        .driverList[index].driveModel?.status
-                                        .toString() ==
-                                    'Canceled',
-                              );
-                            },
-                          )
-                        : ListView.builder(
-                            itemCount: _controller.passengerList.length,
-                            itemBuilder: (BuildContext context, int index) {
-                              return _buildContainer(
-                                context,
-                                _controller.passengerList[index].userProfile
-                                        ?.userModel?.name ??
-                                    '',
-                                '${_controller.passengerList[index].userProfile?.averagePoint} (531 reviews)',
-                                '${_controller.passengerList[index].driveModel?.fromShortAddress}',
-                                '${_controller.passengerList[index].driveModel?.fromAddress}',
-                                '${_controller.passengerList[index].driveModel?.toShortAddress}',
-                                '${_controller.passengerList[index].driveModel?.toAddress}',
-                                '${_controller.passengerList[index].driveModel?.date}',
-                                '16:38 - 16.42',
-                                '220.00₺',
-                                '#5A5A5A',
-                                _controller.passengerList[index].commentId ==
-                                            'null' ||
-                                        _controller
-                                                .driverList[index].commentId ==
-                                            ''
-                                    ? 'reviewTrip'.tr()
-                                    : '',
-                                cancel: _controller
-                                        .driverList[index].driveModel?.status
-                                        .toString() ==
-                                    'Canceled',
-                                index,
-                              );
-                            },
-                          ),
+                        ? _buildDriverList()
+                        : _buildPassengerList(),
               );
             }),
           ],
         ),
       ),
+    );
+  }
+
+  ListView _buildPassengerList() {
+    return ListView.builder(
+      itemCount: _controller.passengerList.length,
+      itemBuilder: (BuildContext context, int index) {
+        return _buildContainer(
+          context,
+          _controller.passengerList[index].userProfile?.userModel?.name ?? '',
+          '${_controller.passengerList[index].userProfile?.averagePoint} (531 reviews)',
+          '${_controller.passengerList[index].driveModel?.fromShortAddress}',
+          '${_controller.passengerList[index].driveModel?.fromAddress}',
+          '${_controller.passengerList[index].driveModel?.toShortAddress}',
+          '${_controller.passengerList[index].driveModel?.toAddress}',
+          '${_controller.passengerList[index].driveModel?.date}',
+          '16:38 - 16.42',
+          '220.00₺',
+          '#5A5A5A',
+          _controller.passengerList[index].commentId == 'null' ||
+                  _controller.driverList[index].commentId == ''
+              ? 'reviewTrip'.tr()
+              : '',
+          cancel: _controller.driverList[index].driveModel?.status.toString() ==
+              'Canceled',
+          index,
+        );
+      },
+    );
+  }
+
+  ListView _buildDriverList() {
+    return ListView.builder(
+      itemCount: _controller.driverList.length,
+      itemBuilder: (BuildContext context, int index) {
+        return _buildContainer(
+          context,
+          _controller.driverList[index].userProfile?.userModel?.name ?? '',
+          '${_controller.driverList[index].userProfile?.averagePoint} (531 reviews)',
+          '${_controller.driverList[index].driveModel?.fromShortAddress}',
+          '${_controller.driverList[index].driveModel?.fromAddress}',
+          '${_controller.driverList[index].driveModel?.toShortAddress}',
+          '${_controller.driverList[index].driveModel?.toAddress}',
+          '${_controller.driverList[index].driveModel?.date}',
+          '16:38 - 16.42',
+          '+220.00₺',
+          '#388E3D',
+          _controller.driverList[index].commentId == null ||
+                  _controller.driverList[index].commentId == ''
+              ? 'reviewPassenger'.tr()
+              : '',
+          index,
+          cancel: _controller.driverList[index].driveModel?.status.toString() ==
+              'Canceled',
+        );
+      },
     );
   }
 }
