@@ -15,7 +15,6 @@ import '../../core/init/navigation/navigation_manager.dart';
 import '../../utils/constants/navigation_constant.dart';
 import '../../widgets/app_bars/back_app_bar.dart';
 import '../../widgets/padding/base_padding.dart';
-import '../home/home_screen_transport.dart';
 
 class PaymetnMethodPage extends StatefulWidget {
   const PaymetnMethodPage({super.key});

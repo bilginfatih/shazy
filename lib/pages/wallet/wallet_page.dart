@@ -149,7 +149,7 @@ class _WalletPageState extends State<WalletPage> {
                   children: [
                     _buildTopContainer(
                         context,
-                        '${_controller.financeList[_controller.financeList.length - 1].total_income}₺',
+                        '${_controller.financeList[_controller.financeList.length - 1].totalIncome}₺',
                         'Total Income',
                         AppThemes.success700,
                         _controller.isSelectedIncome,
@@ -157,7 +157,7 @@ class _WalletPageState extends State<WalletPage> {
                     const Spacer(),
                     _buildTopContainer(
                         context,
-                        '${_controller.financeList[_controller.financeList.length - 1].total_expend}₺',
+                        '${_controller.financeList[_controller.financeList.length - 1].totalExpend}₺',
                         'Total Expend',
                         AppThemes.error700,
                         !_controller.isSelectedIncome,
@@ -181,16 +181,16 @@ class _WalletPageState extends State<WalletPage> {
             Observer(builder: (_) {
               return Expanded(
                 child: _controller.financeList.isEmpty
-                    ? Center(child: CircularProgressIndicator())
+                    ? const Center(child: CircularProgressIndicator())
                     : _controller.isSelectedIncome
                         ? ListView.builder(
                             itemCount: WalletPage.incomeLength,
                             itemBuilder: (_, int index) {
                               return _buildTransectionContainer(
                                   context,
-                                  'Nathsam',
+                                  _controller.income[index].userName,
                                   '${_controller.incomeDate[0][index]}',
-                                  '${_controller.income[0][index]}₺',
+                                  '${_controller.income[index].income}₺',
                                   'down');
                             },
                           )
@@ -199,9 +199,9 @@ class _WalletPageState extends State<WalletPage> {
                             itemBuilder: (_, int index) {
                               return _buildTransectionContainer(
                                   context,
-                                  'Nathsam',
+                                  _controller.outgone[index].userName,
                                   '${_controller.outgoneDate[0][index]}',
-                                  '-${_controller.outgone[0][index]}₺',
+                                  '-${_controller.outgone[index].outgone}₺',
                                   'up');
                             },
                           ),

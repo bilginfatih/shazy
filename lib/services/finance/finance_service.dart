@@ -31,26 +31,26 @@ class FinanceService {
 
       for (var item in response) {
         model = model.fromJson(item);
-        model.created_at = formatDate(model.created_at.toString());
+        model.createdAt = formatDate(model.createdAt.toString());
         totalIncome += int.parse(model.income.toString().split('.')[0]);
         totalExpend += int.parse(model.outgone.toString().split('.')[0]);
 
-        model.total_income = totalIncome;
-        model.total_expend = totalExpend;
+        model.totalIncome = totalIncome;
+        model.totalExpend = totalExpend;
 
         if (model.income.toString().split('.')[0] != '0') {
           income.add(model.income!.split('.')[0]);
-          incomeDate.add(model.created_at);
+          incomeDate.add(model.createdAt);
           WalletPage.incomeLength++;
         } else if (model.outgone.toString().split('.')[0] != '0') {
           outgone.add(model.outgone!.split('.')[0]);
-          outgoneDate.add(model.created_at);
+          outgoneDate.add(model.createdAt);
           WalletPage.outgoneLength++;
         }
-        model.organize_income = income;
-        model.organize_income_date = incomeDate;
-        model.organize_outgone = outgone;
-        model.organize_outgone_date = outgoneDate;
+        model.organizeIncome = income;
+        model.organizeIncomeDate = incomeDate;
+        model.organizeOutgone = outgone;
+        model.organizeOutgoneDate = outgoneDate;
         //print('incomedate: ' + model.organize_income_date.toString());
         //print('outgonedate: ' + model.organize_outgone_date.toString());
         financeList.add(model);

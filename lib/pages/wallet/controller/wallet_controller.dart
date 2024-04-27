@@ -14,7 +14,7 @@ abstract class _WalletControllerBase with Store {
   List<FinanceModel> financeList = [];
 
   @observable
-  List income = [];
+  ObservableList<FinanceModel> income = ObservableList.of([]);
 
   @observable
   List incomeDate = [];
@@ -23,7 +23,7 @@ abstract class _WalletControllerBase with Store {
   bool isSelectedIncome = true;
 
   @observable
-  List outgone = [];
+  ObservableList<FinanceModel> outgone = ObservableList.of([]);
 
   @observable
   List outgoneDate = [];
@@ -37,10 +37,15 @@ abstract class _WalletControllerBase with Store {
   Future<void> getFinance(String id) async {
     try {
       financeList = await FinanceService.instance.getFinance(id);
-      incomeDate.add(financeList[incomeLength].organize_income_date);
-      income.add(financeList[incomeLength].organize_income);
-      outgoneDate.add(financeList[incomeLength].organize_outgone_date);
-      outgone.add(financeList[incomeLength].organize_outgone);
+      for (var financeItem in financeList) {
+        if (financeItem.income != '0.00') {
+          income.add(financeItem);
+        } else {
+          outgone.add(financeItem);
+        }
+      }
+      incomeDate.add(financeList[incomeLength].organizeIncomeDate);
+      outgoneDate.add(financeList[outgoneLength].organizeOutgoneDate);
     } catch (e) {
       return;
     }

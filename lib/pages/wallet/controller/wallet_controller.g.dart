@@ -29,13 +29,13 @@ mixin _$WalletController on _WalletControllerBase, Store {
       Atom(name: '_WalletControllerBase.income', context: context);
 
   @override
-  List<dynamic> get income {
+  ObservableList<FinanceModel> get income {
     _$incomeAtom.reportRead();
     return super.income;
   }
 
   @override
-  set income(List<dynamic> value) {
+  set income(ObservableList<FinanceModel> value) {
     _$incomeAtom.reportWrite(value, super.income, () {
       super.income = value;
     });
@@ -77,13 +77,13 @@ mixin _$WalletController on _WalletControllerBase, Store {
       Atom(name: '_WalletControllerBase.outgone', context: context);
 
   @override
-  List<dynamic> get outgone {
+  ObservableList<FinanceModel> get outgone {
     _$outgoneAtom.reportRead();
     return super.outgone;
   }
 
   @override
-  set outgone(List<dynamic> value) {
+  set outgone(ObservableList<FinanceModel> value) {
     _$outgoneAtom.reportWrite(value, super.outgone, () {
       super.outgone = value;
     });
