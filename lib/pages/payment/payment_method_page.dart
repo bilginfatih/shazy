@@ -153,7 +153,7 @@ class _PaymetnMethodPageState extends State<PaymetnMethodPage> {
     return Scaffold(
       appBar: BackAppBar(
         context: context,
-        mainTitle: 'Request for driver'.tr(),
+        mainTitle: 'requestForDriver'.tr(),
       ),
       body: BasePadding(
         context: context,

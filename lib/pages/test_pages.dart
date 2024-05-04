@@ -78,6 +78,34 @@ class _TestPageState extends State<TestPage>
             children: [
               ElevatedButton(
                 onPressed: () async {
+                  showModalBottomSheet(
+                    isDismissible: false,
+                    isScrollControlled: true,
+                    enableDrag: false,
+                    shape: const RoundedRectangleBorder(
+                      borderRadius: BorderRadius.only(
+                        topLeft: Radius.circular(24),
+                        topRight: Radius.circular(24),
+                      ),
+                    ),
+                    context: context,
+                    builder: (_) => CommentBottomSheet(
+                      selectedIndex: 0,
+                      context: context,
+                      textController: TextEditingController(),
+                      onPressed: () async {
+                        NavigationManager.instance
+                            .navigationToPageClear(NavigationConstant.homePage);
+                      },
+                      onPressedRatingBar: (index) {},
+                      text: 'test test',
+                    ),
+                  );
+                },
+                child: Text('Comment bottom sheet'),
+              ),
+              ElevatedButton(
+                onPressed: () async {
                   DriverHomeDirections directions = DriverHomeDirections();
                   var box = await Hive.openBox('driver_directions');
                   var response = await box.get('driver_directions');

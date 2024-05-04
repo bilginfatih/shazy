@@ -45,7 +45,8 @@ class DriverHomePage extends StatefulWidget {
   State<DriverHomePage> createState() => _DriverHomePageState();
 }
 
-class _DriverHomePageState extends State<DriverHomePage> with TickerProviderStateMixin {
+class _DriverHomePageState extends State<DriverHomePage>
+    with TickerProviderStateMixin {
   DriverHomeDirections driverDirections = DriverHomeDirections();
   Future<void> cacheManagerDriverHomeDirections() async {
     var box = await Hive.openBox('driver_directions');
@@ -78,7 +79,8 @@ class _DriverHomePageState extends State<DriverHomePage> with TickerProviderStat
   List<AnimationController> _bottomSheetControllers = [];
   late Timer _canceledTimer;
   final TextEditingController _commentTextController = TextEditingController();
-  final Completer<GoogleMapController> _controller = Completer<GoogleMapController>();
+  final Completer<GoogleMapController> _controller =
+      Completer<GoogleMapController>();
   final _controllerComment = HistoryUpcomingController();
   final DriverController _driverController = DriverController();
   //late int _duraitonKmCallertoDestinationValue = 0;
@@ -131,7 +133,9 @@ class _DriverHomePageState extends State<DriverHomePage> with TickerProviderStat
 
     _initializeBottomSheetControllers();
 
-    DefaultAssetBundle.of(context).loadString('assets/maptheme/night_theme.json').then(
+    DefaultAssetBundle.of(context)
+        .loadString('assets/maptheme/night_theme.json')
+        .then(
       (value) {
         _mapTheme = value;
       },
@@ -142,9 +146,11 @@ class _DriverHomePageState extends State<DriverHomePage> with TickerProviderStat
 
   Future<void> sendRequestCanceled() async {
     try {
-      driverDirections.api_request_url = "/drive-request/${driverDirections.drive_id}";
+      driverDirections.api_request_url =
+          "/drive-request/${driverDirections.drive_id}";
 
-      var requestResponse = await NetworkManager.instance.get(driverDirections.api_request_url.toString());
+      var requestResponse = await NetworkManager.instance
+          .get(driverDirections.api_request_url.toString());
 
       driverDirections.driver_status = requestResponse["status"];
 
@@ -153,7 +159,8 @@ class _DriverHomePageState extends State<DriverHomePage> with TickerProviderStat
         CacheManager.instance.clearAll('driver_directions');
         _canceledTimer.cancel();
         //drawPolyLineFromOriginToDestination();
-        NavigationManager.instance.navigationToPageClear(NavigationConstant.homePage);
+        NavigationManager.instance
+            .navigationToPageClear(NavigationConstant.homePage);
       }
     } catch (e) {}
   }
@@ -161,22 +168,26 @@ class _DriverHomePageState extends State<DriverHomePage> with TickerProviderStat
   Future<void> sendRequestMatched() async {
     try {
       driverDirections.driver_id = await SessionManager().get('id');
-      String apiUrl = "/drive-request/driver/${driverDirections.driver_id}/matched";
+      String apiUrl =
+          "/drive-request/driver/${driverDirections.driver_id}/matched";
       var requestId = await NetworkManager.instance.get(apiUrl);
 
       driverDirections.drive_id = requestId[0]["id"];
       driverDirections.caller_id = requestId[0]["caller_id"];
 
-      UserProfileModel? userProfile = await UserService.instance.getAnotherUser(driverDirections.caller_id.toString());
+      UserProfileModel? userProfile = await UserService.instance
+          .getAnotherUser(driverDirections.caller_id.toString());
       driverDirections.caller_avarage_point = userProfile!.averagePoint!;
       driverDirections.caller_name = userProfile.userModel!.name!;
       driverDirections.caller_surname = userProfile.userModel!.surname!;
       driverDirections.caller_picture_path = userProfile.profilePicturePath!;
 
-      driverDirections.api_request_url = "/drive-request/${driverDirections.drive_id}";
+      driverDirections.api_request_url =
+          "/drive-request/${driverDirections.drive_id}";
       _timerIsMatched.cancel();
       // 1. cache
-      Provider.of<AppInfo>(context, listen: false).driverDropOffLocationCache(driverDirections);
+      Provider.of<AppInfo>(context, listen: false)
+          .driverDropOffLocationCache(driverDirections);
       _timerSendRequest = Timer.periodic(const Duration(seconds: 10), (timer) {
         // Her 5 saniyede bir istek gönder
         sendRequest();
@@ -188,19 +199,26 @@ class _DriverHomePageState extends State<DriverHomePage> with TickerProviderStat
 
   Future<void> sendRequest() async {
     try {
-      var requestResponse = await NetworkManager.instance.get(driverDirections.api_request_url.toString());
+      var requestResponse = await NetworkManager.instance
+          .get(driverDirections.api_request_url.toString());
 
       if (requestResponse != null) {
         driverDirections.driver_status = requestResponse["status"];
         //String driverId = requestResponse["driver_id"];
-        driverDirections.driver_latitude = double.parse(requestResponse["driver_lat"]);
-        driverDirections.driver_longitude = double.parse(requestResponse["driver_lang"]);
-        driverDirections.from_latitude = double.parse(requestResponse["from_lat"]);
-        driverDirections.from_longitude = double.parse(requestResponse["from_lang"]);
+        driverDirections.driver_latitude =
+            double.parse(requestResponse["driver_lat"]);
+        driverDirections.driver_longitude =
+            double.parse(requestResponse["driver_lang"]);
+        driverDirections.from_latitude =
+            double.parse(requestResponse["from_lat"]);
+        driverDirections.from_longitude =
+            double.parse(requestResponse["from_lang"]);
         driverDirections.to_latitude = double.parse(requestResponse["to_lat"]);
-        driverDirections.to_longitude = double.parse(requestResponse["to_lang"]);
+        driverDirections.to_longitude =
+            double.parse(requestResponse["to_lang"]);
         //2. cache
-        Provider.of<AppInfo>(context, listen: false).driverDropOffLocationCache(driverDirections);
+        Provider.of<AppInfo>(context, listen: false)
+            .driverDropOffLocationCache(driverDirections);
 
         if (driverDirections.driver_status == 'matched' && isMatched) {
           HomeScreenTransport.allowNavigation = false;
@@ -221,7 +239,8 @@ class _DriverHomePageState extends State<DriverHomePage> with TickerProviderStat
             builder: (BuildContext context) {
               return SuccessDialog(
                 context: context,
-                text1: 'The funds have been successfully transferred to ${driverDirections.caller_name} ${driverDirections.caller_surname}.',
+                text1:
+                    'The funds have been successfully transferred to ${driverDirections.caller_name} ${driverDirections.caller_surname}.',
                 title: 'Payment Success',
                 onTap: () async {
                   NavigationManager.instance.navigationToPop();
@@ -229,6 +248,7 @@ class _DriverHomePageState extends State<DriverHomePage> with TickerProviderStat
                   showModalBottomSheet(
                     isDismissible: false,
                     isScrollControlled: true,
+                    enableDrag: false,
                     shape: const RoundedRectangleBorder(
                       borderRadius: BorderRadius.only(
                         topLeft: Radius.circular(24),
@@ -243,15 +263,19 @@ class _DriverHomePageState extends State<DriverHomePage> with TickerProviderStat
                         textController: _commentTextController,
                         onPressed: () async {
                           CacheManager.instance.clearAll('driver_directions');
-                          await sendComment(_commentTextController.text, _controllerComment.starSelectedIndex);
+                          await sendComment(_commentTextController.text,
+                              _controllerComment.starSelectedIndex);
                           setState(() {
                             HomeScreenTransport.allowNavigation = true;
                           });
 
-                          NavigationManager.instance.navigationToPageClear(NavigationConstant.homePage);
+                          NavigationManager.instance.navigationToPageClear(
+                              NavigationConstant.homePage);
                         },
-                        onPressedRatingBar: _controllerComment.changeStarSelectedIndex,
-                        text: '${'youRated'.tr()} ${driverDirections.caller_name} ${' ${_controllerComment.starSelectedIndex}'} ${'star'.tr()}',
+                        onPressedRatingBar:
+                            _controllerComment.changeStarSelectedIndex,
+                        text:
+                            '${'youRated'.tr()} ${driverDirections.caller_name} ${' ${_controllerComment.starSelectedIndex}'} ${'star'.tr()}',
                       );
                     }),
                   );
@@ -287,14 +311,17 @@ class _DriverHomePageState extends State<DriverHomePage> with TickerProviderStat
   }
 
   locateUserPosition() async {
-    Position cPosition = await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
+    Position cPosition = await Geolocator.getCurrentPosition(
+        desiredAccuracy: LocationAccuracy.high);
     //_userCurrentPosition = cPosition;
 
     LatLng latLngPosition = LatLng(cPosition.latitude, cPosition.longitude);
 
-    CameraPosition cameraPosition = CameraPosition(target: latLngPosition, zoom: 14);
+    CameraPosition cameraPosition =
+        CameraPosition(target: latLngPosition, zoom: 14);
 
-    _newGoogleMapController!.animateCamera(CameraUpdate.newCameraPosition(cameraPosition));
+    _newGoogleMapController!
+        .animateCamera(CameraUpdate.newCameraPosition(cameraPosition));
 
     if (mounted) {
       //humanReadableAddress = await AssistantMethods.searchAddressForGeographicCoOrdinates(cPosition, context);
@@ -303,29 +330,40 @@ class _DriverHomePageState extends State<DriverHomePage> with TickerProviderStat
 
   Future<void> drawPolyLineFromOriginToDestination() async {
     //kullanıcı konum alma lazım olursa diye****
-    Position cPosition = await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
+    Position cPosition = await Geolocator.getCurrentPosition(
+        desiredAccuracy: LocationAccuracy.high);
     //_userCurrentPosition = cPosition;
 
     var driverOriginLatLng = LatLng(cPosition.latitude, cPosition.longitude);
-    var originLatLng = LatLng(driverDirections.from_latitude!, driverDirections.from_longitude!);
-    var destinationLatLng = LatLng(driverDirections.to_latitude!, driverDirections.to_longitude!);
+    var originLatLng = LatLng(
+        driverDirections.from_latitude!, driverDirections.from_longitude!);
+    var destinationLatLng =
+        LatLng(driverDirections.to_latitude!, driverDirections.to_longitude!);
 
-    var driverDirectionDetailsInfo = await AssistantMethods.obtainOriginToDestinationDirectionDetails(driverOriginLatLng, originLatLng);
+    var driverDirectionDetailsInfo =
+        await AssistantMethods.obtainOriginToDestinationDirectionDetails(
+            driverOriginLatLng, originLatLng);
 
-    driverDirections.distance_text_driver_caller = driverDirectionDetailsInfo!.distance_text.toString();
-    driverDirections.duration_text_driver_caller = driverDirectionDetailsInfo.duration_text.toString();
-    driverDirections.start_address_driver_location = driverDirectionDetailsInfo.start_address.toString();
-    driverDirections.end_address_caller_location = driverDirectionDetailsInfo.end_address.toString();
+    driverDirections.distance_text_driver_caller =
+        driverDirectionDetailsInfo!.distance_text.toString();
+    driverDirections.duration_text_driver_caller =
+        driverDirectionDetailsInfo.duration_text.toString();
+    driverDirections.start_address_driver_location =
+        driverDirectionDetailsInfo.start_address.toString();
+    driverDirections.end_address_caller_location =
+        driverDirectionDetailsInfo.end_address.toString();
     driverDirections.e_points_driver = driverDirectionDetailsInfo.e_pointsDrive;
 
     PolylinePoints pPointsDriver = PolylinePoints();
-    List<PointLatLng> driverDecodedPolyLinePointsResultList = pPointsDriver.decodePolyline(driverDirections.e_points_driver.toString());
+    List<PointLatLng> driverDecodedPolyLinePointsResultList = pPointsDriver
+        .decodePolyline(driverDirections.e_points_driver.toString());
 
     //pLineCoOrdinatesList.clear();
 
     if (driverDecodedPolyLinePointsResultList.isNotEmpty) {
       driverDecodedPolyLinePointsResultList.forEach((PointLatLng pointLatLng) {
-        pLineCoOrdinatesList2.add(LatLng(pointLatLng.latitude, pointLatLng.longitude));
+        pLineCoOrdinatesList2
+            .add(LatLng(pointLatLng.latitude, pointLatLng.longitude));
       });
     }
     //pLineCoOrdinatesList.clear();
@@ -343,28 +381,38 @@ class _DriverHomePageState extends State<DriverHomePage> with TickerProviderStat
       _polyLineSet.add(polyline2);
     });
 
-    var directionDetailsInfo = await AssistantMethods.obtainOriginToDestinationDirectionDetails(originLatLng, destinationLatLng);
+    var directionDetailsInfo =
+        await AssistantMethods.obtainOriginToDestinationDirectionDetails(
+            originLatLng, destinationLatLng);
 
-    driverDirections.distanceKmCallerToDestination = directionDetailsInfo!.distance_text.toString();
-    driverDirections.durationTimeCallerToDestination = directionDetailsInfo.duration_text.toString();
+    driverDirections.distanceKmCallerToDestination =
+        directionDetailsInfo!.distance_text.toString();
+    driverDirections.durationTimeCallerToDestination =
+        directionDetailsInfo.duration_text.toString();
     //_startAddressCallerToDestination = directionDetailsInfo.start_address.toString();
-    driverDirections.endAddressCallerToDestination = directionDetailsInfo.end_address.toString();
-    driverDirections.distanceKmCallertoDestinationValue = directionDetailsInfo.distance_value!;
+    driverDirections.endAddressCallerToDestination =
+        directionDetailsInfo.end_address.toString();
+    driverDirections.distanceKmCallertoDestinationValue =
+        directionDetailsInfo.distance_value!;
 
-    driverDirections.totalPayment = ((driverDirections.distanceKmCallertoDestinationValue! / 1000) * 35).toInt();
+    driverDirections.totalPayment =
+        ((driverDirections.distanceKmCallertoDestinationValue! / 1000) * 35)
+            .toInt();
     if (driverDirections.totalPayment! < 180) {
       driverDirections.totalPayment = 180;
     }
     driverDirections.e_points = directionDetailsInfo.e_points;
 
     PolylinePoints pPoints = PolylinePoints();
-    List<PointLatLng> decodedPolyLinePointsResultList = pPoints.decodePolyline(driverDirections.e_points.toString());
+    List<PointLatLng> decodedPolyLinePointsResultList =
+        pPoints.decodePolyline(driverDirections.e_points.toString());
 
     //pLineCoOrdinatesList.clear();
 
     if (decodedPolyLinePointsResultList.isNotEmpty) {
       decodedPolyLinePointsResultList.forEach((PointLatLng pointLatLng) {
-        pLineCoOrdinatesList.add(LatLng(pointLatLng.latitude, pointLatLng.longitude));
+        pLineCoOrdinatesList
+            .add(LatLng(pointLatLng.latitude, pointLatLng.longitude));
       });
     }
     //pLineCoOrdinatesList.clear();
@@ -386,8 +434,10 @@ class _DriverHomePageState extends State<DriverHomePage> with TickerProviderStat
       _polyLineSet.add(polyline);
     });
     LatLngBounds boundsLatLng;
-    if (originLatLng.latitude > destinationLatLng.latitude && originLatLng.longitude > destinationLatLng.longitude) {
-      boundsLatLng = LatLngBounds(southwest: destinationLatLng, northeast: originLatLng);
+    if (originLatLng.latitude > destinationLatLng.latitude &&
+        originLatLng.longitude > destinationLatLng.longitude) {
+      boundsLatLng =
+          LatLngBounds(southwest: destinationLatLng, northeast: originLatLng);
     } else if (originLatLng.longitude > destinationLatLng.longitude) {
       boundsLatLng = LatLngBounds(
         southwest: LatLng(originLatLng.latitude, destinationLatLng.longitude),
@@ -399,21 +449,27 @@ class _DriverHomePageState extends State<DriverHomePage> with TickerProviderStat
         northeast: LatLng(originLatLng.latitude, destinationLatLng.longitude),
       );
     } else {
-      boundsLatLng = LatLngBounds(southwest: originLatLng, northeast: destinationLatLng);
+      boundsLatLng =
+          LatLngBounds(southwest: originLatLng, northeast: destinationLatLng);
     }
 
-    _newGoogleMapController!.animateCamera(CameraUpdate.newLatLngBounds(boundsLatLng, 95));
+    _newGoogleMapController!
+        .animateCamera(CameraUpdate.newLatLngBounds(boundsLatLng, 95));
 
     Marker originMarker = Marker(
       markerId: const MarkerId("originID"),
-      infoWindow: InfoWindow(title: 'originPosition.locationName', snippet: directionDetailsInfo.duration_text),
+      infoWindow: InfoWindow(
+          title: 'originPosition.locationName',
+          snippet: directionDetailsInfo.duration_text),
       position: originLatLng,
       icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueYellow),
     );
 
     Marker destinationMarker = Marker(
       markerId: const MarkerId("destinationID"),
-      infoWindow: InfoWindow(title: 'destinationPosition.locationName', snippet: directionDetailsInfo.distance_text.toString()),
+      infoWindow: InfoWindow(
+          title: 'destinationPosition.locationName',
+          snippet: directionDetailsInfo.distance_text.toString()),
       position: destinationLatLng,
       icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueOrange),
     );
@@ -424,7 +480,8 @@ class _DriverHomePageState extends State<DriverHomePage> with TickerProviderStat
 
     // ignore: use_build_context_synchronously
     // ignore: use_build_context_synchronously
-    if (SplashPage.driverHomeDirections.driver_status != 'accept' && SplashPage.driverHomeDirections.driver_status != 'driving') {
+    if (SplashPage.driverHomeDirections.driver_status != 'accept' &&
+        SplashPage.driverHomeDirections.driver_status != 'driving') {
       showDialog(
         barrierDismissible: false,
         context: context,
@@ -432,7 +489,8 @@ class _DriverHomePageState extends State<DriverHomePage> with TickerProviderStat
           context: context,
           price: '${driverDirections.totalPayment}₺',
           star: driverDirections.caller_avarage_point.toString(),
-          location1TextTitle: (driverDirections.duration_text_driver_caller != null)
+          location1TextTitle: (driverDirections.duration_text_driver_caller !=
+                  null)
               ? ("${driverDirections.duration_text_driver_caller} (${driverDirections.distance_text_driver_caller}) away")
               : '',
           location1Text: (driverDirections.end_address_caller_location != null
@@ -440,7 +498,9 @@ class _DriverHomePageState extends State<DriverHomePage> with TickerProviderStat
                   ? "${driverDirections.end_address_caller_location!.substring(0, 36)}..."
                   : driverDirections.end_address_caller_location!)
               : ''),
-          location2TextTitle: (driverDirections.durationTimeCallerToDestination != null)
+          location2TextTitle: (driverDirections
+                      .durationTimeCallerToDestination !=
+                  null)
               ? ("${driverDirections.durationTimeCallerToDestination} (${driverDirections.distanceKmCallerToDestination}) trip")
               : '',
           location2Text: (driverDirections.endAddressCallerToDestination != null
@@ -458,7 +518,8 @@ class _DriverHomePageState extends State<DriverHomePage> with TickerProviderStat
               pLineCoOrdinatesList.clear();
               pLineCoOrdinatesList2.clear();
             });
-            NavigationManager.instance.navigationToPageClear(NavigationConstant.cancelDrive);
+            NavigationManager.instance
+                .navigationToPageClear(NavigationConstant.cancelDrive);
           },
           acceptOnPressed: () async {
             if (driverDirections.driver_status == 'canceled') {
@@ -467,7 +528,8 @@ class _DriverHomePageState extends State<DriverHomePage> with TickerProviderStat
               _polyLineSet.clear();
               pLineCoOrdinatesList.clear();
               pLineCoOrdinatesList2.clear();
-              NavigationManager.instance.navigationToPageClear(NavigationConstant.homePage);
+              NavigationManager.instance
+                  .navigationToPageClear(NavigationConstant.homePage);
             } else {
               var userId = await SessionManager().get('id');
               DriveModel model = DriveModel(driverId: userId);
@@ -550,25 +612,33 @@ class _DriverHomePageState extends State<DriverHomePage> with TickerProviderStat
           initialChildSize: size,
           minChildSize: 0.1,
           maxChildSize: size,
-          builder: (BuildContext context, ScrollController scrollController) => SingleChildScrollView(
+          builder: (BuildContext context, ScrollController scrollController) =>
+              SingleChildScrollView(
             physics: const ClampingScrollPhysics(),
             controller: scrollController,
             child: DriveBottomSheet(
               height: size,
-              buttonTextStart: index == 0 ? 'startTheTrip'.tr() : 'finishTheTrip'.tr(),
+              buttonTextStart:
+                  index == 0 ? 'startTheTrip'.tr() : 'finishTheTrip'.tr(),
               context: context,
-              pickingUpText: index == 0 ? 'pickingUpText'.tr() : 'goingToDestination',
-              imagePath: "https://randomuser.me/api/portraits/men/93.jpg" /*'$baseUrl/$callerAvaragePoint'*/,
-              customerName: '${driverDirections.caller_name} ${driverDirections.caller_surname}',
+              pickingUpText:
+                  index == 0 ? 'pickingUpText'.tr() : 'goingToDestination',
+              imagePath:
+                  "https://randomuser.me/api/portraits/men/93.jpg" /*'$baseUrl/$callerAvaragePoint'*/,
+              customerName:
+                  '${driverDirections.caller_name} ${driverDirections.caller_surname}',
               startText: driverDirections.caller_avarage_point.toString(),
               location1Text: index == 0
                   ? (driverDirections.start_address_driver_location != null
-                      ? (driverDirections.start_address_driver_location!.length > 36
+                      ? (driverDirections
+                                  .start_address_driver_location!.length >
+                              36
                           ? "${driverDirections.start_address_driver_location!.substring(0, 36)}..."
                           : driverDirections.start_address_driver_location!)
                       : '')
                   : (driverDirections.end_address_caller_location != null
-                      ? (driverDirections.end_address_caller_location!.length > 36
+                      ? (driverDirections.end_address_caller_location!.length >
+                              36
                           ? "${driverDirections.end_address_caller_location!.substring(0, 36)}..."
                           : driverDirections.end_address_caller_location!)
                       : ''),
@@ -576,12 +646,15 @@ class _DriverHomePageState extends State<DriverHomePage> with TickerProviderStat
               location1TextTitle: 'currentLocation'.tr(),
               location2Text: index == 0
                   ? (driverDirections.end_address_caller_location != null
-                      ? (driverDirections.end_address_caller_location!.length > 36
+                      ? (driverDirections.end_address_caller_location!.length >
+                              36
                           ? "${driverDirections.end_address_caller_location!.substring(0, 36)}..."
                           : driverDirections.end_address_caller_location!)
                       : '')
                   : (driverDirections.endAddressCallerToDestination != null
-                      ? (driverDirections.endAddressCallerToDestination!.length > 36
+                      ? (driverDirections
+                                  .endAddressCallerToDestination!.length >
+                              36
                           ? "${driverDirections.endAddressCallerToDestination!.substring(0, 36)}..."
                           : driverDirections.endAddressCallerToDestination!)
                       : ''),
@@ -592,7 +665,9 @@ class _DriverHomePageState extends State<DriverHomePage> with TickerProviderStat
                   : (driverDirections.duration_text_driver_caller != null
                       ? ("${driverDirections.durationTimeCallerToDestination} (${driverDirections.distanceKmCallerToDestination}) trip")
                       : ''),
-              showSecondaryButton: index == 0 ? true : false, // Eğer index 0 ise showSecondaryButton true olacak
+              showSecondaryButton: index == 0
+                  ? true
+                  : false, // Eğer index 0 ise showSecondaryButton true olacak
               onPressedStart: () async {
                 if (index == 0) {
                   showDialog(
@@ -611,7 +686,8 @@ class _DriverHomePageState extends State<DriverHomePage> with TickerProviderStat
                     },
                   );
                 } else {
-                  await PaymentService.instance.waitPayment(driverDirections.driver_id.toString());
+                  await PaymentService.instance
+                      .waitPayment(driverDirections.driver_id.toString());
                 }
               },
               onPressedCancel: index == 0
@@ -621,7 +697,9 @@ class _DriverHomePageState extends State<DriverHomePage> with TickerProviderStat
                       pLineCoOrdinatesList.clear();
                       pLineCoOrdinatesList2.clear();
                       CacheManager.instance.clearAll('driver_directions');
-                      NavigationManager.instance.navigationToPage(NavigationConstant.cancelRide, args: driverDirections.driver_id);
+                      NavigationManager.instance.navigationToPage(
+                          NavigationConstant.cancelRide,
+                          args: driverDirections.driver_id);
                     }
                   : null,
             ),
@@ -631,13 +709,16 @@ class _DriverHomePageState extends State<DriverHomePage> with TickerProviderStat
     );
   }
 
-  CustomIconButton _buildRightTopButton(BuildContext context) => _driverController.driverActive
-      ? _buildCustomIconButton(false, Icons.close, () {
-          _driverController.driverPassive(context);
-        })
-      : _buildCustomIconButton(false, Icons.notifications_none_outlined, () {
-          NavigationManager.instance.navigationToPage(NavigationConstant.notification);
-        });
+  CustomIconButton _buildRightTopButton(BuildContext context) =>
+      _driverController.driverActive
+          ? _buildCustomIconButton(false, Icons.close, () {
+              _driverController.driverPassive(context);
+            })
+          : _buildCustomIconButton(false, Icons.notifications_none_outlined,
+              () {
+              NavigationManager.instance
+                  .navigationToPage(NavigationConstant.notification);
+            });
 
   Widget _buildTopLeftButton(BuildContext context) {
     return _driverController.driverActive
@@ -647,7 +728,9 @@ class _DriverHomePageState extends State<DriverHomePage> with TickerProviderStat
         : SizedBox();
   }
 
-  CustomIconButton _buildCustomIconButton(bool isLeft, IconData icon, VoidCallback onPressed) => CustomIconButton(
+  CustomIconButton _buildCustomIconButton(
+          bool isLeft, IconData icon, VoidCallback onPressed) =>
+      CustomIconButton(
         context: context,
         top: context.responsiveHeight(60),
         left: isLeft ? context.responsiveWidth(15) : null,
@@ -664,7 +747,9 @@ class _DriverHomePageState extends State<DriverHomePage> with TickerProviderStat
     return Padding(
       // sayfanın alt kısmı
       padding: EdgeInsets.only(
-        top: context.responsiveHeight(480) - keyboardSize + (keyboardSize != 0 ? context.responsiveHeight(150) : 0),
+        top: context.responsiveHeight(480) -
+            keyboardSize +
+            (keyboardSize != 0 ? context.responsiveHeight(150) : 0),
         right: context.responsiveWidth(15),
         left: context.responsiveWidth(14),
       ),
@@ -691,9 +776,11 @@ class _DriverHomePageState extends State<DriverHomePage> with TickerProviderStat
       child: ElevatedButton.icon(
         onPressed: () {
           if (driverDirections.driver_status == 'driving') {
-            MapsLauncher.launchCoordinates(driverDirections.to_latitude!, driverDirections.to_longitude!, 'Yol Tarifi');
+            MapsLauncher.launchCoordinates(driverDirections.to_latitude!,
+                driverDirections.to_longitude!, 'Yol Tarifi');
           } else if (driverDirections.driver_status == 'accept') {
-            MapsLauncher.launchCoordinates(driverDirections.from_latitude!, driverDirections.from_longitude!, 'Yol Tarifi');
+            MapsLauncher.launchCoordinates(driverDirections.from_latitude!,
+                driverDirections.from_longitude!, 'Yol Tarifi');
           }
         },
         style: ElevatedButton.styleFrom(
@@ -706,7 +793,8 @@ class _DriverHomePageState extends State<DriverHomePage> with TickerProviderStat
         icon: const Icon(Icons.navigation, color: Colors.white),
         label: Text(
           'navigate'.tr(),
-          style: context.textStyle.subheadSmallRegular.copyWith(color: Colors.white, fontSize: context.responsiveFont(14)),
+          style: context.textStyle.subheadSmallRegular.copyWith(
+              color: Colors.white, fontSize: context.responsiveFont(14)),
         ),
       ),
     );
@@ -717,7 +805,8 @@ class _DriverHomePageState extends State<DriverHomePage> with TickerProviderStat
 
   @override
   Widget build(BuildContext context) {
-    if (SplashPage.driverHomeDirections.driver_status == 'accept' && cacheAcceptFlag == 0) {
+    if (SplashPage.driverHomeDirections.driver_status == 'accept' &&
+        cacheAcceptFlag == 0) {
       cacheAcceptFlag = 1;
       _timerSendRequest = Timer.periodic(const Duration(seconds: 10), (timer) {
         // Her 5 saniyede bir istek gönder
@@ -731,7 +820,8 @@ class _DriverHomePageState extends State<DriverHomePage> with TickerProviderStat
       HomeScreenTransport.allowNavigation = false;
       controller.forward();
     }
-    if (SplashPage.driverHomeDirections.driver_status == 'driving' && cacheDrivingFlag == 0) {
+    if (SplashPage.driverHomeDirections.driver_status == 'driving' &&
+        cacheDrivingFlag == 0) {
       cacheDrivingFlag == 1;
       var controller = _bottomSheetControllers[1];
       controller.forward();
@@ -746,7 +836,8 @@ class _DriverHomePageState extends State<DriverHomePage> with TickerProviderStat
       drawPolyLineFromOriginToDestination();
       HomeScreenTransport.allowNavigation = false;
     }
-    if (Provider.of<AppInfo>(context).userDropOffLocation != null && flag == 0) {
+    if (Provider.of<AppInfo>(context).userDropOffLocation != null &&
+        flag == 0) {
       drawPolyLineFromOriginToDestination();
       flag = 1;
     } else {
@@ -761,8 +852,10 @@ class _DriverHomePageState extends State<DriverHomePage> with TickerProviderStat
           return Stack(
             children: [
               _buildGoogleMap(context),
-              if (HomeScreenTransport.allowNavigation) _buildTopLeftButton(context),
-              if (HomeScreenTransport.allowNavigation) _buildRightTopButton(context),
+              if (HomeScreenTransport.allowNavigation)
+                _buildTopLeftButton(context),
+              if (HomeScreenTransport.allowNavigation)
+                _buildRightTopButton(context),
               _buildBottomOfBody(context, keyboardSize),
               _buildGoogleMapsButton(context),
               _buildDriverBottomSheetContent(0, context),

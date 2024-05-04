@@ -33,7 +33,8 @@ abstract class _PaymentControllerBase with Store {
     card = await PaymentService.instance.getCard();
   }
 
-  Future<void> pay(String amount, BuildContext context, {String driverName = ''}) async {
+  Future<void> pay(String amount, BuildContext context,
+      {String driverName = ''}) async {
     try {
       card.amount = amount;
       var response = await PaymentService.instance.pay(card);
@@ -61,6 +62,7 @@ abstract class _PaymentControllerBase with Store {
           ).then((value) {
             showModalBottomSheet(
               isDismissible: false,
+              enableDrag: false,
               isScrollControlled: false,
               shape: const RoundedRectangleBorder(
                 borderRadius: BorderRadius.only(
@@ -75,13 +77,17 @@ abstract class _PaymentControllerBase with Store {
                   context: context,
                   textController: _commentTextController,
                   onPressed: () async {
-                    await sendComment(_commentTextController.text, _controllerComment.starSelectedIndex);
+                    await sendComment(_commentTextController.text,
+                        _controllerComment.starSelectedIndex);
                     CacheManager.instance.clearAll('directions');
                     CacheManager.instance.clearAll('caller_directions');
-                    NavigationManager.instance.navigationToPageClear(NavigationConstant.homePage);
+                    NavigationManager.instance
+                        .navigationToPageClear(NavigationConstant.homePage);
                   },
-                  onPressedRatingBar: _controllerComment.changeStarSelectedIndex,
-                  text: '${'youRated'.tr()} $driverName ${' ${_controllerComment.starSelectedIndex}'} ${'star'.tr()}',
+                  onPressedRatingBar:
+                      _controllerComment.changeStarSelectedIndex,
+                  text:
+                      '${'youRated'.tr()} $driverName ${' ${_controllerComment.starSelectedIndex}'} ${'star'.tr()}',
                 );
               }),
             );
@@ -106,7 +112,8 @@ abstract class _PaymentControllerBase with Store {
       }
     } catch (e) {
       if (context.mounted) {
-        HelperFunctions.instance.showErrorDialog(context, 'payError'.tr(), 'cancel'.tr(), () {
+        HelperFunctions.instance
+            .showErrorDialog(context, 'payError'.tr(), 'cancel'.tr(), () {
           NavigationManager.instance.navigationToPop();
         });
       }
@@ -125,13 +132,16 @@ abstract class _PaymentControllerBase with Store {
     var response = await PaymentService.instance.addCard(model);
     if (response == '') {
       if (HomeScreenTransport.flagWaitPayment == 0) {
-        NavigationManager.instance.navigationToPageClear(NavigationConstant.paymentMethod);
+        NavigationManager.instance
+            .navigationToPageClear(NavigationConstant.paymentMethod);
       } else {
-        NavigationManager.instance.navigationToPageClear(NavigationConstant.paymentTip);
+        NavigationManager.instance
+            .navigationToPageClear(NavigationConstant.paymentTip);
       }
     } else {
       if (context.mounted) {
-        HelperFunctions.instance.showErrorDialog(context, response, 'cancel'.tr(), () {
+        HelperFunctions.instance
+            .showErrorDialog(context, response, 'cancel'.tr(), () {
           NavigationManager.instance.navigationToPop();
         });
       }
