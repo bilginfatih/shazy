@@ -4,14 +4,15 @@ import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:hexcolor/hexcolor.dart';
-import '../../widgets/modal_bottom_sheet/comment_bottom_sheet.dart';
-import 'controller/history_upcoming_controller.dart';
-import '../../widgets/containers/two_select_container.dart';
+
 import '../../utils/extensions/context_extension.dart';
 import '../../utils/theme/themes.dart';
 import '../../widgets/app_bars/custom_app_bar.dart';
 import '../../widgets/buttons/secondary_button.dart';
+import '../../widgets/containers/two_select_container.dart';
+import '../../widgets/modal_bottom_sheet/comment_bottom_sheet.dart';
 import '../../widgets/padding/base_padding.dart';
+import 'controller/history_upcoming_controller.dart';
 
 class HistoryUpcomingPage extends StatefulWidget {
   const HistoryUpcomingPage({super.key, this.scaffoldKey});
@@ -355,7 +356,7 @@ class _HistoryUpcomingPageState extends State<HistoryUpcomingPage> {
           '${_controller.passengerList[index].driveModel?.toAddress}',
           '${_controller.passengerList[index].driveModel?.date}',
           '16:38 - 16.42',
-          '220.00₺',
+          '${_controller.passengerList[index].price}₺',
           '#5A5A5A',
           _controller.passengerList[index].commentId == 'null' ||
                   _controller.driverList[index].commentId == ''
@@ -383,7 +384,7 @@ class _HistoryUpcomingPageState extends State<HistoryUpcomingPage> {
           '${_controller.driverList[index].driveModel?.toAddress}',
           '${_controller.driverList[index].driveModel?.date}',
           '16:38 - 16.42',
-          '+220.00₺',
+          '+${_controller.driverList[index].price}₺',
           '#388E3D',
           _controller.driverList[index].commentId == null ||
                   _controller.driverList[index].commentId == ''

@@ -23,10 +23,11 @@ part 'payment_controller.g.dart';
 class PaymentController = _PaymentControllerBase with _$PaymentController;
 
 abstract class _PaymentControllerBase with Store {
-  final TextEditingController _commentTextController = TextEditingController();
-  final _controllerComment = HistoryUpcomingController();
   @observable
   PaymentModel card = PaymentModel();
+
+  final TextEditingController _commentTextController = TextEditingController();
+  final _controllerComment = HistoryUpcomingController();
 
   @action
   Future<void> init() async {
@@ -63,7 +64,7 @@ abstract class _PaymentControllerBase with Store {
             showModalBottomSheet(
               isDismissible: false,
               enableDrag: false,
-              isScrollControlled: false,
+              isScrollControlled: true,
               shape: const RoundedRectangleBorder(
                 borderRadius: BorderRadius.only(
                   topLeft: Radius.circular(24),

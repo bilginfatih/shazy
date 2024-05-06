@@ -9,6 +9,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:maps_launcher/maps_launcher.dart';
+import 'package:shazy/pages/payment/controller/payment_controller.dart';
 import 'package:shazy/services/payment/payment_service.dart';
 import 'package:shazy/widgets/buttons/secondary_button.dart';
 import 'package:shazy/widgets/dialogs/drive_dialog.dart';
@@ -53,18 +54,82 @@ class TestPage extends StatefulWidget {
 
 class _TestPageState extends State<TestPage>
     with SingleTickerProviderStateMixin {
-  final _scaffoldKey = GlobalKey<ScaffoldState>();
-
-  final _key = GlobalKey();
-  Duration _duration = Duration(milliseconds: 500);
-  final Tween<Offset> _tween = Tween(begin: Offset(0, 1), end: Offset(0, 0));
-  double _size = 0;
   late AnimationController _controller;
+  Duration _duration = Duration(milliseconds: 500);
+  final _key = GlobalKey();
+  final _scaffoldKey = GlobalKey<ScaffoldState>();
+  double _size = 0;
+  final Tween<Offset> _tween = Tween(begin: Offset(0, 1), end: Offset(0, 0));
+
   @override
   void initState() {
     super.initState();
     _controller = AnimationController(vsync: this, duration: _duration);
   }
+
+  void _showDriverDialog(BuildContext context) {
+    showDialog(
+      barrierDismissible: false,
+      context: context,
+      builder: (BuildContext context) => DriverDialog(
+        context: context,
+        price: '220₺',
+        star: '4.9',
+        location1TextTitle: 'kocaeli',
+        location1Text: 'İzmit',
+        location2TextTitle: 'Bursa',
+        location2Text: 'Demirtaş Paşa',
+        cancelOnPressed: () {},
+        acceptOnPressed: () {},
+      ),
+    );
+  }
+
+  Padding _buildLocationRow(
+    BuildContext context,
+    String assetName,
+    String text1,
+    String text2,
+  ) =>
+      Padding(
+        padding: EdgeInsets.only(
+          left: context.responsiveWidth(8),
+          right: context.responsiveWidth(15),
+        ),
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Padding(
+              padding: EdgeInsets.only(
+                  top: context.responsiveHeight(4),
+                  left: context.responsiveWidth(10),
+                  right: context.responsiveWidth(6)),
+              child: SvgPicture.asset('assets/svg/$assetName.svg'),
+            ),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  text1,
+                  style: GoogleFonts.poppins(
+                    fontSize: 15,
+                    fontWeight: FontWeight.w500,
+                    color: HexColor('#5A5A5A'),
+                  ),
+                ),
+                Text(
+                  text2,
+                  style: GoogleFonts.poppins(
+                    fontSize: 9,
+                    fontWeight: FontWeight.w400,
+                    color: HexColor('#B8B8B8'),
+                  ),
+                ),
+              ],
+            ),
+          ],
+        ),
+      );
 
   @override
   Widget build(BuildContext context) {
@@ -76,6 +141,13 @@ class _TestPageState extends State<TestPage>
         child: Center(
           child: ListView(
             children: [
+              ElevatedButton(
+                onPressed: () async {
+                  PaymentController paymentController = PaymentController();
+                  await paymentController.pay('222', context);
+                },
+                child: Text('Comment bottom sheet payment'),
+              ),
               ElevatedButton(
                 onPressed: () async {
                   showModalBottomSheet(
@@ -741,68 +813,4 @@ class _TestPageState extends State<TestPage>
       ),
     );
   }
-
-  void _showDriverDialog(BuildContext context) {
-    showDialog(
-      barrierDismissible: false,
-      context: context,
-      builder: (BuildContext context) => DriverDialog(
-        context: context,
-        price: '220₺',
-        star: '4.9',
-        location1TextTitle: 'kocaeli',
-        location1Text: 'İzmit',
-        location2TextTitle: 'Bursa',
-        location2Text: 'Demirtaş Paşa',
-        cancelOnPressed: () {},
-        acceptOnPressed: () {},
-      ),
-    );
-  }
-
-  Padding _buildLocationRow(
-    BuildContext context,
-    String assetName,
-    String text1,
-    String text2,
-  ) =>
-      Padding(
-        padding: EdgeInsets.only(
-          left: context.responsiveWidth(8),
-          right: context.responsiveWidth(15),
-        ),
-        child: Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Padding(
-              padding: EdgeInsets.only(
-                  top: context.responsiveHeight(4),
-                  left: context.responsiveWidth(10),
-                  right: context.responsiveWidth(6)),
-              child: SvgPicture.asset('assets/svg/$assetName.svg'),
-            ),
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  text1,
-                  style: GoogleFonts.poppins(
-                    fontSize: 15,
-                    fontWeight: FontWeight.w500,
-                    color: HexColor('#5A5A5A'),
-                  ),
-                ),
-                Text(
-                  text2,
-                  style: GoogleFonts.poppins(
-                    fontSize: 9,
-                    fontWeight: FontWeight.w400,
-                    color: HexColor('#B8B8B8'),
-                  ),
-                ),
-              ],
-            ),
-          ],
-        ),
-      );
 }

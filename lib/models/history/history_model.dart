@@ -9,12 +9,12 @@ class HistoryModel extends BaseModel {
     this.driverId,
     this.callerId,
     this.commentId,
-    this.financeId,
     this.createdAt,
     this.updatedAt,
     this.userProfile,
     this.driveRequestId,
     this.driveModel,
+    this.price,
   });
 
   HistoryModel._fromJson(o) {
@@ -22,10 +22,10 @@ class HistoryModel extends BaseModel {
     driverId = o['driver_id'];
     callerId = o['caller_id'];
     commentId = o['comment_id'];
-    financeId = o['finance_id'];
     createdAt = o['created_at'];
     updatedAt = o['updated_at'];
     driveRequestId = o['drive_request_id'];
+    price = double.tryParse(o['price']);
   }
 
   @override
@@ -37,8 +37,8 @@ class HistoryModel extends BaseModel {
   DriveModel? driveModel;
   String? driveRequestId;
   String? driverId;
-  String? financeId;
   String? id;
+  double? price;
   String? updatedAt;
   UserProfileModel? userProfile;
 

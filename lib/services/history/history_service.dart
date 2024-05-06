@@ -43,7 +43,7 @@ class HistoryService {
         model = model.fromJson(item);
         await DriveService.instance
             .getDriverRequest(model.driveRequestId.toString());
-       DriveModel driveModel = await DriveService.instance
+        DriveModel driveModel = await DriveService.instance
             .getDriverRequest(model.driveRequestId.toString());
         model.driveModel = driveModel;
         model.userProfile =
