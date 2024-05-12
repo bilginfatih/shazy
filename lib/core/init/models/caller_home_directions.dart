@@ -16,6 +16,8 @@ class CallerHomeDirections extends BaseModel {
 
   bool? isAccept;
 
+  String? meeting_time;
+
   CallerHomeDirections({
     // caller tarafı
     this.caller_status,
@@ -27,6 +29,7 @@ class CallerHomeDirections extends BaseModel {
     this.driver_picture_path,
     this.five_security_code,
     this.isAccept,
+    this.meeting_time,
   });
 
   CallerHomeDirections._fromJson(o) {
@@ -42,6 +45,7 @@ class CallerHomeDirections extends BaseModel {
     five_security_code = o['five_security_code'];
 
     isAccept = o['is_accept'];
+    meeting_time = o['meeting_time'];
   }
 
   @override
@@ -59,6 +63,7 @@ class CallerHomeDirections extends BaseModel {
     if (five_security_code != null) map['five_security_code'] = five_security_code;
 
     if (isAccept != null) map['is_accept'] = isAccept;
+    if (meeting_time != null) map['meeting_time'] = meeting_time;
     return map;
   }
 }

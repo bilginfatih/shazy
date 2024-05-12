@@ -218,6 +218,16 @@ class _HomeScreenTransportState extends State<HomeScreenTransport> with TickerPr
         if (callerHomeDirections.caller_status == 'accept' && callerHomeDirections.isAccept != true) {
           callerHomeDirections.isAccept = true;
 
+          DateTime originalDateTime = DateTime.parse(requestResponse['updated_at']);
+          DateTime istanbulDateTime = originalDateTime.toLocal();
+          DateFormat formatter = DateFormat.Hm('tr_TR');
+
+          Duration eklenenSure = Duration(seconds: directions!.duration_value!);
+
+          DateTime yeniDateTime = istanbulDateTime.add(eklenenSure);
+
+          callerHomeDirections.meeting_time = formatter.format(yeniDateTime);
+
           String userId = await SessionManager().get('id');
           String securityCodeUrl = "/security-code/callerCode/$userId";
           var requestSecurityCode = await NetworkManager.instance.get(securityCodeUrl);
@@ -360,7 +370,7 @@ class _HomeScreenTransportState extends State<HomeScreenTransport> with TickerPr
                     }
                   : () {},
               context: context,
-              pickingUpText: index == 0 ? 'Meeting Time 10:10' : 'tripToDestionation',
+              pickingUpText: index == 0 ? 'Meeting Time: ${callerHomeDirections.meeting_time}' : 'tripToDestionation'.tr(),
               customerName: '${callerHomeDirections.driver_name} ${callerHomeDirections.driver_surname}',
               imagePath: "https://randomuser.me/api/portraits/men/93.jpg",
               /*'$baseUrl/$driverPicturePath',*/

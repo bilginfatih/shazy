@@ -81,29 +81,18 @@ class _DriverHomePageState extends State<DriverHomePage> with TickerProviderStat
   final Completer<GoogleMapController> _controller = Completer<GoogleMapController>();
   final _controllerComment = HistoryUpcomingController();
   final DriverController _driverController = DriverController();
-  //late int _duraitonKmCallertoDestinationValue = 0;
   final Duration _duration = const Duration(milliseconds: 500);
-  //late String _durationKmCallerToDestination = '';
-  //late String _durationKmDriverToCaller = '';
-  //late String _durationTimeCallerToDestination = '';
-  //late String _durationTimeDriverToCaller = '';
-  //late String _endAddressCallerToDestination = '';
-  //late String _endAddressDriverToCaller = '';
   String _mapTheme = '';
   final Set<Marker> _markersSet = {};
   GoogleMapController? _newGoogleMapController;
   final Set<Polyline> _polyLineSet = {};
-  //late String _startAddressCallerToDestination;
-  //late String _startAddressDriverToCaller;
   late Timer _timerIsMatched;
   late Timer _timerSendRequest;
   late Timer _timerSendIsCommentCache;
   List<Tween<Offset>> _tweens = [];
-  //Position? _userCurrentPosition;
 
   @override
   void dispose() {
-    // Timer'ı iptal et
 
     if (_timerIsMatched.isActive) {
       _timerIsMatched.cancel();
