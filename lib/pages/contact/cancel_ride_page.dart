@@ -98,7 +98,7 @@ class _CancelRidePageState extends State<CancelRidePage> {
                   ),
                 ),
                 onTap: () {
-                  NavigationManager.instance.navigationToPop();
+                  NavigationManager.instance.navigationToPageClear(NavigationConstant.homePage);
                 },
               ),
             ),
@@ -252,7 +252,6 @@ class _CancelRidePageState extends State<CancelRidePage> {
                   CacheManager.instance.clearAll('driver_directions');
                   HomeScreenTransport.isAccept = false;
                   HomeScreenTransport.allowNavigation = true;
-                  NavigationManager.instance.navigationToPageClear(NavigationConstant.homePage);
                 }),
           ],
         ),
