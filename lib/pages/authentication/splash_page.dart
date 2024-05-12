@@ -46,19 +46,23 @@ class _SplashPageState extends State<SplashPage> {
     String? email = await CacheManager.instance.getData('user', 'email');
     String? password = await CacheManager.instance.getData('user', 'password');
     if (email == null || password == null) {
-      NavigationManager.instance.navigationToPageClear(NavigationConstant.welcome);
+      await NavigationManager.instance
+          .navigationToPageClear(NavigationConstant.welcome);
     }
     UserModel model = UserModel(email: email, password: password);
     String? data = await UserService.instance.login(model);
     await _setLang();
     if (data != null) {
-      NavigationManager.instance.navigationToPageClear(NavigationConstant.welcome);
+      await NavigationManager.instance
+          .navigationToPageClear(NavigationConstant.welcome);
     } else if (SplashPage.callerHomeDirections.caller_status == 'waitpayment') {
       await UserIdentityService.instance.cacheUserIdentity();
-      NavigationManager.instance.navigationToPageClear(NavigationConstant.paymentTip);
+      await NavigationManager.instance
+          .navigationToPageClear(NavigationConstant.paymentTip);
     } else {
       await UserIdentityService.instance.cacheUserIdentity();
-      NavigationManager.instance.navigationToPageClear(NavigationConstant.homePage);
+      await NavigationManager.instance
+          .navigationToPageClear(NavigationConstant.homePage);
     }
   }
 
@@ -76,7 +80,8 @@ class _SplashPageState extends State<SplashPage> {
     var box = await Hive.openBox('caller_directions');
     var response = await box.get('caller_directions');
     if (response != null) {
-      SplashPage.callerHomeDirections = SplashPage.callerHomeDirections.fromJson(response);
+      SplashPage.callerHomeDirections =
+          SplashPage.callerHomeDirections.fromJson(response);
     } else {
       SplashPage.callerHomeDirections = CallerHomeDirections();
     }
@@ -86,7 +91,8 @@ class _SplashPageState extends State<SplashPage> {
     var box = await Hive.openBox('driver_directions');
     var response = await box.get('driver_directions');
     if (response != null) {
-      SplashPage.driverHomeDirections = SplashPage.driverHomeDirections.fromJson(response);
+      SplashPage.driverHomeDirections =
+          SplashPage.driverHomeDirections.fromJson(response);
     } else {
       SplashPage.driverHomeDirections = DriverHomeDirections();
     }
@@ -124,7 +130,8 @@ class _SplashPageState extends State<SplashPage> {
       builder: (BuildContext context) {
         return AlertDialog(
           title: Text('Lokasyon İzinleri'),
-          content: Text('Uygulamanın konum izni gerektiği için ayarlara gitmek istiyor musunuz?'),
+          content: Text(
+              'Uygulamanın konum izni gerektiği için ayarlara gitmek istiyor musunuz?'),
           actions: [
             TextButton(
               onPressed: () {
@@ -142,15 +149,16 @@ class _SplashPageState extends State<SplashPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppThemes.lightPrimary500,
+      backgroundColor: Colors.white,
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
+        
             Container(
-              width: context.responsiveWidth(140),
-              height: context.responsiveHeight(140),
+              width: context.responsiveWidth(120),
+              height: context.responsiveHeight(120),
               decoration: ShapeDecoration(
                 color: Colors.white,
                 shape: RoundedRectangleBorder(
@@ -158,10 +166,10 @@ class _SplashPageState extends State<SplashPage> {
                 ),
               ),
               child: Image.asset(
-                "assets/png/splash_logo-2.png",
+                "assets/png/logo.jpg",
               ),
             ),
-            SizedBox(
+          /*  SizedBox(
               height: context.responsiveHeight(7),
             ),
             Text(
@@ -172,7 +180,7 @@ class _SplashPageState extends State<SplashPage> {
                 fontWeight: FontWeight.w800,
                 fontSize: context.responsiveFont(50),
               ),
-            )
+            )*/
           ],
         ),
       ),
