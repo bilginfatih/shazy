@@ -1,7 +1,7 @@
 {
     "signUp": "Sign Up",
     "gender": "Gender",
-    "signUpTerms1": "By signing up. you agree to the",
+    "signUpTerms1": "By signing up. you agree to the ",
     "termsOfService": "Terms of service",
     "and": "and",
     "privacyPolicy": "Privacy policy",
@@ -131,7 +131,7 @@
     "time": "Time",
     "finishTheTrip": "Finish The Trip",
     "goingToDestination": "Going To Destination",
-    "resultsFor": "resultsFor",
+    "resultsFor": "Results for",
     "search": "Search",
     "callDriver": "Call Driver",
     "whereWouldGo": "Where would you go?",

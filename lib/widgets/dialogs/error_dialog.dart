@@ -36,11 +36,12 @@ class ErrorDialog extends Dialog {
                     child: GestureDetector(
                       // ignore: sort_child_properties_last
                       child: Container(
-                        color: Colors.white,
+                        color: Colors.transparent,
                         child: SvgPicture.asset(
                           'assets/svg/cancel.svg',
                           width: context.responsiveWidth(24),
                           height: context.responsiveHeight(24),
+                          colorFilter: ColorFilter.mode(context.isLight ? Colors.black : Colors.white, BlendMode.srcIn),
                         ),
                       ),
                       onTap: onTap ??
@@ -69,8 +70,7 @@ class ErrorDialog extends Dialog {
               ),
               SizedBox(height: context.responsiveHeight(40)),
               Padding(
-                padding: EdgeInsets.symmetric(
-                    horizontal: context.responsiveWidth(12)),
+                padding: EdgeInsets.symmetric(horizontal: context.responsiveWidth(12)),
                 child: FittedBox(
                   child: Text(
                     maxLines: 5,
@@ -82,8 +82,7 @@ class ErrorDialog extends Dialog {
               ),
               SizedBox(height: context.responsiveHeight(40)),
               Padding(
-                padding: EdgeInsets.symmetric(
-                    horizontal: context.responsiveWidth(10)),
+                padding: EdgeInsets.symmetric(horizontal: context.responsiveWidth(10)),
                 child: PrimaryButton(
                   text: buttonText,
                   context: context,

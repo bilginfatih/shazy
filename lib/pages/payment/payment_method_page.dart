@@ -39,27 +39,20 @@ class _PaymetnMethodPageState extends State<PaymetnMethodPage> {
         children: [
           Text(
             text1,
-            style: context.textStyle.subheadSmallRegular
-                .copyWith(color: HexColor('#5A5A5A')),
+            style: context.textStyle.subheadSmallRegular.copyWith(color: context.isLight ? HexColor('#5A5A5A') : Colors.white),
           ),
           Text(
             text2,
-            style: context.textStyle.subheadSmallRegular
-                .copyWith(color: HexColor('#5A5A5A')),
+            style: context.textStyle.subheadSmallRegular.copyWith(color: context.isLight ? HexColor('#5A5A5A') : Colors.white),
           ),
         ],
       );
 
-  Row _buildLocationRow(
-          BuildContext context, String assetName, String text1, String text2,
-          {String text3 = ''}) =>
-      Row(
+  Row _buildLocationRow(BuildContext context, String assetName, String text1, String text2, {String text3 = ''}) => Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Padding(
-            padding: EdgeInsets.only(
-                top: context.responsiveHeight(4),
-                right: context.responsiveWidth(6)),
+            padding: EdgeInsets.only(top: context.responsiveHeight(4), right: context.responsiveWidth(6)),
             child: SvgPicture.asset('assets/svg/$assetName.svg'),
           ),
           Column(
@@ -68,20 +61,23 @@ class _PaymetnMethodPageState extends State<PaymetnMethodPage> {
               Text(
                 text1,
                 style: context.textStyle.subheadLargeMedium.copyWith(
-                  color: HexColor('#5A5A5A'),
+                  color: context.isLight ? HexColor('#5A5A5A') : Colors.white,
                 ),
               ),
               Text(
                 text2,
-                style: context.textStyle.bodySmallRegular
-                    .copyWith(color: HexColor('#5A5A5A')),
+                style: context.textStyle.bodySmallRegular.copyWith(
+                  color: context.isLight ? HexColor('#5A5A5A') : Colors.white,
+                ),
               ),
             ],
           ),
           const Spacer(),
           Text(
             text3,
-            style: context.textStyle.bodyMedium,
+            style: context.textStyle.bodyMedium.copyWith(
+              color: context.isLight ? HexColor('#5A5A5A') : Colors.white,
+            ),
           ),
         ],
       );
@@ -99,23 +95,18 @@ class _PaymetnMethodPageState extends State<PaymetnMethodPage> {
   }
 
   SingleChildRenderObjectWidget _buildPaymentMethod(BuildContext context) {
-    return _controller.card.cardNumber != null &&
-            _controller.card.month != null &&
-            _controller.card.year != null
+    return _controller.card.cardNumber != null && _controller.card.month != null && _controller.card.year != null
         ? PaymetMethodContainer(
             context: context,
             //assetName: 'visa',
-            text1:
-                '**** **** **** ${_controller.card.cardNumber?.substring(_controller.card.cardNumber!.length - 5)}',
-            text2:
-                '${'expires'.tr()}: ${_controller.card.month}/${_controller.card.year}',
+            text1: '**** **** **** ${_controller.card.cardNumber?.substring(_controller.card.cardNumber!.length - 5)}',
+            text2: '${'expires'.tr()}: ${_controller.card.month}/${_controller.card.year}',
             opacitiy: 1,
           )
         : Center(
             child: Text(
               'noPaymentMethod'.tr(),
-              style: context.textStyle.titleSmallMedium
-                  .copyWith(color: HexColor('#898989')),
+              style: context.textStyle.titleSmallMedium.copyWith(color: HexColor('#898989')),
             ),
           );
   }
@@ -175,10 +166,7 @@ class _PaymetnMethodPageState extends State<PaymetnMethodPage> {
                 'map3',
                 dropOffLocationName.toString(),
                 currentLocationName.toString(),
-                text3: Provider.of<AppInfo>(context)
-                    .userDropOffLocation!
-                    .distance_text
-                    .toString(),
+                text3: Provider.of<AppInfo>(context).userDropOffLocation!.distance_text.toString(),
               ),
               SizedBox(
                 height: context.responsiveHeight(20),
@@ -193,9 +181,7 @@ class _PaymetnMethodPageState extends State<PaymetnMethodPage> {
               _buildPriceRow(
                 context,
                 'charge'.tr(),
-                Provider.of<AppInfo>(context, listen: false)
-                            .userDropOffLocation !=
-                        null
+                Provider.of<AppInfo>(context, listen: false).userDropOffLocation != null
                     ? "${Provider.of<AppInfo>(context, listen: false).userDropOffLocation!.totalPayment.toString()}₺"
                     : 'null',
               ),
@@ -208,7 +194,7 @@ class _PaymetnMethodPageState extends State<PaymetnMethodPage> {
                   Text(
                     'selectPaymentMethod'.tr(),
                     style: context.textStyle.headlineSmallMedium.copyWith(
-                      color: HexColor('#5A5A5A'),
+                      color: context.isLight ? HexColor('#5A5A5A') : Colors.white,
                     ),
                   ),
                   _buildAddCardButton(context),

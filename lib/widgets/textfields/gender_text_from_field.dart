@@ -12,11 +12,19 @@ class GenderTextFormField extends DropdownButtonFormField {
     required String text,
   }) : super(
           key: key,
+          
           decoration: InputDecoration(
             hintText: text,
             hintStyle: context.textStyle.subheadLargeMedium.copyWith(
               color: AppThemes.hintTextNeutral,
             ),
+            focusedBorder: context.isLight
+                ? null
+                : OutlineInputBorder(
+                    borderSide: BorderSide(
+                      color: AppThemes.lightPrimary500,
+                    ),
+                  ),
             border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(8),
               borderSide: BorderSide(
@@ -24,8 +32,7 @@ class GenderTextFormField extends DropdownButtonFormField {
               ),
             ),
           ),
-          iconEnabledColor:
-              context.isLight ? HexColor("#414141") : HexColor("#D0D0D0"),
+          iconEnabledColor: context.isLight ? HexColor("#414141") : HexColor("#D0D0D0"),
           icon: const Icon(Icons.keyboard_arrow_down),
           items: const [
             DropdownMenuItem(

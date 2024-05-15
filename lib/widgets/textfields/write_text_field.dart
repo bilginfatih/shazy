@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:hexcolor/hexcolor.dart';
+import 'package:shazy/utils/extensions/context_extension.dart';
+
+import '../../utils/theme/themes.dart';
 
 class WriteTextField extends TextField {
   WriteTextField({
@@ -12,6 +15,7 @@ class WriteTextField extends TextField {
   }) : super(
           key: key,
           controller: controller,
+          cursorColor: context.isLight ? null : AppThemes.lightPrimary500,
           decoration: InputDecoration(
             hintText: hintText,
             hintStyle: TextStyle(color: HexColor("#D0D0D0")),
@@ -22,6 +26,13 @@ class WriteTextField extends TextField {
                 color: borderColor,
               ),
             ),
+            focusedBorder: context.isLight
+                ? null
+                : OutlineInputBorder(
+                    borderSide: BorderSide(
+                      color: AppThemes.lightPrimary500,
+                    ),
+                  ),
           ),
           maxLines: maxLines,
         );

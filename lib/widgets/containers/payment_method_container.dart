@@ -19,7 +19,7 @@ class PaymetMethodContainer extends Opacity {
               width: 1,
               color: AppThemes.lightTheme.colorScheme.primary,
             ),
-            color: AppThemes.lightPrimary50,
+            color: context.isLight ? AppThemes.lightPrimary50 : AppThemes.darkBg,
             child: Row(
               children: [
                 //SvgPicture.asset('assets/svg/payment/$assetName.svg'),

@@ -742,12 +742,12 @@ class _DriverHomePageState extends State<DriverHomePage>
         right: context.responsiveWidth(15),
         left: context.responsiveWidth(14),
       ),
-      child: Column(
+      child: const Column(
         crossAxisAlignment: CrossAxisAlignment.end,
         children: [
           true
               ? SizedBox()
-              : const Center(
+              : Center(
                   // TODO: UI burası değişebilir
                   child: CircularProgressIndicator(),
                 ),

@@ -6,9 +6,10 @@ import '../../utils/extensions/context_extension.dart';
 import '../../utils/theme/themes.dart';
 
 class SearchTextFormField extends StatefulWidget {
-  const SearchTextFormField({super.key, required this.controller});
+  const SearchTextFormField({super.key, required this.controller, this.onChanged});
 
   final TextEditingController controller;
+  final void Function(String)? onChanged;
 
   @override
   State<SearchTextFormField> createState() => _SearchTextFormFieldState();
@@ -19,9 +20,7 @@ class _SearchTextFormFieldState extends State<SearchTextFormField> {
         padding: const EdgeInsets.all(10.0),
         child: SvgPicture.asset(
           'assets/svg/map.svg',
-          colorFilter: ColorFilter.mode(
-              context.isLight ? Colors.black : HexColor('#E8E8E8'),
-              BlendMode.srcIn),
+          colorFilter: ColorFilter.mode(context.isLight ? Colors.black : HexColor('#E8E8E8'), BlendMode.srcIn),
         ),
       );
 
@@ -35,8 +34,7 @@ class _SearchTextFormFieldState extends State<SearchTextFormField> {
           padding: EdgeInsets.only(top: context.responsiveHeight(12)),
           child: SvgPicture.asset(
             'assets/svg/cancel.svg',
-            colorFilter: ColorFilter.mode(
-                context.isLight ? Colors.black : HexColor('#E8E8E8'), BlendMode.srcIn),
+            colorFilter: ColorFilter.mode(context.isLight ? Colors.black : HexColor('#E8E8E8'), BlendMode.srcIn),
           ),
         ),
       );
@@ -45,6 +43,7 @@ class _SearchTextFormFieldState extends State<SearchTextFormField> {
   Widget build(BuildContext context) {
     return TextFormField(
       controller: widget.controller,
+      cursorColor: context.isLight ? null : AppThemes.lightPrimary500,
       style: context.textStyle.subheadLargeMedium,
       textCapitalization: TextCapitalization.sentences,
       decoration: InputDecoration(
@@ -56,6 +55,13 @@ class _SearchTextFormFieldState extends State<SearchTextFormField> {
         hintStyle: context.textStyle.subheadLargeMedium.copyWith(
           color: AppThemes.hintTextNeutral,
         ),
+        focusedBorder: context.isLight
+            ? null
+            : OutlineInputBorder(
+                borderSide: BorderSide(
+                  color: AppThemes.lightPrimary500,
+                ),
+              ),
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(8),
           borderSide: BorderSide(
@@ -63,6 +69,7 @@ class _SearchTextFormFieldState extends State<SearchTextFormField> {
           ),
         ),
       ),
+      onChanged: widget.onChanged,
     );
   }
 }

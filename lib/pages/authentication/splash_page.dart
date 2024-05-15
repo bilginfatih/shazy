@@ -31,6 +31,7 @@ class SplashPage extends StatefulWidget {
 
 class _SplashPageState extends State<SplashPage> {
   late PermissionStatus status;
+  static const splashDuration = 3000; // 3 saniye
 
   @override
   void initState() {
@@ -39,6 +40,7 @@ class _SplashPageState extends State<SplashPage> {
   }
 
   Future<void> _init() async {
+    await Future.delayed(const Duration(milliseconds: splashDuration));
     await cacheManagerCallerDirections();
     await cacheManagerCallerHomeDirections();
     await cacheManagerDriverHomeDirections();

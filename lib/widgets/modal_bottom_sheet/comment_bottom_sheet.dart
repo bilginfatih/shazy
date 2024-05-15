@@ -19,7 +19,8 @@ class CommentBottomSheet extends Padding {
   }) : super(
           key: key,
           padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
-          child: SizedBox(
+          child: Container(
+            color: context.isLight ? null : HexColor('#35383F'),
             height: context.customeHeight(0.5),
             child: BasePadding(
               context: context,
@@ -29,7 +30,7 @@ class CommentBottomSheet extends Padding {
                     width: context.responsiveWidth(134),
                     height: context.responsiveHeight(5),
                     decoration: ShapeDecoration(
-                      color: HexColor('#141414'),
+                      color: context.isLight ? HexColor('#141414') : Colors.white30,
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(100),
                       ),
@@ -48,22 +49,27 @@ class CommentBottomSheet extends Padding {
                   ),
                   Text(
                     'excellent'.tr(),
-                    style: context.textStyle.headlineLargeMedium.copyWith(fontSize: context.responsiveFont(20)),
+                    style: context.textStyle.headlineLargeMedium.copyWith(
+                      fontSize: context.responsiveFont(20),
+                    ),
                   ),
                   SizedBox(
                     height: context.responsiveHeight(8),
                   ),
                   Text(
                     text ?? '',
-                    style: context.textStyle.bodySmallMedium.copyWith(color: HexColor('#B8B8B8'), fontSize: context.responsiveFont(12)),
+                    style: context.textStyle.bodySmallMedium
+                        .copyWith(color: context.isLight ? HexColor('#B8B8B8') : Colors.white30, fontSize: context.responsiveFont(12)),
                   ),
                   SizedBox(
                     height: context.responsiveHeight(24),
                   ),
                   Container(
+                    color: context.isLight ? null : HexColor('#35383F'),
                     height: context.responsiveHeight(118),
                     width: context.responsiveWidth(318),
                     child: TextFormField(
+                      cursorColor: context.isLight ? null : AppThemes.lightPrimary500,
                       controller: textController,
                       minLines: 4,
                       maxLines: 50,
@@ -78,6 +84,13 @@ class CommentBottomSheet extends Padding {
                             color: AppThemes.borderSideColor,
                           ),
                         ),
+                        focusedBorder: context.isLight
+                            ? null
+                            : OutlineInputBorder(
+                                borderSide: BorderSide(
+                                  color: AppThemes.lightPrimary500,
+                                ),
+                              ),
                       ),
                     ),
                   ),

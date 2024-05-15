@@ -12,6 +12,7 @@ class CreditCardTextFormField extends TextFormField {
   }) : super(
           key: key,
           controller: controller,
+          cursorColor: context.isLight ? null : AppThemes.lightPrimary500,
           keyboardType: TextInputType.number,
           inputFormatters: [
             FilteringTextInputFormatter.digitsOnly,
@@ -29,14 +30,20 @@ class CreditCardTextFormField extends TextFormField {
                 color: AppThemes.borderSideColor,
               ),
             ),
+            focusedBorder: context.isLight
+                ? null
+                : OutlineInputBorder(
+                    borderSide: BorderSide(
+                      color: AppThemes.lightPrimary500,
+                    ),
+                  ),
           ),
         );
 }
 
 class CardNumberInputFormatter extends TextInputFormatter {
   @override
-  TextEditingValue formatEditUpdate(
-      TextEditingValue oldValue, TextEditingValue newValue) {
+  TextEditingValue formatEditUpdate(TextEditingValue oldValue, TextEditingValue newValue) {
     if (newValue.selection.baseOffset == 0) {
       return newValue;
     }

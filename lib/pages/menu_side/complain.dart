@@ -24,9 +24,7 @@ class _ComplainPageState extends State<ComplainPage> {
 
   Padding _buildBody(BuildContext context) {
     return Padding(
-      padding: EdgeInsets.only(
-          top: context.responsiveHeight(30.0),
-          left: context.responsiveWidth(15.0)),
+      padding: EdgeInsets.only(top: context.responsiveHeight(30.0), left: context.responsiveWidth(15.0)),
       child: Column(
         children: [
           _buildTextField(context),
@@ -51,10 +49,8 @@ class _ComplainPageState extends State<ComplainPage> {
         );
         if (response != null) {
           if (context.mounted) {
-            HelperFunctions.instance
-                .showErrorDialog(context, response, 'backHome'.tr(), () {
-              NavigationManager.instance
-                  .navigationToPageClear(NavigationConstant.homePage);
+            HelperFunctions.instance.showErrorDialog(context, response, 'backHome'.tr(), () {
+              NavigationManager.instance.navigationToPageClear(NavigationConstant.homePage);
             });
           }
         } else if (context.mounted) {
@@ -66,13 +62,12 @@ class _ComplainPageState extends State<ComplainPage> {
                 text1: 'complainSuccessText'.tr(),
                 title: 'sendSuccessful'.tr(),
                 widget: Padding(
-                  padding: EdgeInsets.symmetric(
-                      horizontal: context.responsiveWidth(20)),
+                  padding: EdgeInsets.symmetric(horizontal: context.responsiveWidth(20)),
                   child: PrimaryButton(
                     context: context,
                     text: 'backHome'.tr(),
                     onPressed: () {
-                      NavigationManager.instance.navigationToPop();
+                      NavigationManager.instance.navigationToPageClear(NavigationConstant.homePage);
                     },
                     width: context.responsiveWidth(340),
                     height: context.responsiveHeight(54),

@@ -24,17 +24,13 @@ class OTPTextFormField extends OTPTextField {
           isDense: true,
           width: width,
           keyboardType: TextInputType.number,
-          contentPadding: contentPadding ??
-              const EdgeInsets.symmetric(horizontal: 4, vertical: 8),
+          contentPadding: contentPadding ?? const EdgeInsets.symmetric(horizontal: 4, vertical: 8),
           textFieldAlignment: MainAxisAlignment.spaceAround,
           fieldWidth: context.responsiveWidth(fieldWidth),
           fieldStyle: FieldStyle.box,
           outlineBorderRadius: 7,
-          style: textStyle?.copyWith(
-                  color:
-                      context.isLight ? HexColor("#414141") : Colors.black) ??
-              context.textStyle.titleMedSemibold.copyWith(
-                  color: context.isLight ? HexColor("#414141") : Colors.black),
+          style: textStyle?.copyWith(color: context.isLight ? HexColor("#414141") : Colors.black) ??
+              context.textStyle.titleMedSemibold.copyWith(color: context.isLight ? HexColor("#414141") : Colors.black),
           otpFieldStyle: OtpFieldStyle(
             focusBorderColor: HexColor("#BC8CE3"),
             backgroundColor: Colors.white,

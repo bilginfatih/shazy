@@ -38,12 +38,9 @@ class _WalletPageState extends State<WalletPage> {
     _controller.getFinance(userId);
   }
 
-  Padding _buildTransectionContainer(
-      BuildContext context, text1, text2, text3, String path) {
-    Color textColor1 =
-        context.isLight ? HexColor('#121212') : HexColor('#D0D0D0');
-    Color textColor2 =
-        context.isLight ? HexColor('#5A5A5A') : HexColor('#B8B8B8');
+  Padding _buildTransectionContainer(BuildContext context, text1, text2, text3, String path) {
+    Color textColor1 = context.isLight ? HexColor('#121212') : HexColor('#D0D0D0');
+    Color textColor2 = context.isLight ? HexColor('#5A5A5A') : HexColor('#B8B8B8');
     return Padding(
       padding: const EdgeInsets.only(bottom: 16),
       child: Container(
@@ -71,13 +68,11 @@ class _WalletPageState extends State<WalletPage> {
                 children: [
                   Text(
                     text1,
-                    style: context.textStyle.subheadSmallRegular
-                        .copyWith(color: textColor1),
+                    style: context.textStyle.subheadSmallRegular.copyWith(color: textColor1),
                   ),
                   Text(
                     text2,
-                    style: context.textStyle.bodySmallRegular
-                        .copyWith(color: textColor2),
+                    style: context.textStyle.bodySmallRegular.copyWith(color: textColor2),
                   ),
                 ],
               ),
@@ -93,8 +88,7 @@ class _WalletPageState extends State<WalletPage> {
     );
   }
 
-  GestureDetector _buildTopContainer(BuildContext context, String text1,
-      String text2, Color color, bool isSelected, bool selectValue) {
+  GestureDetector _buildTopContainer(BuildContext context, String text1, String text2, Color color, bool isSelected, bool selectValue) {
     double width = context.width;
     return GestureDetector(
       onTap: () async {
@@ -147,21 +141,11 @@ class _WalletPageState extends State<WalletPage> {
               } else {
                 return Row(
                   children: [
-                    _buildTopContainer(
-                        context,
-                        '${_controller.financeList[_controller.financeList.length - 1].totalIncome}₺',
-                        'Total Income',
-                        AppThemes.success700,
-                        _controller.isSelectedIncome,
-                        true),
+                    _buildTopContainer(context, '${_controller.financeList[_controller.financeList.length - 1].totalIncome}₺', 'Total Income',
+                        AppThemes.success700, _controller.isSelectedIncome, true),
                     const Spacer(),
-                    _buildTopContainer(
-                        context,
-                        '${_controller.financeList[_controller.financeList.length - 1].totalExpend}₺',
-                        'Total Expend',
-                        AppThemes.error700,
-                        !_controller.isSelectedIncome,
-                        false),
+                    _buildTopContainer(context, '${_controller.financeList[_controller.financeList.length - 1].totalExpend}₺', 'Total Expend',
+                        AppThemes.error700, !_controller.isSelectedIncome, false),
                   ],
                 );
               }
@@ -181,28 +165,23 @@ class _WalletPageState extends State<WalletPage> {
             Observer(builder: (_) {
               return Expanded(
                 child: _controller.financeList.isEmpty
-                    ? const Center(child: CircularProgressIndicator())
+                    ? Center(
+                        child: CircularProgressIndicator(
+                        color: context.isLight ? null : AppThemes.lightPrimary500,
+                      ))
                     : _controller.isSelectedIncome
                         ? ListView.builder(
                             itemCount: WalletPage.incomeLength,
                             itemBuilder: (_, int index) {
-                              return _buildTransectionContainer(
-                                  context,
-                                  _controller.income[index].userName,
-                                  '${_controller.incomeDate[0][index]}',
-                                  '${_controller.income[index].income}₺',
-                                  'down');
+                              return _buildTransectionContainer(context, _controller.income[index].userName, '${_controller.incomeDate[0][index]}',
+                                  '${_controller.income[index].income}₺', 'down');
                             },
                           )
                         : ListView.builder(
                             itemCount: WalletPage.outgoneLength,
                             itemBuilder: (_, int index) {
-                              return _buildTransectionContainer(
-                                  context,
-                                  _controller.outgone[index].userName,
-                                  '${_controller.outgoneDate[0][index]}',
-                                  '-${_controller.outgone[index].outgone}₺',
-                                  'up');
+                              return _buildTransectionContainer(context, _controller.outgone[index].userName, '${_controller.outgoneDate[0][index]}',
+                                  '-${_controller.outgone[index].outgone}₺', 'up');
                             },
                           ),
               );

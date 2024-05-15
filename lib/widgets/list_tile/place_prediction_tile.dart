@@ -3,8 +3,6 @@ import 'package:geolocator/geolocator.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:provider/provider.dart';
 import 'package:shazy/utils/extensions/context_extension.dart';
-
-import '../../core/assistants/request_assistant.dart';
 import '../../core/base/app_info.dart';
 import '../../core/init/models/directions.dart';
 import '../../core/init/models/predicted_places.dart';
@@ -85,16 +83,16 @@ class PlacePredictionTileDesign extends StatelessWidget {
       },
       style: ElevatedButton.styleFrom(
         elevation: 0,
-        backgroundColor: Colors.white,
+        backgroundColor: Colors.transparent,
         // Buton rengini kaldır
       ),
       child: Padding(
         padding: const EdgeInsets.all(4.0),
         child: Row(
           children: [
-            const Icon(
+            Icon(
               Icons.access_time_outlined,
-              color: Colors.black,
+              color: context.isLight ? Colors.black : Colors.white,
             ),
             SizedBox(
               width: context.responsiveWidth(14.0),
@@ -109,7 +107,7 @@ class PlacePredictionTileDesign extends StatelessWidget {
                   Text(
                     predictedPlaces!.main_text!,
                     overflow: TextOverflow.ellipsis,
-                    style: context.textStyle.subheadLargeMedium.copyWith(color: HexColor("#5A5A5A")),
+                    style: context.textStyle.subheadLargeMedium.copyWith(color: context.isLight ? HexColor("#5A5A5A") : Colors.white),
                   ),
                   SizedBox(
                     height: context.responsiveHeight(2.0),

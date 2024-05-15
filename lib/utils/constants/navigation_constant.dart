@@ -50,7 +50,7 @@ class NavigationConstant {
   static const deleteAccount = '/deleteAccount';
   static const driverChoose = '/driverChoose';
   static const changeLanguage = '/changeLanguage';
-  static const privacyPolicy = '/privacyPolicy'; 
+  static const privacyPolicy = '/privacyPolicy';
 
   //Driver make app
   static const driverAccept = '/driverAccept';

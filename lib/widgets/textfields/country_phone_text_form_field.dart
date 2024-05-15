@@ -13,6 +13,7 @@ class CountryPhoneTextFormField extends IntlPhoneField {
   }) : super(
           key: key,
           controller: controller,
+          cursorColor: context.isLight ? null : AppThemes.lightPrimary500,
           // Ülkelere göre telefon kodu getirme paketi
           // ignore: deprecated_member_use
           searchText: "Search Country",
@@ -35,6 +36,13 @@ class CountryPhoneTextFormField extends IntlPhoneField {
                 color: AppThemes.borderSideColor,
               ),
             ),
+            focusedBorder: context.isLight
+                ? null
+                : OutlineInputBorder(
+                    borderSide: BorderSide(
+                      color: AppThemes.lightPrimary500,
+                    ),
+                  ),
           ),
           onChanged: (phone) {},
         );

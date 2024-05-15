@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:hexcolor/hexcolor.dart';
 
 import '../../utils/extensions/context_extension.dart';
 import '../../utils/theme/themes.dart';
@@ -20,11 +21,8 @@ class SecondaryButton extends SizedBox {
           child: FilledButton(
             onPressed: onPressed,
             style: FilledButton.styleFrom(
-                backgroundColor:
-                    context.isLight ? Colors.white : Colors.transparent,
-                foregroundColor: context.isLight
-                    ? AppThemes.lightPrimary500
-                    : Colors.grey[500],
+                backgroundColor: context.isLight ? Colors.white : Colors.transparent,
+                foregroundColor: context.isLight ? AppThemes.lightPrimary500 : Colors.grey[500],
                 side: BorderSide(
                   strokeAlign: 1,
                   width: 2,
@@ -33,11 +31,7 @@ class SecondaryButton extends SizedBox {
             child: FittedBox(
               child: Text(
                 text,
-                style: style ??
-                    context.textStyle.subheadLargeMedium.copyWith(
-                        color: !context.isLight
-                            ? AppThemes.lightPrimary500
-                            : null),
+                style: style ?? context.textStyle.subheadLargeMedium.copyWith(color: !context.isLight ? AppThemes.lightPrimary500 : null),
               ),
             ),
           ),

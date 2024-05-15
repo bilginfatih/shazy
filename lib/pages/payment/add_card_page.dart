@@ -17,8 +17,7 @@ class AddCard extends StatelessWidget {
   AddCard({super.key});
 
   final TextEditingController _cardNumberController = TextEditingController();
-  final TextEditingController _cardholderNameController =
-      TextEditingController();
+  final TextEditingController _cardholderNameController = TextEditingController();
 
   final PaymentController _controller = PaymentController();
   final TextEditingController _cvvController = TextEditingController();
@@ -58,8 +57,7 @@ class AddCard extends StatelessWidget {
   Row _buildRow(BuildContext context) {
     return Row(
       children: [
-        _buildLimitDigitTextFormField(
-            context, _monthController, 'month'.tr(), 2),
+        _buildLimitDigitTextFormField(context, _monthController, 'month'.tr(), 2),
         SizedBox(
           width: context.responsiveWidth(6),
         ),
@@ -75,6 +73,7 @@ class AddCard extends StatelessWidget {
   SizedBox _buildCvvTextFormField(BuildContext context) => SizedBox(
         width: context.responsiveWidth(116),
         child: TextFormField(
+          cursorColor: context.isLight ? null : AppThemes.lightPrimary500,
           controller: _cvvController,
           obscureText: true,
           textAlign: TextAlign.center,
@@ -99,15 +98,16 @@ class AddCard extends StatelessWidget {
       ),
       child: SvgPicture.asset(
         'assets/svg/help-support.svg',
+        //color: context.isLight ? null : Colors.white,
+        colorFilter: ColorFilter.mode(context.isLight ? Colors.black : Colors.white, BlendMode.srcIn),
       ),
     );
   }
 
-  SizedBox _buildLimitDigitTextFormField(BuildContext context,
-          TextEditingController controller, String text, int limit) =>
-      SizedBox(
+  SizedBox _buildLimitDigitTextFormField(BuildContext context, TextEditingController controller, String text, int limit) => SizedBox(
         width: context.responsiveWidth(116),
         child: TextFormField(
+          cursorColor: context.isLight ? null : AppThemes.lightPrimary500,
           controller: controller,
           textAlign: TextAlign.center,
           keyboardType: TextInputType.number,
@@ -119,9 +119,7 @@ class AddCard extends StatelessWidget {
         ),
       );
 
-  InputDecoration _buildInputDecoration(BuildContext context, String text,
-          {Widget? suffixIcon}) =>
-      InputDecoration(
+  InputDecoration _buildInputDecoration(BuildContext context, String text, {Widget? suffixIcon}) => InputDecoration(
         hintText: text,
         hintStyle: context.textStyle.subheadLargeMedium.copyWith(
           color: AppThemes.hintTextNeutral,
@@ -133,6 +131,13 @@ class AddCard extends StatelessWidget {
             color: AppThemes.borderSideColor,
           ),
         ),
+        focusedBorder: context.isLight
+            ? null
+            : OutlineInputBorder(
+                borderSide: BorderSide(
+                  color: AppThemes.lightPrimary500,
+                ),
+              ),
       );
 
   PrimaryButton _buildButton(BuildContext context) {

@@ -198,7 +198,7 @@ class _DriveBottomSheetState extends State<DriveBottomSheet> {
                   style: GoogleFonts.poppins(
                     fontSize: context.responsiveFont(12),
                     fontWeight: FontWeight.w400,
-                    color: HexColor('#5A5A5A'),
+                    color: context.isLight ? HexColor('#5A5A5A') : Colors.white,
                   ),
                 ),
               ],
@@ -212,7 +212,7 @@ class _DriveBottomSheetState extends State<DriveBottomSheet> {
     return Container(
       height: context.customeHeight(widget.height ?? 0.57),
       decoration: BoxDecoration(
-        color: context.isLight ? Colors.white : AppThemes.darkBg,
+        color: context.isLight ? Colors.white : HexColor('#35383F'),
         borderRadius: BorderRadius.only(
           topLeft: Radius.circular(context.responsiveWidth(24)),
           topRight: Radius.circular(context.responsiveWidth(24)),

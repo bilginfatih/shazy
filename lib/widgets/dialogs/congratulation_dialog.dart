@@ -35,11 +35,12 @@ class SuccessDialog extends Dialog {
                     child: GestureDetector(
                       // ignore: sort_child_properties_last
                       child: Container(
-                        color: Colors.white,
+                        color: Colors.transparent,
                         child: SvgPicture.asset(
                           'assets/svg/cancel.svg',
                           width: context.responsiveWidth(24),
                           height: context.responsiveHeight(24),
+                          colorFilter: ColorFilter.mode(context.isLight ? Colors.black : Colors.white, BlendMode.srcIn),
                         ),
                       ),
                       onTap: onTap ??
@@ -74,12 +75,10 @@ class SuccessDialog extends Dialog {
               ),
               SizedBox(height: context.responsiveHeight(7)),
               Padding(
-                padding: EdgeInsets.symmetric(
-                    horizontal: context.responsiveWidth(50)),
+                padding: EdgeInsets.symmetric(horizontal: context.responsiveWidth(50)),
                 child: Text(
                   text1,
-                  style: context.textStyle.bodySmallMedium
-                      .copyWith(color: HexColor('#898989')),
+                  style: context.textStyle.bodySmallMedium.copyWith(color: HexColor('#898989')),
                   textAlign: TextAlign.center,
                 ),
               ),

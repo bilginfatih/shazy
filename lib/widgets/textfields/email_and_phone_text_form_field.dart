@@ -13,6 +13,7 @@ class EmailAndPhoneTextFormField extends TextFormField {
   }) : super(
           key: key,
           controller: controller,
+          cursorColor: context.isLight ? null : AppThemes.lightPrimary500,
           decoration: InputDecoration(
             hintText: 'emailOrPhone'.tr(),
             hintStyle: context.textStyle.subheadLargeMedium.copyWith(
@@ -24,6 +25,13 @@ class EmailAndPhoneTextFormField extends TextFormField {
                 color: AppThemes.borderSideColor,
               ),
             ),
+            focusedBorder: context.isLight
+                ? null
+                : OutlineInputBorder(
+                    borderSide: BorderSide(
+                      color: AppThemes.lightPrimary500,
+                    ),
+                  ),
           ),
           validator: (value) {
             if (value!.isEmpty) {

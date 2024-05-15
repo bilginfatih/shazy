@@ -5,10 +5,10 @@ import 'package:hexcolor/hexcolor.dart';
 import '../../core/init/models/predicted_places.dart';
 import '../../core/init/network/network_manager.dart';
 import '../../utils/extensions/context_extension.dart';
-import '../../utils/theme/themes.dart';
 import '../../widgets/list_tile/place_prediction_tile.dart';
 
 import '../../widgets/padding/base_padding.dart';
+import '../../widgets/textfields/search_text_form_field.dart';
 
 class SearchPage extends StatefulWidget {
   const SearchPage({super.key});
@@ -43,7 +43,7 @@ class _SearchPageState extends State<SearchPage> {
     }
   }
 
-  late TextEditingController _searchController = TextEditingController();
+  late final TextEditingController _searchController = TextEditingController();
   Expanded _buildListView(BuildContext context) {
     return Expanded(
       child: ListView.separated(
@@ -58,7 +58,7 @@ class _SearchPageState extends State<SearchPage> {
         separatorBuilder: (context, index) {
           return const Divider(
             height: 2,
-            color: Colors.white,
+            color: Colors.transparent,
             thickness: 1,
           );
         },
@@ -123,35 +123,15 @@ class _SearchPageState extends State<SearchPage> {
           children: [
             SizedBox(height: context.responsiveHeight(52)),
             SizedBox(
-              height: context.responsiveHeight(60),
-              child: TextFormField(
-                controller: _searchController,
-                style: context.textStyle.subheadLargeMedium,
-                textCapitalization: TextCapitalization.sentences,
-                decoration: InputDecoration(
-                  prefixIcon: _buildMapIcon(context),
-                  suffix: _buildCancelButton(context),
-                  fillColor: context.isLight ? null : HexColor('#35383F'),
-                  filled: true,
-                  hintText: 'search'.tr(),
-                  hintStyle: context.textStyle.subheadLargeMedium.copyWith(
-                    color: AppThemes.hintTextNeutral,
-                  ),
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(8),
-                    borderSide: BorderSide(
-                      color: AppThemes.borderSideColor,
-                    ),
-                  ),
-                ),
-                onChanged: (valueTyped) {
-                  findPlaceAutoCompleteSearch(valueTyped);
-                },
-              ),
-            ),
+                height: context.responsiveHeight(60),
+                child: SearchTextFormField(
+                  controller: _searchController,
+                  onChanged: (p0) {
+                    findPlaceAutoCompleteSearch(p0);
+                  },
+                )),
             SizedBox(height: context.responsiveHeight(19)),
             _buildResultText(context),
-            SizedBox(height: context.responsiveHeight(21)),
             _buildListView(context),
           ],
         ),

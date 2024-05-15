@@ -28,18 +28,14 @@ class BackAppBar extends AppBar {
                 },
                 child: Row(
                   children: [
-                    context.isLight
-                        ? SvgPicture.asset('assets/svg/angle-left.svg')
-                        : SvgPicture.asset('assets/svg/angle-left_white.svg'),
+                    context.isLight ? SvgPicture.asset('assets/svg/angle-left.svg') : SvgPicture.asset('assets/svg/angle-left_white.svg'),
                     SizedBox(
                       width: context.responsiveWidth(5),
                     ),
                     Text(
                       'Back',
                       style: context.textStyle.subheadLargeRegular.copyWith(
-                        color: context.isLight
-                            ? AppThemes.contentSecondary
-                            : Colors.white,
+                        color: context.isLight ? AppThemes.contentSecondary : Colors.white,
                       ),
                     ),
                   ],
@@ -49,13 +45,10 @@ class BackAppBar extends AppBar {
                 width: context.responsiveWidth(191),
                 height: context.responsiveHeight(25),
                 alignment: Alignment.center,
-                margin: EdgeInsets.symmetric(
-                    horizontal: context.responsiveWidth(15)),
+                margin: EdgeInsets.symmetric(horizontal: context.responsiveWidth(15)),
                 child: Text(
                   mainTitle ?? "",
-                  style: context.textStyle.headlineSmallMedium.copyWith(
-                      color:
-                          context.isLight ? HexColor("#2A2A2A") : Colors.white),
+                  style: context.textStyle.headlineSmallMedium.copyWith(color: context.isLight ? HexColor("#2A2A2A") : Colors.white),
                 ),
               ),
             ],

@@ -14,11 +14,19 @@ class EmailTextFormField extends TextFormField {
           key: key,
           controller: controller,
           keyboardType: TextInputType.emailAddress,
+          cursorColor: context.isLight ? null : AppThemes.lightPrimary500,
           decoration: InputDecoration(
             hintText: text,
             hintStyle: context.textStyle.subheadLargeMedium.copyWith(
               color: AppThemes.hintTextNeutral,
             ),
+            focusedBorder: context.isLight
+                ? null
+                : OutlineInputBorder(
+                    borderSide: BorderSide(
+                      color: AppThemes.lightPrimary500,
+                    ),
+                  ),
             border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(8),
               borderSide: BorderSide(
