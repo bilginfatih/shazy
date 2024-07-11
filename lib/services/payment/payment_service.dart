@@ -54,7 +54,6 @@ class PaymentService {
       }
       return response['message'];
     } catch (e) {
-      print(e);
       return 'paymentError'.tr();
     }
   }
