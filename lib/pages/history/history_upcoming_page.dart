@@ -40,8 +40,20 @@ class _HistoryUpcomingPageState extends State<HistoryUpcomingPage> {
     });
   }
 
-  Padding _buildContainer(BuildContext context, String name, String star, String startingLocation1, String startingLocation2, String endLocation1,
-      String endLocation2, String date, String time, String price, String color, String buttonText, int index,
+  Padding _buildContainer(
+      BuildContext context,
+      String name,
+      String star,
+      String startingLocation1,
+      String startingLocation2,
+      String endLocation1,
+      String endLocation2,
+      String date,
+      String time,
+      String price,
+      String color,
+      String buttonText,
+      int index,
       {bool cancel = false}) {
     return Padding(
       padding: const EdgeInsets.only(bottom: 16),
@@ -90,11 +102,15 @@ class _HistoryUpcomingPageState extends State<HistoryUpcomingPage> {
                             ),
                           ),
                           SizedBox(
-                            width: context.responsiveWidth(context.width < 330 ? 120 : 158),
+                            width: context.responsiveWidth(
+                                context.width < 330 ? 120 : 158),
                           ),
                           Text(
                             cancel ? 'canceled'.tr() : '',
-                            style: GoogleFonts.poppins(fontSize: context.responsiveWidth(11), fontWeight: FontWeight.w500, color: HexColor('#F44336')),
+                            style: GoogleFonts.poppins(
+                                fontSize: context.responsiveWidth(11),
+                                fontWeight: FontWeight.w500,
+                                color: HexColor('#F44336')),
                           )
                         ],
                       )
@@ -149,10 +165,13 @@ class _HistoryUpcomingPageState extends State<HistoryUpcomingPage> {
                               context: context,
                               textController: _commentTextController,
                               onPressed: () {
-                                _controller.sendComment(context, _commentTextController.text, index);
+                                _controller.sendComment(context,
+                                    _commentTextController.text, index);
                               },
-                              onPressedRatingBar: _controller.changeStarSelectedIndex,
-                              text: '${'youRated'.tr()} $name${' ${_controller.starSelectedIndex}'} ${'star'.tr()}',
+                              onPressedRatingBar:
+                                  _controller.changeStarSelectedIndex,
+                              text:
+                                  '${'youRated'.tr()} $name${' ${_controller.starSelectedIndex}'} ${'star'.tr()}',
                             );
                           }),
                         );
@@ -180,7 +199,9 @@ class _HistoryUpcomingPageState extends State<HistoryUpcomingPage> {
                           style: GoogleFonts.poppins(
                             fontSize: 10,
                             fontWeight: FontWeight.w500,
-                            color: context.isLight ? HexColor('#5A5A5A') : HexColor('#B8B8B8'),
+                            color: context.isLight
+                                ? HexColor('#5A5A5A')
+                                : HexColor('#B8B8B8'),
                           ),
                         ),
                         Text(
@@ -219,7 +240,10 @@ class _HistoryUpcomingPageState extends State<HistoryUpcomingPage> {
     );
   }
 
-  Padding _buildLocationRow(BuildContext context, String assetName, String text1, String text2, {String text3 = ''}) => Padding(
+  Padding _buildLocationRow(
+          BuildContext context, String assetName, String text1, String text2,
+          {String text3 = ''}) =>
+      Padding(
         padding: EdgeInsets.only(
           left: context.responsiveWidth(8),
           right: context.responsiveWidth(15),
@@ -228,7 +252,10 @@ class _HistoryUpcomingPageState extends State<HistoryUpcomingPage> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Padding(
-              padding: EdgeInsets.only(top: context.responsiveHeight(4), left: context.responsiveWidth(10), right: context.responsiveWidth(6)),
+              padding: EdgeInsets.only(
+                  top: context.responsiveHeight(4),
+                  left: context.responsiveWidth(10),
+                  right: context.responsiveWidth(6)),
               child: SvgPicture.asset('assets/svg/$assetName.svg'),
             ),
             Column(
@@ -240,7 +267,11 @@ class _HistoryUpcomingPageState extends State<HistoryUpcomingPage> {
                 Text(
                   text1,
                   style: GoogleFonts.poppins(
-                      fontSize: context.responsiveFont(10), fontWeight: FontWeight.w500, color: context.isLight ? HexColor('#5A5A5A') : HexColor('#B8B8B8')),
+                      fontSize: context.responsiveFont(10),
+                      fontWeight: FontWeight.w500,
+                      color: context.isLight
+                          ? HexColor('#5A5A5A')
+                          : HexColor('#B8B8B8')),
                 ),
                 FittedBox(
                   child: Text(
@@ -260,7 +291,12 @@ class _HistoryUpcomingPageState extends State<HistoryUpcomingPage> {
             const Spacer(),
             Text(
               text3,
-              style: GoogleFonts.poppins(fontSize: 11, fontWeight: FontWeight.w500, color: context.isLight ? HexColor('#5A5A5A') : HexColor('#B8B8B8')),
+              style: GoogleFonts.poppins(
+                  fontSize: 11,
+                  fontWeight: FontWeight.w500,
+                  color: context.isLight
+                      ? HexColor('#5A5A5A')
+                      : HexColor('#B8B8B8')),
             ),
           ],
         ),
@@ -297,7 +333,8 @@ class _HistoryUpcomingPageState extends State<HistoryUpcomingPage> {
             Observer(builder: (_) {
               return SizedBox(
                 height: context.responsiveHeight(550),
-                child: _controller.driverList.isEmpty && _controller.passengerList.isEmpty
+                child: _controller.driverList.isEmpty &&
+                        _controller.passengerList.isEmpty
                     ? Center(
                         child: showImage
                             ? Image.asset(
@@ -332,11 +369,15 @@ class _HistoryUpcomingPageState extends State<HistoryUpcomingPage> {
           '${_controller.passengerList[index].driveModel?.toShortAddress}',
           '${_controller.passengerList[index].driveModel?.toAddress}',
           '${_controller.passengerList[index].driveModel?.date}',
-          '16:38 - 16.42',
+          '${_controller.passengerList[index].driveModel?.hour}',
           '${_controller.passengerList[index].price}₺',
           '#5A5A5A',
-          _controller.passengerList[index].commentId == 'null' || _controller.driverList[index].commentId == '' ? 'reviewTrip'.tr() : '',
-          cancel: _controller.driverList[index].driveModel?.status.toString() == 'Canceled',
+          _controller.passengerList[index].commentId == 'null' ||
+                  _controller.driverList[index].commentId == ''
+              ? 'reviewTrip'.tr()
+              : '',
+          cancel: _controller.driverList[index].driveModel?.status.toString() ==
+              'Canceled',
           index,
         );
       },
@@ -356,12 +397,16 @@ class _HistoryUpcomingPageState extends State<HistoryUpcomingPage> {
           '${_controller.driverList[index].driveModel?.toShortAddress}',
           '${_controller.driverList[index].driveModel?.toAddress}',
           '${_controller.driverList[index].driveModel?.date}',
-          '16:38 - 16.42',
+          '${_controller.driverList[index].driveModel?.hour}',
           '+${_controller.driverList[index].price}₺',
           '#388E3D',
-          _controller.driverList[index].commentId == null || _controller.driverList[index].commentId == '' ? 'reviewPassenger'.tr() : '',
+          _controller.driverList[index].commentId == null ||
+                  _controller.driverList[index].commentId == ''
+              ? 'reviewPassenger'.tr()
+              : '',
           index,
-          cancel: _controller.driverList[index].driveModel?.status.toString() == 'Canceled',
+          cancel: _controller.driverList[index].driveModel?.status.toString() ==
+              'Canceled',
         );
       },
     );

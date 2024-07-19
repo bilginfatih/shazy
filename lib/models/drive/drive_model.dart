@@ -18,6 +18,7 @@ class DriveModel extends BaseModel {
     this.fromShortAddress,
     this.toShortAddress,
     this.date,
+    this.hour,
   });
 
   DriveModel._fromJson(o) {
@@ -32,15 +33,19 @@ class DriveModel extends BaseModel {
     toLang = double.tryParse(o['to_lang']);
     timeFrom = o['time_from'];
     timeTo = o['time_to'];
-    DateTime dateTime = DateTime.parse(o['created_at']);
+    DateTime dateTimeCratedAt = DateTime.parse(o['created_at']);
+    DateTime dateTimeUpdatedAt = DateTime.parse(o['updated_at']);
     date =
-        '${dateTime.day < 10 ? '0${dateTime.day}' : dateTime.day}.${dateTime.month < 10 ? '0${dateTime.month}' : dateTime.month}.${dateTime.year}';
+        '${dateTimeCratedAt.day < 10 ? '0${dateTimeCratedAt.day}' : dateTimeCratedAt.day}.${dateTimeCratedAt.month < 10 ? '0${dateTimeCratedAt.month}' : dateTimeCratedAt.month}.${dateTimeCratedAt.year}';
+    hour =
+        '${_formatTwoDigits(dateTimeCratedAt.hour)}:${_formatTwoDigits(dateTimeCratedAt.minute)} - ${_formatTwoDigits(dateTimeUpdatedAt.hour)}:${_formatTwoDigits(dateTimeUpdatedAt.minute)}';
   }
 
   @override
   fromJson(json) => DriveModel._fromJson(json);
 
   String? callerId;
+  String? date;
   String? driverId;
   double? driverLang;
   double? driverLat;
@@ -48,6 +53,7 @@ class DriveModel extends BaseModel {
   double? fromLang;
   double? fromLat;
   String? fromShortAddress;
+  String? hour;
   String? status;
   String? timeFrom;
   String? timeTo;
@@ -55,7 +61,6 @@ class DriveModel extends BaseModel {
   double? toLang;
   double? toLat;
   String? toShortAddress;
-  String? date;
 
   @override
   Map<String, dynamic> toJson() {
@@ -73,4 +78,6 @@ class DriveModel extends BaseModel {
     if (status != null) map['status'] = status;
     return map;
   }
+
+  String _formatTwoDigits(int n) => n.toString().padLeft(2, '0');
 }
