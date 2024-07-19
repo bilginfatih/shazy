@@ -5,8 +5,8 @@ import 'package:hexcolor/hexcolor.dart';
 import '../../core/init/models/predicted_places.dart';
 import '../../core/init/network/network_manager.dart';
 import '../../utils/extensions/context_extension.dart';
+import '../../widgets/app_bars/back_app_bar.dart';
 import '../../widgets/list_tile/place_prediction_tile.dart';
-
 import '../../widgets/padding/base_padding.dart';
 import '../../widgets/textfields/search_text_form_field.dart';
 
@@ -117,11 +117,13 @@ class _SearchPageState extends State<SearchPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: BackAppBar(
+        context: context,
+      ),
       body: BasePadding(
         context: context,
         child: Column(
           children: [
-            SizedBox(height: context.responsiveHeight(52)),
             SizedBox(
                 height: context.responsiveHeight(60),
                 child: SearchTextFormField(

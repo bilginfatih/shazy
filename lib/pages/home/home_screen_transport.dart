@@ -438,6 +438,8 @@ class _HomeScreenTransportState extends State<HomeScreenTransport> with TickerPr
       print('çizme işlem yapılmadı');
     }
     double keyboardSize = MediaQuery.of(context).viewInsets.bottom;
+    double bottomPadding = MediaQuery.of(context).size.height * 0.29;
+    double topPadding = MediaQuery.of(context).size.height * 0.1;
     return Scaffold(
       body: SingleChildScrollView(
         scrollDirection: Axis.horizontal,
@@ -459,7 +461,7 @@ class _HomeScreenTransportState extends State<HomeScreenTransport> with TickerPr
                   locateUserPosition();
                 },
                 myLocationEnabled: true,
-                padding: Platform.isIOS ? EdgeInsets.only(bottom: 230) : EdgeInsets.only(top: 100),
+                padding: Platform.isIOS ? EdgeInsets.only(bottom: bottomPadding) : EdgeInsets.only(top: topPadding),
                 myLocationButtonEnabled: true,
                 zoomControlsEnabled: false,
                 polylines: polyLineSet,

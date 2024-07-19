@@ -26,11 +26,18 @@ class HistoryUpcomingPage extends StatefulWidget {
 class _HistoryUpcomingPageState extends State<HistoryUpcomingPage> {
   final TextEditingController _commentTextController = TextEditingController();
   final _controller = HistoryUpcomingController();
+  bool showImage = false;
 
   @override
   void initState() {
     super.initState();
     _controller.init();
+
+    Future.delayed(const Duration(seconds: 3), () {
+      setState(() {
+        showImage = true;
+      });
+    });
   }
 
   Padding _buildContainer(
@@ -329,11 +336,14 @@ class _HistoryUpcomingPageState extends State<HistoryUpcomingPage> {
                 child: _controller.driverList.isEmpty &&
                         _controller.passengerList.isEmpty
                     ? Center(
-                        child: CircularProgressIndicator(
-                          color: context.isLight
-                              ? null
-                              : AppThemes.lightPrimary500,
-                        ),
+                        child: showImage
+                            ? Image.asset(
+                                'assets/png/no_data.png',
+                                fit: BoxFit.fill,
+                              )
+                            : CircularProgressIndicator(
+                                color: context.isLight ? null : AppThemes.lightPrimary500,
+                              ),
                       )
                     : _controller.isDriverSelected
                         ? _buildDriverList()
