@@ -24,6 +24,7 @@ class WalletPage extends StatefulWidget {
 
 class _WalletPageState extends State<WalletPage> {
   String userId = '';
+  bool showImage = false;
 
   final WalletController _controller = WalletController();
 
@@ -31,6 +32,12 @@ class _WalletPageState extends State<WalletPage> {
   void initState() {
     _init();
     super.initState();
+
+    Future.delayed(const Duration(seconds: 3), () {
+      setState(() {
+        showImage = true;
+      });
+    });
   }
 
   Future _init() async {
@@ -166,9 +173,15 @@ class _WalletPageState extends State<WalletPage> {
               return Expanded(
                 child: _controller.financeList.isEmpty
                     ? Center(
-                        child: CircularProgressIndicator(
-                        color: context.isLight ? null : AppThemes.lightPrimary500,
-                      ))
+                        child: showImage
+                            ? Image.asset(
+                                'assets/png/no_data.png',
+                                fit: BoxFit.fill,
+                              )
+                            : CircularProgressIndicator(
+                                color: context.isLight ? null : AppThemes.lightPrimary500,
+                              ),
+                      )
                     : _controller.isSelectedIncome
                         ? ListView.builder(
                             itemCount: WalletPage.incomeLength,
