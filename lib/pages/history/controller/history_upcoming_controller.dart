@@ -34,8 +34,7 @@ abstract class _HistoryUpcomingControllerBase with Store {
   @action
   Future<void> init() async {
     passengerList.addAll(await HistoryService.instance.getPassengerHistory());
-    driverList = ObservableList<HistoryModel>.of(
-        await HistoryService.instance.getDriverHistory());
+    driverList.addAll(await HistoryService.instance.getDriverHistory());
   }
 
   @action

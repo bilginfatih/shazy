@@ -24,9 +24,10 @@ class HistoryUpcomingPage extends StatefulWidget {
 }
 
 class _HistoryUpcomingPageState extends State<HistoryUpcomingPage> {
+  bool showImage = false;
+
   final TextEditingController _commentTextController = TextEditingController();
   final _controller = HistoryUpcomingController();
-  bool showImage = false;
 
   @override
   void initState() {
@@ -273,7 +274,8 @@ class _HistoryUpcomingPageState extends State<HistoryUpcomingPage> {
                           ? HexColor('#5A5A5A')
                           : HexColor('#B8B8B8')),
                 ),
-                FittedBox(
+                SizedBox(
+                  width: context.responsiveWidth(240),
                   child: Text(
                     text2,
                     maxLines: 2,
@@ -301,6 +303,63 @@ class _HistoryUpcomingPageState extends State<HistoryUpcomingPage> {
           ],
         ),
       );
+
+  ListView _buildPassengerList() {
+    return ListView.builder(
+      itemCount: _controller.passengerList.length,
+      itemBuilder: (BuildContext context, int index) {
+        return _buildContainer(
+          context,
+          _controller.passengerList[index].userProfile?.userModel?.name ?? '',
+          '${_controller.passengerList[index].userProfile?.averagePoint} (531 reviews)',
+          '${_controller.passengerList[index].driveModel?.fromShortAddress}',
+          '${_controller.passengerList[index].driveModel?.fromAddress}',
+          '${_controller.passengerList[index].driveModel?.toShortAddress}',
+          '${_controller.passengerList[index].driveModel?.toAddress}',
+          '${_controller.passengerList[index].driveModel?.date}',
+          '${_controller.passengerList[index].driveModel?.hour}',
+          '${_controller.passengerList[index].price}₺',
+          '#5A5A5A',
+          _controller.passengerList[index].commentId == 'null' ||
+                  _controller.passengerList[index].commentId == ''
+              ? 'reviewTrip'.tr()
+              : '',
+          cancel:
+              _controller.passengerList[index].driveModel?.status.toString() ==
+                  'Canceled',
+          index,
+        );
+      },
+    );
+  }
+
+  ListView _buildDriverList() {
+    return ListView.builder(
+      itemCount: _controller.driverList.length,
+      itemBuilder: (BuildContext context, int index) {
+        return _buildContainer(
+          context,
+          _controller.driverList[index].userProfile?.userModel?.name ?? '',
+          '${_controller.driverList[index].userProfile?.averagePoint} (531 reviews)',
+          '${_controller.driverList[index].driveModel?.fromShortAddress}',
+          '${_controller.driverList[index].driveModel?.fromAddress}',
+          '${_controller.driverList[index].driveModel?.toShortAddress}',
+          '${_controller.driverList[index].driveModel?.toAddress}',
+          '${_controller.driverList[index].driveModel?.date}',
+          '${_controller.driverList[index].driveModel?.hour}',
+          '+${_controller.driverList[index].price}₺',
+          '#388E3D',
+          _controller.driverList[index].commentId == null ||
+                  _controller.driverList[index].commentId == ''
+              ? 'reviewPassenger'.tr()
+              : '',
+          index,
+          cancel: _controller.driverList[index].driveModel?.status.toString() ==
+              'Canceled',
+        );
+      },
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -333,82 +392,28 @@ class _HistoryUpcomingPageState extends State<HistoryUpcomingPage> {
             Observer(builder: (_) {
               return SizedBox(
                 height: context.responsiveHeight(550),
-                child: _controller.driverList.isEmpty &&
-                        _controller.passengerList.isEmpty
-                    ? Center(
-                        child: showImage
-                            ? Image.asset(
-                                'assets/png/no_data.png',
-                                fit: BoxFit.fill,
-                              )
-                            : CircularProgressIndicator(
-                                color: context.isLight ? null : AppThemes.lightPrimary500,
-                              ),
-                      )
-                    : _controller.isDriverSelected
-                        ? _buildDriverList()
+                child: _controller.isDriverSelected
+                    ? _controller.driverList.isEmpty
+                        ? Center(
+                            child: Image.asset(
+                              'assets/png/no_data.png',
+                              fit: BoxFit.fill,
+                            ),
+                          )
+                        : _buildDriverList()
+                    : _controller.passengerList.isEmpty
+                        ? Center(
+                            child: Image.asset(
+                              'assets/png/no_data.png',
+                              fit: BoxFit.fill,
+                            ),
+                          )
                         : _buildPassengerList(),
               );
             }),
           ],
         ),
       ),
-    );
-  }
-
-  ListView _buildPassengerList() {
-    return ListView.builder(
-      itemCount: _controller.passengerList.length,
-      itemBuilder: (BuildContext context, int index) {
-        return _buildContainer(
-          context,
-          _controller.passengerList[index].userProfile?.userModel?.name ?? '',
-          '${_controller.passengerList[index].userProfile?.averagePoint} (531 reviews)',
-          '${_controller.passengerList[index].driveModel?.fromShortAddress}',
-          '${_controller.passengerList[index].driveModel?.fromAddress}',
-          '${_controller.passengerList[index].driveModel?.toShortAddress}',
-          '${_controller.passengerList[index].driveModel?.toAddress}',
-          '${_controller.passengerList[index].driveModel?.date}',
-          '${_controller.passengerList[index].driveModel?.hour}',
-          '${_controller.passengerList[index].price}₺',
-          '#5A5A5A',
-          _controller.passengerList[index].commentId == 'null' ||
-                  _controller.driverList[index].commentId == ''
-              ? 'reviewTrip'.tr()
-              : '',
-          cancel: _controller.driverList[index].driveModel?.status.toString() ==
-              'Canceled',
-          index,
-        );
-      },
-    );
-  }
-
-  ListView _buildDriverList() {
-    return ListView.builder(
-      itemCount: _controller.driverList.length,
-      itemBuilder: (BuildContext context, int index) {
-        return _buildContainer(
-          context,
-          _controller.driverList[index].userProfile?.userModel?.name ?? '',
-          '${_controller.driverList[index].userProfile?.averagePoint} (531 reviews)',
-          '${_controller.driverList[index].driveModel?.fromShortAddress}',
-          '${_controller.driverList[index].driveModel?.fromAddress}',
-          '${_controller.driverList[index].driveModel?.toShortAddress}',
-          '${_controller.driverList[index].driveModel?.toAddress}',
-          '${_controller.driverList[index].driveModel?.date}',
-          '${_controller.driverList[index].driveModel?.hour}',
-          '+${_controller.driverList[index].price}₺',
-          '#388E3D',
-          _controller.driverList[index].commentId == null ||
-                  _controller.driverList[index].commentId == ''
-              ? 'reviewPassenger'.tr()
-              : '',
-          index,
-          cancel: _controller.driverList[index].driveModel?.status.toString() ==
-              'Canceled',
-        );
-      },
     );
   }
 }
