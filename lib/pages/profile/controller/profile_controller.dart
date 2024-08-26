@@ -91,20 +91,18 @@ abstract class _ProfileControllerBase with Store {
       }
       var responseUpdateUser = await NetworkManager.instance
           .put('/user/$id', model: model.userModel);
-
       CacheManager.instance
           .putData('user', 'email', model.userModel!.email.toString());
       CacheManager.instance.putData('user', 'name',
           '${model.userModel?.name} ${model.userModel?.surname.toString()[0]}.');
-      var responseUpdateUserProfile = await NetworkManager.instance.put(
-          '/user-profile/$id',
-          model: UserProfileModel(description: model.description ?? ''));
+
+      var responseUpdateUserProfile =
+          await NetworkManager.instance.put('/user-profile/$id', model: model);
       if (context.mounted) {
         await init(context);
       }
       NavigationManager.instance.navigationToPop();
     } catch (e) {
-      print(e);
       if (context.mounted) {
         HelperFunctions.instance.showErrorDialog(
             context, 'updateProfileError'.tr(), 'backHome'.tr(), () {
@@ -151,7 +149,7 @@ abstract class _ProfileControllerBase with Store {
     star = userProfile!.averagePoint.toString();
     email = await CacheManager.instance.getData('user', 'email');
     userProfile!.userModel?.email = email;
-    imagePath = '$baseUrl/${userProfile!.profilePicturePath}';
+    imagePath = userProfile!.profilePicturePath ?? '';
     lisanceVertification = userProfile!.lisanceVerification ?? false;
     if (description == 'null') {
       description = '';

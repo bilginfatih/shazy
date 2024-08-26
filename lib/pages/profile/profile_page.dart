@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
@@ -202,12 +204,18 @@ class _ProfilePageState extends State<ProfilePage> {
     });
   }
 
-  Image _buildImage(String path) {
-    return Image.network(path,
+  ClipOval _buildImage(String path) {
+    return ClipOval(
+      child: Image.network(
+        path,
+        fit: BoxFit.cover,
+        width: double.infinity,
+        height: double.infinity,
         errorBuilder: (context, exception, stackTrack) => Image.asset(
-              'assets/png/no_data.png',
-              height: context.responsiveHeight(85),
-            ));
+          'assets/png/no_data.png',
+        ),
+      ),
+    );
   }
 
   Column _buildProfileColumn(String text1, String text2, bool isLight) {

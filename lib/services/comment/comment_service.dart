@@ -4,7 +4,6 @@ import 'package:shazy/services/user/user_service.dart';
 
 import '../../core/init/network/network_manager.dart';
 import '../../models/comment/comment_model.dart';
-import '../../utils/constants/app_constant.dart';
 
 // TODO: sürücü endpointleri eklendikten sonra test edilecek.
 class CommentService {
@@ -40,7 +39,7 @@ class CommentService {
         model = model.fromJson(item);
         UserProfileModel? userProfile = await UserService.instance.getAnotherUser(model.commentorUserId.toString());
         model.name = '${userProfile?.userModel?.name} ${userProfile?.userModel?.surname.toString()[0]}.';
-        model.imagePath = '$baseUrl/${userProfile?.profilePicturePath}';
+        model.imagePath = userProfile?.profilePicturePath;
         commentList.add(model);
       }
       return commentList;

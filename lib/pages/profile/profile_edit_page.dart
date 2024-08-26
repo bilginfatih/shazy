@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:developer';
 import 'dart:io';
 import 'dart:typed_data';
 
@@ -20,6 +21,7 @@ import '../../core/init/navigation/navigation_manager.dart';
 import '../../utils/constants/app_constant.dart';
 import '../../utils/helper/helper_functions.dart';
 import '../../widgets/padding/base_padding.dart';
+import 'package:image/image.dart' as img;
 
 class ProfileEditPage extends StatefulWidget {
   const ProfileEditPage({super.key});
@@ -35,6 +37,7 @@ class _ProfileEditPageState extends State<ProfileEditPage> {
   final TextEditingController _nameTextController = TextEditingController();
   final _picker = ImagePicker();
   final TextEditingController _surnameTextController = TextEditingController();
+  String _imagePath = '';
 
   @override
   void initState() {
@@ -45,7 +48,7 @@ class _ProfileEditPageState extends State<ProfileEditPage> {
     });
     super.initState();
   }
-
+/* TODO: delete
   Future _addImage() async {
     try {
       final pickedFile = await _picker.pickImage(
@@ -57,9 +60,41 @@ class _ProfileEditPageState extends State<ProfileEditPage> {
       if (xfilePick != null) {
         File imageFile = File(xfilePick.path);
         Uint8List imagebytes = await imageFile.readAsBytes();
-        String base64Photo = base64.encode(imagebytes);
+        _imagePath = base64.normalize(base64.encode(imagebytes));
+        debugPrint(_imagePath);
+        setState(() {});
       }
       setState(() {});
+    } catch (e) {
+      if (context.mounted) {
+        HelperFunctions.instance
+            .showErrorDialog(context, 'addImageError'.tr(), 'cancel'.tr(), () {
+          NavigationManager.instance.navigationToPop();
+        });
+      }
+    }
+  }*/
+
+  Future<void> _addImage() async {
+    try {
+      final pickedFile = await _picker.pickImage(source: ImageSource.gallery);
+      if (pickedFile != null) {
+        File imageFile = File(pickedFile.path);
+        Uint8List imageBytes = await imageFile.readAsBytes();
+        img.Image? image = img.decodeImage(imageBytes);
+        if (image != null) {
+          img.Image resizedImage = img.copyResize(image, width: 400);
+          Uint8List resizedImageBytes = Uint8List.fromList(
+            img.encodeJpg(resizedImage, quality: 75),
+          );
+          String base64String = base64Encode(resizedImageBytes);
+          log('Base64 String Length: ${base64String.length}');
+          log('Base64 String: $base64String');
+          setState(() {
+            _imagePath = base64String;
+          });
+        }
+      }
     } catch (e) {
       if (context.mounted) {
         HelperFunctions.instance
@@ -120,8 +155,9 @@ class _ProfileEditPageState extends State<ProfileEditPage> {
             CircleAvatar(
               radius: 35,
               backgroundColor: Colors.white,
-              child: _buildImage(
-                  '$baseUrl/${_controller.userProfile?.profilePicturePath}'),
+              child: _buildImage(_imagePath == ''
+                  ? _controller.userProfile?.profilePicturePath
+                  : _imagePath),
             ),
             Positioned(
               left: 50,
@@ -217,6 +253,7 @@ class _ProfileEditPageState extends State<ProfileEditPage> {
         : _aboutYouTextController.text;
     UserProfileModel model = UserProfileModel(
       description: description,
+      profilePicturePath: _imagePath,
       userModel: UserModel(
         name: name,
         surname: surname,
@@ -226,10 +263,25 @@ class _ProfileEditPageState extends State<ProfileEditPage> {
     _controller.updateUserProfile(context, model);
   }
 
-  Image _buildImage(String path) {
-    return Image.network(path,
-        errorBuilder: (context, exception, stackTrack) =>
-            Image.asset('assets/png/no_data.png'));
+  ClipOval _buildImage(String? path) {
+    return ClipOval(
+      child: path != null
+          ? Image.memory(
+              base64Decode(path),
+              fit: BoxFit.cover,
+              width: double.infinity,
+              height: double.infinity,
+              errorBuilder: (context, exception, stackTrack) => Image.asset(
+                'assets/png/no_data.png',
+              ),
+            )
+          : Image.asset(
+              'assets/png/no_data.png',
+              fit: BoxFit.cover,
+              width: double.infinity,
+              height: double.infinity,
+            ),
+    );
   }
 
   @override

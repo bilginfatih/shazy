@@ -108,7 +108,7 @@ class _HomePageState extends State<HomePage> {
   }
 
   Future<void> _getUserData() async {
-    _name = await CacheManager.instance.getData('user', 'name');
+    _name = await CacheManager.instance.getData('user', 'name') ?? '';
     _email = await CacheManager.instance.getData('user', 'email');
     setState(() {});
   }

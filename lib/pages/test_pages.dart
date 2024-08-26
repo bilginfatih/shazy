@@ -1,5 +1,8 @@
 import 'dart:async';
+import 'dart:convert';
 import 'dart:developer';
+import 'dart:io';
+import 'dart:typed_data';
 
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
@@ -8,7 +11,9 @@ import 'package:flutter_svg/svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:hive_flutter/hive_flutter.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:maps_launcher/maps_launcher.dart';
+import 'package:shazy/models/user/user_profile_model.dart';
 import 'package:shazy/pages/payment/controller/payment_controller.dart';
 import 'package:shazy/services/payment/payment_service.dart';
 import 'package:shazy/widgets/buttons/secondary_button.dart';
@@ -20,6 +25,7 @@ import '../core/init/models/caller_home_directions.dart';
 import '../core/init/models/directions.dart';
 import '../core/init/models/driver_home_directions.dart';
 import '../core/init/navigation/navigation_manager.dart';
+import '../core/init/network/network_manager.dart';
 import '../models/comment/comment_model.dart';
 import '../models/drive/drive_model.dart';
 import '../models/payment/payment_model.dart';
@@ -29,6 +35,7 @@ import '../services/drive/drive_service.dart';
 import '../services/security/security_service.dart';
 import '../utils/constants/navigation_constant.dart';
 import '../utils/extensions/context_extension.dart';
+import '../utils/helper/helper_functions.dart';
 import '../utils/theme/themes.dart';
 import '../widgets/buttons/primary_button.dart';
 import '../widgets/containers/payment_method_container.dart';
@@ -43,6 +50,7 @@ import '../models/user/user_model.dart';
 import '../services/history/history_service.dart';
 import '../services/user/user_service.dart';
 import '../widgets/padding/base_padding.dart';
+import 'package:image/image.dart' as img;
 
 // TODO: End pointleri test etmek için olan sayfa proda çıkmadan kaldırılacak
 class TestPage extends StatefulWidget {
@@ -56,7 +64,9 @@ class _TestPageState extends State<TestPage>
     with SingleTickerProviderStateMixin {
   late AnimationController _controller;
   Duration _duration = Duration(milliseconds: 500);
+  String _imagePath = '';
   final _key = GlobalKey();
+  final _picker = ImagePicker();
   final _scaffoldKey = GlobalKey<ScaffoldState>();
   double _size = 0;
   final Tween<Offset> _tween = Tween(begin: Offset(0, 1), end: Offset(0, 0));
@@ -131,6 +141,89 @@ class _TestPageState extends State<TestPage>
         ),
       );
 
+  Future<void> _addImage() async {
+    try {
+      final pickedFile = await _picker.pickImage(source: ImageSource.gallery);
+      if (pickedFile != null) {
+        File imageFile = File(pickedFile.path);
+        // Resmi byte array olarak oku
+        Uint8List imageBytes = await imageFile.readAsBytes();
+
+        // Resmi image paketi ile yükle
+        img.Image? image = img.decodeImage(imageBytes);
+
+        if (image != null) {
+          // Resim boyutunu küçült
+          img.Image resizedImage =
+              img.copyResize(image, width: 400); // Genişliği 800 piksel yapın
+
+          // Küçültülmüş resmi yeniden byte array olarak al
+          Uint8List resizedImageBytes =
+              Uint8List.fromList(img.encodeJpg(resizedImage));
+
+          // Base64 string oluştur
+          String base64String = base64.normalize(base64Encode(resizedImageBytes));
+          log(base64String.length.toString());
+          log(base64String);
+          setState(() {
+            _imagePath = base64String;
+          });
+        }
+      }
+    } catch (e) {
+      print(e);
+    }
+  }
+
+  String _truncateString(String input, int length) {
+    if (input.length <= length) {
+      return input;
+    } else {
+      return input.substring(0, length);
+    }
+  }
+
+  Future<void> updateUserProfile(
+      BuildContext context, UserProfileModel model) async {
+    try {
+      String? email = await CacheManager.instance.getData('user', 'email');
+      var id = await SessionManager().get('id');
+      String? responseRegiserControl;
+      if (email != model.userModel?.email) {
+        responseRegiserControl = await UserService.instance
+            .registerControl(UserModel(email: model.userModel?.email));
+        if (responseRegiserControl != null &&
+            responseRegiserControl != '200' &&
+            context.mounted) {
+          HelperFunctions.instance.showErrorDialog(
+              context, responseRegiserControl, 'backHome'.tr(), () {
+            NavigationManager.instance
+                .navigationToPageClear(NavigationConstant.homePage);
+          });
+        }
+      }
+      var responseUpdateUser = await NetworkManager.instance
+          .put('/user/$id', model: model.userModel);
+      CacheManager.instance
+          .putData('user', 'email', model.userModel!.email.toString());
+      CacheManager.instance.putData('user', 'name',
+          '${model.userModel?.name} ${model.userModel?.surname.toString()[0]}.');
+
+      var responseUpdateUserProfile =
+          await NetworkManager.instance.put('/user-profile/$id', model: model);
+      if (context.mounted) {}
+      NavigationManager.instance.navigationToPop();
+    } catch (e) {
+      if (context.mounted) {
+        HelperFunctions.instance.showErrorDialog(
+            context, 'updateProfileError'.tr(), 'backHome'.tr(), () {
+          NavigationManager.instance
+              .navigationToPageClear(NavigationConstant.homePage);
+        });
+      }
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -141,6 +234,26 @@ class _TestPageState extends State<TestPage>
         child: Center(
           child: ListView(
             children: [
+              ElevatedButton(
+                onPressed: () async {
+                  await _addImage();
+
+                  /*if (_imagePath == '') {
+                    await _addImage();
+                  }
+                  var model = UserProfileModel(
+                      userModel: UserModel(
+                          name: 'test',
+                          surname: 'test',
+                          email: 'halil@gmail.com'),
+                      profilePicturePath: base64.normalize(_imagePath));
+                  var id = await SessionManager().get('id');
+                  log(base64.normalize(_imagePath));
+                  await NetworkManager.instance
+                      .put2('/user-profile/$id', model.toJson(), data: model);*/
+                },
+                child: Text('update profile page'),
+              ),
               ElevatedButton(
                 onPressed: () async {
                   PaymentController paymentController = PaymentController();
