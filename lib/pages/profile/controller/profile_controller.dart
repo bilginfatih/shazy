@@ -7,7 +7,6 @@ import 'package:shazy/core/init/network/network_manager.dart';
 import 'package:shazy/models/user/user_profile_model.dart';
 import 'package:shazy/services/comment/comment_service.dart';
 import 'package:shazy/services/user/user_service.dart';
-import 'package:shazy/utils/constants/app_constant.dart';
 import 'package:shazy/utils/constants/navigation_constant.dart';
 import 'package:shazy/utils/helper/helper_functions.dart';
 

@@ -48,32 +48,6 @@ class _ProfileEditPageState extends State<ProfileEditPage> {
     });
     super.initState();
   }
-/* TODO: delete
-  Future _addImage() async {
-    try {
-      final pickedFile = await _picker.pickImage(
-          source: ImageSource.gallery,
-          imageQuality: 100,
-          maxHeight: 1000,
-          maxWidth: 1000);
-      XFile? xfilePick = pickedFile;
-      if (xfilePick != null) {
-        File imageFile = File(xfilePick.path);
-        Uint8List imagebytes = await imageFile.readAsBytes();
-        _imagePath = base64.normalize(base64.encode(imagebytes));
-        debugPrint(_imagePath);
-        setState(() {});
-      }
-      setState(() {});
-    } catch (e) {
-      if (context.mounted) {
-        HelperFunctions.instance
-            .showErrorDialog(context, 'addImageError'.tr(), 'cancel'.tr(), () {
-          NavigationManager.instance.navigationToPop();
-        });
-      }
-    }
-  }*/
 
   Future<void> _addImage() async {
     try {
@@ -155,9 +129,7 @@ class _ProfileEditPageState extends State<ProfileEditPage> {
             CircleAvatar(
               radius: 35,
               backgroundColor: Colors.white,
-              child: _buildImage(_imagePath == ''
-                  ? _controller.userProfile?.profilePicturePath
-                  : _imagePath),
+              child: _buildImage(_imagePath),
             ),
             Positioned(
               left: 50,
@@ -265,7 +237,7 @@ class _ProfileEditPageState extends State<ProfileEditPage> {
 
   ClipOval _buildImage(String? path) {
     return ClipOval(
-      child: path != null
+      child: path != null && path != ''
           ? Image.memory(
               base64Decode(path),
               fit: BoxFit.cover,
@@ -275,11 +247,14 @@ class _ProfileEditPageState extends State<ProfileEditPage> {
                 'assets/png/no_data.png',
               ),
             )
-          : Image.asset(
-              'assets/png/no_data.png',
+          : Image.network(
+              _controller.userProfile?.profilePicturePath ?? '',
               fit: BoxFit.cover,
               width: double.infinity,
               height: double.infinity,
+              errorBuilder: (context, exception, stackTrack) => Image.asset(
+                'assets/png/no_data.png',
+              ),
             ),
     );
   }

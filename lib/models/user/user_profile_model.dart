@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:shazy/models/user/user_model.dart';
+import 'package:shazy/utils/constants/app_constant.dart';
 
 import '../../core/base/base_model.dart';
 
@@ -25,7 +26,8 @@ class UserProfileModel extends BaseModel {
     id = userProfile['id'];
     lisanceVerification = userProfile['lisance_verification'] == 1 &&
         userProfile['lisance_verification'] != 'null';
-    profilePicturePath = userProfile['profile_picture'];
+    profilePicturePath =
+        '$baseUrl/${userProfile['profile_picture_path']}/profile.jpg';
     profileVerification = userProfile['profile_verification'] == 1 &&
         userProfile['profile_verification'] != 'null';
     userId = userProfile['user_id'];
@@ -50,7 +52,7 @@ class UserProfileModel extends BaseModel {
       map['description'] = description;
     }
     if (profilePicturePath != null) {
-      map['profile_picture'] = base64.normalize(profilePicturePath!);
+      map['profile_picture_path'] = base64.normalize(profilePicturePath!);
     }
     if (userModel != null) {
       map['user'] = userModel!.toJson();
