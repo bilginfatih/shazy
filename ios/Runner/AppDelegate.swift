@@ -2,7 +2,7 @@ import UIKit
 import Flutter
 import Firebase 
 import GoogleMaps
-@UIApplicationMain
+@main
 @objc class AppDelegate: FlutterAppDelegate, MessagingDelegate  {
   override func application(
     _ application: UIApplication,

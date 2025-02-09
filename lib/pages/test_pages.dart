@@ -21,6 +21,7 @@ import 'package:shazy/widgets/dialogs/drive_dialog.dart';
 import 'package:shazy/widgets/dialogs/search_driver_dialog.dart';
 import 'package:shazy/widgets/divider/counter_divider.dart';
 import 'package:shazy/widgets/modal_bottom_sheet/drive_bottom_sheet.dart';
+import '../core/init/firebase/firebase_notification_manager.dart';
 import '../core/init/models/caller_home_directions.dart';
 import '../core/init/models/directions.dart';
 import '../core/init/models/driver_home_directions.dart';
@@ -162,7 +163,8 @@ class _TestPageState extends State<TestPage>
               Uint8List.fromList(img.encodeJpg(resizedImage));
 
           // Base64 string oluştur
-          String base64String = base64.normalize(base64Encode(resizedImageBytes));
+          String base64String =
+              base64.normalize(base64Encode(resizedImageBytes));
           log(base64String.length.toString());
           log(base64String);
           setState(() {
@@ -253,6 +255,19 @@ class _TestPageState extends State<TestPage>
                       .put2('/user-profile/$id', model.toJson(), data: model);*/
                 },
                 child: Text('update profile page'),
+              ),
+              ElevatedButton(
+                onPressed: () async {
+                  var token = await FirebaseNotificationManager
+                      .instance.notificationToken;
+                  Map<String, dynamic> request = {
+                    'registrationToken': token,
+                    'notificationMessage': 'test',
+                  };
+                  await NetworkManager.instance
+                      .post('/send-notification', data: request);
+                },
+                child: Text('Push notification'),
               ),
               ElevatedButton(
                 onPressed: () async {

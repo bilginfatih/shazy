@@ -31,6 +31,7 @@ class FirebaseNotificationManager {
   Future<void> init() async {
     FirebaseMessaging firebaseMessaging = FirebaseMessaging.instance;
     firebaseMessaging.requestPermission();
+  
     final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
         FlutterLocalNotificationsPlugin();
     var token = await notificationToken;
