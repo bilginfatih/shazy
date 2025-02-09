@@ -98,6 +98,7 @@ class _DriverAcceptState extends State<DriverAccept> {
               height: context.responsiveHeight(54),
               onPressed: () {
                 if (_termsCheck) {
+                  // TODO: 
                   NavigationManager.instance.navigationToPage(NavigationConstant.driverChoose);
                   //NavigationManager.instance.navigationToPage(NavigationConstant.driverLicance);
                 }
