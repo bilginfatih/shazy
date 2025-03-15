@@ -38,9 +38,18 @@ class _PasswordTextFormFieldState extends State<PasswordTextFormField> {
       controller: widget.controller,
       obscureText: _isObscure,
       cursorColor: context.isLight ? null : AppThemes.lightPrimary500,
+      onTapOutside: (event) {
+        FocusScopeNode currentFocus = FocusScope.of(context);
+        if (!currentFocus.hasPrimaryFocus &&
+            currentFocus.focusedChild != null) {
+          FocusManager.instance.primaryFocus?.unfocus();
+        }
+      },
       decoration: InputDecoration(
         suffixIcon: IconButton(
-          icon: _isObscure ? const Icon(Icons.visibility_off_outlined) : const Icon(Icons.visibility_outlined),
+          icon: _isObscure
+              ? const Icon(Icons.visibility_off_outlined)
+              : const Icon(Icons.visibility_outlined),
           onPressed: () {
             setState(() {
               _isObscure = !_isObscure;

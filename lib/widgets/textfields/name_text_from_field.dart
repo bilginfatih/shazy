@@ -13,6 +13,13 @@ class NameTextFormField extends TextFormField {
           key: key,
           controller: controller,
           cursorColor: context.isLight ? null : AppThemes.lightPrimary500,
+          onTapOutside: (event) {
+            FocusScopeNode currentFocus = FocusScope.of(context);
+            if (!currentFocus.hasPrimaryFocus &&
+                currentFocus.focusedChild != null) {
+              FocusManager.instance.primaryFocus?.unfocus();
+            }
+          },
           decoration: InputDecoration(
             hintText: hintText ?? 'Name',
             hintStyle: context.textStyle.subheadLargeMedium.copyWith(

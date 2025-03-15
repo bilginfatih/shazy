@@ -1,2 +1,2 @@
-const baseUrl = 'https://test.shazyinc.com/public';
+const baseUrl = 'https://shazyteknoloji.com/public';
 const imageBaseUrl = '$baseUrl/profile';

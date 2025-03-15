@@ -28,24 +28,45 @@ class FirebaseNotificationManager {
     return '';
   }
 
-  Future<void> init() async {
+ Future<void> init() async {
     FirebaseMessaging firebaseMessaging = FirebaseMessaging.instance;
+    /*if (await NetworkManager.instance.checkNetwork()) {
+      if (Platform.isIOS) {
+        notificationToken =
+            await FirebaseMessaging.instance.getAPNSToken() ?? '';
+      } else {
+        notificationToken = await FirebaseMessaging.instance.getToken() ?? '';
+      }
+    }*/
     firebaseMessaging.requestPermission();
-  
+    /*await FirebaseMessaging.instance.subscribeToTopic('all');
+    FirebaseMessaging.instance.onTokenRefresh.listen((newToken) {
+      notificationToken = newToken;
+    });*/
+    var token = await notificationToken;
+    print('Notification Token: $token');
     final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
         FlutterLocalNotificationsPlugin();
-    var token = await notificationToken;
-    print('FM: $token');
+
+    const AndroidNotificationChannel channel = AndroidNotificationChannel(
+      'high_importance_channel', // id
+      'High Importance Notifications', // name
+      description:
+          'This channel is used for important notifications.', // description
+      importance: Importance.max,
+    );
     await flutterLocalNotificationsPlugin
         .resolvePlatformSpecificImplementation<
             AndroidFlutterLocalNotificationsPlugin>()
         ?.createNotificationChannel(channel);
+
     await FirebaseMessaging.instance
         .setForegroundNotificationPresentationOptions(
       alert: true,
       badge: true,
       sound: true,
     );
+
     FirebaseMessaging.onMessage.listen((RemoteMessage message) {
       RemoteNotification? notification = message.notification;
       if (notification != null) {
@@ -60,6 +81,7 @@ class FirebaseNotificationManager {
                 android: AndroidNotificationDetails(
                   channel.id,
                   channel.name,
+                  channelDescription: channel.description,
                   icon: "ic_launcher",
                   priority: Priority.max,
                   importance: Importance.max,
@@ -68,6 +90,15 @@ class FirebaseNotificationManager {
               ),
             );
           }
+        } else if (Platform.isIOS) {
+          flutterLocalNotificationsPlugin.show(
+            notification.hashCode,
+            notification.title,
+            notification.body,
+            const NotificationDetails(
+              iOS: DarwinNotificationDetails(),
+            ),
+          );
         }
       }
     });

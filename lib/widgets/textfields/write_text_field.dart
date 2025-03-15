@@ -16,6 +16,13 @@ class WriteTextField extends TextField {
           key: key,
           controller: controller,
           cursorColor: context.isLight ? null : AppThemes.lightPrimary500,
+          onTapOutside: (event) {
+            FocusScopeNode currentFocus = FocusScope.of(context);
+            if (!currentFocus.hasPrimaryFocus &&
+                currentFocus.focusedChild != null) {
+              FocusManager.instance.primaryFocus?.unfocus();
+            }
+          },
           decoration: InputDecoration(
             hintText: hintText,
             hintStyle: TextStyle(color: HexColor("#D0D0D0")),

@@ -15,6 +15,13 @@ class EmailTextFormField extends TextFormField {
           controller: controller,
           keyboardType: TextInputType.emailAddress,
           cursorColor: context.isLight ? null : AppThemes.lightPrimary500,
+          onTapOutside: (event) {
+            FocusScopeNode currentFocus = FocusScope.of(context);
+            if (!currentFocus.hasPrimaryFocus &&
+                currentFocus.focusedChild != null) {
+              FocusManager.instance.primaryFocus?.unfocus();
+            }
+          },
           decoration: InputDecoration(
             hintText: text,
             hintStyle: context.textStyle.subheadLargeMedium.copyWith(

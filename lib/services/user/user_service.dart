@@ -55,6 +55,7 @@ class UserService {
         }
       }
     } catch (e) {
+      print(e.toString());
       return 'registerError'.tr();
     }
     return null;

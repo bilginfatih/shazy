@@ -12,7 +12,6 @@ class GenderTextFormField extends DropdownButtonFormField {
     required String text,
   }) : super(
           key: key,
-          
           decoration: InputDecoration(
             hintText: text,
             hintStyle: context.textStyle.subheadLargeMedium.copyWith(

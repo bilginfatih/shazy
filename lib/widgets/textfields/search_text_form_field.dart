@@ -6,7 +6,8 @@ import '../../utils/extensions/context_extension.dart';
 import '../../utils/theme/themes.dart';
 
 class SearchTextFormField extends StatefulWidget {
-  const SearchTextFormField({super.key, required this.controller, this.onChanged});
+  const SearchTextFormField(
+      {super.key, required this.controller, this.onChanged});
 
   final TextEditingController controller;
   final void Function(String)? onChanged;
@@ -20,7 +21,9 @@ class _SearchTextFormFieldState extends State<SearchTextFormField> {
         padding: const EdgeInsets.all(10.0),
         child: SvgPicture.asset(
           'assets/svg/map.svg',
-          colorFilter: ColorFilter.mode(context.isLight ? Colors.black : HexColor('#E8E8E8'), BlendMode.srcIn),
+          colorFilter: ColorFilter.mode(
+              context.isLight ? Colors.black : HexColor('#E8E8E8'),
+              BlendMode.srcIn),
         ),
       );
 
@@ -34,7 +37,9 @@ class _SearchTextFormFieldState extends State<SearchTextFormField> {
           padding: EdgeInsets.only(top: context.responsiveHeight(12)),
           child: SvgPicture.asset(
             'assets/svg/cancel.svg',
-            colorFilter: ColorFilter.mode(context.isLight ? Colors.black : HexColor('#E8E8E8'), BlendMode.srcIn),
+            colorFilter: ColorFilter.mode(
+                context.isLight ? Colors.black : HexColor('#E8E8E8'),
+                BlendMode.srcIn),
           ),
         ),
       );
@@ -46,6 +51,13 @@ class _SearchTextFormFieldState extends State<SearchTextFormField> {
       cursorColor: context.isLight ? null : AppThemes.lightPrimary500,
       style: context.textStyle.subheadLargeMedium,
       textCapitalization: TextCapitalization.sentences,
+      onTapOutside: (event) {
+        FocusScopeNode currentFocus = FocusScope.of(context);
+        if (!currentFocus.hasPrimaryFocus &&
+            currentFocus.focusedChild != null) {
+          FocusManager.instance.primaryFocus?.unfocus();
+        }
+      },
       decoration: InputDecoration(
         prefixIcon: _buildMapIcon(context),
         suffix: _buildCancelButton(context),

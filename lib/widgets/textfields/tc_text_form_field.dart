@@ -13,6 +13,13 @@ class TcTextFormField extends TextFormField {
           controller: controller,
           cursorColor: context.isLight ? null : AppThemes.lightPrimary500,
           keyboardType: TextInputType.number,
+          onTapOutside: (event) {
+            FocusScopeNode currentFocus = FocusScope.of(context);
+            if (!currentFocus.hasPrimaryFocus &&
+                currentFocus.focusedChild != null) {
+              FocusManager.instance.primaryFocus?.unfocus();
+            }
+          },
           decoration: InputDecoration(
             hintText: 'TC',
             hintStyle: context.textStyle.subheadLargeMedium.copyWith(

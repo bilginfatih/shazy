@@ -79,6 +79,7 @@ class NetworkManager extends BaseNetworkManager {
           },
         ),
       );
+      print(response.toString());
       if (response.data == '') {
         return '';
       }
